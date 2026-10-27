@@ -1,0 +1,327 @@
+{
+  "date": "2026-10-27",
+  "scope": "development; not a final test or sparsity certificate",
+  "training_manifest_sha256": "6a4d6747c316edb31aff965364be979098adfddd763cddb3fea96c79aafdd59c",
+  "model_order": [
+    "S-NL",
+    "D-NL",
+    "S-AF"
+  ],
+  "runs": [
+    {
+      "model": "S-NL",
+      "description": "sparse nonlinear baseline",
+      "run_name": "librispeech_sparse_autoencoder_10h_20261027T113534514450Z_seed0",
+      "train_name": "librispeech_sparse_autoencoder_10h",
+      "training_status": {
+        "status": "complete",
+        "total_steps": 20000,
+        "completed": true,
+        "step": 20000,
+        "best_validation": 0.18301507165746964,
+        "seconds": 1008.9649906998966,
+        "peak_gpu_bytes": 204785152
+      },
+      "training_statistics": {
+        "train_power": 0.003196885499251754,
+        "parameters": 1002369,
+        "trainable_parameters": 1002369,
+        "dictionary_values": null,
+        "training_method": "gradient",
+        "manifest_audit_passed": true,
+        "resume_note": "Model/optimizer RNG is restored; random crop/sampler position restarts at resume."
+      },
+      "environment": {
+        "python": "3.11.0",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "torch": "2.8.0+cu128",
+        "cuda": "12.8",
+        "cuda_available": true,
+        "numpy": "2.2.6",
+        "scipy": "1.13.1",
+        "soundfile": "0.13.1",
+        "librosa": "0.11.0",
+        "scikit-learn": "1.9.0",
+        "PyYAML": "6.0.3",
+        "matplotlib": "3.11.1",
+        "pytest": "9.1.1",
+        "pesq": "0.0.4",
+        "pystoi": "0.4.1",
+        "gpu": "NVIDIA RTX 2000 Ada Generation"
+      },
+      "training_source_combined_sha256": "d6bcd15ed5a0a4c9bda03c197aeb4e40ffe005a0635ccf5571e24e380e50ff55",
+      "checkpoint_sha256": "4ddfc7e9785ae43083f53b6cdf120d8d8e17d9986dd99b896ddc4ea04b532fd8",
+      "checkpoint_step": 20000,
+      "validation_manifest_sha256": "2c720e827733d0681694bd0a7e2a8058ce3ed0e6b54a902251e773719a68d62c",
+      "validation_coverage_sha256": "4c27d41d9a728448253672a6dedb74879a362d4daa2c4e4816ad410b85118353",
+      "evaluation_summary_sha256": {
+        "fraction_0.0": "bcde1de556938fe492fd241b718fa987ba14927cba577344213a8ee180ab9541",
+        "fraction_0.01": "38c5767aeae3444ebdb66b8679689e928952bbe097bb63c099738f91d76126b8",
+        "fraction_0.02": "3ea4a7f8f3e83f1cb8425833e206408df22074267c811f463446e2bca02fa866",
+        "fraction_0.05": "92c69cff4ad67ff40213c52ea5e010ca1d635eefe2b1b9ea23b1544b4ac7e9fb",
+        "fraction_0.1": "3dffbca92228d5b90729509a532028277f81b49b5a4cfc7db4e0c00f40492944",
+        "fraction_0.25": "ba8b7523b512066dd89bbf14ed27569b0a0fd9b64cc479931bddfca01ee0a03c",
+        "fraction_0.5": "14776522db75e1c6970023cfed473a0d355e43def8e7759a45b359f65f2cd870",
+        "fraction_1.0": "c5c1b516bbe1ecb0f6e0ee05897b80869527c8b66309cb7fa66adc6faf3e18c8"
+      },
+      "speech_metric_statuses": {
+        "pesq_wb_status": {
+          "ok": 200
+        },
+        "stoi_status": {
+          "ok": 200
+        },
+        "visqol_status": {
+          "not integrated; no score computed": 200
+        }
+      },
+      "support_search": {
+        "scope": "smallest actual support among the evaluated codes; not a certified minimum",
+        "settings": [
+          "fraction=0.0",
+          "fraction=0.01",
+          "fraction=0.02",
+          "fraction=0.05",
+          "fraction=0.1",
+          "fraction=0.25",
+          "fraction=0.5",
+          "fraction=1.0"
+        ],
+        "targets": [
+          {
+            "target_nmse": 0.1,
+            "met": 90,
+            "unmet": 110,
+            "silent": 0,
+            "median_successful_support": 3566.5
+          },
+          {
+            "target_nmse": 0.01,
+            "met": 0,
+            "unmet": 200,
+            "silent": 0,
+            "median_successful_support": null
+          },
+          {
+            "target_nmse": 0.001,
+            "met": 0,
+            "unmet": 200,
+            "silent": 0,
+            "median_successful_support": null
+          }
+        ],
+        "coverage_sha256": "4c27d41d9a728448253672a6dedb74879a362d4daa2c4e4816ad410b85118353"
+      }
+    },
+    {
+      "model": "D-NL",
+      "description": "dense-trained nonlinear control",
+      "run_name": "librispeech_sparse_autoencoder_dense_10h_20261027T114358039621Z_seed0",
+      "train_name": "librispeech_sparse_autoencoder_dense_10h",
+      "training_status": {
+        "status": "complete",
+        "total_steps": 20000,
+        "completed": true,
+        "step": 20000,
+        "best_validation": 0.41564629748463633,
+        "seconds": 1158.5621862998232,
+        "peak_gpu_bytes": 204785152
+      },
+      "training_statistics": {
+        "train_power": 0.003196885499251754,
+        "parameters": 1002369,
+        "trainable_parameters": 1002369,
+        "dictionary_values": null,
+        "training_method": "gradient",
+        "manifest_audit_passed": true,
+        "resume_note": "Model/optimizer RNG is restored; random crop/sampler position restarts at resume."
+      },
+      "environment": {
+        "python": "3.11.0",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "torch": "2.8.0+cu128",
+        "cuda": "12.8",
+        "cuda_available": true,
+        "numpy": "2.2.6",
+        "scipy": "1.13.1",
+        "soundfile": "0.13.1",
+        "librosa": "0.11.0",
+        "scikit-learn": "1.9.0",
+        "PyYAML": "6.0.3",
+        "matplotlib": "3.11.1",
+        "pytest": "9.1.1",
+        "pesq": "0.0.4",
+        "pystoi": "0.4.1",
+        "gpu": "NVIDIA RTX 2000 Ada Generation"
+      },
+      "training_source_combined_sha256": "adc84c82c1ec9bb1489eea8fede0d64ced6236e85100bd4ff7747547759acc07",
+      "checkpoint_sha256": "451c534aac9aa94d15f7a5ed78a6978057b9b6c636d550656c06422e78683ba4",
+      "checkpoint_step": 20000,
+      "validation_manifest_sha256": "2c720e827733d0681694bd0a7e2a8058ce3ed0e6b54a902251e773719a68d62c",
+      "validation_coverage_sha256": "4c27d41d9a728448253672a6dedb74879a362d4daa2c4e4816ad410b85118353",
+      "evaluation_summary_sha256": {
+        "fraction_0.0": "4638df8c16fa80b9f479724c35c96e6d4dd1da623dd49f1058fd2640dbd82f14",
+        "fraction_0.01": "89c240437c203c3e0645fb5c00eeae9b0afaad9f4f0274c204d1b38bc1ba615b",
+        "fraction_0.02": "6ed57edc7cb945c65eea7d8b9bf1a78ee26dc468324701a23fd5ce9ec8988db2",
+        "fraction_0.05": "743310a7066a0b1b6b9e0fd74723f0a6cf26b3101d28af0c46029392b0ff5eba",
+        "fraction_0.1": "34bae68a7e54492f20da513ea5ed9903c3b3308fa665ab43ed95092bd63d767c",
+        "fraction_0.25": "96681bc4ed4c63b06bb803e8beb4d73b67dcd0ecbdedd5cecdff3f51536e1775",
+        "fraction_0.5": "55876ea2d977191852461147e0b39b13df872c0081d7ae502ea6b8eb38588a14",
+        "fraction_1.0": "b5a5bd0edefd2505a4f4a7746eedc5fc44b06aeee288b030b46adc0c621f4f32"
+      },
+      "speech_metric_statuses": {
+        "pesq_wb_status": {
+          "ok": 200
+        },
+        "stoi_status": {
+          "ok": 200
+        },
+        "visqol_status": {
+          "not integrated; no score computed": 200
+        }
+      },
+      "support_search": {
+        "scope": "smallest actual support among the evaluated codes; not a certified minimum",
+        "settings": [
+          "fraction=0.0",
+          "fraction=0.01",
+          "fraction=0.02",
+          "fraction=0.05",
+          "fraction=0.1",
+          "fraction=0.25",
+          "fraction=0.5",
+          "fraction=1.0"
+        ],
+        "targets": [
+          {
+            "target_nmse": 0.1,
+            "met": 139,
+            "unmet": 61,
+            "silent": 0,
+            "median_successful_support": 39296
+          },
+          {
+            "target_nmse": 0.01,
+            "met": 2,
+            "unmet": 198,
+            "silent": 0,
+            "median_successful_support": 64000.0
+          },
+          {
+            "target_nmse": 0.001,
+            "met": 0,
+            "unmet": 200,
+            "silent": 0,
+            "median_successful_support": null
+          }
+        ],
+        "coverage_sha256": "4c27d41d9a728448253672a6dedb74879a362d4daa2c4e4816ad410b85118353"
+      }
+    },
+    {
+      "model": "S-AF",
+      "description": "sparse affine control",
+      "run_name": "librispeech_sparse_autoencoder_affine_10h_20261027T114554258463Z_seed0",
+      "train_name": "librispeech_sparse_autoencoder_affine_10h",
+      "training_status": {
+        "status": "complete",
+        "total_steps": 20000,
+        "completed": true,
+        "step": 20000,
+        "best_validation": 0.10362520710182642,
+        "seconds": 1158.952187599847,
+        "peak_gpu_bytes": 136675328
+      },
+      "training_statistics": {
+        "train_power": 0.003196885499251754,
+        "parameters": 1002369,
+        "trainable_parameters": 1002369,
+        "dictionary_values": null,
+        "training_method": "gradient",
+        "manifest_audit_passed": true,
+        "resume_note": "Model/optimizer RNG is restored; random crop/sampler position restarts at resume."
+      },
+      "environment": {
+        "python": "3.11.0",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "torch": "2.8.0+cu128",
+        "cuda": "12.8",
+        "cuda_available": true,
+        "numpy": "2.2.6",
+        "scipy": "1.13.1",
+        "soundfile": "0.13.1",
+        "librosa": "0.11.0",
+        "scikit-learn": "1.9.0",
+        "PyYAML": "6.0.3",
+        "matplotlib": "3.11.1",
+        "pytest": "9.1.1",
+        "pesq": "0.0.4",
+        "pystoi": "0.4.1",
+        "gpu": "NVIDIA RTX 2000 Ada Generation"
+      },
+      "training_source_combined_sha256": "adc84c82c1ec9bb1489eea8fede0d64ced6236e85100bd4ff7747547759acc07",
+      "checkpoint_sha256": "19019fb2f65f7e36947adc7ebd33c266679bee1e013794e4fe7e260625b600cf",
+      "checkpoint_step": 20000,
+      "validation_manifest_sha256": "2c720e827733d0681694bd0a7e2a8058ce3ed0e6b54a902251e773719a68d62c",
+      "validation_coverage_sha256": "4c27d41d9a728448253672a6dedb74879a362d4daa2c4e4816ad410b85118353",
+      "evaluation_summary_sha256": {
+        "fraction_0.0": "15f48527f398671c666a549315e68bc8075790568d4d30d200c54af880025db3",
+        "fraction_0.01": "6e15c223c57fc9b87887226826423e876ddec4b687a59bfc99980256782d2e23",
+        "fraction_0.02": "b351cedc0c865b4d03661abb97115c13b0912eadb0021e82e42a55540f5b9448",
+        "fraction_0.05": "eecbac7561d2ee1e1854a4e46819123fadbb1bbc27a693957b68d2faa93978bf",
+        "fraction_0.1": "10b4308054e217a01ec6d4cb0e3e227b42ffa8a112141eff3e4d0f3292150139",
+        "fraction_0.25": "f45458352dfffb5ce31bc4f4edc2ddd29f6fa856b7da550c8e891a8f301d621d",
+        "fraction_0.5": "506c2dab356ba60f7d98c4655d2657d57c8e218b1250edabdcd3fff7c869b963",
+        "fraction_1.0": "9fc451c2a094be8dfce29d5c88fc9091b6e73b202965cc1ddadcc2a22ada4a7e"
+      },
+      "speech_metric_statuses": {
+        "pesq_wb_status": {
+          "ok": 200
+        },
+        "stoi_status": {
+          "ok": 200
+        },
+        "visqol_status": {
+          "not integrated; no score computed": 200
+        }
+      },
+      "support_search": {
+        "scope": "smallest actual support among the evaluated codes; not a certified minimum",
+        "settings": [
+          "fraction=0.0",
+          "fraction=0.01",
+          "fraction=0.02",
+          "fraction=0.05",
+          "fraction=0.1",
+          "fraction=0.25",
+          "fraction=0.5",
+          "fraction=1.0"
+        ],
+        "targets": [
+          {
+            "target_nmse": 0.1,
+            "met": 161,
+            "unmet": 39,
+            "silent": 0,
+            "median_successful_support": 2438
+          },
+          {
+            "target_nmse": 0.01,
+            "met": 18,
+            "unmet": 182,
+            "silent": 0,
+            "median_successful_support": 10227.5
+          },
+          {
+            "target_nmse": 0.001,
+            "met": 0,
+            "unmet": 200,
+            "silent": 0,
+            "median_successful_support": null
+          }
+        ],
+        "coverage_sha256": "4c27d41d9a728448253672a6dedb74879a362d4daa2c4e4816ad410b85118353"
+      }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+extends: [data_librispeech_cached.yaml, model_sparse_autoencoder.yaml]
+train:
+  name: librispeech_sparse_autoencoder_10h
+  stage: main
+  steps: 20000
+  batch_size: 8
+  val_examples: 200
+  val_interval: 500
+  checkpoint_interval: 500
+  log_interval: 20
+  workers: 0
+  warmup_fraction: 0.0
+evaluation:
+  speech_metrics: true
+  analysis_examples: 8
+  audio_examples: 4

@@ -1,0 +1,8 @@
+extends: [data_synthetic.yaml, model_sparse_autoencoder.yaml]
+train:
+  name: synthetic_sparse_autoencoder
+  stage: screen
+  steps: 2000
+  val_examples: 32
+  val_interval: 500
+  warmup_fraction: 0.0

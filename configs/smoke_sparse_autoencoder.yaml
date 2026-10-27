@@ -1,0 +1,12 @@
+extends: [smoke_orthogonal.yaml, model_sparse_autoencoder.yaml]
+data:
+  manifest_dir: data/manifests/smoke_sparse_autoencoder
+model:
+  channels: [4, 8, 8, 8]
+  latent_width: 32
+train:
+  name: smoke_sparse_autoencoder
+  spectral_weight: 0.0
+  warmup_fraction: 0.0
+evaluation:
+  keep_fractions: [0.0, 0.1, 1.0]

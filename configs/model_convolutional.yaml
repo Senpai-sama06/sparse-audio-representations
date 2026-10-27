@@ -1,0 +1,8 @@
+model:
+  kind: convolutional
+  conv_kernels: 64
+  conv_length: 512
+  conv_hop: 64
+  threshold: 0.01
+train:
+  learning_rate: 0.001

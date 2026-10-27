@@ -1,0 +1,3 @@
+base: librispeech_autoencoder_10h.yaml
+axis: model.latent_width
+values: [32, 64, 128, 256]

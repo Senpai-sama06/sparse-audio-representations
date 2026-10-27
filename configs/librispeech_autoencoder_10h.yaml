@@ -1,0 +1,6 @@
+extends: [data_librispeech.yaml, model_autoencoder.yaml]
+data:
+  train_manifest: train_10h.jsonl
+train:
+  name: librispeech_autoencoder_10h
+  steps: 20000

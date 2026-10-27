@@ -1,0 +1,6 @@
+extends: [data_vctk_fullband.yaml, model_autoencoder.yaml]
+train:
+  name: vctk_autoencoder_48k
+  steps: 20000
+  batch_size: 2
+  accumulation: 4

@@ -1,0 +1,17 @@
+data:
+  source: librispeech
+  root: ~/.cache/kagglehub/datasets/pypiahmad/librispeech-asr-corpus/versions/1
+  manifest_dir: data/manifests/librispeech_cached
+  librispeech_train_split: train-clean-360
+  train_manifest: train_10h.jsonl
+  val_manifest: validation.jsonl
+  test_manifests:
+    clean: test_clean.jsonl
+  expected_speakers:
+    train: 921
+    validation: 40
+    test:clean: 40
+  sample_rate: 16000
+  crop_seconds: 2.0
+  subsets_hours: [1, 10]
+  hash_audio: true

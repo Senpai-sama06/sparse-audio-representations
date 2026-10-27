@@ -1,0 +1,4 @@
+extends: [data_synthetic.yaml, model_autoencoder.yaml]
+train:
+  name: synthetic_autoencoder
+  steps: 2000

@@ -1,0 +1,5 @@
+extends: synthetic_autoencoder.yaml
+train:
+  name: synthetic_autoencoder_functional
+  group_weight: 0.001
+  functional_weight: 0.001

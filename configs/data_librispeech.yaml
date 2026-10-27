@@ -1,0 +1,17 @@
+data:
+  source: librispeech
+  root: data/raw/librispeech
+  manifest_dir: data/manifests/librispeech
+  train_manifest: train.jsonl
+  val_manifest: validation.jsonl
+  test_manifests:
+    clean: test_clean.jsonl
+    other: test_other.jsonl
+  expected_speakers:
+    train: 251
+    validation: 40
+    test:clean: 40
+    test:other: 33
+  sample_rate: 16000
+  hash_audio: true
+  subsets_hours: [1, 10]

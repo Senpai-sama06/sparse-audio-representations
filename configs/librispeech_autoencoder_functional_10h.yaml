@@ -1,0 +1,7 @@
+extends: librispeech_autoencoder_10h.yaml
+train:
+  name: librispeech_autoencoder_functional_10h
+  group_weight: 0.001
+  functional_weight: 0.001
+  functional_interval: 4
+  functional_probes: 4

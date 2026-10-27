@@ -1,0 +1,4 @@
+extends: [data_synthetic.yaml, model_overcomplete.yaml]
+train:
+  name: synthetic_overcomplete
+  steps: 2000

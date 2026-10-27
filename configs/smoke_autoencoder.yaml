@@ -1,0 +1,14 @@
+extends: smoke_orthogonal.yaml
+model:
+  kind: autoencoder
+  channels: [8, 16, 16, 16]
+  latent_width: 16
+train:
+  name: smoke_autoencoder
+  steps: 8
+  learning_rate: 0.0002
+  group_weight: 0.001
+  functional_weight: 0.001
+  warmup_fraction: 0.0
+  functional_interval: 2
+  functional_probes: 2

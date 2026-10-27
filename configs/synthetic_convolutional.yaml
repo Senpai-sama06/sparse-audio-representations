@@ -1,0 +1,4 @@
+extends: [data_synthetic.yaml, model_convolutional.yaml]
+train:
+  name: synthetic_convolutional
+  steps: 2000

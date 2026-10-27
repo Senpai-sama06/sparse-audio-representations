@@ -1,0 +1,23 @@
+extends: synthetic_block_orthogonal.yaml
+data:
+  manifest_dir: data/manifests/smoke_block_orthogonal
+  train_count: 32
+  validation_count: 4
+  test_count: 4
+  synthetic_seconds: 0.064
+  crop_seconds: 0.064
+model:
+  frame_length: 64
+  hop: 64
+train:
+  name: smoke_block_orthogonal
+  stage: smoke
+  steps: 8
+  batch_size: 4
+  val_interval: 4
+  val_examples: 2
+  log_interval: 1
+evaluation:
+  analysis_examples: 2
+  audio_examples: 2
+  bootstrap_samples: 20

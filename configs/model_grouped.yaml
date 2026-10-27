@@ -1,0 +1,6 @@
+model:
+  kind: grouped
+  threshold: 0.01
+  group_threshold: 0.01
+train:
+  learning_rate: 0.001

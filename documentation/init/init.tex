@@ -1,0 +1,507 @@
+
+\documentclass{article}
+
+\usepackage[margin=0.75in]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{hyperref}
+
+\title{Structured Representation Learning for Low-Resource Speech Coding}
+\author{Ramakrishna Sen}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Problem Statement}
+
+We investigate whether audio admits a compact, structured,
+and reconstructible representation whose constituent information
+can be separated, organized, related, and efficiently encoded.
+
+Unlike conventional neural codecs, which primarily optimize a
+latent representation for rate--distortion performance, our
+objective is to investigate the structure of the representation
+itself. Specifically, we seek to determine what constituent
+information is required to describe speech, how this information
+can be organized into distinct representations, and how these
+representations can jointly reconstruct the original signal.
+
+We propose representing speech through a finite collection of
+\emph{feature slots}. Each slot acts as a container for a
+particular class of information extracted from the input.
+The contents and relationships of these slots collectively
+constitute the representation of the audio.
+
+Importantly, the constituent features need not be statistically
+independent or mutually orthogonal. Instead, the representation
+should minimize unnecessary redundancy while retaining
+sufficient information for reconstruction.
+
+The long-term objective is to discover these constituent
+features automatically. However, our initial investigation
+uses known acoustic properties of human speech to establish
+the feasibility of the proposed representation.
+
+\section{Feature-Based Speech Representation}
+
+Consider an audio signal divided into $T$ frames,
+
+\begin{equation}
+    X = \{\mathbf{x}_1,\mathbf{x}_2,\ldots,\mathbf{x}_T\},
+    \qquad \mathbf{x}_t\in\mathbb{R}^{N}.
+\end{equation}
+
+We introduce $K$ feature slots,
+
+\begin{equation}
+    \mathcal{C}
+    =
+    \{\mathcal{C}_1,\mathcal{C}_2,\ldots,\mathcal{C}_K\},
+\end{equation}
+
+where each slot contains information extracted from the
+audio through a corresponding analysis operator.
+
+For the initial supervised formulation, we define
+
+\begin{equation}
+    \boxed{
+    \mathbf{z}_{k,t}
+    =
+    E_k(\mathbf{x}_{\leq t};\theta_k)
+    }
+\end{equation}
+
+where $E_k$ is a learned feature extractor,
+$\theta_k$ denotes its parameters, and
+$\mathbf{z}_{k,t}\in\mathcal{Z}_k$ is the representation
+associated with slot $k$ at time $t$.
+
+Each slot therefore contains a time-indexed representation,
+
+\begin{equation}
+    \mathcal{C}_k(X)
+    =
+    \{\mathbf{z}_{k,1},\ldots,\mathbf{z}_{k,T}\}.
+\end{equation}
+
+The complete structured representation is
+
+\begin{equation}
+    \boxed{
+    \mathcal{Z}(X)
+    =
+    \{\mathcal{C}_1(X),\ldots,\mathcal{C}_K(X)\}.
+    }
+\end{equation}
+
+The individual latent spaces $\mathcal{Z}_k$ need not have
+the same dimensionality or represent the same type of
+acoustic information.
+
+\subsection{Initial Feature-Slot Definitions}
+
+For the first experiment, we consider the following
+known acoustic properties of human speech:
+
+\begin{enumerate}
+    \item \textbf{Pitch and voicing:}
+    Fundamental-frequency contours and the presence
+    or absence of periodic excitation.
+
+    \item \textbf{Spectral envelope:}
+    Slowly varying spectral characteristics associated
+    with vocal-tract filtering and formant structure.
+
+    \item \textbf{Aperiodicity:}
+    Noise-like excitation components and departures
+    from harmonic periodicity.
+
+    \item \textbf{Transient structure:}
+    Rapidly varying acoustic events associated with
+    articulation, consonant bursts, and temporal changes.
+\end{enumerate}
+
+These are not assumed to be independent components.
+For example, pitch and voicing are closely related,
+while spectral-envelope characteristics contribute to
+both phonetic identity and perceived timbre.
+
+An additional residual representation may be introduced
+to capture information inadequately represented by the
+initial feature slots.
+
+The purpose of this initial selection is not to claim
+that these properties constitute an optimal decomposition
+of speech, but to establish a measurable starting point.
+
+\section{Feature Extraction and Reconstruction}
+
+Each feature extractor is initially trained to estimate
+its corresponding acoustic parameters.
+
+Given reference feature representations
+$\mathbf{z}_{k,t}^{*}$ obtained from established
+signal-processing methods, a preliminary training
+objective is
+
+\begin{equation}
+    \mathcal{L}_{\mathrm{feat}}
+    =
+    \sum_{k=1}^{K}
+    \alpha_k
+    \mathbb{E}_t
+    \left[
+    d_k\left(
+    E_k(\mathbf{x}_{\leq t}),
+    \mathbf{z}_{k,t}^{*}
+    \right)
+    \right],
+\end{equation}
+
+where $d_k$ is an appropriate feature-specific
+distortion measure.
+
+The extracted representations are combined using a
+shared synthesis operator $S$:
+
+\begin{equation}
+    \boxed{
+    \hat{\mathbf{x}}_t
+    =
+    S(\mathbf{z}_{1,\leq t},
+      \ldots,
+      \mathbf{z}_{K,\leq t}).
+    }
+\end{equation}
+
+The first objective is to establish whether the
+selected representations contain sufficient information
+for reconstructing speech before introducing quantization.
+
+This can initially be evaluated using classical
+analysis--synthesis systems, such as WORLD
+\cite{world}, which represents speech through
+fundamental frequency, spectral envelope,
+and aperiodicity.
+
+Once individual extraction performance has been
+established, the extractors and synthesizer may be
+jointly fine-tuned using a reconstruction objective,
+
+\begin{equation}
+    \mathcal{L}_{\mathrm{rec}}
+    =
+    \mathbb{E}
+    \left[
+    D\left(
+    \mathbf{x},
+    \hat{\mathbf{x}}
+    \right)
+    \right],
+\end{equation}
+
+where $D$ may combine waveform and perceptually
+motivated spectral distortion measures.
+
+This distinction is important: accurate estimation
+of individual acoustic parameters does not necessarily
+guarantee accurate joint waveform reconstruction.
+
+\section{Quantization and Transmission}
+
+Having established a reconstructible representation,
+we investigate how efficiently its constituent
+information can be transmitted.
+
+Each feature representation is quantized independently
+in the initial experiment:
+
+\begin{equation}
+    \tilde{\mathbf{z}}_{k,t}
+    =
+    Q_k(\mathbf{z}_{k,t}).
+\end{equation}
+
+The decoder reconstructs the audio using only the
+received quantized representations:
+
+\begin{equation}
+    \boxed{
+    \hat{\mathbf{x}}_t
+    =
+    S(\tilde{\mathbf{z}}_{1,\leq t},
+      \ldots,
+      \tilde{\mathbf{z}}_{K,\leq t}).
+    }
+\end{equation}
+
+Because the initial slots have fixed, predefined
+meanings, their identities need not be transmitted
+explicitly. The bitstream instead contains the
+quantized feature parameters and any necessary
+timing, scaling, or activity information.
+
+For a fixed-rate codec, the total transmitted bits
+over a coding interval must satisfy
+
+\begin{equation}
+    \boxed{
+    B_{\mathrm{total}}
+    =
+    \sum_{k=1}^{K} B_k
+    +
+    B_{\mathrm{overhead}}
+    \leq B_{\max}.
+    }
+\end{equation}
+
+We therefore investigate the constrained
+rate--distortion problem
+
+\begin{equation}
+    \boxed{
+    \begin{aligned}
+    \min_{\{Q_k\},S}\quad&
+    \mathbb{E}[D(\mathbf{x},\hat{\mathbf{x}})]
+    \\
+    \text{subject to}\quad&
+    B_{\mathrm{total}}\leq B_{\max}.
+    \end{aligned}
+    }
+\end{equation}
+
+Different slots may require different quantization
+strategies and bit allocations. The objective is
+to establish the marginal reconstruction benefit
+of allocating bits to each feature family.
+
+If the initial feature representation is insufficient,
+an additional learned residual slot may be introduced
+to encode information missing from the base reconstruction.
+
+\section{Extension to Learned Slot Discovery}
+
+The preceding formulation assumes that the contents
+of each slot are known beforehand.
+
+Our longer-term objective is to remove this assumption
+and allow the architecture to discover useful
+constituent representations automatically.
+
+We propose first extracting a collection of learned
+feature tokens from each audio frame,
+
+\begin{equation}
+    \mathcal{H}_t
+    =
+    \{\mathbf{h}_{t,1},\ldots,\mathbf{h}_{t,L}\}.
+\end{equation}
+
+A learned assignment mechanism then determines
+the association between each token and the available
+slots:
+
+\begin{equation}
+    \boxed{
+    a_{t,n,k}
+    =
+    P(\mathcal{C}_k\mid\mathbf{h}_{t,n}),
+    \qquad
+    \sum_{k=1}^{K}a_{t,n,k}=1.
+    }
+\end{equation}
+
+The representation of slot $k$ is obtained by
+aggregating its assigned information,
+
+\begin{equation}
+    \mathbf{z}_{k,t}
+    =
+    \operatorname{Agg}_k
+    \left(
+    \{a_{t,n,k}\mathbf{h}_{t,n}\}_{n=1}^{L}
+    \right).
+\end{equation}
+
+This formulation is related to slot-based
+representation learning, including Slot Attention
+\cite{slotattention}, but differs in its intended
+application: rather than identifying discrete
+objects or sound sources, we seek constituent
+acoustic information suitable for reconstruction
+and efficient coding.
+
+Learned slot assignments may require additional
+transmission information. Their coding cost must
+therefore be included when evaluating the representation.
+
+\section{Functional Separation and Statistical Dependencies}
+
+A major challenge is preventing different slots
+from learning redundant representations.
+
+However, conventional orthogonality between
+dictionary matrices,
+
+\begin{equation}
+    \mathbf{D}_i^\top\mathbf{D}_j=\mathbf{0},
+\end{equation}
+
+may be unnecessarily restrictive because
+different speech properties are neither physically
+nor statistically independent.
+
+Simon et al.~\cite{simon2026} propose an alternative
+principle based on the functional effects of
+latent variables on a generative mapping.
+
+For a differentiable synthesis function
+$\hat{\mathbf{x}}=S(\mathbf{z})$, define
+
+\begin{equation}
+    \mathbf{J}_{S,k}
+    =
+    \frac{\partial S}{\partial\mathbf{z}_k}.
+\end{equation}
+
+A possible group-wise functional orthogonality
+regularizer is
+
+\begin{equation}
+    \boxed{
+    \mathcal{L}_{\mathrm{func}}
+    =
+    \sum_{i<j}
+    \left\|
+    \mathbf{J}_{S,i}^{\top}
+    \mathbf{J}_{S,j}
+    \right\|_F^2.
+    }
+\end{equation}
+
+This encourages changes in different latent groups
+to produce complementary local changes in the
+reconstructed waveform.
+
+It is an adaptation of the functional-orthogonality
+principle, not a direct application of Simon et al.'s
+identifiability theorem, which requires additional
+assumptions on the generative mapping and latent domain.
+
+Functional separation also does not imply statistical
+independence. Consequently, dependencies between
+slot representations may still be exploited for coding.
+
+For example, a predictive model could estimate
+
+\begin{equation}
+    \hat{\mathbf{z}}_{j,t}
+    =
+    g_j\left(
+    \{\tilde{\mathbf{z}}_{i,\leq t}:
+    i\in\operatorname{Pa}(j)\}
+    \right),
+\end{equation}
+
+where the parent representations are already available
+to the decoder.
+
+Only the prediction innovation would then be encoded:
+
+\begin{equation}
+    \boxed{
+    \begin{aligned}
+    \mathbf{e}_{j,t}
+    &=
+    \mathbf{z}_{j,t}
+    -
+    \hat{\mathbf{z}}_{j,t},
+    \\
+    \tilde{\mathbf{z}}_{j,t}
+    &=
+    \hat{\mathbf{z}}_{j,t}
+    +
+    Q_j(\mathbf{e}_{j,t}).
+    \end{aligned}
+    }
+\end{equation}
+
+Such dependencies may eventually be represented
+using a sparse directed graph. Graph learning and
+functional orthogonality are therefore considered
+subsequent extensions rather than prerequisites
+for the initial representation experiment.
+
+\section{Proposed Research Methodology}
+
+The investigation is organized into four stages.
+
+\begin{enumerate}
+    \item \textbf{Known-property representation:}
+    Extract pitch, voicing, spectral-envelope,
+    and aperiodicity information using established
+    analytical methods. Evaluate reconstruction
+    before quantization.
+
+    \item \textbf{Learned feature extraction and coding:}
+    Train lightweight feature-specific networks
+    and a shared synthesizer. Quantize the
+    representations and evaluate reconstruction
+    at matched bitrates and computational costs.
+
+    \item \textbf{Unsupervised slot discovery:}
+    Replace predefined feature assignments with
+    a learned routing mechanism. Investigate
+    representation sufficiency, slot utilization,
+    stability, and redundancy.
+
+    \item \textbf{Functional and statistical structure:}
+    Evaluate functional orthogonality constraints
+    and subsequently investigate predictive
+    relationships between slots for reducing
+    transmitted information.
+\end{enumerate}
+
+Throughout these experiments, three properties
+remain central: reconstruction fidelity,
+representation economy, and computational efficiency.
+
+The ultimate research question is whether a
+structured representation of audio, built from
+learned constituent information and its relationships,
+can provide a better rate--distortion--complexity
+tradeoff than an unconstrained latent representation.
+
+The objective is not to assume that disentanglement
+or orthogonality improves compression, but to
+establish whether organizing audio information
+into such representations provides a measurable
+advantage.
+
+\begin{thebibliography}{9}
+
+\bibitem{slotattention}
+F. Locatello et al.,
+``Object-Centric Learning with Slot Attention,''
+\emph{Advances in Neural Information Processing Systems},
+2020.
+
+\bibitem{world}
+M. Morise, F. Yokomori, and K. Ozawa,
+``WORLD: A Vocoder-Based High-Quality Speech Synthesis
+System for Real-Time Applications,''
+\emph{IEICE Transactions on Information and Systems},
+2016.
+
+\bibitem{simon2026}
+M. C. Simon, P. Frossard, and C. De Vleeschouwer,
+``Unsupervised Disentanglement Without Compromises:
+How Functional Orthogonality Enforces Identifiability,''
+\emph{Proceedings of the 43rd International Conference
+on Machine Learning}, 2026.
+
+\end{thebibliography}
+
+\end{document}

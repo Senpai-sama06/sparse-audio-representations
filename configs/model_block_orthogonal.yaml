@@ -1,0 +1,7 @@
+model:
+  kind: block_orthogonal
+  frame_length: 512
+  hop: 512
+  groups: 4
+  initialization: dct
+  keep_fraction: 0.125

@@ -1,0 +1,7 @@
+model:
+  kind: overcomplete
+  atoms: 1024
+  threshold: 0.01
+  inference_steps: 200
+train:
+  learning_rate: 0.001

@@ -1,0 +1,8 @@
+model:
+  kind: autoencoder
+  latent_width: 128
+  groups: 4
+  channels: [32, 64, 128, 128]
+train:
+  learning_rate: 0.0002
+  weight_decay: 0.0001

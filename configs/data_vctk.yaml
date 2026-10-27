@@ -1,0 +1,9 @@
+data:
+  source: vctk
+  root: data/raw/vctk
+  manifest_dir: data/manifests/vctk
+  test_manifests:
+    external: external.jsonl
+  sample_rate: 16000
+  vctk_per_speaker: 10
+  hash_audio: true

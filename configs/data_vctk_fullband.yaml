@@ -1,0 +1,11 @@
+data:
+  source: vctk
+  root: data/raw/vctk
+  manifest_dir: data/manifests/vctk_fullband
+  vctk_mode: speaker_split
+  sample_rate: 48000
+  train_manifest: train.jsonl
+  val_manifest: validation.jsonl
+  test_manifests:
+    heldout: test.jsonl
+  hash_audio: true

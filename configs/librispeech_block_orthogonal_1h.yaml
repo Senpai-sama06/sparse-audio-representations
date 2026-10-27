@@ -1,0 +1,11 @@
+extends: [data_librispeech.yaml, model_block_orthogonal.yaml]
+data:
+  train_manifest: train_1h.jsonl
+  crop_seconds: 2.048
+train:
+  name: librispeech_block_orthogonal_1h
+  stage: screen
+  steps: 2000
+  batch_size: 16
+  val_interval: 100
+  val_examples: 64

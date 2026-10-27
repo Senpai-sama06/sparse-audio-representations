@@ -1,0 +1,4 @@
+extends: [data_synthetic.yaml, model_random.yaml]
+train:
+  name: synthetic_random
+  steps: 0

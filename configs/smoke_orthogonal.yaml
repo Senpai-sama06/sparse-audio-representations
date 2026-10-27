@@ -1,0 +1,24 @@
+extends: [data_synthetic.yaml, model_orthogonal.yaml]
+data:
+  manifest_dir: data/manifests/smoke
+  train_count: 32
+  validation_count: 4
+  test_count: 4
+  synthetic_seconds: 0.128
+  crop_seconds: 0.128
+model:
+  frame_length: 64
+  hop: 16
+train:
+  name: smoke_orthogonal
+  stage: smoke
+  steps: 8
+  batch_size: 4
+  val_interval: 4
+  val_examples: 2
+  log_interval: 1
+  checkpoint_interval: 4
+evaluation:
+  bootstrap_samples: 100
+  analysis_examples: 4
+  audio_examples: 2

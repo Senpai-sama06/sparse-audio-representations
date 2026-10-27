@@ -1,0 +1,7 @@
+extends: [data_librispeech.yaml, model_orthogonal.yaml]
+data:
+  train_manifest: train_1h.jsonl
+train:
+  name: librispeech_orthogonal_1h
+  stage: screen
+  steps: 2000

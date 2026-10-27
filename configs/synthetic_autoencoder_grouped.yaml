@@ -1,0 +1,4 @@
+extends: synthetic_autoencoder.yaml
+train:
+  name: synthetic_autoencoder_grouped
+  group_weight: 0.001

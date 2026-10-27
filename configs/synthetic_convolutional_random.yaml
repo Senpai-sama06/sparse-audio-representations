@@ -1,0 +1,6 @@
+extends: synthetic_convolutional.yaml
+model:
+  trainable_kernels: false
+train:
+  name: synthetic_convolutional_random
+  steps: 0

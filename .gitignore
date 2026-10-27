@@ -1,0 +1,41 @@
+# Python environments and generated package files
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+build/
+dist/
+
+# Local datasets, path-bearing manifests, and experiment products
+/data/
+/runs/
+/tmp/
+/output/
+
+# Credentials and machine-local editor settings
+.env
+.env.*
+!.env.example
+kaggle.json
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# LaTeX intermediates; source, references, figures, and PDFs are committed
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.lof
+*.lot

@@ -1,0 +1,3 @@
+base: librispeech_autoencoder_10h.yaml
+axis: train.seed
+values: [0, 1, 2]

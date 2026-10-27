@@ -1,0 +1,6 @@
+extends: librispeech_orthogonal_10h.yaml
+data:
+  train_manifest: train.jsonl
+train:
+  name: librispeech_orthogonal_100h
+  stage: confirmation

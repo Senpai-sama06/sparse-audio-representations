@@ -1,0 +1,4 @@
+extends: [data_synthetic.yaml, model_pca.yaml]
+train:
+  name: synthetic_pca
+  steps: 0

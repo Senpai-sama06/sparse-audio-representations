@@ -1,0 +1,5 @@
+extends: librispeech_sparse_autoencoder_10h.yaml
+train:
+  name: librispeech_sparse_autoencoder_dense_10h
+  keep_fractions: [1.0]
+  validation_keep_fractions: [0.01, 0.02, 0.05, 0.1, 0.25, 0.5, 1.0]

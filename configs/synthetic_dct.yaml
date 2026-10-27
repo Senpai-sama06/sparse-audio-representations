@@ -1,0 +1,5 @@
+extends: [data_synthetic.yaml, model_dct.yaml]
+train:
+  name: synthetic_dct
+  stage: reference
+  steps: 0

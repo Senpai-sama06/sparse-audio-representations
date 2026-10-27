@@ -1,0 +1,5 @@
+extends: librispeech_sparse_autoencoder_10h.yaml
+model:
+  activation: identity
+train:
+  name: librispeech_sparse_autoencoder_affine_10h

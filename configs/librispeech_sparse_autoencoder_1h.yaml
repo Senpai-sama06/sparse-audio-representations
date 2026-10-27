@@ -1,0 +1,9 @@
+extends: librispeech_sparse_autoencoder_10h.yaml
+data:
+  train_manifest: train_1h.jsonl
+train:
+  name: librispeech_sparse_autoencoder_1h
+  stage: screen
+  steps: 2000
+  val_examples: 40
+  val_interval: 500

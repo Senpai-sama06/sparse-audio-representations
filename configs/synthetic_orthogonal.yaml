@@ -1,0 +1,4 @@
+extends: [data_synthetic.yaml, model_orthogonal.yaml]
+train:
+  name: synthetic_orthogonal
+  steps: 2000
