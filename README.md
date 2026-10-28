@@ -21,6 +21,9 @@ The [S-AF channel characterization](documentation/saf_channel_analysis.md) ranks
 all 256 channels at 10% support and analyzes the top ten: coefficient distributions,
 bias-corrected synthesis spectra, voiced/unvoiced associations, ablations, and
 individual-channel spectrograms.
+The [controlled pitch intervention](documentation/saf_pitch_analysis.md) measures
+all 256 frozen S-AF channels before and after top-k, with fixed-filter predictions,
+independent manipulation checks, channel rankings, and unvoiced/noise controls.
 The [datasets and study protocol](documentation/experiments.md) and
 [architecture comparison](documentation/implementation.md) record alternatives;
 existing models remain earlier baselines for exploration.

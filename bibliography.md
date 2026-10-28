@@ -51,3 +51,5 @@ SDR – half-baked or well done? — Jonathan Le Roux, Scott Wisdom, Hakan Erdog
 An Algorithm for Intelligibility Prediction of Time–Frequency Weighted Noisy Speech — Cees H. Taal, Richard C. Hendriks, Richard Heusdens, Jesper Jensen
 PYIN: A fundamental frequency estimator using probabilistic threshold distributions — Matthias Mauch, Simon Dixon
 Joint Robust Voicing Detection and Pitch Estimation Based on Residual Harmonics — Thomas Drugman, Abeer Alwan
+WORLD: A Vocoder-Based High-Quality Speech Synthesis System for Real-Time Applications — Masanori Morise, Fumiya Yokomori, Kenji Ozawa
+CheapTrick, a spectral envelope estimator for high-quality speech synthesis — Masanori Morise
