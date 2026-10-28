@@ -24,6 +24,9 @@ individual-channel spectrograms.
 The [controlled pitch intervention](documentation/saf_pitch_analysis.md) measures
 all 256 frozen S-AF channels before and after top-k, with fixed-filter predictions,
 independent manipulation checks, channel rankings, and unvoiced/noise controls.
+The [module audit](documentation/saf_module_analysis.md) follows an example through
+every block and lays out stage probes, reconstruction oracles and interventions
+for understanding the architecture.
 The [datasets and study protocol](documentation/experiments.md) and
 [architecture comparison](documentation/implementation.md) record alternatives;
 existing models remain earlier baselines for exploration.
