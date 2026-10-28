@@ -11,6 +11,12 @@ documents the exact architecture, training objective, citations, and measured
 development results. Its [LaTeX source](documentation/sparse_autoencoder_models.tex),
 [references](documentation/sparse_autoencoder_models.bib), and
 [numeric results](documentation/sparse_autoencoder_results.csv) are included.
+The [full held-out test comparison](documentation/sparse_autoencoder_test_results.md)
+covers all 2,620 test-clean recordings from 40 unseen speakers, including quality
+curves, matched-error support comparisons, and paired speaker uncertainty. The
+architecture audit identifies hidden compression to 16,000 values before the
+32,000-slot latent projection for a two-second input; full-budget reconstruction
+is therefore not a lossless reference.
 The [datasets and study protocol](documentation/experiments.md) and
 [architecture comparison](documentation/implementation.md) record alternatives;
 existing models remain earlier baselines for exploration.
@@ -143,6 +149,25 @@ Original training source and checkpoint hashes are preserved in
 `documentation/sparse_autoencoder_runs.json`; code has subsequently received
 documentation and portability fixes. `data/`, `runs/`, environments, and LaTeX
 intermediates are ignored; source files and PDFs are committed.
+
+## Evaluate the three frozen speech models
+
+Evaluate each saved run on the full held-out set with:
+
+```powershell
+python run.py evaluate --run runs/YOUR_RUN --split clean --metric-workers 4
+```
+
+This uses the saved evaluation budgets and best development-selected checkpoint.
+`--metric-workers` parallelizes optional PESQ/STOI on CPU; zero uses the original
+serial calculation. It does not change the metric definitions or model weights.
+Use `--resume` to reuse completed budgets after interrupting an evaluation with
+the same frozen checkpoint and data. Run GPU evaluations sequentially if parallel
+runs fill device memory; CPU metric workers can still run in parallel.
+During the three-model study, `./tools/status.ps1 -Test` shows test progress.
+After all three runs finish, `python tools/compare_models.py` generates the test
+comparison, curves, numeric export, and paired speaker uncertainty in
+`documentation/`. The local study file uses the same format shown above.
 
 ## Contribute
 

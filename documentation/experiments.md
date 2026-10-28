@@ -2,10 +2,13 @@
 
 ## Sparse-autoencoder baseline: run protocol
 
-Status: the sparse autoencoder is implemented, all 60 tests pass, and the new
+Status: the sparse autoencoder is implemented, all 62 tests pass, and the new
 1h speech pilot completed 2,000 updates. The 10h main run and matched dense-trained
 and affine controls have each completed 20,000 updates and validation reports.
-Final held-out test reconstruction remains separate. See the
+The full held-out test-clean evaluation is now complete; see the
+[test findings](sparse_autoencoder_test_results.md). All three models share a
+hidden half-dimensional layer before the final latent projection, a limitation
+identified during evaluation. See the
 [baseline guide and run record](sparse_autoencoder.md) for actual code,
 configuration, checkpoints, and measurements. Earlier grouped-autoencoder smoke
 runs are not this baseline. Invertible-model experiments remain deferred.

@@ -24,3 +24,14 @@ def test_speech_metrics_report_invalid_short_reference():
     assert result["pesq_wb"] is None and result["stoi"] is None
     assert "too short or silent" in result["pesq_wb_status"]
     assert result["visqol"] is None
+
+
+def test_speech_metrics_match_in_worker_process():
+    from concurrent.futures import ProcessPoolExecutor
+    from lrac.metrics import speech_quality_metrics
+    x = (.1 * torch.sin(torch.arange(16000).float() * .1))[None, None]
+    y = x * .9
+    serial = speech_quality_metrics(x, y, 16000)
+    with ProcessPoolExecutor(max_workers=1) as pool:
+        parallel = pool.submit(speech_quality_metrics, x.numpy(), y.numpy(), 16000).result(timeout=60)
+    assert parallel == serial

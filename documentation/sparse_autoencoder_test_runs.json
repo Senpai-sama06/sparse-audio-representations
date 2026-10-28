@@ -1,0 +1,542 @@
+{
+  "date": "2026-10-28",
+  "scope": "full held-out test-clean; fixed models and budgets; no minimum-support certificate",
+  "training_manifest_sha256": "6a4d6747c316edb31aff965364be979098adfddd763cddb3fea96c79aafdd59c",
+  "model_order": [
+    "S-NL",
+    "D-NL",
+    "S-AF"
+  ],
+  "runs": [
+    {
+      "model": "S-NL",
+      "description": "sparse nonlinear baseline",
+      "run_name": "librispeech_sparse_autoencoder_10h_20261027T113534514450Z_seed0",
+      "train_name": "librispeech_sparse_autoencoder_10h",
+      "training_status": {
+        "status": "complete",
+        "total_steps": 20000,
+        "completed": true,
+        "step": 20000,
+        "best_validation": 0.18301507165746964,
+        "seconds": 1008.9649906998966,
+        "peak_gpu_bytes": 204785152
+      },
+      "training_statistics": {
+        "train_power": 0.003196885499251754,
+        "parameters": 1002369,
+        "trainable_parameters": 1002369,
+        "dictionary_values": null,
+        "training_method": "gradient",
+        "manifest_audit_passed": true,
+        "resume_note": "Model/optimizer RNG is restored; random crop/sampler position restarts at resume."
+      },
+      "environment": {
+        "python": "3.11.0",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "torch": "2.8.0+cu128",
+        "cuda": "12.8",
+        "cuda_available": true,
+        "numpy": "2.2.6",
+        "scipy": "1.13.1",
+        "soundfile": "0.13.1",
+        "librosa": "0.11.0",
+        "scikit-learn": "1.9.0",
+        "PyYAML": "6.0.3",
+        "matplotlib": "3.11.1",
+        "pytest": "9.1.1",
+        "pesq": "0.0.4",
+        "pystoi": "0.4.1",
+        "gpu": "NVIDIA RTX 2000 Ada Generation"
+      },
+      "training_source_combined_sha256": "d6bcd15ed5a0a4c9bda03c197aeb4e40ffe005a0635ccf5571e24e380e50ff55",
+      "checkpoint_sha256": "4ddfc7e9785ae43083f53b6cdf120d8d8e17d9986dd99b896ddc4ea04b532fd8",
+      "checkpoint_step": 20000,
+      "clean_manifest_sha256": "f4bd4c62d1137944dcf5e3c995ac981227909103da979ecabd5c81f67d4f7405",
+      "clean_coverage_sha256": "3c87a196783f631aa2de3b78c244f8fe56a183529bdd17df9acc28ff9f26c4d5",
+      "evaluation_summary_sha256": {
+        "fraction_0.0": "79ed1246c4dbc22d23a0fa36753c490b4568201629cd667bcfb54018956e08a9",
+        "fraction_0.01": "dd083c2dd91b0dd8b190d608057c7ffa375967917eac681c45dd8724cdc9a8cf",
+        "fraction_0.02": "706dafee8f8a9f5a3fa377677d70296d7742a41815d2ff54845e18ef6142f57e",
+        "fraction_0.05": "f626d8b95a6428e66601681979331512d646fae103de01688b25095faee0b430",
+        "fraction_0.1": "0eeb99f6edc8a274a75d143f1cb74cc0b4dea99e3b0418340d4fa3d0b2fabe0b",
+        "fraction_0.25": "c65a85b24152c54ef5e2f7d1c524a25fb5c04e0e32574df1d5e8778e06023874",
+        "fraction_0.5": "4ab6abb9a7c167b49f161770f9879408c3b296c54c60f740ba5e43e2b04fefe7",
+        "fraction_1.0": "b96cc26fdd63308c38a6f0296d72cf9993164d5edba5b0151ed364d9151bf362"
+      },
+      "speech_metric_statuses": {
+        "pesq_wb_status": {
+          "ok": 2620
+        },
+        "stoi_status": {
+          "ok": 2620
+        },
+        "visqol_status": {
+          "not integrated; no score computed": 2620
+        }
+      },
+      "support_search": {
+        "scope": "smallest actual support among the evaluated codes; not a certified minimum",
+        "settings": [
+          "fraction=0.0",
+          "fraction=0.01",
+          "fraction=0.02",
+          "fraction=0.05",
+          "fraction=0.1",
+          "fraction=0.25",
+          "fraction=0.5",
+          "fraction=1.0"
+        ],
+        "targets": [
+          {
+            "target_nmse": 0.1,
+            "met": 1168,
+            "unmet": 1452,
+            "silent": 0,
+            "median_successful_support": 3433.5
+          },
+          {
+            "target_nmse": 0.01,
+            "met": 0,
+            "unmet": 2620,
+            "silent": 0,
+            "median_successful_support": null
+          },
+          {
+            "target_nmse": 0.001,
+            "met": 0,
+            "unmet": 2620,
+            "silent": 0,
+            "median_successful_support": null
+          }
+        ],
+        "coverage_sha256": "3c87a196783f631aa2de3b78c244f8fe56a183529bdd17df9acc28ff9f26c4d5"
+      }
+    },
+    {
+      "model": "D-NL",
+      "description": "dense-trained nonlinear control",
+      "run_name": "librispeech_sparse_autoencoder_dense_10h_20261027T114358039621Z_seed0",
+      "train_name": "librispeech_sparse_autoencoder_dense_10h",
+      "training_status": {
+        "status": "complete",
+        "total_steps": 20000,
+        "completed": true,
+        "step": 20000,
+        "best_validation": 0.41564629748463633,
+        "seconds": 1158.5621862998232,
+        "peak_gpu_bytes": 204785152
+      },
+      "training_statistics": {
+        "train_power": 0.003196885499251754,
+        "parameters": 1002369,
+        "trainable_parameters": 1002369,
+        "dictionary_values": null,
+        "training_method": "gradient",
+        "manifest_audit_passed": true,
+        "resume_note": "Model/optimizer RNG is restored; random crop/sampler position restarts at resume."
+      },
+      "environment": {
+        "python": "3.11.0",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "torch": "2.8.0+cu128",
+        "cuda": "12.8",
+        "cuda_available": true,
+        "numpy": "2.2.6",
+        "scipy": "1.13.1",
+        "soundfile": "0.13.1",
+        "librosa": "0.11.0",
+        "scikit-learn": "1.9.0",
+        "PyYAML": "6.0.3",
+        "matplotlib": "3.11.1",
+        "pytest": "9.1.1",
+        "pesq": "0.0.4",
+        "pystoi": "0.4.1",
+        "gpu": "NVIDIA RTX 2000 Ada Generation"
+      },
+      "training_source_combined_sha256": "adc84c82c1ec9bb1489eea8fede0d64ced6236e85100bd4ff7747547759acc07",
+      "checkpoint_sha256": "451c534aac9aa94d15f7a5ed78a6978057b9b6c636d550656c06422e78683ba4",
+      "checkpoint_step": 20000,
+      "clean_manifest_sha256": "f4bd4c62d1137944dcf5e3c995ac981227909103da979ecabd5c81f67d4f7405",
+      "clean_coverage_sha256": "3c87a196783f631aa2de3b78c244f8fe56a183529bdd17df9acc28ff9f26c4d5",
+      "evaluation_summary_sha256": {
+        "fraction_0.0": "5db415e3a21adb909c4968b37d4511cc980754e26ec5b2b83707b16475298260",
+        "fraction_0.01": "ff545a2987b0395e557d93e1b8f2e7d98a87e229ae835abef66f370d03ee7dbf",
+        "fraction_0.02": "219512fbbccb551493f48155591622ec4b2cc5d532bf1e0b182c1d5766ae3177",
+        "fraction_0.05": "db45a8176d582d792b686b32e53b4da796fef888f4877c4bd49073bd7c331dda",
+        "fraction_0.1": "b6a004a38eba165cbf889dbd54420599ef3721a0205eedf7e30f4a44086d6124",
+        "fraction_0.25": "f2776816eeffa002f687de6022d0b69baec2d92b825048518d789cfc12009ace",
+        "fraction_0.5": "0933793405e2aa0ab8a8b862dc1e0bfb5e2ba28239917053daef65fda236b536",
+        "fraction_1.0": "810678dd660e8b1212cca2692968ef95035712521db88cd8adbd5f86780bd25c"
+      },
+      "speech_metric_statuses": {
+        "pesq_wb_status": {
+          "ok": 2620
+        },
+        "stoi_status": {
+          "ok": 2620
+        },
+        "visqol_status": {
+          "not integrated; no score computed": 2620
+        }
+      },
+      "support_search": {
+        "scope": "smallest actual support among the evaluated codes; not a certified minimum",
+        "settings": [
+          "fraction=0.0",
+          "fraction=0.01",
+          "fraction=0.02",
+          "fraction=0.05",
+          "fraction=0.1",
+          "fraction=0.25",
+          "fraction=0.5",
+          "fraction=1.0"
+        ],
+        "targets": [
+          {
+            "target_nmse": 0.1,
+            "met": 1511,
+            "unmet": 1109,
+            "silent": 0,
+            "median_successful_support": 31040
+          },
+          {
+            "target_nmse": 0.01,
+            "met": 1,
+            "unmet": 2619,
+            "silent": 0,
+            "median_successful_support": 17536
+          },
+          {
+            "target_nmse": 0.001,
+            "met": 0,
+            "unmet": 2620,
+            "silent": 0,
+            "median_successful_support": null
+          }
+        ],
+        "coverage_sha256": "3c87a196783f631aa2de3b78c244f8fe56a183529bdd17df9acc28ff9f26c4d5"
+      }
+    },
+    {
+      "model": "S-AF",
+      "description": "sparse affine control",
+      "run_name": "librispeech_sparse_autoencoder_affine_10h_20261027T114554258463Z_seed0",
+      "train_name": "librispeech_sparse_autoencoder_affine_10h",
+      "training_status": {
+        "status": "complete",
+        "total_steps": 20000,
+        "completed": true,
+        "step": 20000,
+        "best_validation": 0.10362520710182642,
+        "seconds": 1158.952187599847,
+        "peak_gpu_bytes": 136675328
+      },
+      "training_statistics": {
+        "train_power": 0.003196885499251754,
+        "parameters": 1002369,
+        "trainable_parameters": 1002369,
+        "dictionary_values": null,
+        "training_method": "gradient",
+        "manifest_audit_passed": true,
+        "resume_note": "Model/optimizer RNG is restored; random crop/sampler position restarts at resume."
+      },
+      "environment": {
+        "python": "3.11.0",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "torch": "2.8.0+cu128",
+        "cuda": "12.8",
+        "cuda_available": true,
+        "numpy": "2.2.6",
+        "scipy": "1.13.1",
+        "soundfile": "0.13.1",
+        "librosa": "0.11.0",
+        "scikit-learn": "1.9.0",
+        "PyYAML": "6.0.3",
+        "matplotlib": "3.11.1",
+        "pytest": "9.1.1",
+        "pesq": "0.0.4",
+        "pystoi": "0.4.1",
+        "gpu": "NVIDIA RTX 2000 Ada Generation"
+      },
+      "training_source_combined_sha256": "adc84c82c1ec9bb1489eea8fede0d64ced6236e85100bd4ff7747547759acc07",
+      "checkpoint_sha256": "19019fb2f65f7e36947adc7ebd33c266679bee1e013794e4fe7e260625b600cf",
+      "checkpoint_step": 20000,
+      "clean_manifest_sha256": "f4bd4c62d1137944dcf5e3c995ac981227909103da979ecabd5c81f67d4f7405",
+      "clean_coverage_sha256": "3c87a196783f631aa2de3b78c244f8fe56a183529bdd17df9acc28ff9f26c4d5",
+      "evaluation_summary_sha256": {
+        "fraction_0.0": "81e6d4c168473aff1b87c2bf9ad1e286def037339f4e4e8eeee5e3bec03e6b30",
+        "fraction_0.01": "537e2444d57374160704b072dc3473c0c0485bfae91d9511ec13236919f097bf",
+        "fraction_0.02": "787dc48205757aea91dd553718de71f61548b9f803eadf7fe0ed29f5e9ec05a2",
+        "fraction_0.05": "7799c4cd9db0767e8eb8eb7e2fd27d53111693449a5f308929197418abba5dd5",
+        "fraction_0.1": "bee722ff006628676e1ced7af70fe3d3b119e9318c66fcfe4850fd2dcdc77390",
+        "fraction_0.25": "f8bc5cb6e7fa87f3cccbe66fb6d9df1f524ab5129338e8f9bfddd4d46a1247c9",
+        "fraction_0.5": "cdcc6b6de1e92af0c3d55e3455d0e8a8a3f235b3af0a2a3981e4c68116fcac6c",
+        "fraction_1.0": "33c8fe7a6ad0c9961dc4b233ce04da79426dff8d909a6f5b7327f892ba7775be"
+      },
+      "speech_metric_statuses": {
+        "pesq_wb_status": {
+          "ok": 2620
+        },
+        "stoi_status": {
+          "ok": 2620
+        },
+        "visqol_status": {
+          "not integrated; no score computed": 2620
+        }
+      },
+      "support_search": {
+        "scope": "smallest actual support among the evaluated codes; not a certified minimum",
+        "settings": [
+          "fraction=0.0",
+          "fraction=0.01",
+          "fraction=0.02",
+          "fraction=0.05",
+          "fraction=0.1",
+          "fraction=0.25",
+          "fraction=0.5",
+          "fraction=1.0"
+        ],
+        "targets": [
+          {
+            "target_nmse": 0.1,
+            "met": 1845,
+            "unmet": 775,
+            "silent": 0,
+            "median_successful_support": 2156
+          },
+          {
+            "target_nmse": 0.01,
+            "met": 105,
+            "unmet": 2515,
+            "silent": 0,
+            "median_successful_support": 12096
+          },
+          {
+            "target_nmse": 0.001,
+            "met": 0,
+            "unmet": 2620,
+            "silent": 0,
+            "median_successful_support": null
+          }
+        ],
+        "coverage_sha256": "3c87a196783f631aa2de3b78c244f8fe56a183529bdd17df9acc28ff9f26c4d5"
+      }
+    }
+  ],
+  "frozen_test_protocol": {
+    "frozen_at_utc": "2026-10-28T04:27:17.810115+00:00",
+    "split": "clean",
+    "limit": null,
+    "checkpoint": "best.pt",
+    "keep_fractions": [
+      0.0,
+      0.01,
+      0.02,
+      0.05,
+      0.1,
+      0.25,
+      0.5,
+      1.0
+    ],
+    "nmse_targets": [
+      0.1,
+      0.01,
+      0.001
+    ],
+    "seed": 0,
+    "cpu_threads_per_process": 1,
+    "models_frozen": true,
+    "speech_metrics": [
+      "PESQ-WB",
+      "STOI"
+    ],
+    "visqol": "not integrated",
+    "timing_note": "Three evaluation jobs may overlap; inference timings are not isolated speed measurements.",
+    "source": {
+      "files": {
+        "lrac/__init__.py": "9b2b726ad3ee4e2d7bdffc5eeb430eccd328ecfdb8e23a3ed8a03f49358d5653",
+        "lrac/__main__.py": "ef83bb9ee95d75a8262493d56de2c4416bb9b9c9f9fa871c1ad1460c1f4738b6",
+        "lrac/analyze.py": "260ec014ddc9d92e8f6cec36916a5f1867983564bf9de37c81a94a108323c73d",
+        "lrac/cli.py": "728a02236227597e340a0b6aabb11c3eb0be7a1dbf9389318f74f045f90dd780",
+        "lrac/config.py": "b6ebc55fe89978ed158f52e66cc6b150482e32b3ec944f6512d4cb29167ed1ba",
+        "lrac/data/__init__.py": "8b19f38cdd177517e29220b2bb87318b651cf8db1479bfcdcad5f4ed9ba00c8f",
+        "lrac/data/audit.py": "083b78dfd243b83eb4a89a03bac0f3846e3b39887193e462a1be8c22902dc1d6",
+        "lrac/data/datasets.py": "565a14cf99bf86eae9d89e3d92384f7a7714cbced4061b7bea6c36b6616041ed",
+        "lrac/data/downloads.py": "a468dca1d402f69a4167254a7cc6550c0e2d92ae9330ebef162aeeb3d7fc9127",
+        "lrac/data/manifests.py": "c477584fb5e31f362125c224cb6b9e548c582849fb48e660b56721ca0e891024",
+        "lrac/data/preprocessing.py": "e6369f13c178fd265ad0bf39c29662eae01e42420220c9326ded6a2ce420cb40",
+        "lrac/data/synthetic.py": "d8620766e3835bce9fe68caf991e4f18a9c9d3937effe6cc80869f3652ca48c6",
+        "lrac/evaluate.py": "07e5f5c84348533653a548e8f224e00244b4ca72f806ded99a321b6ea2af316d",
+        "lrac/experiment.py": "aff6157f4e524f1f36093ac52c7025ef488ee441d2b8b506b82a7840c75200a0",
+        "lrac/losses.py": "112cc5c8d7ce2e5ea33356204e33adb5f14507a368a631f286d799f4bbe02e4e",
+        "lrac/metrics.py": "650038a96b843fea6fa0bca65eb5f95c40c71d692ae0ef87c7d726f63d1bfb75",
+        "lrac/models/__init__.py": "5a0d110092f3d89def0f0cb5e3b200f273f46927150f81e7969d3b8d7057507c",
+        "lrac/models/autoencoder.py": "139f017da26115703431b6be4cbf44b4150f5ad1ce434f57c7c0265994ca2582",
+        "lrac/models/base.py": "b4277ce12dbf47814b47478702d05fb3e7e06f54a0fa2b4fbded18cf4c16f248",
+        "lrac/models/block_orthogonal.py": "5b39cc3bd8803a460373de2822c23cbd48d6208688ef74370f509658cd6949b8",
+        "lrac/models/convolutional.py": "8f7037f7d08f3f5b36371445d82856f5a7d7484ddeb80cb81bacdfcb104d5a92",
+        "lrac/models/dictionaries.py": "c754922eb3b8f90edf285be2303cf9dd7434dc48552f16f802fa75ae59491513",
+        "lrac/models/sparse_autoencoder.py": "771e61ad44f67ae3c5dead5f593f2bcf409fa162668195e531ae452e6102a8c6",
+        "lrac/models/transforms.py": "99acae7572faa3e9b704eb8a760e4d1cb37d3048154f823294d2153109643c7b",
+        "lrac/report.py": "b87a4aeb1856aa3b0e49a057e211494ece610991b0d4833e91a5ef1b77b88223",
+        "lrac/sparse.py": "c15584f00315bbdb8643581bf525d53e1c1ffc180d4e7fdae5a22e34f430bbec",
+        "lrac/train.py": "7cc1ae9bdf1cf3f9647f0442cdf5a5f79389fcc978bb6197ccd12303837ebdc2",
+        "lrac/utils.py": "4a32717284471b88aa2e1d2e3b2861e19712d923c7053efcb1fabecbed767471",
+        "pyproject.toml": "fb2cef436115380710854666882b9f48c8038bc6c86183338158472c9eae2c95",
+        "requirements-lock.txt": "aa699fc7d074163d39f3a9c7ebf1d8a32b3433faf047843af29c026276502324"
+      },
+      "combined_sha256": "ff986fba5ce86a342db94d64b8b2570371bf33c6ff78d0ca28a762a8702ad420"
+    },
+    "environment": {
+      "python": "3.11.0",
+      "platform": "Windows-10-10.0.26200-SP0",
+      "torch": "2.8.0+cu128",
+      "cuda": "12.8",
+      "cuda_available": true,
+      "numpy": "2.2.6",
+      "scipy": "1.13.1",
+      "soundfile": "0.13.1",
+      "librosa": "0.11.0",
+      "scikit-learn": "1.9.0",
+      "PyYAML": "6.0.3",
+      "matplotlib": "3.11.1",
+      "pytest": "9.1.1",
+      "pesq": "0.0.4",
+      "pystoi": "0.4.1",
+      "gpu": "NVIDIA RTX 2000 Ada Generation"
+    },
+    "runs": [
+      {
+        "name": "sparse nonlinear baseline",
+        "run": "runs\\librispeech_sparse_autoencoder_10h_20261027T113534514450Z_seed0",
+        "checkpoint_sha256": "4ddfc7e9785ae43083f53b6cdf120d8d8e17d9986dd99b896ddc4ea04b532fd8",
+        "test_manifest_sha256": "f4bd4c62d1137944dcf5e3c995ac981227909103da979ecabd5c81f67d4f7405"
+      },
+      {
+        "name": "dense-trained nonlinear control",
+        "run": "runs\\librispeech_sparse_autoencoder_dense_10h_20261027T114358039621Z_seed0",
+        "checkpoint_sha256": "451c534aac9aa94d15f7a5ed78a6978057b9b6c636d550656c06422e78683ba4",
+        "test_manifest_sha256": "f4bd4c62d1137944dcf5e3c995ac981227909103da979ecabd5c81f67d4f7405"
+      },
+      {
+        "name": "sparse affine control",
+        "run": "runs\\librispeech_sparse_autoencoder_affine_10h_20261027T114554258463Z_seed0",
+        "checkpoint_sha256": "19019fb2f65f7e36947adc7ebd33c266679bee1e013794e4fe7e260625b600cf",
+        "test_manifest_sha256": "f4bd4c62d1137944dcf5e3c995ac981227909103da979ecabd5c81f67d4f7405"
+      }
+    ],
+    "execution_note": "Serial attempt interrupted during first budget to parallelize CPU speech metrics; no complete test budget or model selection used.",
+    "metric_workers_per_model": 4,
+    "execution_updated_utc": "2026-10-28T04:31:35.308418+00:00",
+    "evaluation_source": {
+      "files": {
+        "lrac/__init__.py": "9b2b726ad3ee4e2d7bdffc5eeb430eccd328ecfdb8e23a3ed8a03f49358d5653",
+        "lrac/__main__.py": "ef83bb9ee95d75a8262493d56de2c4416bb9b9c9f9fa871c1ad1460c1f4738b6",
+        "lrac/analyze.py": "260ec014ddc9d92e8f6cec36916a5f1867983564bf9de37c81a94a108323c73d",
+        "lrac/cli.py": "f8822091e1f0c764a9ccb149043bcd467da75b20ae47a68c15a6d96ac79f06c5",
+        "lrac/config.py": "b6ebc55fe89978ed158f52e66cc6b150482e32b3ec944f6512d4cb29167ed1ba",
+        "lrac/data/__init__.py": "8b19f38cdd177517e29220b2bb87318b651cf8db1479bfcdcad5f4ed9ba00c8f",
+        "lrac/data/audit.py": "083b78dfd243b83eb4a89a03bac0f3846e3b39887193e462a1be8c22902dc1d6",
+        "lrac/data/datasets.py": "565a14cf99bf86eae9d89e3d92384f7a7714cbced4061b7bea6c36b6616041ed",
+        "lrac/data/downloads.py": "a468dca1d402f69a4167254a7cc6550c0e2d92ae9330ebef162aeeb3d7fc9127",
+        "lrac/data/manifests.py": "c477584fb5e31f362125c224cb6b9e548c582849fb48e660b56721ca0e891024",
+        "lrac/data/preprocessing.py": "e6369f13c178fd265ad0bf39c29662eae01e42420220c9326ded6a2ce420cb40",
+        "lrac/data/synthetic.py": "d8620766e3835bce9fe68caf991e4f18a9c9d3937effe6cc80869f3652ca48c6",
+        "lrac/evaluate.py": "b33f15dc0917718497b341806e170db3f2f074c6a04f2a614d62e5a6ace60743",
+        "lrac/experiment.py": "aff6157f4e524f1f36093ac52c7025ef488ee441d2b8b506b82a7840c75200a0",
+        "lrac/losses.py": "112cc5c8d7ce2e5ea33356204e33adb5f14507a368a631f286d799f4bbe02e4e",
+        "lrac/metrics.py": "e05cfdfabcb5f4011afac44eda7490bbb404f9d5b33080db0f218ea46bc677b2",
+        "lrac/models/__init__.py": "5a0d110092f3d89def0f0cb5e3b200f273f46927150f81e7969d3b8d7057507c",
+        "lrac/models/autoencoder.py": "139f017da26115703431b6be4cbf44b4150f5ad1ce434f57c7c0265994ca2582",
+        "lrac/models/base.py": "b4277ce12dbf47814b47478702d05fb3e7e06f54a0fa2b4fbded18cf4c16f248",
+        "lrac/models/block_orthogonal.py": "5b39cc3bd8803a460373de2822c23cbd48d6208688ef74370f509658cd6949b8",
+        "lrac/models/convolutional.py": "8f7037f7d08f3f5b36371445d82856f5a7d7484ddeb80cb81bacdfcb104d5a92",
+        "lrac/models/dictionaries.py": "c754922eb3b8f90edf285be2303cf9dd7434dc48552f16f802fa75ae59491513",
+        "lrac/models/sparse_autoencoder.py": "771e61ad44f67ae3c5dead5f593f2bcf409fa162668195e531ae452e6102a8c6",
+        "lrac/models/transforms.py": "99acae7572faa3e9b704eb8a760e4d1cb37d3048154f823294d2153109643c7b",
+        "lrac/report.py": "b87a4aeb1856aa3b0e49a057e211494ece610991b0d4833e91a5ef1b77b88223",
+        "lrac/sparse.py": "c15584f00315bbdb8643581bf525d53e1c1ffc180d4e7fdae5a22e34f430bbec",
+        "lrac/train.py": "7cc1ae9bdf1cf3f9647f0442cdf5a5f79389fcc978bb6197ccd12303837ebdc2",
+        "lrac/utils.py": "4a32717284471b88aa2e1d2e3b2861e19712d923c7053efcb1fabecbed767471",
+        "pyproject.toml": "fb2cef436115380710854666882b9f48c8038bc6c86183338158472c9eae2c95",
+        "requirements-lock.txt": "aa699fc7d074163d39f3a9c7ebf1d8a32b3433faf047843af29c026276502324"
+      },
+      "combined_sha256": "988aef0cd9da7f38f40a7b6b1f95c4f33963af44019b4f8cac2375afc61c8f6c"
+    },
+    "scheduling_note": "Concurrent GPU evaluation exhausted practical VRAM headroom; dense and affine attempts interrupted. Sparse nonlinear continues; dense then affine follow sequentially with four CPU speech-metric workers and reuse of complete frozen budgets.",
+    "resume_evaluation_source": {
+      "files": {
+        "lrac/__init__.py": "9b2b726ad3ee4e2d7bdffc5eeb430eccd328ecfdb8e23a3ed8a03f49358d5653",
+        "lrac/__main__.py": "ef83bb9ee95d75a8262493d56de2c4416bb9b9c9f9fa871c1ad1460c1f4738b6",
+        "lrac/analyze.py": "260ec014ddc9d92e8f6cec36916a5f1867983564bf9de37c81a94a108323c73d",
+        "lrac/cli.py": "735757b2d8b62d42f166ec745e7fb0316596f6d10163567b97cf61cf39550690",
+        "lrac/config.py": "b6ebc55fe89978ed158f52e66cc6b150482e32b3ec944f6512d4cb29167ed1ba",
+        "lrac/data/__init__.py": "8b19f38cdd177517e29220b2bb87318b651cf8db1479bfcdcad5f4ed9ba00c8f",
+        "lrac/data/audit.py": "083b78dfd243b83eb4a89a03bac0f3846e3b39887193e462a1be8c22902dc1d6",
+        "lrac/data/datasets.py": "565a14cf99bf86eae9d89e3d92384f7a7714cbced4061b7bea6c36b6616041ed",
+        "lrac/data/downloads.py": "a468dca1d402f69a4167254a7cc6550c0e2d92ae9330ebef162aeeb3d7fc9127",
+        "lrac/data/manifests.py": "c477584fb5e31f362125c224cb6b9e548c582849fb48e660b56721ca0e891024",
+        "lrac/data/preprocessing.py": "e6369f13c178fd265ad0bf39c29662eae01e42420220c9326ded6a2ce420cb40",
+        "lrac/data/synthetic.py": "d8620766e3835bce9fe68caf991e4f18a9c9d3937effe6cc80869f3652ca48c6",
+        "lrac/evaluate.py": "a32efffb6c34dcd698284a7b83ce841dd7785c4784e29f074ca0c4b818b529dc",
+        "lrac/experiment.py": "aff6157f4e524f1f36093ac52c7025ef488ee441d2b8b506b82a7840c75200a0",
+        "lrac/losses.py": "112cc5c8d7ce2e5ea33356204e33adb5f14507a368a631f286d799f4bbe02e4e",
+        "lrac/metrics.py": "e05cfdfabcb5f4011afac44eda7490bbb404f9d5b33080db0f218ea46bc677b2",
+        "lrac/models/__init__.py": "5a0d110092f3d89def0f0cb5e3b200f273f46927150f81e7969d3b8d7057507c",
+        "lrac/models/autoencoder.py": "139f017da26115703431b6be4cbf44b4150f5ad1ce434f57c7c0265994ca2582",
+        "lrac/models/base.py": "b4277ce12dbf47814b47478702d05fb3e7e06f54a0fa2b4fbded18cf4c16f248",
+        "lrac/models/block_orthogonal.py": "5b39cc3bd8803a460373de2822c23cbd48d6208688ef74370f509658cd6949b8",
+        "lrac/models/convolutional.py": "8f7037f7d08f3f5b36371445d82856f5a7d7484ddeb80cb81bacdfcb104d5a92",
+        "lrac/models/dictionaries.py": "c754922eb3b8f90edf285be2303cf9dd7434dc48552f16f802fa75ae59491513",
+        "lrac/models/sparse_autoencoder.py": "771e61ad44f67ae3c5dead5f593f2bcf409fa162668195e531ae452e6102a8c6",
+        "lrac/models/transforms.py": "99acae7572faa3e9b704eb8a760e4d1cb37d3048154f823294d2153109643c7b",
+        "lrac/report.py": "b87a4aeb1856aa3b0e49a057e211494ece610991b0d4833e91a5ef1b77b88223",
+        "lrac/sparse.py": "c15584f00315bbdb8643581bf525d53e1c1ffc180d4e7fdae5a22e34f430bbec",
+        "lrac/train.py": "7cc1ae9bdf1cf3f9647f0442cdf5a5f79389fcc978bb6197ccd12303837ebdc2",
+        "lrac/utils.py": "4a32717284471b88aa2e1d2e3b2861e19712d923c7053efcb1fabecbed767471",
+        "pyproject.toml": "fb2cef436115380710854666882b9f48c8038bc6c86183338158472c9eae2c95",
+        "requirements-lock.txt": "aa699fc7d074163d39f3a9c7ebf1d8a32b3433faf047843af29c026276502324"
+      },
+      "combined_sha256": "df5ff8be9a319d9aae784cf0c36ab7446a60f2ad0fbee9f925d47a6fbca4d986"
+    },
+    "scheduling_updated_utc": "2026-10-28T04:37:37.963446+00:00",
+    "later_metric_workers_per_model": 12,
+    "later_execution_note": "After completing dense zero-budget control with four workers, increased CPU workers to twelve for remaining dense and affine evaluations. GPU inference remains sequential.",
+    "later_evaluation_source": {
+      "files": {
+        "lrac/__init__.py": "9b2b726ad3ee4e2d7bdffc5eeb430eccd328ecfdb8e23a3ed8a03f49358d5653",
+        "lrac/__main__.py": "ef83bb9ee95d75a8262493d56de2c4416bb9b9c9f9fa871c1ad1460c1f4738b6",
+        "lrac/analyze.py": "260ec014ddc9d92e8f6cec36916a5f1867983564bf9de37c81a94a108323c73d",
+        "lrac/cli.py": "735757b2d8b62d42f166ec745e7fb0316596f6d10163567b97cf61cf39550690",
+        "lrac/config.py": "b6ebc55fe89978ed158f52e66cc6b150482e32b3ec944f6512d4cb29167ed1ba",
+        "lrac/data/__init__.py": "8b19f38cdd177517e29220b2bb87318b651cf8db1479bfcdcad5f4ed9ba00c8f",
+        "lrac/data/audit.py": "083b78dfd243b83eb4a89a03bac0f3846e3b39887193e462a1be8c22902dc1d6",
+        "lrac/data/datasets.py": "565a14cf99bf86eae9d89e3d92384f7a7714cbced4061b7bea6c36b6616041ed",
+        "lrac/data/downloads.py": "a468dca1d402f69a4167254a7cc6550c0e2d92ae9330ebef162aeeb3d7fc9127",
+        "lrac/data/manifests.py": "c477584fb5e31f362125c224cb6b9e548c582849fb48e660b56721ca0e891024",
+        "lrac/data/preprocessing.py": "e6369f13c178fd265ad0bf39c29662eae01e42420220c9326ded6a2ce420cb40",
+        "lrac/data/synthetic.py": "d8620766e3835bce9fe68caf991e4f18a9c9d3937effe6cc80869f3652ca48c6",
+        "lrac/evaluate.py": "9b4955ee95a1153bc53232f2e320db6faafa85a3a00c87d333591c138d794c2b",
+        "lrac/experiment.py": "aff6157f4e524f1f36093ac52c7025ef488ee441d2b8b506b82a7840c75200a0",
+        "lrac/losses.py": "112cc5c8d7ce2e5ea33356204e33adb5f14507a368a631f286d799f4bbe02e4e",
+        "lrac/metrics.py": "e05cfdfabcb5f4011afac44eda7490bbb404f9d5b33080db0f218ea46bc677b2",
+        "lrac/models/__init__.py": "5a0d110092f3d89def0f0cb5e3b200f273f46927150f81e7969d3b8d7057507c",
+        "lrac/models/autoencoder.py": "139f017da26115703431b6be4cbf44b4150f5ad1ce434f57c7c0265994ca2582",
+        "lrac/models/base.py": "b4277ce12dbf47814b47478702d05fb3e7e06f54a0fa2b4fbded18cf4c16f248",
+        "lrac/models/block_orthogonal.py": "5b39cc3bd8803a460373de2822c23cbd48d6208688ef74370f509658cd6949b8",
+        "lrac/models/convolutional.py": "8f7037f7d08f3f5b36371445d82856f5a7d7484ddeb80cb81bacdfcb104d5a92",
+        "lrac/models/dictionaries.py": "c754922eb3b8f90edf285be2303cf9dd7434dc48552f16f802fa75ae59491513",
+        "lrac/models/sparse_autoencoder.py": "771e61ad44f67ae3c5dead5f593f2bcf409fa162668195e531ae452e6102a8c6",
+        "lrac/models/transforms.py": "99acae7572faa3e9b704eb8a760e4d1cb37d3048154f823294d2153109643c7b",
+        "lrac/report.py": "b87a4aeb1856aa3b0e49a057e211494ece610991b0d4833e91a5ef1b77b88223",
+        "lrac/sparse.py": "c15584f00315bbdb8643581bf525d53e1c1ffc180d4e7fdae5a22e34f430bbec",
+        "lrac/train.py": "7cc1ae9bdf1cf3f9647f0442cdf5a5f79389fcc978bb6197ccd12303837ebdc2",
+        "lrac/utils.py": "4a32717284471b88aa2e1d2e3b2861e19712d923c7053efcb1fabecbed767471",
+        "pyproject.toml": "fb2cef436115380710854666882b9f48c8038bc6c86183338158472c9eae2c95",
+        "requirements-lock.txt": "aa699fc7d074163d39f3a9c7ebf1d8a32b3433faf047843af29c026276502324"
+      },
+      "combined_sha256": "0470331517a521a0591f6d65a5ce8c643297069866c99df1d91d2f385d500f6e"
+    }
+  }
+}

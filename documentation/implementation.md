@@ -192,6 +192,11 @@ Neither candidate requires orthogonality or tied encoder/decoder weights.
 
 Initially use maximum latent size `M = N` and vary retained budget `k`. This avoids
 making a narrow dense bottleneck the only possible reason for missing detail.
+The implemented convolutional baseline does not fully achieve this intention:
+its final slot count is `M = N`, but an earlier 128-channel layer at stride 256
+contains only `N / 2` values for the two-second crops. This was identified during
+the 28 October 2026 held-out evaluation. Record that hidden compression when
+interpreting the baseline; final latent width alone is not a sufficient check.
 It does not guarantee trained dense reconstruction: full-budget performance is
 an explicit control. Layer counts, hidden widths, clip length, and initialization
 remain implementation choices to settle after this discussion. A short fixed

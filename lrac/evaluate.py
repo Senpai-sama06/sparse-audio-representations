@@ -3,7 +3,9 @@ import csv
 import json
 import time
 import hashlib
-from collections import Counter
+from collections import Counter, deque
+from concurrent.futures import ProcessPoolExecutor
+from contextlib import nullcontext
 from statistics import median
 import torch
 import soundfile as sf
@@ -15,7 +17,16 @@ from lrac.utils import write_json, get_device, file_hash
 from lrac.metrics import waveform_metrics, summarize, speech_quality_metrics
 
 
-def evaluate(run, split=None, limit=None, device="auto", data_config=None, budgets=None, nmse_targets=None, checkpoint="best.pt", keep_fractions=None):
+def evaluate(run, split=None, limit=None, device="auto", data_config=None, budgets=None, nmse_targets=None, checkpoint="best.pt", keep_fractions=None, metric_workers=0, resume=False):
+    if metric_workers < 0:
+        raise ValueError("metric_workers must be nonnegative")
+    # Processes avoid the GIL in optional native speech metrics. Bound queued
+    # waveforms below so the full corpus is never buffered in memory.
+    with ProcessPoolExecutor(max_workers=metric_workers) if metric_workers else nullcontext() as pool:
+        return _evaluate(run, split, limit, device, data_config, budgets, nmse_targets, checkpoint, keep_fractions, pool, resume, metric_workers)
+
+
+def _evaluate(run, split, limit, device, data_config, budgets, nmse_targets, checkpoint, keep_fractions, speech_pool, resume, metric_workers):
     cfg, model, state = load_run(run, device, checkpoint)
     block_model = getattr(model, "uses_procrustes", False)
     sparse_model = getattr(model, "uses_global_budget", False)
@@ -86,9 +97,34 @@ def evaluate(run, split=None, limit=None, device="auto", data_config=None, budge
                 model.config.code_budget = value
             # Limited runs are deliberately segregated from complete benchmark results.
             out = output_root / label / (f"limit_{limit}" if limit else "smoke" if stage == "smoke" else "complete") / f"{mode}_{value}"
+            if resume and (out / "summary.json").exists() and (out / "metrics.csv").exists():
+                saved = json.loads((out / "summary.json").read_text(encoding="utf-8"))
+                if saved["coverage_sha256"] != coverage_hash or saved["checkpoint_step"] != state["step"] or saved["checkpoint"] != checkpoint or saved["representation_setting"] != f"{mode}={value}":
+                    raise ValueError("Cannot resume an evaluation with different examples or checkpoint")
+                with (out / "metrics.csv").open(newline="", encoding="utf-8") as stream:
+                    cached = list(csv.DictReader(stream))
+                if len(cached) != len(dataset):
+                    raise ValueError("Cached evaluation has incomplete metrics")
+                if sparse_model:
+                    searched.extend({"id": r["id"], "speaker": r["speaker"],
+                        "nmse": float(r["nmse"]) if r["nmse"] else None,
+                        "active_coefficients": int(r["active_coefficients"]),
+                        "setting": f"{mode}={value}"} for r in cached)
+                print(f"REUSED_EVALUATION={out}", flush=True)
+                results.append(out)
+                continue
             (out / "audio").mkdir(parents=True, exist_ok=True)
-            rows, worst = [], []
+            rows, worst, pending = [], [], deque()
             began = time.perf_counter()
+            progress_file = out.parent / "progress.json"
+            def progress(completed, status="evaluating"):
+                write_json(progress_file, {"status": status, "split": label,
+                    "representation_setting": f"{mode}={value}",
+                    "setting_index": settings.index((mode, value)) + 1,
+                    "total_settings": len(settings), "examples_completed": completed,
+                    "total_examples": len(dataset), "setting_seconds": time.perf_counter() - began})
+            progress(0)
+            print(f"EVALUATING split={label} setting={mode}={value} examples={len(dataset)}", flush=True)
             orthogonality_error = None
             if block_model:
                 basis = model.matrix()
@@ -124,7 +160,14 @@ def evaluate(run, split=None, limit=None, device="auto", data_config=None, budge
                 row.update(inference_seconds=inference_seconds, values_per_input_sample=active_count / x.shape[-1])
                 if cfg.evaluation.speech_metrics:
                     if metadata["corpus"] != "synthetic":
-                        row.update(speech_quality_metrics(x, estimate, cfg.data.sample_rate))
+                        if speech_pool is None:
+                            row.update(speech_quality_metrics(x, estimate, cfg.data.sample_rate))
+                        else:
+                            future = speech_pool.submit(speech_quality_metrics, x.detach().cpu().numpy(), estimate.detach().cpu().numpy(), cfg.data.sample_rate)
+                            pending.append((row, future))
+                            if len(pending) >= 2 * metric_workers:
+                                ready_row, ready = pending.popleft()
+                                ready_row.update(ready.result())
                     else:
                         row.update(pesq_wb=None, stoi=None, visqol=None, pesq_wb_status="not applicable to synthetic signals", stoi_status="not applicable to synthetic signals", visqol_status="not integrated; no score computed")
                 row["minimum_support_verified"] = None
@@ -144,6 +187,11 @@ def evaluate(run, split=None, limit=None, device="auto", data_config=None, budge
                     worst.append((row["snr_db"], stem, x[0, 0].cpu().numpy(), estimate[0, 0].cpu().numpy()))
                     worst.sort(key=lambda item: item[0])
                     worst = worst[:3]
+                if (index + 1) % 100 == 0:
+                    progress(index + 1)
+                    print(f"progress setting={mode}={value} examples={index + 1}/{len(dataset)}", flush=True)
+            for ready_row, ready in pending:
+                ready_row.update(ready.result())
             with (out / "metrics.csv").open("w", encoding="utf-8", newline="") as stream:
                 writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
                 writer.writeheader()
@@ -169,6 +217,7 @@ def evaluate(run, split=None, limit=None, device="auto", data_config=None, budge
             if sparse_model:
                 searched.extend({**row, "setting": f"{mode}={value}"} for row in rows)
             print(f"EVALUATION={out} median_snr={snr.get('median')}", flush=True)
+            progress(len(dataset), "setting complete")
             results.append(out)
         if sparse_model:
             search_rows, target_summaries = [], []
@@ -194,4 +243,8 @@ def evaluate(run, split=None, limit=None, device="auto", data_config=None, budge
                 writer.writeheader()
                 writer.writerows(search_rows)
             write_json(out.parent / "support_search.json", {"scope": "smallest actual support among the evaluated codes; not a certified minimum", "settings": [f"{mode}={value}" for mode, value in settings], "targets": target_summaries, "coverage_sha256": coverage_hash})
+        write_json(out.parent / "progress.json", {"status": "complete", "split": label,
+            "representation_setting": f"{mode}={value}", "setting_index": len(settings),
+            "total_settings": len(settings), "examples_completed": len(dataset),
+            "total_examples": len(dataset)})
     return results

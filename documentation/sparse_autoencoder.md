@@ -12,6 +12,14 @@ latent channels. A two-second 16 kHz input has 125 x 256 latent values before
 selection. The encoder receptive field is 2,041 samples, about 128 ms; global
 selection does not make the candidate-value encoder global in time.
 
+Architecture review on 28 October 2026 identified a hidden bottleneck: before
+the final 128-to-256 channel projection, stage E4 contains only 128 x 125 = 16,000
+values for a 32,000-sample input. The decoder's initial projection also reduces
+256 channels to 128. Matching the final latent slot count to the input therefore
+does not make the dense mapping information-preserving. The affine operators
+have rank at most 16,000 at this input length. This limits a general lossless
+reference but does not by itself establish an error lower bound for speech.
+
 Magnitude selection retains a fraction or exact count across the whole example,
 with exact zero values elsewhere. There is one representation group, no waveform
 bypass, and no orthogonality or feature-label objective. Masked batch padding is
@@ -95,9 +103,10 @@ python run.py evaluate --run runs/YOUR_RUN --split validation --limit 40 --budge
 All budgets refer to the whole recording. Float32 values, coordinate identifiers,
 and length metadata are needed for reconstruction; scalar support is not an
 encoded bitrate. The first results describe an achieved code, not a minimum-
-support certificate. The matched dense-trained control is now training, as
-described below. The DCT comparison remains to be evaluated; neither comparison
-should be claimed complete before its results exist.
+support certificate. The matched dense-trained and affine controls have since
+completed training and full held-out testing; see the
+[test comparison](sparse_autoencoder_test_results.md). The DCT comparison remains
+to be evaluated.
 
 ## Background runs and monitoring
 
@@ -187,8 +196,8 @@ Status update: all three runs have completed 20,000 updates and their validation
 reports exist. The status script reads this from each actual run directory.
 
 The user requested concurrent experiments after observing low GPU memory use.
-The original baseline continues unchanged. Two controlled alternatives are now
-training on the same cached 10h subset, with identical source/speaker separation,
+The comparison used two controlled alternatives on the same cached 10h subset,
+with identical source/speaker separation,
 seed 0, batch size eight, 20,000 updates, waveform loss, and evaluation fractions.
 
 | Run | Difference | Question |
@@ -219,7 +228,7 @@ Run directories:
 - `runs/librispeech_sparse_autoencoder_dense_10h_20261027T114358039621Z_seed0`
 - `runs/librispeech_sparse_autoencoder_affine_10h_20261027T114554258463Z_seed0`
 
-All 60 tests pass, including equal parameter initialization/counts and numerical
+At the initial concurrent launch, all 60 tests passed, including equal parameter initialization/counts and numerical
 affinity of the dense encoder/decoder. The affine variant completed a short
 synthetic workflow before its speech training was launched.
 

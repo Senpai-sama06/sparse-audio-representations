@@ -6,8 +6,8 @@ from lrac.losses import spectral_loss
 
 def speech_quality_metrics(reference, estimate, sample_rate):
     """Optional speech metrics; missing/invalid scores have explicit reasons."""
-    x = reference.detach().cpu().numpy().reshape(-1)
-    y = estimate.detach().cpu().numpy().reshape(-1)
+    x = (reference.detach().cpu().numpy() if torch.is_tensor(reference) else np.asarray(reference)).reshape(-1)
+    y = (estimate.detach().cpu().numpy() if torch.is_tensor(estimate) else np.asarray(estimate)).reshape(-1)
     result = {"pesq_wb": None, "stoi": None, "visqol": None, "visqol_status": "not integrated; no score computed"}
     for key in ["pesq_wb", "stoi"]:
         try:

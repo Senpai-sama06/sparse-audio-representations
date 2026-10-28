@@ -20,7 +20,7 @@
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{\small\textcolor{ink}{LRAC / Audio representation baselines}}
-\fancyhead[R]{\small 27 October 2026}
+\fancyhead[R]{\small 28 October 2026}
 \fancyfoot[C]{\thepage}
 \setlength{\headheight}{14pt}
 \setlength{\parindent}{0pt}
@@ -35,14 +35,14 @@
 \lstset{basicstyle=\ttfamily\footnotesize,breaklines=true,columns=fullflexible,keepspaces=true,frame=single,rulecolor=\color{black!15},backgroundcolor=\color{black!2},aboveskip=8pt,belowskip=8pt}
 \title{\textcolor{ink}{Sparse Autoencoder Baselines\\for Audio Representation}\\[6pt]\large Mathematical formulation, exact architecture, training protocol,\\and measured comparison of three models}
 \author{LRAC research project}
-\date{27 October 2026}
+\date{28 October 2026}
 \begin{document}
 \maketitle
 \begin{abstract}
-The research objective is to discover a representation that reconstructs a particular audio signal using as few retained scalar values as possible, without requiring a named transform or interpretable feature labels. This report specifies the first controlled experiment: a sparse nonlinear convolutional autoencoder, its dense-trained nonlinear control, and a sparse affine analysis--synthesis control. All three contain 1,002,369 trainable parameters and were trained for 20,000 updates on the same speaker-balanced ten-hour subset of LibriSpeech. The affine control currently gives the strongest reconstruction results on a common 200-utterance development probe. This is an achieved sparsity--distortion comparison within a restricted model family, not a certificate of the sparsest possible representation, a lossless transform, or a measured audio bitrate. The report connects every architecture and objective to the implementation, reports the observed results, and identifies the remaining research questions.
+The research objective is to discover a representation that reconstructs a particular audio signal using as few retained scalar values as possible, without requiring a named transform or interpretable feature labels. This report specifies the first controlled experiment: a sparse nonlinear convolutional autoencoder, its dense-trained nonlinear control, and a sparse affine analysis--synthesis control. All three contain 1,002,369 trainable parameters and were trained for 20,000 updates on the same speaker-balanced ten-hour subset of LibriSpeech. The affine control leads the 200-utterance development comparison and the full 2,620-utterance held-out test. Architecture review also identifies hidden compression to half the input dimensionality before the final latent projection. This is an achieved sparsity--distortion comparison within a restricted model family, not a certificate of the sparsest possible representation, a lossless transform, or a measured audio bitrate. The report connects architecture and objectives to the implementation, reports the observed results, and identifies the remaining research questions.
 \end{abstract}
 \vspace{4pt}
-\colorbox{paperblue}{\parbox{\dimexpr\linewidth-2\fboxsep\relax}{\textbf{Experimental status.} Three training runs and validation reports are complete. Results use five full utterances from each of 40 \code{dev-clean} speakers. These same utterances selected checkpoints. Final \code{test-clean} reconstruction scores have not been computed.}}
+\colorbox{paperblue}{\parbox{\dimexpr\linewidth-2\fboxsep\relax}{\textbf{Experimental status.} Training and held-out evaluation are complete for three models. Development results use 200 utterances from 40 \code{dev-clean} speakers and also selected checkpoints. The held-out comparison uses all 2,620 \code{test-clean} utterances from 40 different speakers, with frozen checkpoints and budgets. This revision also identifies the shared hidden dimensional bottleneck before sparsification.}}
 \newpage
 {\small\setlength{\parskip}{0pt}\tableofcontents}
 \newpage
@@ -91,7 +91,7 @@ Each valid waveform is right-padded to
  C=256,\quad M_i=C T_i.
  \label{eq:capacity}
 \end{equation}
-The encoder returns $U_i\in\R^{T_i\times256}$. Flattening gives $u_i\in\R^{M_i}$. For a two-second training crop, $N=32{,}000$, $T=125$, and $M=32{,}000$: the \emph{dense} code has the same number of scalar values as the waveform. Sparsity, rather than a smaller dense tensor, supplies the bottleneck. For other lengths, $M$ can be slightly larger than $N$ because of the last partially occupied time step.
+The encoder returns $U_i\in\R^{T_i\times256}$. Flattening gives $u_i\in\R^{M_i}$. For a two-second training crop, $N=32{,}000$, $T=125$, and $M=32{,}000$: the \emph{final dense code} has the same number of scalar slots as the waveform. For other lengths, $M$ can be slightly larger than $N$ because of the last partially occupied time step. This slot count does not imply an information-preserving dense encoder: the preceding hidden layer is smaller, as detailed below.
 
 Batch padding is excluded. The implementation encodes equal-valid-length items together so that a longer item in the same batch cannot alter a shorter item's boundary activations. The coefficient mask is
 \begin{equation}
@@ -162,6 +162,15 @@ Encoder total &&& 501,312 \\
 \end{table}
 
 The temporal hop is $4^4=256$ samples, or 16 ms. The maximum receptive field of a dense encoder coordinate is 2,041 samples, approximately 127.6 ms. To verify this, start with receptive field $r=1$ and jump $j=1$. At each stage add $8j$ for the stride-4 convolution, set $j\leftarrow4j$, then add $4j$ for the two residual convolutions. Thus candidate values are locally computed, although support selection compares candidates across the whole recording.
+
+\paragraph{Hidden compression before sparsification.}
+E4 produces only $H=128T=16{,}000$ values for a two-second crop, before the final $128\to256$ projection expands them to $M=32{,}000$ slots. The decoder's first projection similarly reduces 256 channels to 128. All three baselines therefore have a hidden dimensional bottleneck even at full support. The earlier interpretation that only top-$k$ supplies a bottleneck was incomplete; this revision makes the hidden compression explicit.
+
+For S-AF at a fixed length, the effective analysis and synthesis operators in Eq.~\eqref{eq:affine} obey
+\begin{equation}
+ \operatorname{rank}(B)\leq H,\qquad \operatorname{rank}(A)\leq H.
+\end{equation}
+At $N=32{,}000$, $H=N/2$, so a nonzero analysis nullspace exists and the dense affine model cannot reconstruct arbitrary waveforms exactly. The final expansion cannot recover directions lost before it. For the nonlinear models, the encoder also factors through $H$ values, and its local Jacobian rank away from activation boundaries is at most $H$. This does not establish a numerical lower bound on reconstruction error for a particular speech recording, which may lie near a lower-dimensional signal set. It does establish that equal final code and waveform slot counts do not guarantee a lossless dense reference. Full-budget errors reflect this restriction as well as optimization and training choices.
 
 \subsection{Decoder: exact operation order}
 The decoder first applies a biased $1\times1$ convolution $256\to128$. For source--target channel pairs $(128,128)$, $(128,64)$, $(64,32)$, and $(32,1)$, it then applies
@@ -329,7 +338,7 @@ Training samples source intervals with replacement using weight $1/n_s$ for ever
 \subsection{Audits and test discipline}
 Before training, the audit verifies partition roles, speaker identities, source extents, IDs, metadata, and cross-role duplicate decoded-audio hashes. All three runs passed. Source audio is not copied to the repository. Generated manifests and hash caches remain local.
 
-The reported metrics use the same 200 development utterances that selected checkpoints. Their confidence intervals therefore describe variation over these development speakers, not an unbiased final generalization estimate after repeated model selection. Test recordings have been indexed and leakage-audited but have not been used for reconstruction evaluation, checkpoint selection, or fitting training statistics. The inspected cache lacks \code{test-other}; external speakers, other languages, music, and environmental audio remain untested.
+The development metrics use the same 200 utterances that selected checkpoints. Their confidence intervals therefore describe variation over these development speakers, not an unbiased final generalization estimate after repeated model selection. Test recordings were indexed and leakage-audited before training, and first evaluated for reconstruction on 28 October 2026 using the frozen checkpoints and budget grid. They were not used for checkpoint selection, fitting training statistics, or architecture changes. The inspected cache lacks \code{test-other}; additional corpora, other languages, music, and environmental audio remain untested.
 
 \section{Measurements and mathematical definitions}
 \subsection{Sparsity and complete representation accounting}
@@ -451,6 +460,45 @@ A success means \emph{some} point in the entire eight-budget sweep reaches the t
 \item \textbf{The stated research goal remains open.} None of the three models reaches 30 dB SNR for any development utterance in the tested sweep. Neither low support nor favorable intelligibility demonstrates that all important details of the waveform have been preserved.
 \end{enumerate}
 
+\clearpage
+\section{Held-out test-clean comparison}
+The complete test uses all 2,620 recordings from 40 speakers, approximately 5.403 hours. None of these speakers occurs in the 921-speaker training set or 40-speaker development set. The checkpoint hashes, test-manifest hash, seed, eight fractions, and error thresholds were recorded before evaluation. All three checkpoints remain those previously selected at update 20,000; no retraining or test-driven model selection was performed.
+
+Table~\ref{tab:test-results} is generated from the completed evaluation summaries. Mean and median conventions match the development table. Zero retained values are a reconstruction control, and do not imply that a nonzero STOI score demonstrates preserved speech information. The numeric export is \code{sparse_autoencoder_test_results.csv}; the frozen protocol and provenance are in \code{sparse_autoencoder_test_runs.json}.
+\input{sparse_autoencoder_test_results.tex}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\linewidth]{sparse_autoencoder_test_results.png}
+\caption{Full held-out support--quality curves. Requested retained fraction is not a bitrate. The zero-code control is omitted from logarithmic axes. Curves summarize a fixed grid and do not establish intermediate or globally optimal performance.}
+\end{figure}
+
+\subsection{Interpreting the held-out findings}
+At 1\% capacity, S-NL reaches 6.89 dB median SNR compared with D-NL's 1.26 dB. At 10\%, the values are 9.30 and 6.09 dB. Training through sparsification therefore improves low-budget robustness in this comparison. At full support, however, D-NL reaches 11.14 dB compared with S-NL's 9.45 dB. A representation trained to tolerate pruning need not offer the strongest dense reconstruction.
+
+S-AF reaches 8.20 dB at 1\%, 12.86 dB at 10\%, and 13.18 dB at full support. At 10\%, its mean STOI is 0.873 and mean wideband PESQ is 2.027, compared with S-NL's 0.791 and 1.589. Its paired speaker-macro mean SNR advantage over S-NL is 3.52 dB, with a 95\% paired speaker-bootstrap interval of $[3.16,3.87]$ dB; its mean SNR difference is positive for all 40 speakers. This mean-difference interval is distinct from the difference between corpus medians.
+
+\begin{center}
+\begin{tabular}{lrrr}
+\toprule
+Target waveform NMSE & S-NL successes & D-NL successes & S-AF successes \\
+\midrule
+$\leq.1$ (SNR $\geq10$ dB) & 1,168/2,620 & 1,511/2,620 & 1,845/2,620 \\
+$\leq.01$ (SNR $\geq20$ dB) & 0/2,620 & 1/2,620 & 105/2,620 \\
+$\leq.001$ (SNR $\geq30$ dB) & 0/2,620 & 0/2,620 & 0/2,620 \\
+\bottomrule
+\end{tabular}
+\end{center}
+Each success permits any point in the frozen eight-budget sweep; these are not small-budget success counts. Among the 1,168 recordings where both S-AF and S-NL reach 10 dB, the median of their paired smallest-tested-support ratios $K_{\rm S\mbox{-}AF}/K_{\rm S\mbox{-}NL}$ is 0.50. S-AF uses strictly fewer retained values for 804 of those recordings and also succeeds on 677 recordings where S-NL fails. This supports an achieved representation-economy advantage for this comparison, while retaining the qualification that the supports come from a finite grid and a fixed inference rule.
+
+The complete numerical comparison appears in the Markdown report, \path{sparse_autoencoder_test_results.md}. Its paired support analysis compares smallest tested supports on the \emph{same} recordings where both models meet a fixed error target. It reports the size of that common successful set alongside each conditional ratio. The paired JSON record, \path{sparse_autoencoder_test_paired.json}, also retains one-sided successes and failures. Different successful subsets must not be mistaken for a paired sparsity advantage.
+
+The paired quality analysis resamples 40 speakers with 2,000 draws under seed 0, after averaging matched utterance differences within each speaker. Its 95\% percentile intervals concern speaker-macro \emph{mean differences}, not differences of median SNR or variability across training seeds. Per-budget summaries additionally retain the original 1,000-resample speaker intervals.
+
+The hidden $H=N/2$ bottleneck identified in the architecture review materially limits interpretation of the full-budget floor. This experiment tests achieved sparse representations produced by three particular compressed encoder--decoder designs. It does not isolate sparsification from a lossless dense reference, and the affine rank bound does not by itself quantify the observed error for a particular speech signal. A subsequent experiment should first establish dense reconstruction fidelity, then measure the additional cost of sparsification under a controlled representation.
+
+PESQ and STOI used CPU worker processes with the same metric functions and input arrays; a regression check confirmed equality with serial evaluation. GPU jobs were eventually scheduled sequentially after concurrent evaluation filled device memory. Earlier completed budgets were retained under the same frozen checkpoints and coverage. Resource scheduling and a larger CPU pool change execution time, not the reconstruction rule, metric definitions, or selected model. Timings are not used for architecture-speed conclusions.
+
 \section{Reproduction, files, and code correspondence}
 \subsection{Minimal workflow}
 Use Python 3.11 or newer and a PyTorch build suitable for the machine. From the repository root, a fresh installation can use:
@@ -480,7 +528,9 @@ For a saved run, an explicit development sweep is
 \begin{lstlisting}
 python run.py evaluate --run runs/YOUR_RUN --split validation --limit 200 --keep-fractions 0,0.01,0.02,0.05,0.1,0.25,0.5,1
 \end{lstlisting}
-After freezing the study protocol, a \emph{future} final test would use \code{--split clean} without a development limit. That final-test command has not been run for this report. The evaluator loads \code{checkpoints/best.pt} by default. Checkpoints contain model/optimizer states, configuration, training power, update count, and stored RNG state. Resuming restores model/optimizer RNG but restarts the crop/sampler position; an interrupted/resumed trajectory is not promised to match an uninterrupted one bit for bit. GPU numerical kernels can also limit exact cross-machine reproduction.
+The held-out test in this revision uses \code{--split clean} without a development limit. Optional \code{--metric-workers 4} parallelizes CPU PESQ/STOI calculations. \code{--resume} reuses completed budgets with matching coverage and checkpoint metadata; the frozen study additionally verifies checkpoint and manifest hashes. \code{python tools/compare_models.py} regenerates the test comparison, paired support/quality analysis, figure, and numeric exports from completed local runs.
+
+The evaluator loads \code{checkpoints/best.pt} by default. Checkpoints contain model/optimizer states, configuration, training power, update count, and stored RNG state. Training resume restores model/optimizer RNG but restarts the crop/sampler position; an interrupted/resumed training trajectory is not promised to match an uninterrupted one bit for bit. GPU numerical kernels can also limit exact cross-machine reproduction.
 
 \subsection{Implementation map}
 \begin{center}\small
@@ -500,7 +550,7 @@ Source & Responsibility \\
 \code{tests/test_sparse_autoencoder.py} & Shapes, padding, code-only decode, gradients, affine control \\
 \bottomrule
 \end{tabularx}\end{center}
-The existing suite also exercises audits, metric validity, dataset sampling, checkpoint reuse, and the end-to-end workflow. All 61 tests passed during preparation of this report, including the home-path portability check added for repository publication. Documentation and exported results do not replace the executable implementation.
+The existing suite also exercises audits, metric validity, dataset sampling, checkpoint reuse, and the end-to-end workflow. All 62 tests passed during this revision, including process-worker metric equality and reuse of completed evaluation budgets. Documentation and exported results do not replace the executable implementation.
 
 The repository includes the \LaTeX{} source, BibTeX references, compiled PDF, a numeric results export, and a compact run/provenance record. Downloaded recordings, generated path-bearing manifests, environments, checkpoints, and bulky run products are excluded by \code{.gitignore}. Retraining regenerates local run artifacts; published scalar results alone do not provide downloadable pretrained models.
 
@@ -516,7 +566,7 @@ latexmk -pdf -interaction=nonstopmode -halt-on-error sparse_autoencoder_models.t
 \item \textbf{Exact reconstruction or invertibility:} no Jacobian, frame-bound, or perfect-reconstruction constraint is enforced. Full-budget residual error is substantial.
 \item \textbf{Per-sample optimal adaptation:} the learned bank of convolutional parameters is shared. Only latent values and positions adapt. There is no search over input-dependent transforms, learned stopping rule, per-example latent optimization, or certified lower bound.
 \item \textbf{Bitrate and arbitrary precision:} values remain float32 and no entropy-coded bitstream is produced. A one-number code with unbounded numerical precision would be an accounting loophole, not evidence of physical compression.
-\item \textbf{General audio generalization:} the main data are clean English read speech, one training seed, and a limited development probe. Speaker separation does not establish transfer to all signals.
+\item \textbf{General audio generalization:} the main data are clean English read speech and one training seed. Full held-out \code{test-clean} evaluation checks unseen narrators in this corpus; it does not establish transfer to all signals.
 \item \textbf{Semantic or independent features:} a coordinate is an operational reconstruction variable. Neither semantic interpretation, orthogonality, nor independence is required or demonstrated.
 \end{itemize}
 
@@ -525,7 +575,7 @@ The first priority is to explain the full-budget reconstruction floor before tre
 
 Next, compare hard magnitude ranking with reconstruction-aware support refinement under a \emph{fixed} decoder and fixed budget. For S-AF, optimize selected coefficients and test alternative supports; for S-NL, separate amplitude optimization from support changes. Any gains would quantify the inference gap between this encoder and better codes within the same decoder, without conflating that gap with model capacity. Analyze paired recordings at matched distortion and report failures as well as successes.
 
-Finally, repeat with multiple seeds, use the remaining development speakers' utterances carefully, and freeze the selection procedure before final test evaluation. Synthetic signals remain useful because known generative structure can expose failures, but success on selected synthetic families would not establish universality. Quantization, support coding, and shared-model accounting should be added when comparing actual description lengths. These questions keep the experiment connected to the dream system while avoiding claims the current evidence cannot support.
+Finally, repeat with multiple seeds and develop subsequent architectures on training/development data. This test-clean result is now a fixed baseline; further test-driven choices should not be presented as fresh independent confirmation. Synthetic signals remain useful because known generative structure can expose failures, but success on selected synthetic families would not establish universality. Quantization, support coding, and shared-model accounting should be added when comparing actual description lengths. These questions keep the experiment connected to the dream system while avoiding claims the current evidence cannot support.
 
 \bibliographystyle{unsrtnat}
 \bibliography{sparse_autoencoder_models}

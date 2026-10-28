@@ -1,0 +1,609 @@
+{
+  "quality": [
+    {
+      "a": "S-NL",
+      "b": "D-NL",
+      "keep_fraction": 0.01,
+      "metric": "snr_db",
+      "speaker_macro_mean_difference": 5.446432871194075,
+      "paired_speaker_bootstrap_ci95": [
+        4.844888645671368,
+        6.020578538354218
+      ],
+      "utterance_win_fraction": 1.0,
+      "speaker_win_fraction": 1.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-NL",
+      "b": "D-NL",
+      "keep_fraction": 0.01,
+      "metric": "stoi",
+      "speaker_macro_mean_difference": 0.23056386238101845,
+      "paired_speaker_bootstrap_ci95": [
+        0.21284887371115946,
+        0.2456284994635405
+      ],
+      "utterance_win_fraction": 1.0,
+      "speaker_win_fraction": 1.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-NL",
+      "b": "D-NL",
+      "keep_fraction": 0.01,
+      "metric": "pesq_wb",
+      "speaker_macro_mean_difference": 0.2231295762119415,
+      "paired_speaker_bootstrap_ci95": [
+        0.20490285494030483,
+        0.2424706375939561
+      ],
+      "utterance_win_fraction": 1.0,
+      "speaker_win_fraction": 1.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-NL",
+      "b": "D-NL",
+      "keep_fraction": 0.05,
+      "metric": "snr_db",
+      "speaker_macro_mean_difference": 4.95771029554122,
+      "paired_speaker_bootstrap_ci95": [
+        4.197479275764814,
+        5.712494754485535
+      ],
+      "utterance_win_fraction": 0.9927480916030534,
+      "speaker_win_fraction": 1.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-NL",
+      "b": "D-NL",
+      "keep_fraction": 0.05,
+      "metric": "stoi",
+      "speaker_macro_mean_difference": 0.17393785795260497,
+      "paired_speaker_bootstrap_ci95": [
+        0.1565690589573596,
+        0.18916834548335787
+      ],
+      "utterance_win_fraction": 0.9984732824427481,
+      "speaker_win_fraction": 1.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-NL",
+      "b": "D-NL",
+      "keep_fraction": 0.05,
+      "metric": "pesq_wb",
+      "speaker_macro_mean_difference": 0.4598701802526165,
+      "paired_speaker_bootstrap_ci95": [
+        0.42489975951887454,
+        0.4938637100341697
+      ],
+      "utterance_win_fraction": 1.0,
+      "speaker_win_fraction": 1.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-NL",
+      "b": "D-NL",
+      "keep_fraction": 0.1,
+      "metric": "snr_db",
+      "speaker_macro_mean_difference": 3.1622078676725667,
+      "paired_speaker_bootstrap_ci95": [
+        2.5358279749488783,
+        3.817453560677013
+      ],
+      "utterance_win_fraction": 0.9305343511450381,
+      "speaker_win_fraction": 0.975,
+      "speakers": 40
+    },
+    {
+      "a": "S-NL",
+      "b": "D-NL",
+      "keep_fraction": 0.1,
+      "metric": "stoi",
+      "speaker_macro_mean_difference": 0.10189537325727005,
+      "paired_speaker_bootstrap_ci95": [
+        0.08860878634147795,
+        0.11384653480415237
+      ],
+      "utterance_win_fraction": 0.9843511450381679,
+      "speaker_win_fraction": 1.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-NL",
+      "b": "D-NL",
+      "keep_fraction": 0.1,
+      "metric": "pesq_wb",
+      "speaker_macro_mean_difference": 0.47807988773514276,
+      "paired_speaker_bootstrap_ci95": [
+        0.43906299192541165,
+        0.5145280953922634
+      ],
+      "utterance_win_fraction": 0.999618320610687,
+      "speaker_win_fraction": 1.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-NL",
+      "b": "D-NL",
+      "keep_fraction": 1.0,
+      "metric": "snr_db",
+      "speaker_macro_mean_difference": -1.7312717383545515,
+      "paired_speaker_bootstrap_ci95": [
+        -1.869586706750212,
+        -1.5883739150507055
+      ],
+      "utterance_win_fraction": 0.0003816793893129771,
+      "speaker_win_fraction": 0.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-NL",
+      "b": "D-NL",
+      "keep_fraction": 1.0,
+      "metric": "stoi",
+      "speaker_macro_mean_difference": -0.06000361098940182,
+      "paired_speaker_bootstrap_ci95": [
+        -0.06483813630002364,
+        -0.05514531993928564
+      ],
+      "utterance_win_fraction": 0.0057251908396946565,
+      "speaker_win_fraction": 0.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-NL",
+      "b": "D-NL",
+      "keep_fraction": 1.0,
+      "metric": "pesq_wb",
+      "speaker_macro_mean_difference": -0.2447488368431813,
+      "paired_speaker_bootstrap_ci95": [
+        -0.29056979313903386,
+        -0.2011530836051761
+      ],
+      "utterance_win_fraction": 0.11870229007633588,
+      "speaker_win_fraction": 0.05,
+      "speakers": 40
+    },
+    {
+      "a": "S-AF",
+      "b": "S-NL",
+      "keep_fraction": 0.01,
+      "metric": "snr_db",
+      "speaker_macro_mean_difference": 1.356290795743481,
+      "paired_speaker_bootstrap_ci95": [
+        1.172916497189116,
+        1.5399543826085709
+      ],
+      "utterance_win_fraction": 0.9969465648854962,
+      "speaker_win_fraction": 1.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-AF",
+      "b": "S-NL",
+      "keep_fraction": 0.01,
+      "metric": "stoi",
+      "speaker_macro_mean_difference": 0.02622113878220888,
+      "paired_speaker_bootstrap_ci95": [
+        0.022881001774247293,
+        0.029508070722094496
+      ],
+      "utterance_win_fraction": 0.9026717557251909,
+      "speaker_win_fraction": 1.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-AF",
+      "b": "S-NL",
+      "keep_fraction": 0.01,
+      "metric": "pesq_wb",
+      "speaker_macro_mean_difference": 0.022570117050429245,
+      "paired_speaker_bootstrap_ci95": [
+        0.0072052394339348165,
+        0.03908142227479357
+      ],
+      "utterance_win_fraction": 0.5553435114503816,
+      "speaker_win_fraction": 0.6,
+      "speakers": 40
+    },
+    {
+      "a": "S-AF",
+      "b": "S-NL",
+      "keep_fraction": 0.05,
+      "metric": "snr_db",
+      "speaker_macro_mean_difference": 3.193411567611504,
+      "paired_speaker_bootstrap_ci95": [
+        2.8825087735941914,
+        3.4907940945873235
+      ],
+      "utterance_win_fraction": 0.999236641221374,
+      "speaker_win_fraction": 1.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-AF",
+      "b": "S-NL",
+      "keep_fraction": 0.05,
+      "metric": "stoi",
+      "speaker_macro_mean_difference": 0.07155300368577529,
+      "paired_speaker_bootstrap_ci95": [
+        0.06738669941062729,
+        0.07613866203664166
+      ],
+      "utterance_win_fraction": 0.9973282442748092,
+      "speaker_win_fraction": 1.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-AF",
+      "b": "S-NL",
+      "keep_fraction": 0.05,
+      "metric": "pesq_wb",
+      "speaker_macro_mean_difference": 0.27913251589529287,
+      "paired_speaker_bootstrap_ci95": [
+        0.24362478958520872,
+        0.3149615183812196
+      ],
+      "utterance_win_fraction": 0.9366412213740458,
+      "speaker_win_fraction": 1.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-AF",
+      "b": "S-NL",
+      "keep_fraction": 0.1,
+      "metric": "snr_db",
+      "speaker_macro_mean_difference": 3.522007308521674,
+      "paired_speaker_bootstrap_ci95": [
+        3.1615079136517994,
+        3.8676210302926664
+      ],
+      "utterance_win_fraction": 0.999236641221374,
+      "speaker_win_fraction": 1.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-AF",
+      "b": "S-NL",
+      "keep_fraction": 0.1,
+      "metric": "stoi",
+      "speaker_macro_mean_difference": 0.0809205709904193,
+      "paired_speaker_bootstrap_ci95": [
+        0.07643502875613374,
+        0.08596294641052349
+      ],
+      "utterance_win_fraction": 0.998854961832061,
+      "speaker_win_fraction": 1.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-AF",
+      "b": "S-NL",
+      "keep_fraction": 0.1,
+      "metric": "pesq_wb",
+      "speaker_macro_mean_difference": 0.44035108296727704,
+      "paired_speaker_bootstrap_ci95": [
+        0.4002741350775022,
+        0.4795795981696768
+      ],
+      "utterance_win_fraction": 0.9770992366412213,
+      "speaker_win_fraction": 1.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-AF",
+      "b": "S-NL",
+      "keep_fraction": 1.0,
+      "metric": "snr_db",
+      "speaker_macro_mean_difference": 3.675483089449198,
+      "paired_speaker_bootstrap_ci95": [
+        3.294166938478842,
+        4.048604473679288
+      ],
+      "utterance_win_fraction": 0.999236641221374,
+      "speaker_win_fraction": 1.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-AF",
+      "b": "S-NL",
+      "keep_fraction": 1.0,
+      "metric": "stoi",
+      "speaker_macro_mean_difference": 0.09231489913984876,
+      "paired_speaker_bootstrap_ci95": [
+        0.08686320960849538,
+        0.09795785057131962
+      ],
+      "utterance_win_fraction": 0.999618320610687,
+      "speaker_win_fraction": 1.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-AF",
+      "b": "S-NL",
+      "keep_fraction": 1.0,
+      "metric": "pesq_wb",
+      "speaker_macro_mean_difference": 0.7896684082654966,
+      "paired_speaker_bootstrap_ci95": [
+        0.7277864181751851,
+        0.8506933946310252
+      ],
+      "utterance_win_fraction": 0.9942748091603053,
+      "speaker_win_fraction": 1.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-AF",
+      "b": "D-NL",
+      "keep_fraction": 0.01,
+      "metric": "snr_db",
+      "speaker_macro_mean_difference": 6.802723666937557,
+      "paired_speaker_bootstrap_ci95": [
+        6.141270673030886,
+        7.441068680148072
+      ],
+      "utterance_win_fraction": 1.0,
+      "speaker_win_fraction": 1.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-AF",
+      "b": "D-NL",
+      "keep_fraction": 0.01,
+      "metric": "stoi",
+      "speaker_macro_mean_difference": 0.25678500116322733,
+      "paired_speaker_bootstrap_ci95": [
+        0.2380267344599684,
+        0.2734546488463119
+      ],
+      "utterance_win_fraction": 1.0,
+      "speaker_win_fraction": 1.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-AF",
+      "b": "D-NL",
+      "keep_fraction": 0.01,
+      "metric": "pesq_wb",
+      "speaker_macro_mean_difference": 0.24569969326237073,
+      "paired_speaker_bootstrap_ci95": [
+        0.21501166690008963,
+        0.278669259037281
+      ],
+      "utterance_win_fraction": 1.0,
+      "speaker_win_fraction": 1.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-AF",
+      "b": "D-NL",
+      "keep_fraction": 0.05,
+      "metric": "snr_db",
+      "speaker_macro_mean_difference": 8.151121863152724,
+      "paired_speaker_bootstrap_ci95": [
+        7.20466054983817,
+        9.084451145550727
+      ],
+      "utterance_win_fraction": 0.9958015267175573,
+      "speaker_win_fraction": 1.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-AF",
+      "b": "D-NL",
+      "keep_fraction": 0.05,
+      "metric": "stoi",
+      "speaker_macro_mean_difference": 0.24549086163838027,
+      "paired_speaker_bootstrap_ci95": [
+        0.2278394626507552,
+        0.26136040437280483
+      ],
+      "utterance_win_fraction": 1.0,
+      "speaker_win_fraction": 1.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-AF",
+      "b": "D-NL",
+      "keep_fraction": 0.05,
+      "metric": "pesq_wb",
+      "speaker_macro_mean_difference": 0.7390026961479095,
+      "paired_speaker_bootstrap_ci95": [
+        0.6843639822302623,
+        0.792411020606565
+      ],
+      "utterance_win_fraction": 1.0,
+      "speaker_win_fraction": 1.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-AF",
+      "b": "D-NL",
+      "keep_fraction": 0.1,
+      "metric": "snr_db",
+      "speaker_macro_mean_difference": 6.6842151761942405,
+      "paired_speaker_bootstrap_ci95": [
+        5.818418594727658,
+        7.5528140512096265
+      ],
+      "utterance_win_fraction": 0.9877862595419847,
+      "speaker_win_fraction": 1.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-AF",
+      "b": "D-NL",
+      "keep_fraction": 0.1,
+      "metric": "stoi",
+      "speaker_macro_mean_difference": 0.18281594424768938,
+      "paired_speaker_bootstrap_ci95": [
+        0.16966873593974383,
+        0.195492180379411
+      ],
+      "utterance_win_fraction": 1.0,
+      "speaker_win_fraction": 1.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-AF",
+      "b": "D-NL",
+      "keep_fraction": 0.1,
+      "metric": "pesq_wb",
+      "speaker_macro_mean_difference": 0.9184309707024199,
+      "paired_speaker_bootstrap_ci95": [
+        0.8592151813969094,
+        0.9729840260334272
+      ],
+      "utterance_win_fraction": 1.0,
+      "speaker_win_fraction": 1.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-AF",
+      "b": "D-NL",
+      "keep_fraction": 1.0,
+      "metric": "snr_db",
+      "speaker_macro_mean_difference": 1.944211351094647,
+      "paired_speaker_bootstrap_ci95": [
+        1.6238730599810491,
+        2.262231049608327
+      ],
+      "utterance_win_fraction": 0.9091603053435114,
+      "speaker_win_fraction": 0.95,
+      "speakers": 40
+    },
+    {
+      "a": "S-AF",
+      "b": "D-NL",
+      "keep_fraction": 1.0,
+      "metric": "stoi",
+      "speaker_macro_mean_difference": 0.03231128815044693,
+      "paired_speaker_bootstrap_ci95": [
+        0.027292556648997008,
+        0.03703910724482253
+      ],
+      "utterance_win_fraction": 0.9366412213740458,
+      "speaker_win_fraction": 1.0,
+      "speakers": 40
+    },
+    {
+      "a": "S-AF",
+      "b": "D-NL",
+      "keep_fraction": 1.0,
+      "metric": "pesq_wb",
+      "speaker_macro_mean_difference": 0.5449195714223154,
+      "paired_speaker_bootstrap_ci95": [
+        0.4860727347720433,
+        0.600437546832209
+      ],
+      "utterance_win_fraction": 0.9736641221374046,
+      "speaker_win_fraction": 1.0,
+      "speakers": 40
+    }
+  ],
+  "support": [
+    {
+      "a": "S-NL",
+      "b": "D-NL",
+      "target_nmse": 0.1,
+      "both_succeed": 1168,
+      "only_a_succeeds": 0,
+      "only_b_succeeds": 343,
+      "neither_succeeds": 1109,
+      "a_uses_fewer_values_among_both": 1134,
+      "median_support_ratio_a_over_b_among_both": 0.08004679144385027
+    },
+    {
+      "a": "S-NL",
+      "b": "D-NL",
+      "target_nmse": 0.01,
+      "both_succeed": 0,
+      "only_a_succeeds": 0,
+      "only_b_succeeds": 1,
+      "neither_succeeds": 2619,
+      "a_uses_fewer_values_among_both": 0,
+      "median_support_ratio_a_over_b_among_both": null
+    },
+    {
+      "a": "S-NL",
+      "b": "D-NL",
+      "target_nmse": 0.001,
+      "both_succeed": 0,
+      "only_a_succeeds": 0,
+      "only_b_succeeds": 0,
+      "neither_succeeds": 2620,
+      "a_uses_fewer_values_among_both": 0,
+      "median_support_ratio_a_over_b_among_both": null
+    },
+    {
+      "a": "S-AF",
+      "b": "S-NL",
+      "target_nmse": 0.1,
+      "both_succeed": 1168,
+      "only_a_succeeds": 677,
+      "only_b_succeeds": 0,
+      "neither_succeeds": 775,
+      "a_uses_fewer_values_among_both": 804,
+      "median_support_ratio_a_over_b_among_both": 0.5
+    },
+    {
+      "a": "S-AF",
+      "b": "S-NL",
+      "target_nmse": 0.01,
+      "both_succeed": 0,
+      "only_a_succeeds": 105,
+      "only_b_succeeds": 0,
+      "neither_succeeds": 2515,
+      "a_uses_fewer_values_among_both": 0,
+      "median_support_ratio_a_over_b_among_both": null
+    },
+    {
+      "a": "S-AF",
+      "b": "S-NL",
+      "target_nmse": 0.001,
+      "both_succeed": 0,
+      "only_a_succeeds": 0,
+      "only_b_succeeds": 0,
+      "neither_succeeds": 2620,
+      "a_uses_fewer_values_among_both": 0,
+      "median_support_ratio_a_over_b_among_both": null
+    },
+    {
+      "a": "S-AF",
+      "b": "D-NL",
+      "target_nmse": 0.1,
+      "both_succeed": 1510,
+      "only_a_succeeds": 335,
+      "only_b_succeeds": 1,
+      "neither_succeeds": 774,
+      "a_uses_fewer_values_among_both": 1510,
+      "median_support_ratio_a_over_b_among_both": 0.08000309524101493
+    },
+    {
+      "a": "S-AF",
+      "b": "D-NL",
+      "target_nmse": 0.01,
+      "both_succeed": 1,
+      "only_a_succeeds": 104,
+      "only_b_succeeds": 0,
+      "neither_succeeds": 2515,
+      "a_uses_fewer_values_among_both": 1,
+      "median_support_ratio_a_over_b_among_both": 0.1000228102189781
+    },
+    {
+      "a": "S-AF",
+      "b": "D-NL",
+      "target_nmse": 0.001,
+      "both_succeed": 0,
+      "only_a_succeeds": 0,
+      "only_b_succeeds": 0,
+      "neither_succeeds": 2620,
+      "a_uses_fewer_values_among_both": 0,
+      "median_support_ratio_a_over_b_among_both": null
+    }
+  ]
+}

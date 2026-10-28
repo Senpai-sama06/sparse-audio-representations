@@ -3,6 +3,7 @@ import argparse
 import csv
 import hashlib
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 
 
@@ -14,9 +15,11 @@ def file_hash(path):
     return digest.hexdigest()
 
 
-def export(study_path, output):
+def export(study_path, output, split="validation"):
     root = Path(__file__).resolve().parents[1]
     study = json.loads(study_path.read_text(encoding="utf-8"))
+    subset = "limit_200" if split == "validation" else "complete"
+    stem = "sparse_autoencoder" if split == "validation" else "sparse_autoencoder_test"
     if len(study["runs"]) != 3:
         raise ValueError("Expected three runs in S-NL, D-NL, S-AF order")
     rows, records, coverage, training_manifests = [], [], set(), set()
@@ -34,7 +37,10 @@ def export(study_path, output):
             raise ValueError(f"Run order does not match the report labels: {run.name}")
         training_manifests.add(file_hash(root / config["data"]["manifest_dir"] / config["data"]["train_manifest"]))
         source = json.loads((run / "source.json").read_text())
-        summaries = sorted(run.glob("evaluation/validation/limit_200/fraction_*/summary.json"),
+        manifest_name = config["data"]["val_manifest"] if split == "validation" else config["data"]["test_manifests"][split]
+        manifest = root / config["data"]["manifest_dir"] / manifest_name
+        expected = 200 if split == "validation" else sum(bool(line.strip()) for line in manifest.read_text().splitlines())
+        summaries = sorted(run.glob(f"evaluation/{split}/{subset}/fraction_*/summary.json"),
                            key=lambda p: float(p.parent.name.split("_")[1]))
         if len(summaries) != 8:
             raise ValueError(f"Expected eight evaluated budgets: {run.name}")
@@ -42,8 +48,8 @@ def export(study_path, output):
         for path in summaries:
             summary = json.loads(path.read_text())
             fraction = float(path.parent.name.split("_")[1])
-            if summary["examples"] != 200 or summary["split"] != "validation":
-                raise ValueError("Expected the common 200-example development probe")
+            if summary["examples"] != expected or summary["split"] != split or summary["limited"] != (split == "validation"):
+                raise ValueError(f"Expected the common {expected}-example {split} evaluation")
             coverage.add(summary["coverage_sha256"])
             metrics = summary["metrics"]
             row = {"model": label, "keep_fraction": fraction, "examples": summary["examples"],
@@ -70,8 +76,8 @@ def export(study_path, output):
             "training_source_combined_sha256": source["combined_sha256"],
             "checkpoint_sha256": file_hash(run / "checkpoints/best.pt"),
             "checkpoint_step": summary["checkpoint_step"],
-            "validation_manifest_sha256": summary["manifest_sha256"],
-            "validation_coverage_sha256": summary["coverage_sha256"],
+            f"{split}_manifest_sha256": summary["manifest_sha256"],
+            f"{split}_coverage_sha256": summary["coverage_sha256"],
             "evaluation_summary_sha256": score_files,
             "speech_metric_statuses": summary["speech_metric_statuses"],
             "support_search": search,
@@ -79,23 +85,37 @@ def export(study_path, output):
     if len(coverage) != 1 or len(training_manifests) != 1:
         raise ValueError("The runs used different training manifests or evaluated different recording coverage")
     table[-1] = r"\bottomrule"
+    if split == "clean":
+        table[0] = r"\begin{table}[!htbp]"
+    caption = "Common development probe: 200 full utterances, 40 speakers. " if split == "validation" else f"Full held-out test-clean: {expected:,} utterances, 40 speakers. "
+    selection = "All scores use best checkpoints selected on this same probe." if split == "validation" else "All scores use frozen checkpoints previously selected on development data."
     table.extend([r"\end{tabular}",
-                  r"\caption{Common development probe: 200 full utterances, 40 speakers. "
+                  r"\caption{" + caption +
                   r"Values/s, NMSE, STOI, and PESQ-WB are utterance means; SNR is the utterance median. "
                   r"Retained is the requested fraction of valid latent capacity. "
-                  r"All scores use best checkpoints selected on this same probe.}",
-                  r"\label{tab:results}", r"\end{table}"])
+                  + selection + "}",
+                  r"\label{tab:results}" if split == "validation" else r"\label{tab:test-results}", r"\end{table}"])
     output.mkdir(parents=True, exist_ok=True)
     fields = list(dict.fromkeys(key for row in rows for key in row))
-    with (output / "sparse_autoencoder_results.csv").open("w", newline="", encoding="utf-8") as stream:
+    with (output / f"{stem}_results.csv").open("w", newline="", encoding="utf-8") as stream:
         writer = csv.DictWriter(stream, fieldnames=fields)
         writer.writeheader()
         writer.writerows(rows)
-    (output / "sparse_autoencoder_results.tex").write_text("\n".join(table) + "\n", encoding="utf-8")
-    provenance = {"date": "2026-10-27", "scope": "development; not a final test or sparsity certificate",
+    (output / f"{stem}_results.tex").write_text("\n".join(table) + "\n", encoding="utf-8")
+    scope = "development; not a final test or sparsity certificate" if split == "validation" else "full held-out test-clean; fixed models and budgets; no minimum-support certificate"
+    provenance = {"date": datetime.now(timezone.utc).date().isoformat(), "scope": scope,
                   "training_manifest_sha256": next(iter(training_manifests)),
                   "model_order": ["S-NL", "D-NL", "S-AF"], "runs": records}
-    (output / "sparse_autoencoder_runs.json").write_text(json.dumps(provenance, indent=2) + "\n", encoding="utf-8")
+    protocol = root / "runs/final_test_evaluation.json"
+    if split == "clean" and protocol.exists():
+        frozen = json.loads(protocol.read_text())
+        frozen_runs = {Path(r["run"]).name: r for r in frozen["runs"]}
+        for record in records:
+            expected_run = frozen_runs[record["run_name"]]
+            if record["checkpoint_sha256"] != expected_run["checkpoint_sha256"] or record["clean_manifest_sha256"] != expected_run["test_manifest_sha256"]:
+                raise ValueError("Checkpoint or test manifest changed since protocol freeze")
+        provenance["frozen_test_protocol"] = frozen
+    (output / f"{stem}_runs.json").write_text(json.dumps(provenance, indent=2) + "\n", encoding="utf-8")
     print(f"Exported {len(rows)} rows, the LaTeX table, and three run records to {output}")
 
 
@@ -103,5 +123,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--study", type=Path, default=Path("runs/concurrent_training.json"))
     parser.add_argument("--output", type=Path, default=Path("documentation"))
+    parser.add_argument("--split", choices=["validation", "clean"], default="validation")
     args = parser.parse_args()
-    export(args.study, args.output)
+    export(args.study, args.output, args.split)

@@ -97,6 +97,11 @@ def test_checkpoint_training_and_fraction_evaluation(tmp_path):
     assert len(search["targets"]) == 3
     assert all(row["met"] + row["unmet"] + row["silent"] == 1 for row in search["targets"])
     assert json.loads((paths[1]/"summary.json").read_text())["metrics"]["active_coefficients"]["mean"] == 4
+    before = [(path/"metrics.csv").read_bytes() for path in paths]
+    reused = evaluate(run,split="validation",limit=1,device="cpu",keep_fractions=[0.,.25,1.],resume=True)
+    assert before == [(path/"metrics.csv").read_bytes() for path in reused]
+    assert json.loads((paths[-1].parent/"support_search.json").read_text()) == search
+    assert json.loads((paths[-1].parent/"progress.json").read_text())["status"] == "complete"
     from lrac.analyze import analyze
     diagnostics = analyze(run, limit=1, device="cpu")
     assert json.loads((diagnostics/"diagnostics.json").read_text())["functional_interaction_estimate"] is None

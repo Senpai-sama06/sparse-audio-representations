@@ -30,6 +30,8 @@ def parser():
             command.add_argument("--data-config", help="External dataset configuration; model remains frozen")
             command.add_argument("--budgets", help="Retained coefficients: whole recording for sparse_autoencoder/block_orthogonal, per time step otherwise; zero keeps none in global models, all in legacy models")
             command.add_argument("--keep-fractions", help="Sparse autoencoder: comma-separated fractions retained across each whole recording, including 0 and 1")
+            command.add_argument("--metric-workers", type=int, default=0, help="CPU processes for optional PESQ/STOI; zero computes them serially")
+            command.add_argument("--resume", action="store_true", help="Reuse complete budgets with matching example coverage and checkpoint metadata")
             command.add_argument("--nmse-targets", help="Block model: comma-separated waveform NMSE tolerances for minimum support")
     command = sub.add_parser("report")
     command.add_argument("--runs", nargs="+", required=True)
@@ -67,7 +69,7 @@ def main(argv=None):
             raise ValueError("Budgets must be nonnegative")
         targets = [float(v) for v in args.nmse_targets.split(",")] if args.nmse_targets else None
         fractions = [float(v) for v in args.keep_fractions.split(",")] if args.keep_fractions else None
-        evaluate(args.run, args.split, args.limit, args.device, args.data_config, budgets, targets, args.checkpoint, fractions)
+        evaluate(args.run, args.split, args.limit, args.device, args.data_config, budgets, targets, args.checkpoint, fractions, args.metric_workers, args.resume)
     elif args.command == "analyze":
         from lrac.analyze import analyze
         analyze(args.run, args.split, args.limit, args.device, args.checkpoint)
