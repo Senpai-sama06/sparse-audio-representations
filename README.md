@@ -17,6 +17,10 @@ curves, matched-error support comparisons, and paired speaker uncertainty. The
 architecture audit identifies hidden compression to 16,000 values before the
 32,000-slot latent projection for a two-second input; full-budget reconstruction
 is therefore not a lossless reference.
+The [S-AF channel characterization](documentation/saf_channel_analysis.md) ranks
+all 256 channels at 10% support and analyzes the top ten: coefficient distributions,
+bias-corrected synthesis spectra, voiced/unvoiced associations, ablations, and
+individual-channel spectrograms.
 The [datasets and study protocol](documentation/experiments.md) and
 [architecture comparison](documentation/implementation.md) record alternatives;
 existing models remain earlier baselines for exploration.

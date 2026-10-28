@@ -49,3 +49,5 @@ Deep Residual Learning for Image Recognition — Kaiming He, Xiangyu Zhang, Shao
 Decoupled Weight Decay Regularization — Ilya Loshchilov, Frank Hutter
 SDR – half-baked or well done? — Jonathan Le Roux, Scott Wisdom, Hakan Erdogan, John R. Hershey
 An Algorithm for Intelligibility Prediction of Time–Frequency Weighted Noisy Speech — Cees H. Taal, Richard C. Hendriks, Richard Heusdens, Jesper Jensen
+PYIN: A fundamental frequency estimator using probabilistic threshold distributions — Matthias Mauch, Simon Dixon
+Joint Robust Voicing Detection and Pitch Estimation Based on Residual Harmonics — Thomas Drugman, Abeer Alwan
