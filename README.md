@@ -37,6 +37,9 @@ following the [initial literature review](documentation/literature_review.md).
 The [formal existence proofs](documentation/sparsest_representation.md) establish
 when minimum support is attained and distinguish sample-adapted bases from
 shared, stable reconstruction systems.
+The [sparse optimization search](documentation/sparse_search.md) formulates joint
+domain/coefficient optimization and provides a tiny exact rational search with
+certified minimum-support results.
 [bibliography.md](bibliography.md) records the papers examined. Dictionaries and
 orthogonality are candidate assumptions, not requirements of the research goal.
 

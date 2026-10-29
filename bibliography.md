@@ -53,3 +53,4 @@ PYIN: A fundamental frequency estimator using probabilistic threshold distributi
 Joint Robust Voicing Detection and Pitch Estimation Based on Residual Harmonics — Thomas Drugman, Abeer Alwan
 WORLD: A Vocoder-Based High-Quality Speech Synthesis System for Real-Time Applications — Masanori Morise, Fumiya Yokomori, Kenji Ozawa
 CheapTrick, a spectral envelope estimator for high-quality speech synthesis — Masanori Morise
+SCIP: global optimization of mixed-integer nonlinear programs in a branch-and-cut framework — Stefan Vigerske, Ambros Gleixner
