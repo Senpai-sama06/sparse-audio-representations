@@ -34,6 +34,9 @@ existing models remain earlier baselines for exploration.
 The current research discussion is in
 [finding the sparsest domain for a particular sample](documentation/adaptive_transforms.md),
 following the [initial literature review](documentation/literature_review.md).
+The [formal existence proofs](documentation/sparsest_representation.md) establish
+when minimum support is attained and distinguish sample-adapted bases from
+shared, stable reconstruction systems.
 [bibliography.md](bibliography.md) records the papers examined. Dictionaries and
 orthogonality are candidate assumptions, not requirements of the research goal.
 

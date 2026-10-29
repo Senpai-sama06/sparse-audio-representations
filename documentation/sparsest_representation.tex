@@ -1,0 +1,575 @@
+% Build from documentation/: latexmk -pdf -interaction=nonstopmode -halt-on-error sparsest_representation.tex
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,microtype}
+\usepackage[margin=24mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,tabularx,array,enumitem,fancyhdr,xcolor}
+\usepackage[colorlinks,linkcolor=blue!45!black,citecolor=blue!45!black,urlcolor=blue!45!black,breaklinks]{hyperref}
+\usepackage{bookmark}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+\newcommand{\F}{\mathbb F}
+\newcommand{\N}{\mathbb N}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\spanof}{\operatorname{span}}
+\newcommand{\dist}{\operatorname{dist}}
+\newcommand{\spark}{\operatorname{spark}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlist{nosep,leftmargin=*}
+\renewcommand{\arraystretch}{1.16}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small LRAC / Foundations of sparsest representation}
+\fancyhead[R]{\small 29 October 2026}
+\fancyfoot[C]{\thepage}
+\setlength{\headheight}{14pt}
+\hypersetup{pdftitle={Existence of Sparsest Representations: Theorems, Proofs, and Limits},pdfauthor={LRAC research project}}
+\title{Existence of Sparsest Representations\\[5pt]\large Theorems, proofs, and the limits of what existence establishes}
+\author{LRAC research project}
+\date{29 October 2026}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+We give a precise answer to whether every sequence has a sparsest possible
+representation. First, any declared representation family with at least one
+feasible finite code attains a minimum nonzero count, by well-ordering; compactness
+is unnecessary for this conditional existence result. Second, every nonzero
+sequence admits an exact one-coefficient representation in a sequence-dependent
+algebraic basis. In finite dimensions this basis can be orthonormal and
+constructed by Gram--Schmidt; the same conclusion holds for finite-energy infinite
+sequences in a sequence-dependent Hilbert basis. These are existence statements,
+not evidence of compression: the chosen basis can contain the sequence itself.
+We then prove existence in fixed dictionaries, a conditional uniqueness result,
+and limitations for shared stable decoders and finite-precision codes. No theorem
+here asserts that the trained autoencoder attains a global optimum, or that one
+universal, useful sparsifying domain has been identified.
+\end{abstract}
+
+\section{The question and its quantifiers}
+
+A finite real recording is a vector $x\in\R^N$. More generally, a sequence is an
+element of $\F^I$, where $\F=\R$ or $\C$ and $I$ is a finite index set or $\N$.
+An infinite sequence need not belong to $\ell^2$; the space and reconstruction
+criterion must therefore be stated explicitly.
+We use $\N=\{1,2,\ldots\}$ and $\N_0=\{0,1,2,\ldots\}$; finite signal and
+dictionary dimensions are positive integers.
+
+The word \emph{sparsest} refers here to the \textbf{minimum number of nonzero
+scalar coefficients}, not minimum bit length, smallest coefficient magnitudes,
+or most interpretable features. We distinguish:
+\begin{enumerate}
+\item existence of a minimum in a declared feasible family;
+\item existence when a new basis may be chosen for each individual sequence;
+\item existence under a shared decoder, restricted adaptation and specified precision;
+\item uniqueness, computation and certification of that minimum.
+\end{enumerate}
+These assertions are not interchangeable. In particular,
+$\forall x\,\exists D_x$ does not imply $\exists D\,\forall x$ with the same sparse
+budget. All results below are mathematical statements under their explicit
+assumptions; they are not new empirical findings about speech.
+
+\section{A general existence theorem}
+
+\begin{definition}[Admissible finite-code representation]\label{def:admissible}
+Fix a signal space $X$ and shared reconstruction conventions $h$. An admissible
+representation is a pair $r=(\theta,z)$ in a declared set $\mathcal A_h$, where
+$z\in\F^m$ for some finite $m\geq0$, and $\theta$ specifies any permitted
+sample-dependent choice of transform, basis, decoder parameters or side
+information. A fixed reconstruction rule $G_h$ maps $r$ to $X$.
+
+Its coefficient cost is
+\[
+c(r)=\norm{z}_0=\#\{j:z_j\neq0\}\in\N_0.
+\]
+For a declared nonnegative distortion $d$ and tolerance $\varepsilon\geq0$, set
+\[
+\mathcal F_\varepsilon(x)
+=\{r\in\mathcal A_h:d(x,G_h(r))\leq\varepsilon\}.
+\]
+Exact reconstruction can instead be required directly as $G_h(r)=x$.
+Any restrictions on adaptation, coefficient range, precision, code length and
+decoder access are part of $\mathcal A_h$ and $h$.
+\end{definition}
+
+\begin{lemma}[Attainment of an integer-valued minimum]\label{lem:integer}
+Let $S$ be nonempty and $c:S\to\N_0$. There exists $s_*\in S$ such that
+$c(s_*)\leq c(s)$ for all $s\in S$.
+\end{lemma}
+\begin{proof}
+The image $c(S)$ is a nonempty subset of $\N_0$, so the well-ordering principle
+gives a least element $k_*$. Since $k_*\in c(S)$, some $s_*\in S$ satisfies
+$c(s_*)=k_*$. This $s_*$ has the required property.
+\end{proof}
+
+\begin{theorem}[Existence of a sparsest feasible finite representation]\label{thm:existence}
+For every $x\in X$ and $\varepsilon\geq0$, if
+$\mathcal F_\varepsilon(x)\neq\varnothing$, then there exists
+$r_*=(\theta_*,z_*)\in\mathcal F_\varepsilon(x)$ satisfying
+\[
+k_*(x;\varepsilon,\mathcal A_h)
+=\norm{z_*}_0
+=\min_{(\theta,z)\in\mathcal F_\varepsilon(x)}\norm{z}_0.
+\]
+Consequently, any admissible feasible family for every signal in a class
+$\mathcal X\subseteq X$ has a sparsest finite representation for every
+$x\in\mathcal X$.
+\end{theorem}
+\begin{proof}
+Apply Lemma~\ref{lem:integer} to
+$S=\mathcal F_\varepsilon(x)$ and $c(\theta,z)=\norm{z}_0$.
+\end{proof}
+
+\begin{remark}[What is, and is not, assumed]
+This result permits infinitely many transforms, noncompact parameter sets and
+different finite code lengths. It needs no continuity, convexity or compactness:
+the \emph{attained coefficient counts} are integers. It does require an actual
+feasible finite code. It establishes neither uniqueness nor an algorithm for
+finding the minimizer. The minimum distortion for a \emph{fixed} code budget is
+a different optimization problem and can fail to be attained.
+\end{remark}
+
+\begin{example}[An infimum of error is not feasibility]\label{ex:infimum}
+For scalar target $x=0$ and fixed decoder $G(z)=e^z$, $z\in\R$,
+$\inf_z|x-G(z)|=0$, but $G(z)\neq0$ for every finite $z$. At tolerance zero there
+is no feasible code. At every positive tolerance there is a feasible finite
+code and Theorem~\ref{thm:existence} applies. Thus arbitrarily accurate
+approximations do not, by themselves, prove exact feasibility.
+\end{example}
+
+For finite $x\in\F^N$, allowing the identity decoder with $z=x$ proves feasibility
+with at most $N$ nonzeros. If that decoder is not admissible, feasibility must
+be established separately. This is the first assumption to check for a learned
+architecture with an information bottleneck.
+
+\section{Unrestricted sequence-dependent bases}
+
+\subsection{An algebraic statement for every sequence}
+
+\begin{lemma}[Extension of a linearly independent set to a basis]\label{lem:extension}
+Assume the axiom of choice in its equivalent Zorn-lemma form. If $V$ is a vector
+space over $\F$ and $L\subseteq V$ is linearly independent, then $L$ is contained
+in an algebraic (Hamel) basis of $V$.
+\end{lemma}
+\begin{proof}
+Let $\mathcal P$ be the collection of linearly independent subsets of $V$
+containing $L$, ordered by inclusion. It is nonempty since $L\in\mathcal P$.
+For a nonempty chain in $\mathcal P$, its union contains $L$ and is linearly
+independent: a finite linear relation in that union uses finitely many vectors,
+all contained in one member of the chain. The empty chain has upper bound $L$.
+Thus every chain has an upper bound, and Zorn's lemma gives a maximal element $B$.
+
+If $\spanof(B)\neq V$, choose $v\notin\spanof(B)$. Then $B\cup\{v\}$ is linearly
+independent, contradicting maximality. Hence $B$ spans $V$ and is a basis.
+\end{proof}
+
+\begin{theorem}[Exact global one-sparsity under unrestricted basis choice]\label{thm:one}
+Let $V$ be a nonzero vector space over $\F$, including the space of length-$N$
+finite sequences $\F^N$ or all infinite sequences $\F^\N$. Allow every algebraic basis
+of $V$, with the basis known to the inverse. Then
+\[
+\min_{\substack{B\ \mathrm{basis\ of}\ V\\x=\sum_{b\in B}z_b b}}
+\#\{b:z_b\neq0\}
+=
+\begin{cases}
+0,&x=0,\\
+1,&x\neq0,
+\end{cases}
+\]
+where the sum is finite, as required for an algebraic basis.
+\end{theorem}
+\begin{proof}
+For $x\neq0$, the singleton $\{x\}$ is linearly independent.
+Lemma~\ref{lem:extension} supplies a basis $B_x$ containing $x$. Assign coefficient
+$1$ to that basis vector and zero to every other vector; the reconstruction is
+exact and the cost is one. No linear synthesis of an all-zero coefficient vector
+can equal a nonzero $x$, so zero nonzeros are impossible. For $x=0$, all-zero
+coefficients attain the lower bound zero.
+\end{proof}
+
+\begin{remark}[Meaning of the infinite-sequence assertion]
+For all of $\F^\N$, this is an algebraic, generally nonconstructive statement.
+A Hamel basis need not be countable, computable, continuous or stably encodable.
+It is not a conventional Fourier/wavelet expansion or a finite-bit codec.
+The theorem explicitly uses a basis that may depend on the target sequence.
+\end{remark}
+
+\subsection{Finite sequences: a constructive orthonormal result}
+
+\begin{lemma}[Finite orthonormal completion]\label{lem:orthogonal}
+For any unit vector $u\in\F^N$, there exists an orthonormal basis
+$(u,q_2,\ldots,q_N)$ of $\F^N$.
+\end{lemma}
+\begin{proof}
+Run Gram--Schmidt on the ordered spanning list
+$(u,e_1,\ldots,e_N)$, discarding zero residuals. Its first output is $u$.
+The process preserves the span of processed vectors and produces orthonormal
+nonzero outputs. Since the original list spans $\F^N$, exactly $N$ outputs
+are obtained, giving the required basis. This finite construction needs no
+infinite-dimensional basis-extension argument.
+\end{proof}
+
+\begin{corollary}[Finite orthonormal sparsest-domain existence]\label{cor:orthonormal}
+For every nonzero $x\in\F^N$, there is a unitary synthesis matrix $Q_x$ such that
+\[
+Q_x^*x=\norm{x}_2e_1,
+\qquad
+x=Q_x(\norm{x}_2e_1).
+\]
+The minimum nonzero count over all invertible linear coordinate systems, and
+also over the smaller family of unitary coordinate systems, is exactly one.
+For $x=0$, both minima are zero.
+\end{corollary}
+\begin{proof}
+Apply Lemma~\ref{lem:orthogonal} to $u=x/\norm{x}_2$ and let $Q_x$ have the
+resulting orthonormal vectors as columns. Inner products with these columns
+give the displayed coefficient vector. The zero-code lower bound follows
+from linearity, as in Theorem~\ref{thm:one}.
+\end{proof}
+
+\begin{corollary}[Unrestricted best sparsity at a norm-error tolerance]\label{cor:approx}
+For $x\in\F^N$ and distortion $\norm{x-Qz}_2$, if all unitary $Q$ are allowed,
+\[
+k_*(x;\varepsilon)=
+\begin{cases}
+0,&\norm{x}_2\leq\varepsilon,\\
+1,&\norm{x}_2>\varepsilon.
+\end{cases}
+\]
+\end{corollary}
+\begin{proof}
+Zero coefficients reconstruct zero with error $\norm{x}_2$. If that error is
+inadmissible, at least one coefficient is necessary, and
+Corollary~\ref{cor:orthonormal} gives an exact one-coefficient reconstruction.
+\end{proof}
+
+Thus even orthogonality, norm preservation and condition number one do not stop
+the basis from encoding the entire direction of $x$. These are not proposed
+constraints for our model; they show that the issue persists under strong
+linear regularity.
+
+\subsection{Finite-energy infinite sequences}
+
+\begin{theorem}[One-sparsity in a sequence-dependent Hilbert basis]\label{thm:hilbert}
+For every nonzero $x\in\ell^2(\N;\F)$ there is a countable complete orthonormal
+basis $(q_j)_{j\geq1}$ of $\ell^2$ such that
+\[
+q_1=x/\norm{x}_2,\qquad
+x=\norm{x}_2q_1.
+\]
+Hence the exact minimum over these sequence-dependent Hilbert bases is one.
+\end{theorem}
+\begin{proof}
+Apply Gram--Schmidt to $(x/\norm{x}_2,e_1,e_2,\ldots)$, skipping zero residuals.
+The resulting orthonormal sequence has the same closed linear span as this
+list. The list contains the canonical basis of $\ell^2$, whose finite linear
+span is dense, so the resulting sequence is complete. Its first element is
+$x/\norm{x}_2$, giving the claimed expansion. The zero-code lower bound is again
+linearity.
+\end{proof}
+
+\begin{proposition}[Affine adaptation makes the minimum zero]\label{prop:affine}
+If invertible affine coordinate systems may be chosen separately for each
+$x\in\F^N$, every $x$ has an exact representation with zero nonzeros.
+\end{proposition}
+\begin{proof}
+Choose $T_x(y)=y-x$, with inverse $T_x^{-1}(z)=z+x$. Then $T_x(x)=0$ and
+$T_x^{-1}(0)=x$. Nonzero count is nonnegative, so zero is optimal.
+\end{proof}
+
+\textbf{Interpretation.} The linear theorem stores the sequence in its basis;
+the affine theorem stores it in an offset. The inverse must know this
+sample-dependent information. Neither proves economical reconstruction from
+the counted coefficient vector alone.
+
+\section{A nontrivial admissible family: a fixed finite dictionary}
+
+Here the dictionary is fixed before the target is represented. These statements
+do not optimize over every possible dictionary.
+
+\begin{lemma}[Best approximation in a finite-dimensional subspace]\label{lem:projection}
+Let $W\subseteq\F^N$ be a linear subspace. There is a unique $p_Wx\in W$ such that
+\[
+\norm{x-p_Wx}_2=\min_{y\in W}\norm{x-y}_2.
+\]
+\end{lemma}
+\begin{proof}
+Choose an orthonormal basis $(u_1,\ldots,u_r)$ of $W$ and put
+$p_Wx=\sum_{j=1}^r\langle x,u_j\rangle u_j$, using the inner-product convention
+linear in its first argument. The residual is orthogonal to $W$. For any $y\in W$,
+\[
+\norm{x-y}_2^2=\norm{x-p_Wx}_2^2+\norm{p_Wx-y}_2^2.
+\]
+This proves both minimality and uniqueness. For $W=\{0\}$, take $p_Wx=0$.
+\end{proof}
+
+\begin{theorem}[Existence and exact characterization in a fixed dictionary]\label{thm:dictionary}
+Fix $D\in\F^{N\times M}$, $M\geq1$. For $S\subseteq\{1,\ldots,M\}$ write
+$W_S=\spanof\{D_j:j\in S\}$, with $W_\varnothing=\{0\}$. Define
+\[
+\rho_k(x)=\min_{\substack{S\subseteq\{1,\ldots,M\}\\|S|\leq k}}
+              \dist(x,W_S),\qquad 0\leq k\leq M .
+\]
+Each minimum is attained and equals
+\[
+\rho_k(x)=\min_{\norm{z}_0\leq k}\norm{x-Dz}_2.
+\]
+A feasible code at tolerance $\varepsilon$ exists exactly when
+$\dist(x,\operatorname{range}D)\leq\varepsilon$. When feasible, a sparsest code
+exists and its cost is
+\[
+k_*=\min\{k:\rho_k(x)\leq\varepsilon\}.
+\]
+In particular, if $D$ spans $\F^N$, every finite sequence has a sparsest exact
+representation in $D$, with at most $N$ nonzeros.
+\end{theorem}
+\begin{proof}
+For each support $S$, Lemma~\ref{lem:projection} gives an attained best waveform
+$p_{W_S}x$. Since it belongs to the column span of $D_S$, it has coefficients
+supported on $S$, even if these coefficients are nonunique. There are finitely
+many supports with $|S|\leq k$, so a support attaining the smallest error exists.
+Conversely, every $k$-sparse code synthesizes into one of these subspaces. This
+proves the equality and attainment of $\rho_k$.
+
+Taking all columns gives the feasibility criterion. Feasibility makes the
+displayed set of integers nonempty, and its least element is attained by the
+preceding construction. If $D$ spans $\F^N$, choose $N$ independent columns
+forming a basis; they represent every $x$ exactly.
+\end{proof}
+
+No coefficient bound or compact parameter space is needed here: each support
+produces a closed finite-dimensional waveform subspace, so its best waveform
+approximation is attained. Exhaustive support search can be expensive; existence
+is not a claim of efficient computation.
+
+\begin{corollary}[Certified best basis in a finite orthonormal library]\label{cor:library}
+Let $(Q_\ell)_{\ell=1}^J$ be a fixed finite library of unitary $N\times N$
+matrices. For each $\ell$, let $a^{(\ell)}=Q_\ell^*x$, and order its magnitudes as
+$|a^{(\ell)}|_{(1)}\geq\cdots\geq|a^{(\ell)}|_{(N)}$. Then
+\[
+\min_{\ell,\norm{z}_0\leq k}\norm{x-Q_\ell z}_2^2
+=\min_{1\leq\ell\leq J}\ \sum_{j=k+1}^N|a^{(\ell)}|_{(j)}^2.
+\]
+The least $k$ for which the right side is at most $\varepsilon^2$ is the
+globally sparsest feasible code in this declared library.
+\end{corollary}
+\begin{proof}
+For fixed $\ell$, unitarity gives
+$\norm{x-Q_\ell z}_2^2=\norm{a^{(\ell)}-z}_2^2$. On a chosen support the best
+coefficients equal the corresponding entries of $a^{(\ell)}$. Keeping the
+$k$ largest squared magnitudes minimizes the discarded sum. A finite comparison
+over $\ell$ attains the best result.
+\end{proof}
+
+This supplies a rigorous small oracle for later experiments. It is a certificate
+within the library, not across unknown transforms outside it. The library
+identifier is part of the reconstruction information when the chosen basis is
+not otherwise known to the inverse.
+
+\begin{theorem}[Conditional uniqueness via spark]\label{thm:spark}
+For a fixed finite dictionary $D$, let $\spark(D)$ be the smallest number of
+linearly dependent columns, with convention $\spark(D)=M+1$ if all columns are
+independent. If $Dz=x$ and
+$2\norm{z}_0<\spark(D)$, then $z$ is the unique sparsest exact code in $D$.
+\end{theorem}
+\begin{proof}
+Put $k=\norm{z}_0$. If another code $w\neq z$ satisfies $Dw=x$ and
+$\norm{w}_0\leq k$, then $v=z-w\neq0$ satisfies $Dv=0$ and has at most $2k$
+nonzeros. Its nonzero coordinates give a linear dependence among fewer than
+$\spark(D)$ columns, a contradiction. Thus no distinct code of cost at most
+$k$ exists.
+\end{proof}
+
+This standard result is included with its proof to separate \emph{existence}
+from \emph{uniqueness}; see Donoho and Elad~\cite{donoho2003}. It is not a noisy
+recovery theorem, a necessary uniqueness condition, or a certificate that $D$
+is the best dictionary over all admissible choices.
+
+\section{Why a shared stable decoder is a different claim}
+
+\begin{lemma}[Lipschitz images of lower-dimensional domains have zero volume]\label{lem:null}
+If $f:\R^s\to\R^N$ is Lipschitz and $0\leq s<N$, then
+$f(\R^s)$ has zero $N$-dimensional Lebesgue measure.
+\end{lemma}
+\begin{proof}
+For $s=0$, the image is a point and has zero volume. For $s\geq1$, restrict to
+$[-R,R]^s$. Partition it into $n^s$ cubes of side $2R/n$. If $L>0$ is a
+Lipschitz constant, the image of each cube has diameter at most
+$2LR\sqrt{s}/n$, and fits in an $N$-dimensional box of side at most
+$4LR\sqrt{s}/n$. The total volume of these covering boxes is bounded by
+\[
+n^s(4LR\sqrt{s}/n)^N=(4LR\sqrt{s})^N n^{s-N}\ \longrightarrow\ 0.
+\]
+The image therefore has zero outer measure. The case $L=0$ is constant.
+Finally $\R^s=\bigcup_{R\in\N}[-R,R]^s$, and a countable union of null sets is null.
+\end{proof}
+
+\begin{theorem}[No universal exact low-support code under a shared Lipschitz decoder]\label{thm:uniform}
+Fix $G:\R^M\to\R^N$ Lipschitz and an integer $0\leq k<N$. Then
+\[
+\mathcal Y_k=\{G(z):\norm{z}_0\leq k\}
+\]
+has zero $N$-dimensional measure and contains no nonempty open subset of $\R^N$.
+Consequently, one such decoder cannot exactly reconstruct every waveform in an
+open full-dimensional class using at most $k$ nonzeros.
+\end{theorem}
+\begin{proof}
+For each support $S\subseteq\{1,\ldots,M\}$ with $|S|\leq k$, the coordinate
+embedding $\iota_S:\R^{|S|}\to\R^M$ is an isometry. Thus $G\circ\iota_S$ is
+Lipschitz and its image is null by Lemma~\ref{lem:null}. There are finitely many
+supports. Their union is $\mathcal Y_k$, which is null. Every nonempty open
+subset of $\R^N$ contains a box with positive volume, so none lies in $\mathcal Y_k$.
+\end{proof}
+
+A finite collection of such decoders also has a null union of $k$-sparse outputs.
+If a single decoder receives $p$ additional continuous adaptation parameters
+and is jointly Lipschitz, the same proof applies when $p+k<N$, using
+$\R^p\times\R^{|S|}$ as the parameter domain. Adaptation cannot be ignored in
+a dimension count.
+
+This result does not contradict Theorem~\ref{thm:one}, whose basis may depend
+freely on $x$. It also does not assert that speech contains an open subset of
+waveform space. Nor does null volume by itself provide a positive
+\emph{approximation} error bound: a null set may be dense. Approximate, stable
+compression needs further code-range, precision and model-class assumptions.
+Class-level stable approximation is treated more generally by
+Cohen et al.~\cite{cohen2020}; their work is not a per-sequence shortest-code
+certificate.
+
+\section{Infinite sequences and finite-precision reconstruction}
+
+\begin{example}[No finite exact code in a fixed infinite coordinate basis]\label{ex:infinite}
+Let $x=(2^{-n})_{n\geq1}\in\ell^2$ and use its fixed canonical basis $(e_n)$.
+Every coordinate of its unique exact expansion is nonzero, so no finite-support
+exact representation exists in that basis. Theorem~\ref{thm:existence} does not
+supply one because its exact finite-code feasible set is empty.
+
+For support $S$, the best coefficient values are the original entries; the
+captured energy is $\sum_{n\in S}4^{-n}$, maximized among $k$-element supports
+by the first $k$ indices. Thus for any positive norm-error tolerance
+$\varepsilon$, the best $k$-term canonical approximation has squared error
+\[
+\sum_{n=k+1}^\infty 4^{-n}=\frac{4^{-k}}{3}.
+\]
+Hence
+\[
+k_*=\max\!\left(0,\left\lceil\log_4\frac{1}{3\varepsilon^2}\right\rceil\right)
+\]
+is finite and attained. At $\varepsilon=0$ no finite $k$ suffices.
+By Theorem~\ref{thm:hilbert}, the very same sequence is one-sparse in a suitably
+chosen sequence-dependent Hilbert basis. The admissible family changes the answer.
+\end{example}
+
+\begin{theorem}[A finite-alphabet counting bound]\label{thm:counting}
+Consider all length-$N$ sequences over an alphabet of size $q\geq2$. Suppose a
+fixed reconstruction system accepts a choice from $J$ declared models and a code
+$z$ of $M$ coordinates, each from an alphabet of $L\geq2$ coefficient symbols
+including zero, with at most $k\leq M$ nonzeros. If it reconstructs all $q^N$
+sequences exactly, it is necessary that
+\[
+q^N\ \leq\ J\sum_{j=0}^{k}\binom{M}{j}(L-1)^j .
+\]
+\end{theorem}
+\begin{proof}
+There are $\binom Mj$ choices of a support of size $j$ and $(L-1)^j$ assignments
+of nonzero symbols on it. Multiplying the sum by $J$ bounds the total number of
+possible input descriptions to the fixed decoder. A deterministic decoder
+produces at most that many distinct outputs. To reconstruct $q^N$ distinct
+sequences exactly, it must have at least $q^N$ distinct possible outputs.
+\end{proof}
+
+The support index and model choice are included in this bound. Increasing
+coefficient precision or allowing uncounted sequence-specific models can evade a
+coefficient-count comparison without reducing the actual information supplied.
+This motivates explicit model/precision conventions, consistent with the
+description-accounting perspective of Rissanen~\cite{rissanen1978}; it does not
+replace minimum support with a different objective.
+
+\begin{proposition}[No finite-bit exact description for every infinite binary sequence]\label{prop:binary}
+Under any fixed decoder whose only input is a finite binary string, not every
+infinite binary sequence has an exact description.
+\end{proposition}
+\begin{proof}
+Finite binary strings form a countable set, so the decoder has at most countably
+many outputs. Infinite binary sequences are uncountable: if $(s^{(j)})_{j\geq1}$
+were an enumeration, the sequence $t_j=1-s^{(j)}_j$ would differ from its $j$th
+listed sequence at coordinate $j$, contradicting completeness of the list.
+Thus some infinite binary sequences are absent from the decoder's range.
+\end{proof}
+
+An algebraic one-coefficient representation from Theorem~\ref{thm:one} does not
+contradict this proposition: its arbitrary basis and exact scalar need not have
+finite binary descriptions. Likewise, mathematical finite real-valued vectors
+and finite-precision stored recordings are distinct objects.
+
+\section{What the existence proof establishes for this project}
+
+The strongest unrestricted conclusion is already exact:
+\begin{center}
+\fbox{\parbox{0.91\linewidth}{
+Every nonzero sequence admits an exact one-sparse representation in a
+sequence-dependent algebraic basis. Every feasible finite-code problem has an
+attained sparsest code within its declared admissible family. Neither statement
+identifies a useful universal domain or an efficiently discoverable optimum.}}
+\end{center}
+
+For finite audio, our meaningful research target remains
+\[
+\min_{\theta,z}\norm{z}_0
+\quad\text{subject to}\quad
+d\bigl(x,G_h(\theta,z)\bigr)\leq\varepsilon,\qquad
+(\theta,z)\in\mathcal A_h.
+\]
+The family may include unknown learned or sample-adapted domains. Its rules must
+declare what the inverse knows, the allowed adaptation information, coefficient
+precision/range, and any stability requirements. Existence does not force a
+particular dictionary, orthogonality, semantic interpretation, or model architecture.
+
+A feasible $k$-coefficient code gives an upper bound $U=k$ on the optimum.
+A lower bound $L$ must rule out \emph{all} allowed codes and transform choices
+with fewer coefficients. Matching bounds $L=U$ certify optimality within the
+family. A unique sparsest code for one fixed dictionary does not prove that
+dictionary is the best possible domain.
+
+The frozen S-AF autoencoder is one admissible encoder--decoder construction.
+Its successful reconstructions exhibit achievable codes. They do not prove
+global sparsest-domain optimality. The next theoretical decision is the
+admissible family and information-accounting rules; training can then be studied
+as a search mechanism for that defined objective.
+
+\begin{thebibliography}{9}
+\bibitem{donoho2003}
+D.~L. Donoho and M.~Elad.
+\emph{Optimally sparse representation in general (nonorthogonal) dictionaries
+via $\ell^1$ minimization}.
+Proceedings of the National Academy of Sciences, 100(5):2197--2202, 2003.
+\href{https://doi.org/10.1073/pnas.0437847100}{doi:10.1073/pnas.0437847100}.
+
+\bibitem{cohen2020}
+A.~Cohen, R.~DeVore, G.~Petrova and P.~Wojtaszczyk.
+\emph{Optimal Stable Nonlinear Approximation}.
+arXiv:2009.09907, 2020.
+\url{https://arxiv.org/abs/2009.09907}.
+
+\bibitem{rissanen1978}
+J.~Rissanen.
+\emph{Modeling by shortest data description}.
+Automatica, 14(5):465--471, 1978.
+\href{https://doi.org/10.1016/0005-1098(78)90005-5}{doi:10.1016/0005-1098(78)90005-5}.
+\end{thebibliography}
+
+\end{document}

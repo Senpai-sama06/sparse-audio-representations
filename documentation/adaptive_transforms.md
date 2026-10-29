@@ -1,5 +1,9 @@
 # Finding the sparsest domain for a particular audio sample
 
+The [formal existence note](sparsest_representation.md), added 29 October 2026,
+provides numbered lemmas, theorems and complete proofs in LaTeX/PDF for finite
+and infinite sequences, alongside the assumptions and limitations below.
+
 Review date: 27 October 2026. This follow-up sharpens the
 [initial literature review](literature_review.md) around the user's clarified
 objective. Feature semantics and disentanglement are secondary unless needed to
