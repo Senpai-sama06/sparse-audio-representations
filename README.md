@@ -43,6 +43,9 @@ certified minimum-support results.
 The [structural-cue investigation](documentation/sparse_cues.md) compares faster
 deterministic searches, proves a pruning bound and an ideal constructive result,
 and examines recurrence-based descriptions before further model training.
+The [proposed L1 experiment](documentation/l1_experiment.md) specifies a sparse
+inference baseline and definitions for decoded reconstruction quality and actual
+bitrate; it has not yet been executed.
 [bibliography.md](bibliography.md) records the papers examined. Dictionaries and
 orthogonality are candidate assumptions, not requirements of the research goal.
 

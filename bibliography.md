@@ -56,3 +56,5 @@ CheapTrick, a spectral envelope estimator for high-quality speech synthesis — 
 SCIP: global optimization of mixed-integer nonlinear programs in a branch-and-cut framework — Stefan Vigerske, Ambros Gleixner
 Learning Fast Sparsifying Transforms — Cristian Rusu, John Thompson
 Sampling Signals With Finite Rate of Innovation — Martin Vetterli, Pina Marziliano, Thierry Blu
+Atomic Decomposition by Basis Pursuit — Scott Shaobing Chen, David L. Donoho, Michael A. Saunders
+Proximal Algorithms — Neal Parikh, Stephen Boyd
