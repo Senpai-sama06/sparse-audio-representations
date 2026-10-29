@@ -16,6 +16,8 @@ def study_function(kind):
         from lrac.study_sparse_cues import run
     elif kind == "l1":
         from lrac.study_l1 import run
+    elif kind == "l0":
+        from lrac.study_l0 import run
     else:
         raise ValueError(f"Unknown study kind: {kind}")
     return run

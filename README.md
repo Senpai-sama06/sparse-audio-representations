@@ -50,6 +50,9 @@ the matching synthetic and two-speaker smoke configurations provide small checks
 The [first measured L1 results](documentation/l1_results.md) include 3,600 real
 bitstreams from 120 development clips, solver certificates, quality/rate curves
 and comparisons with DCT thresholding.
+The [separate exhaustive L0 activity](documentation/l0_activity.md) enumerates
+supports on a full speech clip without pruning or a time limit, with persistent
+progress and resume commands.
 [bibliography.md](bibliography.md) records the papers examined. Dictionaries and
 orthogonality are candidate assumptions, not requirements of the research goal.
 
