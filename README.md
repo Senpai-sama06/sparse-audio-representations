@@ -40,6 +40,9 @@ shared, stable reconstruction systems.
 The [sparse optimization search](documentation/sparse_search.md) formulates joint
 domain/coefficient optimization and provides a tiny exact rational search with
 certified minimum-support results.
+The [structural-cue investigation](documentation/sparse_cues.md) compares faster
+deterministic searches, proves a pruning bound and an ideal constructive result,
+and examines recurrence-based descriptions before further model training.
 [bibliography.md](bibliography.md) records the papers examined. Dictionaries and
 orthogonality are candidate assumptions, not requirements of the research goal.
 

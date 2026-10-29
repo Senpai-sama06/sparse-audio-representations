@@ -83,6 +83,10 @@ Those algorithms' guarantees do not automatically transfer to a new joint
 transform-learning formulation. No external MINLP solver was installed or run
 for the prototype below.
 
+The [structural-cue follow-up](sparse_cues.md) tests greedy proposals, beam search,
+and geometry-guided certified pruning against this oracle, then derives a direct
+construction in a separate continuous-angle family.
+
 ## How a global search certifies its answer
 
 A feasible representation with $U$ coefficients supplies an upper bound on
