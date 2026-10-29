@@ -1,0 +1,9 @@
+name: l1_synthetic
+kind: l1
+parameters:
+  dataset: synthetic
+  seconds: 2.0
+  workers: 1
+  seed: 0
+  targets: [0.1, 0.01, 0.001]
+  quantization_bits: [4, 6, 8, 12, 16]

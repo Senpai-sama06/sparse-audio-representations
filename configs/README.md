@@ -120,3 +120,24 @@ timestamped directory under `runs_dir`; `--output runs/my_check` selects a speci
 new directory. An existing directory is rejected to preserve earlier results.
 No `data`, `model`, or `train` section is required. See the
 [codebase guide](../documentation/codebase.md) for adding a new study kind.
+
+## L1 sparse-coding pilot
+
+```powershell
+python run.py study --config configs/study_l1_synthetic.yaml
+python run.py study --config configs/study_l1_smoke.yaml
+python run.py study --config configs/study_l1_librispeech.yaml
+```
+
+The first checks five synthetic signals; the second uses two speech clips; the
+third uses three clips from each of 40 development speakers. The speech YAML's
+`manifest` selects cached development data and `exclusions` points to the earlier
+checkpoint-selection metrics CSV. Those utterances are excluded before selecting
+clips. No downloads or neural training occur.
+
+`targets` sets waveform NMSE limits and `quantization_bits` sets the coefficient
+precision grid. `workers` controls CPU processes. Solver iteration/search limits
+and tolerances are explicit in the speech YAML. Leave the mathematical protocol
+fixed when reproducing a reported comparison; changed settings constitute a new
+run. Results include `report.md`, `metrics.csv`, `rate_distortion.png`, solver
+diagnostics and independently decodable files under `bitstreams/`.

@@ -110,11 +110,15 @@ encoding/decoding path.
 - The older channel, pitch and module analysis tools retain their existing
   interfaces and cache behavior. They have not been migrated in this change.
 
-No new dependency or folder is introduced. This establishes a place for future
-studies; it does not implement or execute the proposed L1 audio experiment.
+No new dependency or folder was introduced by the restructuring. The workflow
+now also hosts the [L1 audio experiment](l1_experiment.md): `linear.py` contains
+matrix-free dictionaries, `l1.py` inference, `codec.py` serialization,
+`data/l1_examples.py` cohort selection, and `study_l1.py` the experiment loop.
+See [its measured results](l1_results.md).
 
-Verification of this change: all 84 tests pass, including the existing training
-and saved-model evaluation checks. The moved search reproduces the 105 published
+The restructuring passed all 84 tests then present, including the existing training
+and saved-model evaluation checks; the L1 extension brings the suite to 103 tests.
+The moved search reproduces the 105 published
 minimum-support results and complete error curves. A full cue-study rerun matches
 all 1,440 comparisons, 135 summary rows, 96 feature rows, 288 continuous-construction
 rows and exact witnesses, excluding elapsed execution times.

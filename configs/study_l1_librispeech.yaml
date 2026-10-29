@@ -1,0 +1,20 @@
+name: l1_librispeech
+kind: l1
+parameters:
+  dataset: librispeech
+  manifest: data/manifests/librispeech_cached/validation.jsonl
+  exclusions: runs/librispeech_sparse_autoencoder_affine_10h_20261027T114554258463Z_seed0/evaluation/validation/limit_200/fraction_0.1/metrics.csv
+  sample_rate: 16000
+  seconds: 2.0
+  speakers: 40
+  clips_per_speaker: 3
+  seed: 0
+  targets: [0.1, 0.01, 0.001]
+  quantization_bits: [4, 6, 8, 12, 16]
+  comparison_rates: [16, 32, 64, 128]
+  workers: 4
+  max_iterations: 2000
+  search_steps: 18
+  gap_tolerance: 0.00001
+  constrained_tolerance: 0.01
+  quantization_margin: 0.01

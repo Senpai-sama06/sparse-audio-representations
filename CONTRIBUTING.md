@@ -114,6 +114,9 @@ recording in one role. Describe dataset exclusions and any known limitations.
   registries, callback systems, or new configuration layers for a single use.
 - Keep comments about assumptions and mathematics; avoid comments
   that only repeat the next line of code.
+- New and substantially changed code must include useful docstrings and comments
+  explaining mathematical steps, units, non-obvious choices and limitations so
+  another researcher can follow and modify it.
 
 ## Before sharing a change
 

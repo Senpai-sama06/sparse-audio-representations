@@ -1,9 +1,10 @@
-# Proposed L1 sparse-coding rate-distortion experiment
+# L1 sparse-coding rate-distortion experiment
 
-Status: **proposal only**, 29 October 2026. No audio experiment or codec
-implementation was run for this proposal. This records the first peer suggestion:
-find a representation by L1 minimization and measure its reconstruction fidelity
-and actual encoding bitrate. The next idea has not yet been incorporated.
+Status: **implemented and evaluated**, 29 October 2026, following approval of the
+codebase structure. This records the first peer suggestion: find a representation
+by L1 minimization and measure reconstruction fidelity and actual encoding bitrate.
+See [the measured results](l1_results.md). Other peer suggestions have not been
+incorporated.
 
 ## The question this experiment can answer
 
@@ -14,15 +15,15 @@ This is a feasible, conventional optimization experiment. It does not require
 neural training or a ground-truth sparse code. It also does not, by itself,
 discover the globally sparsest domain or certify minimum nonzero count/bitrate.
 
-Our current pipeline measures reconstruction and coefficient counts, including
-coefficients per second. It does **not** yet provide a common serialized sparse
-audio bitstream for those model comparisons. The earlier transform-description
-bit accounting in the tiny exact search is not a complete audio codec.
+The earlier model pipeline measured reconstruction and coefficient counts,
+including coefficients per second. This experiment adds an actual serialized
+sparse bitstream for its L1/DCT comparison. The earlier neural-model codes have
+not been retroactively encoded, and their old results are not bitrate results.
 
-## Recommended first representation
+## Representation used
 
-Use a fixed linear, unit-column-norm, overcomplete synthesis dictionary. A simple
-starting proposal for a complete length-N waveform is
+Use a fixed linear, unit-column-norm, overcomplete synthesis dictionary. The
+implemented baseline for a complete length-N waveform is
 
 $$
 \Phi=[I,\ Q],
@@ -45,7 +46,7 @@ $$
 $$
 
 The DCT/IDCT operators permit efficient matrix-free optimization. This is a
-recommended baseline family, not a claim that impulses/cosines are the right
+baseline family, not a claim that impulses/cosines are the right
 final representation.
 
 A secondary controlled arm could optimize coefficients in the **frozen S-AF
@@ -58,7 +59,7 @@ representations.
 
 ## Sparse optimization
 
-For a nonzero original waveform $x$, propose the constrained problem
+For a nonzero original waveform $x$, use the constrained problem
 
 $$
 \min_z\|z\|_1
@@ -104,7 +105,7 @@ serialized bytes -> parse/dequantize -> shared synthesis -> reconstructed wavefo
 The decoder receives no original waveform, unquantized coefficients, per-record
 scale, transform choice or normalization factor through an uncounted side input.
 
-A simple initial codec proposal:
+The implemented initial codec:
 - Signed uniform scalar coefficient quantization, sweeping 4, 6, 8, 12 and 16 bits.
 - A transmitted coefficient scale when it is selected per clip; quantization
   must use the same represented scale as the decoder.
@@ -182,15 +183,16 @@ A term already represented in the header must not be counted twice.
 Encoder-only optimization parameters need not be transmitted if reconstruction
 does not use them. All actual transmitted data do count.
 
-## Proposed small pilot
+## Pilot specification
 
-These are proposed settings to discuss before execution, not a frozen protocol:
+The approved proposal was implemented with the following settings. The execution
+details below fix the selection and numerical/coding tolerances used in the run:
 
 1. Synthetic impulses, tones, mixtures and noise for solver and codec sanity checks.
 2. Cached LibriSpeech dev-clean, not new test-clean measurements. Use balanced
    recordings across its 40 speakers, excluding the 200 checkpoint-selection
    utterances. Do not restrict the pilot to the voiced regions used in pitch tests.
-3. For example, select three deterministic two-second crops per speaker before
+3. Select three deterministic two-second crops per speaker before
    inspecting results: 120 clips / four minutes of audio.
 4. Split 20 development speakers for encoder/coder calibration and 20 for the
    exploratory comparison. These are still development speakers previously used
@@ -213,11 +215,72 @@ Existing S-AF scores cannot be placed on these bitrate plots by assigning
 assumed bits per coefficient. Its codes would need the same encode/decode
 measurement and fresh quality scoring on the same pilot inputs.
 
+## Implementation and reproduction
+
+```powershell
+python run.py study --config configs/study_l1_synthetic.yaml
+python run.py study --config configs/study_l1_smoke.yaml
+python run.py study --config configs/study_l1_librispeech.yaml
+```
+
+- `lrac/linear.py`: whole-clip DCT-II/IDCT-II, orthonormal scaling, unit columns;
+  no frame/window/padding or learned weights. The union has 64,000 coordinates
+  for a 32,000-sample clip, versus 32,000 in the DCT baseline.
+- `lrac/l1.py`: float64 accelerated proximal gradient with generalized-gradient
+  restart. Its exact Lipschitz step is 1/2 for the union. Lambda search uses warm
+  starts, at most 18 subproblems and 2,000 iterations per subproblem. Lasso relative
+  dual-gap tolerance is 1e-5; final BPDN relative gap tolerance is 0.01. Every path
+  and failure status is saved. This is approximate L1 optimality, not an L0 proof.
+- For BPDN with epsilon = sqrt(eta)||x||, any u satisfying
+  ||Phi.T u||_infinity <= 1 gives lower bound x.T u - epsilon||u||. The recorded
+  constrained gap is (primal L1 - lower bound) / primal L1. Feasibility is checked
+  separately. A feasible identity code remains a fallback if the solve is limited.
+- Both methods use a pre-quantization NMSE limit of **0.99 times the named target**,
+  reserving 1% of the error budget for quantization. This does not guarantee that
+  quantized streams meet the named target; each final stream is checked.
+- `lrac/codec.py`: `SAC1` version 1. The 28-byte header uses struct format
+  `<4sBBBBIIId`: magic, version, dictionary ID, precision, support mode, sample
+  count, sample rate, support count and binary64 quantizer step. Payload bits are
+  MSB-first; support and value payloads are separately zero-padded to bytes.
+  Quantizer levels are symmetric signed integers; rounded zeros are omitted.
+- Support is either a bitmap or sorted fixed-width indices, whichever has fewer
+  padded bytes. No entropy coding, gain fitting, mean removal or sample-specific
+  transform is used. `decode(payload)` receives bytes alone.
+- `lrac/data/l1_examples.py`: 40 shuffled development speakers with seed 0; the
+  first 20 form calibration and the remaining 20 measurement. Select the first
+  three eligible unused utterance IDs per speaker and take centered two-second
+  crops. Exclude the 200 earlier checkpoint-selection utterances. No response,
+  pitch or energy criterion selects the crops. All amplitudes/DC offsets remain.
+- Both groups use the same declared grid. No setting was selected from their
+  measurement scores. Four CPU processes are used; no neural training occurs.
+- `lrac/study_l1.py`: generate the complete grid, save bytes, decode them, reuse
+  existing waveform/speech metrics and report paired speaker comparisons.
+  Original-versus-itself PESQ/STOI provide implementation reference scores.
+
+The finite grid chooses the fewest measured bits meeting a **maximum final NMSE**
+for each clip, or the lowest measured NMSE under a bitrate ceiling. No interpolation
+is claimed. Actual errors can differ between methods; especially at the 0.01 limit,
+a tighter-target/coarser-quantizer L1 point can be selected. The table is therefore
+a comparison at common error limits, not precisely identical achieved distortion.
+
+See the commented modules and [YAML guide](../configs/README.md) for changing
+settings. Output `report.md` and `progress.json` live in the printed run directory.
+Saved `.sac` files can be reconstructed independently:
+
+```python
+from pathlib import Path
+import soundfile as sf
+from lrac.codec import decode
+
+waveform, info = decode(Path("runs/YOUR_RUN/bitstreams/YOUR_FILE.sac").read_bytes())
+sf.write("reconstructed.wav", waveform, info["sample_rate"], subtype="FLOAT")
+```
+
 ## Feasibility conclusion
 
 This is a possible and informative experiment with the existing data and
-linear-transform tooling. Its immediate deliverable would be measured
-rate-distortion curves and a reproducible, decodable sparse bitstream.
+linear-transform tooling. Its deliverables are measured rate-distortion curves
+and a reproducible, decodable sparse bitstream.
 
 It tests the usefulness of L1 inference within a specified family. It does not
 yet resolve the unknown-domain search, certify minimum L0/bitrate, or establish
@@ -230,6 +293,12 @@ Relevant sources reviewed:
   the available PDF is the 2001 SIAM Review republication of the 1998 article.
 - [Proximal Algorithms — Parikh and Boyd](https://stanford.edu/~boyd/papers/pdf/prox_algs.pdf):
   proximal-method overview and selected Lasso/algorithm discussion reviewed.
+- [A Fast Iterative Shrinkage-Thresholding Algorithm for Linear Inverse Problems — Beck and Teboulle](https://www.ceremade.dauphine.fr/~carlier/FISTA.pdf):
+  formulation and constant-step FISTA algorithm reviewed; the full convergence
+  proof was not audited.
+- [Adaptive Restart for Accelerated Gradient Schemes — O’Donoghue and Candès](https://arxiv.org/pdf/1204.3982):
+  selected restart and sparse-regression sections reviewed, including the
+  generalized-gradient restart rule.
 
 Their titles and authors are recorded in [bibliography.md](../bibliography.md).
-The codec design above is our proposal, not a method attributed to these papers.
+The bitstream format is our implementation, not a method attributed to these papers.

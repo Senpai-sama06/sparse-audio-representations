@@ -58,3 +58,5 @@ Learning Fast Sparsifying Transforms — Cristian Rusu, John Thompson
 Sampling Signals With Finite Rate of Innovation — Martin Vetterli, Pina Marziliano, Thierry Blu
 Atomic Decomposition by Basis Pursuit — Scott Shaobing Chen, David L. Donoho, Michael A. Saunders
 Proximal Algorithms — Neal Parikh, Stephen Boyd
+A Fast Iterative Shrinkage-Thresholding Algorithm for Linear Inverse Problems — Amir Beck, Marc Teboulle
+Adaptive Restart for Accelerated Gradient Schemes — Brendan O’Donoghue, Emmanuel Candès

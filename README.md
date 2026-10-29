@@ -43,9 +43,13 @@ certified minimum-support results.
 The [structural-cue investigation](documentation/sparse_cues.md) compares faster
 deterministic searches, proves a pruning bound and an ideal constructive result,
 and examines recurrence-based descriptions before further model training.
-The [proposed L1 experiment](documentation/l1_experiment.md) specifies a sparse
+The [L1 experiment protocol](documentation/l1_experiment.md) specifies a sparse
 inference baseline and definitions for decoded reconstruction quality and actual
-bitrate; it has not yet been executed.
+bitrate. Run it with `python run.py study --config configs/study_l1_librispeech.yaml`;
+the matching synthetic and two-speaker smoke configurations provide small checks.
+The [first measured L1 results](documentation/l1_results.md) include 3,600 real
+bitstreams from 120 development clips, solver certificates, quality/rate curves
+and comparisons with DCT thresholding.
 [bibliography.md](bibliography.md) records the papers examined. Dictionaries and
 orthogonality are candidate assumptions, not requirements of the research goal.
 

@@ -1,0 +1,6 @@
+extends: study_l1_librispeech.yaml
+name: l1_smoke
+parameters:
+  speakers: 2
+  clips_per_speaker: 1
+  workers: 1
