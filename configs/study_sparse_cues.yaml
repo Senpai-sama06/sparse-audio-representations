@@ -1,0 +1,6 @@
+name: sparse_cues
+kind: sparse_cues
+runs_dir: runs
+parameters:
+  seed: 20261029
+  beam_width: 8

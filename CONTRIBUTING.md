@@ -26,6 +26,30 @@ and `evaluation.analysis_examples` for feature inspection. Use `--limit N` to
 change its validation limit. Final tests are a separate `evaluate` command after
 model selection. No downloads happen without `--download`.
 
+### Experiments without training
+
+Use `python run.py study --config configs/study_<topic>.yaml`. The existing
+`experiment` command remains the prepare/train/validation workflow.
+
+1. Put reusable algorithms in `lrac/<topic>.py` and data generation/loading in
+   `lrac/data/`. Reuse the existing metrics rather than making local copies.
+2. Add `lrac/study_<topic>.py` with a plain `run(output, *, ...)` function. Keep
+   the experimental loop, comparisons and study-specific tables here. Put tunable
+   options in keyword arguments; fixed mathematical protocol details can stay in
+   the study implementation and should be recorded in its results.
+3. Add an explicit selection branch to `study_function` in `lrac/study.py`.
+   No new base class, registry, training loop or script is required.
+4. Add `configs/study_<topic>.yaml` with `name`, `kind` and `parameters`. The runner
+   saves resolved defaults, environment/source hashes and completion/failure
+   status, and refuses to overwrite an existing output directory.
+5. Check the new behavior and document the research question and limitations.
+   Promote selected results from `runs/` into `documentation/` deliberately;
+   ordinary runs should not rewrite committed reports.
+
+See [the codebase guide](documentation/codebase.md) for the layout and a minimal
+configuration. The earlier S-AF analysis tools remain available; the two
+deterministic search/cue scripts now only forward to this study command.
+
 ## Add or change a model
 
 | Change | Location |
@@ -81,6 +105,7 @@ recording in one role. Describe dataset exclusions and any known limitations.
   add ordinary pipeline functions to `train.py`, `evaluate.py`, `analyze.py`,
   `report.py`, or another clearly named module alongside them.
 - Use `data_`, `model_`, and `sweep_` prefixes for reusable configurations.
+- Use `study_` for no-training study configurations and their orchestration modules.
 - Keep setup and numerical helper scripts together in `tools`. Reports and
   caches belong under `runs`; research notes belong in `documentation`.
 - Keep `run.py` thin. Add commands to the existing CLI rather than making copies

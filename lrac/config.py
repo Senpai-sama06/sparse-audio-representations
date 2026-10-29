@@ -3,6 +3,7 @@ from dataclasses import asdict, dataclass, field, fields
 from pathlib import Path
 import copy
 import math
+import re
 import yaml
 
 
@@ -165,6 +166,45 @@ def load_config(path):
     root = next((p for p in path.parents if (p / "pyproject.toml").exists()), Path.cwd())
     raw.setdefault("project_root", str(root))
     return from_dict(raw)
+
+
+@dataclass
+class StudyConfig:
+    """Settings for an experiment that does not require a trainable model."""
+
+    name: str
+    kind: str
+    parameters: dict = field(default_factory=dict)
+    runs_dir: str = "runs"
+    project_root: str = "."
+
+    def path(self, value):
+        p = Path(value).expanduser()
+        return p if p.is_absolute() else Path(self.project_root) / p
+
+    def to_dict(self):
+        return asdict(self)
+
+
+def load_study_config(path):
+    """Reuse YAML inheritance/path rules without inventing a model or training job."""
+    path = Path(path).resolve()
+    raw = _read(path)
+    extra = set(raw) - {f.name for f in fields(StudyConfig)}
+    if extra:
+        raise ValueError(f"Unknown study keys: {sorted(extra)}")
+    for key in ("name", "kind"):
+        if not isinstance(raw.get(key), str) or not re.fullmatch(r"[a-z][a-z0-9_]*", raw[key]):
+            raise ValueError(f"Study {key} must use lower-case snake_case")
+    if not isinstance(raw.get("parameters", {}), dict):
+        raise ValueError("Study parameters must be a mapping")
+    if not isinstance(raw.get("runs_dir", "runs"), str) or not raw.get("runs_dir", "runs"):
+        raise ValueError("Study runs_dir must be a nonempty path string")
+    root = next((p for p in path.parents if (p / "pyproject.toml").exists()), Path.cwd())
+    raw.setdefault("project_root", str(root))
+    cfg = StudyConfig(**raw)
+    cfg.project_root = str(Path(cfg.project_root).expanduser().resolve())
+    return cfg
 
 
 def validate(c):

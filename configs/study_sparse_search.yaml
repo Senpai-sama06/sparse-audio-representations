@@ -1,0 +1,5 @@
+name: sparse_search
+kind: sparse_search
+runs_dir: runs
+parameters:
+  seed: 0

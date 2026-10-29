@@ -3,7 +3,7 @@ from dataclasses import replace
 from pathlib import Path
 import torch
 import pytest
-from lrac.config import Config, DataConfig, ModelConfig, TrainConfig, EvaluationConfig, load_config
+from lrac.config import Config, DataConfig, ModelConfig, TrainConfig, EvaluationConfig, load_config, load_study_config
 from lrac.data.manifests import prepare
 from lrac.train import train, load_run
 from lrac.evaluate import evaluate
@@ -31,7 +31,9 @@ def test_saved_pipeline_and_evaluation(tmp_path):
 def test_repository_configurations_are_valid():
     root = Path(__file__).resolve().parents[1]
     for path in (root / "configs").rglob("*.yaml"):
-        if not path.name.startswith("sweep_"):
+        if path.name.startswith("study_"):
+            load_study_config(path)
+        elif not path.name.startswith("sweep_"):
             load_config(path)
 
 

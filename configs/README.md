@@ -92,3 +92,31 @@ Its `keep_fraction` sets the fraction of coefficients retained across each whole
 recording. It trains through SVD updates, so it uses no learning rate.
 See [minimum-support evaluation](../documentation/block_orthogonal.md) for
 `--nmse-targets` and comparisons with `--checkpoint initial.pt`.
+
+## Studies without training
+
+Use `study_*.yaml` for a numerical experiment that does not need a training run:
+
+```yaml
+name: my_search
+kind: sparse_search
+runs_dir: runs
+parameters:
+  seed: 0
+```
+
+```powershell
+python run.py study --config configs/study_sparse_search.yaml
+```
+
+`kind` selects the experiment implementation; `name` labels its output directory.
+`parameters` are the keyword arguments of `run(output, *, ...)` in the corresponding
+`lrac/study_<kind>.py` module. Omitted arguments use its defaults, which are saved
+in the run's `config.json`. Unknown arguments raise an error. The existing cue
+study also accepts `beam_width`.
+
+The same `extends` and project-relative path rules apply. Results go to a new
+timestamped directory under `runs_dir`; `--output runs/my_check` selects a specific
+new directory. An existing directory is rejected to preserve earlier results.
+No `data`, `model`, or `train` section is required. See the
+[codebase guide](../documentation/codebase.md) for adding a new study kind.

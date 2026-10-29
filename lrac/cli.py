@@ -36,6 +36,9 @@ def parser():
     command = sub.add_parser("report")
     command.add_argument("--runs", nargs="+", required=True)
     command.add_argument("--output", default="runs/reports/comparison")
+    command = sub.add_parser("study", help="Run a deterministic or no-training experiment")
+    command.add_argument("--config", required=True)
+    command.add_argument("--output", help="New run directory; default is a timestamped directory under runs_dir")
     command = sub.add_parser("sweep")
     command.add_argument("--config", required=True, help="Sweep specification with base, axis, and values")
     command.add_argument("--execute", action="store_true", help="Run sequentially; default only writes resolved configs")
@@ -49,6 +52,10 @@ def main(argv=None):
     if args.command == "experiment":
         from lrac.experiment import run_experiment
         run_experiment(load_config(args.config), download=args.download, limit=args.limit, skip_prepare=args.skip_prepare)
+    elif args.command == "study":
+        from lrac.config import load_study_config
+        from lrac.study import run_study
+        run_study(load_study_config(args.config), output=args.output)
     elif args.command == "prepare":
         from lrac.data.manifests import prepare
         cfg = load_config(args.config)

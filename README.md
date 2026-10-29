@@ -117,6 +117,19 @@ All individual steps remain available:
 `python run.py COMMAND --help` for options. The installed `lrac` and
 `python -m lrac` commands use the same implementation.
 
+Experiments that need no training use the same entry point with `study`:
+
+```powershell
+python run.py study --config configs/study_sparse_search.yaml
+python run.py study --config configs/study_sparse_cues.yaml
+```
+
+Each creates a new `runs/<name>_<timestamp>/` containing resolved settings,
+environment/source records, results and completion status. See the
+[codebase guide](documentation/codebase.md) for module responsibilities and how
+to add a study. These commands repeat the existing toy experiments; the L1 audio
+experiment remains a proposal awaiting review.
+
 ## Where things live
 
 Seven working folders, with one level of code organization:
@@ -124,6 +137,8 @@ Seven working folders, with one level of code organization:
 ```text
 run.py                 # Run the pipeline
 lrac/                  # Python code: train.py, evaluate.py, analyze.py, report.py
+  study.py             # Common bookkeeping for experiments without training
+  study_<topic>.py     # One experiment loop; reusable algorithms stay separate
   models/              # Model implementations and their shared interface
   data/                # Signal generation, loading, and dataset audits
 configs/               # All YAML settings in one place
@@ -137,6 +152,7 @@ tools/                 # Setup, smoke check, environment lock, and MATLAB check
 Configuration names distinguish their purpose without subfolders:
 
 - `example.yaml` and `<dataset>_<model>*.yaml`: runnable experiments.
+- `study_*.yaml`: experiments without model training.
 - `data_*.yaml`: reusable dataset settings.
 - `model_*.yaml`: reusable model settings.
 - `sweep_*.yaml`: parameter sweeps.

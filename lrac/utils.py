@@ -1,5 +1,6 @@
 from pathlib import Path
 import hashlib
+import csv
 import json
 import os
 import random
@@ -13,6 +14,16 @@ def write_json(path, obj):
     temp = path.with_suffix(path.suffix + ".tmp")
     temp.write_text(json.dumps(obj, indent=2, allow_nan=False), encoding="utf-8")
     temp.replace(path)
+
+
+def write_csv(path, rows):
+    """Write a nonempty table of dictionaries with a shared, explicit schema."""
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="", encoding="utf-8") as stream:
+        writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
+        writer.writeheader()
+        writer.writerows(rows)
 
 
 def file_hash(path):

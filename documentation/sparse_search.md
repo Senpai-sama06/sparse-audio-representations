@@ -236,14 +236,18 @@ on the final representation system.
 ## Reproduce and inspect
 
 ```powershell
-python tools/search_sparsest.py
+python run.py study --config configs/study_sparse_search.yaml
 python -m pytest tests/test_sparse_search.py -q
 ```
 
 - [Exact minimum-support results](sparse_search_results.csv).
 - [Complete best-error curves for all support budgets](sparse_search_curves.csv).
 - [Rational witnesses, smaller-support lower bounds and protocol](sparse_search_results.json).
-- [Search implementation](../lrac/sparse_search.py) and [experiment driver](../tools/search_sparsest.py).
+- [Search implementation](../lrac/sparse_search.py) and [experiment driver](../lrac/study_sparse_search.py).
+
+Fresh results go to the printed `runs/` directory, leaving the published tables
+above intact. The old `tools/search_sparsest.py` command forwards to the same
+runner. See [the codebase guide](codebase.md) for run metadata and settings.
 
 The independent small validation test enumerates every coefficient pair in a
 two-dimensional quantized example, across every permitted basis description,

@@ -295,7 +295,7 @@ that all future domains be orthogonal.
 ## Reproduce and inspect
 
 ```powershell
-python tools/analyze_sparse_cues.py
+python run.py study --config configs/study_sparse_cues.yaml
 python -m pytest tests/test_sparse_cues.py -q
 ```
 
@@ -304,7 +304,11 @@ python -m pytest tests/test_sparse_cues.py -q
 - [Measured root cues and Hankel ranks](sparse_cues_features.csv).
 - [Separate continuous-angle construction results](sparse_cues_continuous.csv).
 - [Exact witnesses, reconstruction rules, provenance and scope](sparse_cues_results.json).
-- [Core algorithms](../lrac/sparse_cues.py) and [driver](../tools/analyze_sparse_cues.py).
+- [Core algorithms](../lrac/sparse_cues.py) and [driver](../lrac/study_sparse_cues.py).
+
+Fresh results go to the printed `runs/` directory; the committed results and
+their original provenance remain unchanged. `tools/analyze_sparse_cues.py` is
+now a compatibility entry point to the same runner.
 
 The two reviewed papers were added as one-line entries to
 [bibliography.md](../bibliography.md). The bound and construction proofs above
