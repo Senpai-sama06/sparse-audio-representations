@@ -1,10 +1,11 @@
 param(
     [string]$Config = "configs/study_l0_librispeech.yaml",
-    [string]$ResumeRun = ""
+    [string]$ResumeRun = "",
+    [int]$Workers = 0
 )
 
 # Launch detached and hidden, retaining PID and both logs. No wall-time limit or
-# support cap is imposed. Environment limits this activity to one CPU thread.
+# support cap is imposed. Each worker uses one CPU thread.
 $ErrorActionPreference = "Stop"
 $workspaceRoot = Split-Path -Parent $PSScriptRoot
 $pythonFile = Join-Path $workspaceRoot ".venv/Scripts/python.exe"
@@ -15,7 +16,7 @@ $stamp = (Get-Date).ToUniversalTime().ToString("yyyyMMddTHHmmssfffZ")
 if ($ResumeRun) {
     $runFolder = (Resolve-Path -LiteralPath $ResumeRun).Path
     $entryFile = Join-Path $workspaceRoot "tools/resume_l0.py"
-    $arguments = @("-u", ('"{0}"' -f $entryFile), "--run", ('"{0}"' -f $runFolder))
+    $arguments = @("-u", ('"{0}"' -f $entryFile), "--run", ('"{0}"' -f $runFolder), "--workers", $Workers)
 } else {
     $runFolder = Join-Path $workspaceRoot "runs/l0_librispeech_$stamp"
     $configFile = (Resolve-Path -LiteralPath $Config).Path

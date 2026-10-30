@@ -4,3 +4,4 @@ parameters:
   cohort: runs/l1_librispeech_20261029T110402750634Z/cohort.json
   target_nmse: 0.01
   boundary_guard_relative: 0.000000000001
+  workers: 0  # All logical CPUs; each worker has one numerical-library thread.

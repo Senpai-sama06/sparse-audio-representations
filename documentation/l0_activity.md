@@ -74,7 +74,9 @@ starts a Python child. Logs and launch metadata are beside the run directory.
 .\tools\start_l0.ps1 -ResumeRun runs/l0_librispeech_20261029T120949726Z
 ```
 
-The running process has no time/support cap and uses one CPU thread. It continues
+The running process has no time/support cap. On 30 October it was moved from one
+CPU thread to **32 worker processes**, one numerical-library thread each, on this
+24-core / 32-logical-CPU workstation. It continues
 while the computer and process remain running. After termination or reboot, the
 resume command continues from the saved state; automatic reboot scheduling has
 not been installed.
@@ -85,6 +87,44 @@ state. Restarting does not walk through earlier combinations to reach its cursor
 An OS file lock prevents two workers from concurrently searching the same run.
 Resume verifies frozen source and implementation hashes, so preserve this code
 version for long-lived runs.
+
+## Parallel execution update
+
+The numerical support fitter and dictionary are unchanged. `lrac/l0_parallel.py`
+assigns disjoint chunks of 512 consecutive supports to workers. Up to twice the
+worker count of chunks is in flight. The coordinator commits their results in
+lexicographic order; only this contiguous completed prefix advances the saved
+cursor and counts. Cardinalities do not overlap. A crash can replay uncommitted
+chunks, but cannot skip an unfinished support or claim a premature lower bound.
+Every candidate still receives an independent SVD least-squares fit.
+
+The serial worker was stopped and its latest atomic checkpoint preserved as
+`serial_state_before_parallel.json` and `serial_progress_before_parallel.json`.
+The same source and search protocol were retained, and the search resumed at that
+cursor. The original `l0.py` and `linear.py` source hashes were preserved. Parallel
+execution also records its own implementation hash in `parallel_execution.json`.
+
+`progress.json` now includes the coordinator PID, worker PIDs, worker count and
+chunk size. These values are separate from the virtual-environment launcher PID.
+To choose a different worker count after stopping the existing activity:
+
+```powershell
+.\tools\start_l0.ps1 -ResumeRun runs/l0_librispeech_20261029T120949726Z -Workers 32
+```
+
+Zero workers means all logical CPUs. For a new run, the `workers` keyword in its
+study YAML selects the count (default zero); the launcher's `-Workers` option
+applies to resumes. No GPU is used. Completion time remains unrestricted.
+
+Additional tests compare serial and parallel minimum-support results and restart
+counts, and independently verify chunk traversal against all small combinations.
+
+During an approximately 66-second observation after startup, the 32 workers used
+93.4% of the machine's logical CPU capacity and committed about 21,600 supports
+per second. Utilization is the sum of worker CPU seconds divided by elapsed wall
+seconds times 32; throughput uses committed checkpoint counters and active search
+time. These measurements were taken while project checks ran concurrently, and
+are observations rather than guaranteed rates at larger support sizes.
 
 Files include `source.npy`, `search_protocol.json`, `search_state.json`,
 `initial_witness.npz` and, on success, `witness.npz`. The authoritative search

@@ -5,12 +5,13 @@ from pathlib import Path
 import numpy as np
 
 from lrac.data.l1_examples import read_example
-from lrac.l0 import implementation_hashes, resume_search
+from lrac.l0 import implementation_hashes
+from lrac.l0_parallel import resume_search_parallel
 from lrac.utils import file_hash, write_json
 
 
 def run(output, *, cohort="runs/l1_librispeech_20261029T110402750634Z/cohort.json",
-        source_id=None, target_nmse=.01, boundary_guard_relative=1e-12):
+        source_id=None, target_nmse=.01, boundary_guard_relative=1e-12, workers=0):
     """Use the first measurement clip by default, without shortening the waveform."""
     if not 0 < target_nmse < 1 or not 0 < boundary_guard_relative < target_nmse:
         raise ValueError("Require 0 < boundary guard < target NMSE < 1")
@@ -36,4 +37,4 @@ def run(output, *, cohort="runs/l1_librispeech_20261029T110402750634Z/cohort.jso
     write_json(output/"search_state.json", dict(status="running", k=0, next_support=[],
         tested_supports=0, upper_bound=len(support), first_ambiguous_k=None,
         ambiguous_supports=0, seconds=0.0))
-    resume_search(output)
+    resume_search_parallel(output, workers=workers)
