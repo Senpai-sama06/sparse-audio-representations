@@ -240,7 +240,8 @@ def analyze(args):
         examples=list(examples),channels=statistics)
     save_results(output,local,summary,examples,frequencies,spectral_power,impulses,impulse_f,impulse_power)
     write_json(local/"progress.json",dict(phase="complete",completed=len(dataset),examples=len(dataset),channels=channels))
-    print(f"CHANNEL_REPORT={output/'saf_channel_analysis.md'}",flush=True)
+    report = Path(__file__).resolve().parents[1]/"README.md" if output.resolve() == Path(__file__).resolve().parents[1]/"documentation" else output/"saf_channel_analysis.md"
+    print(f"CHANNEL_REPORT={report}",flush=True)
 
 
 def save_results(output,local,summary,examples,frequencies,spectral_power,impulses,impulse_f,impulse_power):
@@ -373,7 +374,10 @@ def write_report(output,summary):
     if "decomposition_max_absolute_error" in summary:
         lines += ["", f"Bias + ten isolated channels + the remaining channels also matches full decoding: "
                   f"maximum absolute discrepancy {summary['decomposition_max_absolute_error']:.3g} on the displayed recordings."]
-    (output/"saf_channel_analysis.md").write_text("\n".join(lines)+"\n",encoding="utf-8")
+    # Committed explanations live in the single README. Custom/run output
+    # directories can still receive their automatically generated local report.
+    if output.resolve() != Path(__file__).resolve().parents[1]/"documentation":
+        (output/"saf_channel_analysis.md").write_text("\n".join(lines)+"\n",encoding="utf-8")
 
 
 if __name__=="__main__":

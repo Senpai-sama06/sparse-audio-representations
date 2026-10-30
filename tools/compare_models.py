@@ -164,7 +164,10 @@ def compare(study_path, output):
               "ViSQOL was not integrated. Inference times are contended and are not used for model-speed claims.", "",
               "Reproduce with `python tools/compare_models.py`. This also regenerates the numeric "
               "export and LaTeX table from the completed local runs; datasets and checkpoints stay local."]
-    (output / "sparse_autoencoder_test_results.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    # Export numerical/LaTeX artifacts as before, while keeping README as the
+    # only maintained explanation. Generated Markdown is for local reports only.
+    if output.resolve() != Path(__file__).resolve().parents[1]/"documentation":
+        (output / "sparse_autoencoder_test_results.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"Wrote held-out comparison, paired uncertainty, and figure to {output}")
 
 
