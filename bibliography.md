@@ -60,3 +60,5 @@ Atomic Decomposition by Basis Pursuit — Scott Shaobing Chen, David L. Donoho, 
 Proximal Algorithms — Neal Parikh, Stephen Boyd
 A Fast Iterative Shrinkage-Thresholding Algorithm for Linear Inverse Problems — Amir Beck, Marc Teboulle
 Adaptive Restart for Accelerated Gradient Schemes — Brendan O’Donoghue, Emmanuel Candès
+PitchFlower: A Flow-based Neural Audio Codec with Pitch Controllability — Diego Torres, Axel Roebel, Nicolas Obin
+GS-Codec: A Gaussian-Splatting Bottleneck for Neural Audio Coding — Ron Aluf, Alon Canfi, Eliya Nachmani

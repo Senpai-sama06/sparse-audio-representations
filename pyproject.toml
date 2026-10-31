@@ -13,6 +13,7 @@ dependencies = ["torch>=2.8,<2.9", "numpy>=2,<3", "scipy>=1.13", "soundfile>=0.1
 dev = ["pytest>=8"]
 speech-metrics = ["pesq>=0.0.4", "pystoi>=0.4"]
 pitch-analysis = ["pyworld==0.3.5"]
+pitchflower = ["torchaudio>=2.8,<2.9", "einops==0.8.1", "rotary-embedding-torch==0.8.9", "torchdyn==1.0.6", "vocos==0.1.0", "pytorch-lightning==2.5.5", "pyworld==0.3.5", "tqdm>=4.67"]
 
 [project.scripts]
 lrac = "lrac.cli:main"

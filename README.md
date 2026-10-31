@@ -41,7 +41,7 @@ single-speaker corpus. Synthetic signals check controlled cases, not all signals
 
 Earlier whole-utterance test-clean results (2,620 recordings; means):
 
-| Model, support | NMSE ? | PESQ-WB ? | STOI ? |
+| Model, support | NMSE (lower) | PESQ-WB (higher) | STOI (higher) |
 |---|---:|---:|---:|
 | S-NL, 10% | 0.1830 | 1.589 | 0.791 |
 | D-NL, 10% | 0.2801 | 1.119 | 0.688 |
@@ -105,7 +105,7 @@ Shared learned-model storage must be reported separately.
 ## Exhaustive L0 activity
 
 A separate search uses the full two-second clip `librispeech:3081-166546-0005`,
-64,000 impulse/DCT atoms and NMSE ? 0.01. It enumerates supports without pruning
+64,000 impulse/DCT atoms and NMSE <= 0.01. It enumerates supports without pruning
 or a time limit; each support receives an independent SVD least-squares fit.
 32 workers use one numerical-library thread each. Disjoint chunks are committed
 in order, with five-second checkpoints and OS locking; a restart may replay
@@ -123,6 +123,50 @@ lower bound. Float64 and a boundary guard provide numerical evidence, not an exa
 certificate. Completion would be a reference for this clip/dictionary/tolerance,
 not every representation domain or minimum bitrate. Check `search_state.json`
 for authoritative completion; a reboot requires the resume command.
+
+## PitchFlower RVQ / Gaussian-splatting training
+
+Prepared from the [official PitchFlower implementation](https://github.com/diegotg2000/PitchFlower)
+and [GS-Codec](https://github.com/ronaluf/gs-codec), pinned in
+`tools/setup_pitchflower.py`. **PitchFlower training has not been launched.**
+When ready, one foreground command runs the entire resumable campaign:
+
+```powershell
+.\tools\run_pitchflower.ps1
+```
+
+It prepares a shared offline WORLD flat/shift cache, trains RVQ then GS sequentially
+on the full cached train-clean-360 (104,014 files / 921 speakers / 363.6 hours),
+then trains the GS predictor and calibrates 6-bit scalar centroids. Original
+LibriSpeech is resampled from 16 to 24 kHz; dev-clean speakers are separate.
+Crops use the released peak normalization convention, unlike the earlier
+amplitude-preserving baseline; waveform gains would need separate codec accounting.
+Both codecs use PitchFlower's ConvNeXt/attention/flow backbone, CFM plus commitment,
+1M optimizer steps, AdamW 1e-4 and effective batch 32 (microbatch 4 x accumulation 8).
+The GS predictor uses 100k steps and effective batch 16. Configuration:
+`configs/study_pitchflower_librispeech.yaml`.
+
+RVQ uses 8 x 512 entries, dimension 256. GS uses the paper's C=32, shared widths,
+fixed uniform centers, 100 inner Adam steps at LR 0.4 and STE outer gradients.
+Its density 80/225 becomes 25 Gaussians over 71 latent frames here; this is a
+PitchFlower adaptation, not a reproduction of GS-Codec's SEANet/GAN backbone.
+Commitment weights are respectively 0.25 and 20. Paper CFG dropout is implemented
+as 10% per condition, correcting the inverted F0 comparison/absent content dropout
+in the reference loss. Neither RVQ dropout nor training-time GS quantization is used.
+The GS predictor uses the released implementation (four dilated blocks, positional
+encodings and one attention decoder); scalar PTQ comes
+after training. No measured bitrate or quality results are claimed yet.
+
+Terminal bars show preprocessing and optimizer-step/loss progress. Outputs are in
+`runs/pitchflower_librispeech/{rvq,gs,predictor}/`: checkpoints, TensorBoard logs,
+progress JSON and final Vocos waveform examples at -6/0/+6 semitones. The root
+`progress.json` mirrors the current phase. Rerun the same command after Ctrl+C
+to resume; model/optimizer state is restored, but data-order/crop replay is not
+guaranteed identical. Cached utterances are reused. `-Phase prepare|rvq|gs|predictor|calibrate`
+selects one phase; edit resource settings before the first run. This launcher does
+not stop or resize the ongoing L0 search. Preprocessing may require substantial
+time and roughly 250 GB before compression. Paper WER/SIM/UTMOS benchmarks remain
+a later evaluation, not metrics computed by this training recipe.
 
 ## Run and extend
 

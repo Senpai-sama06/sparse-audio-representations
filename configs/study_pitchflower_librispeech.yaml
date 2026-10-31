@@ -1,0 +1,27 @@
+name: pitchflower_librispeech
+kind: pitchflower
+parameters:
+  run_dir: runs/pitchflower_librispeech
+  train_manifest: data/manifests/librispeech_cached/train.jsonl
+  validation_manifest: data/manifests/librispeech_cached/validation.jsonl
+  cache_dir: data/processed/pitchflower_24k_seed0
+  expected_train_files: 104014
+  expected_train_speakers: 921
+  seed: 0
+  samples: 36096  # Released 1.504-s recipe: 142 mel frames, even after decoding.
+  micro_batch: 4
+  accumulation: 8  # Effective batch 32; both variants use the same schedule.
+  steps: 1000000
+  predictor_steps: 100000
+  predictor_accumulation: 4  # Predictor effective batch 16, as in GS-Codec Appendix A.
+  learning_rate: 0.0001
+  loader_workers: 2
+  prepare_workers: 8
+  validation_examples: 120
+  validation_interval: 1000  # Optimizer steps, converted to microbatches by Trainer.
+  checkpoint_interval: 500
+  gs_density: 0.35555555555555557  # 80/225 frames in GS-Codec -> 25/71 here.
+  gs_channels: 32  # GS-Codec channel count; RVQ retains PitchFlower's 256.
+  gs_iterations: 100
+  rvq_commitment: 0.25
+  gs_commitment: 20.0

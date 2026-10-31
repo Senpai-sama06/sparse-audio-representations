@@ -42,6 +42,9 @@ def parser():
     command = sub.add_parser("sweep")
     command.add_argument("--config", required=True, help="Sweep specification with base, axis, and values")
     command.add_argument("--execute", action="store_true", help="Run sequentially; default only writes resolved configs")
+    command = sub.add_parser("pitchflower", help="Foreground RVQ/GS training campaign with progress and resume")
+    command.add_argument("--config", default="configs/study_pitchflower_librispeech.yaml")
+    command.add_argument("--phase", choices=["all", "prepare", "rvq", "gs", "predictor", "calibrate"], default="all")
     return p
 
 
@@ -52,6 +55,10 @@ def main(argv=None):
     if args.command == "experiment":
         from lrac.experiment import run_experiment
         run_experiment(load_config(args.config), download=args.download, limit=args.limit, skip_prepare=args.skip_prepare)
+    elif args.command == "pitchflower":
+        from lrac.config import load_study_config
+        from lrac.pitchflower import campaign
+        campaign(load_study_config(args.config), args.phase)
     elif args.command == "study":
         from lrac.config import load_study_config
         from lrac.study import run_study
