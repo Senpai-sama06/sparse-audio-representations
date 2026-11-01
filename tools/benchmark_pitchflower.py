@@ -50,6 +50,7 @@ def main():
     loading_seconds = time.perf_counter()-started
     batch = tuple(torch.stack([example[i] for example in examples]).cuda() for i in range(3))
     report = {"kind": args.kind, "attention": "reference" if args.reference_attention else "sdpa", "priority": args.priority,
+              "optimizer_fused": False,
               "includes_loader": args.loader,
               "crop_loading_seconds_32": loading_seconds, "effective_batch": 32, "measurements": []}
     destination = ROOT/args.output
@@ -66,7 +67,7 @@ def main():
                 state = torch.load(checkpoint, map_location="cpu", weights_only=False)
                 model.load_state_dict({k.removeprefix("net."): v for k, v in state["state_dict"].items()})
                 del state
-            optimizer = torch.optim.AdamW(model.parameters(), lr=1e-4, fused=not args.reference_attention)
+            optimizer = torch.optim.AdamW(model.parameters(), lr=1e-4, fused=False)
             loader = None
             if args.loader:
                 loader = torch.utils.data.DataLoader(dataset, batch_size=size,

@@ -1,4 +1,4 @@
-"""Component checks only: synthetic tensors; no Trainer.fit or training run."""
+"""Synthetic component and disposable Trainer checks; no production training."""
 import hashlib
 import copy
 import json
@@ -96,26 +96,69 @@ def test_interruption_callback_saves_optimizer_checkpoint(tmp_path):
 
 
 @pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA fused Adam required")
-def test_old_optimizer_state_can_resume_with_fused_adam(monkeypatch):
-    """Old CPU step tensors must move to CUDA without resetting Adam moments."""
+def test_fused_optimizer_state_can_resume_with_clipping_compatible_adam(monkeypatch):
+    """A fused checkpoint can return to ordinary Adam without losing moments."""
     import lrac.pitchflower as recipe
     monkeypatch.setattr(recipe, "PitchFlowerModel", lambda *args, **kwargs: torch.nn.Linear(2, 2))
     settings = dict(gs_density=.35, gs_iterations=100, gs_channels=32, samples=36096)
     module = recipe.TrainingModule(settings, "rvq").cuda()
-    optimizer = torch.optim.AdamW(module.net.parameters(), fused=False)
+    optimizer = torch.optim.AdamW(module.net.parameters(), fused=True)
     module.net(torch.ones(2, 2, device="cuda")).square().mean().backward()
     optimizer.step()
     saved = [state["exp_avg"].clone() for state in optimizer.state.values()]
-    assert all(state["step"].device.type == "cpu" for state in optimizer.state.values())
+    assert all(state["step"].device.type == "cuda" for state in optimizer.state.values())
     module._trainer = SimpleNamespace(optimizers=[optimizer])
     module.on_train_start()
     for before, state in zip(saved, optimizer.state.values()):
         torch.testing.assert_close(before, state["exp_avg"])
-        assert state["step"].device.type == "cuda" and float(state["step"]) == 1
+        assert state["step"].device.type == "cpu" and float(state["step"]) == 1
     optimizer.zero_grad(set_to_none=True)
     module.net(torch.ones(2, 2, device="cuda")).square().mean().backward()
     optimizer.step()
     assert all(float(state["step"]) == 2 for state in optimizer.state.values())
+
+
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA BF16 integration check")
+@pytest.mark.parametrize("stage", ["rvq", "gs", "predictor"])
+def test_lightning_bf16_clipping_and_checkpoint_resume(tmp_path, monkeypatch, stage):
+    """Exercise the actual AMP/optimizer/clip/restore path missed by raw benchmarks."""
+    import lrac.pitchflower as recipe
+    monkeypatch.setattr(recipe, "PitchFlowerModel", lambda *args, **kwargs: torch.nn.Linear(2, 2))
+    monkeypatch.setattr(recipe, "GaussianPredictor", lambda *args, **kwargs: torch.nn.Linear(2, 2))
+    settings = dict(micro_batch=4, gs_density=.35, gs_iterations=100, gs_channels=32,
+                    samples=36096, learning_rate=1e-4, predictor_steps=100000, seed=0)
+    norms = []
+
+    class SyntheticModule(recipe.TrainingModule):
+        def _loss(self, batch, training):
+            network = self.predictor if self.predictor_stage else self.net
+            loss = (network(batch[0]).float()-batch[1]).square().mean()
+            return loss, {"synthetic_mse": loss.detach()}
+
+        def configure_gradient_clipping(self, optimizer, gradient_clip_val, gradient_clip_algorithm):
+            super().configure_gradient_clipping(optimizer, gradient_clip_val, gradient_clip_algorithm)
+            gradients = [p.grad for group in optimizer.param_groups for p in group["params"] if p.grad is not None]
+            norms.append(float(torch.stack([grad.norm() for grad in gradients]).norm()))
+
+    data = torch.utils.data.TensorDataset(torch.full((16, 2), 10.), torch.full((16, 2), 30.))
+    loader = torch.utils.data.DataLoader(data, batch_size=4)
+    def trainer(steps):
+        return recipe.pl.Trainer(accelerator="gpu", devices=1, precision="bf16-mixed",
+            max_steps=steps, max_epochs=-1, gradient_clip_val=1., num_sanity_val_steps=0,
+            logger=False, enable_checkpointing=False, enable_progress_bar=False,
+            enable_model_summary=False, default_root_dir=tmp_path)
+    first = SyntheticModule(settings, "gs" if stage == "predictor" else stage, stage == "predictor")
+    initial = trainer(2)
+    initial.fit(first, loader)
+    checkpoint = tmp_path/"synthetic.ckpt"
+    initial.save_checkpoint(checkpoint)
+    second = SyntheticModule(settings, "gs" if stage == "predictor" else stage, stage == "predictor")
+    resumed = trainer(4)
+    resumed.fit(second, loader, ckpt_path=str(checkpoint))
+    assert resumed.global_step == 4 and len(norms) == 4
+    assert all(norm <= 1.00001 for norm in norms)
+    assert all(not group["fused"] for group in resumed.optimizers[0].param_groups)
+    assert all(float(state["step"]) == 4 for state in resumed.optimizers[0].state.values() if "step" in state)
 
 
 def test_resume_converts_microbatch_counts_without_changing_optimizer_steps(monkeypatch):

@@ -33,7 +33,21 @@
       }
     ]
   },
-  "optimized_rvq": {
+  "limitations": [
+    "Short throughput checks, not convergence or quality comparisons.",
+    "Baseline uses normal CPU priority and resident GPU batches; optimized RVQ uses above-normal priority and the real loader.",
+    "This compares a bundle of execution changes, not an attention-only ablation.",
+    "GS uses fresh weights and resident batches. Its time is not a measured full-campaign ETA.",
+    "Peak memory is PyTorch allocated memory, not total driver-reported VRAM.",
+    "The corrected benchmark was collected later under potentially different system load; changes in time are not an optimizer-only speed comparison."
+  ],
+  "recipe_sha256": {
+    "lrac/pitchflower.py": "e828a6c485e4391c0dd7eb2fa83953f4400eb066104601e1d7e4012aefcc24da",
+    "lrac/models/pitchflower.py": "e80a7613be361cd0239e19a6d901f945c92849a624935bf53c62c731ceabdc4a",
+    "lrac/data/pitchflower.py": "1ec435488d4818383e4f7ea57f833fd1bde0d558e2566a7d49787596c4a39aac"
+  },
+  "updated_utc": "2026-11-01T15:02:32.592622+00:00",
+  "prior_fused_rvq": {
     "kind": "rvq",
     "attention": "sdpa",
     "priority": true,
@@ -55,9 +69,10 @@
         "loss": 2.8840088844299316,
         "gradient_norm": 42.02518081665039
       }
-    ]
+    ],
+    "optimizer_fused": true
   },
-  "optimized_gs": {
+  "prior_fused_gs": {
     "kind": "gs",
     "attention": "sdpa",
     "priority": true,
@@ -77,18 +92,34 @@
         "loss": 51.74791717529297,
         "gradient_norm": 549.5390625
       }
-    ]
+    ],
+    "optimizer_fused": true
   },
-  "limitations": [
-    "Short throughput checks, not convergence or quality comparisons.",
-    "Baseline uses normal CPU priority and resident GPU batches; optimized RVQ uses above-normal priority and the real loader.",
-    "This compares a bundle of execution changes, not an attention-only ablation.",
-    "GS uses fresh weights and resident batches. Its time is not a measured full-campaign ETA.",
-    "Peak memory is PyTorch allocated memory, not total driver-reported VRAM."
-  ],
-  "recipe_sha256": {
-    "lrac/pitchflower.py": "a947dadc2bd5102cf7cfe73fdb65c1ff4bcb1f792fdb0ea1609e39a28a8f1e04",
-    "lrac/models/pitchflower.py": "e80a7613be361cd0239e19a6d901f945c92849a624935bf53c62c731ceabdc4a",
-    "lrac/data/pitchflower.py": "1ec435488d4818383e4f7ea57f833fd1bde0d558e2566a7d49787596c4a39aac"
-  }
+  "optimized_rvq": {
+    "kind": "rvq",
+    "attention": "sdpa",
+    "priority": true,
+    "includes_loader": true,
+    "crop_loading_seconds_32": 0.2919298999477178,
+    "effective_batch": 32,
+    "measurements": [
+      {
+        "micro_batch": 32,
+        "seconds_per_step": 0.35850696000270543,
+        "durations": [
+          0.3592034999746829,
+          0.3433396997861564,
+          0.41047070012427866,
+          0.34152060002088547,
+          0.3380003001075238
+        ],
+        "peak_gpu_gib": 4.629143238067627,
+        "loss": 2.812957286834717,
+        "gradient_norm": 40.53328323364258
+      }
+    ],
+    "optimizer_fused": false
+  },
+  "compatibility_fix": "Lightning 2.5.5 AMP rejects fused outer optimizers with gradient clipping. Use ordinary/foreach AdamW and Adam; retain fused Adam only inside detached GS fitting, which does not use Lightning clipping.",
+  "verification": "19 PitchFlower checks passed, including disposable actual Lightning BF16 clipping/save/resume for RVQ, GS and predictor."
 }

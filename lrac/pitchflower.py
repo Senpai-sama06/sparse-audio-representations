@@ -172,8 +172,8 @@ class TrainingModule(pl.LightningModule):
     def configure_optimizers(self):
         if not self.predictor_stage:
             return torch.optim.AdamW(self.net.parameters(), lr=self.settings["learning_rate"],
-                                     fused=self.device.type == "cuda")
-        optimizer = torch.optim.Adam(self.predictor.parameters(), lr=5e-4, fused=self.device.type == "cuda")
+                                     fused=False)
+        optimizer = torch.optim.Adam(self.predictor.parameters(), lr=5e-4, fused=False)
         total = self.settings["predictor_steps"]
         def multiplier(step):
             if step < 1000:
@@ -185,18 +185,17 @@ class TrainingModule(pl.LightningModule):
     def on_train_start(self):
         # Restoring an older checkpoint also restores its optimizer flags. Set
         # the execution backend after restoration while retaining Adam moments,
-        # parameter groups, learning rates and step counters verbatim.
+        # learning rates and step values. Lightning 2.5's AMP plugin rejects
+        # fused optimizers with gradient clipping, including unscaled BF16.
+        # foreach=None lets PyTorch choose its compatible CUDA foreach path.
         for optimizer in self.trainer.optimizers:
             for group in optimizer.param_groups:
-                group["fused"] = self.device.type == "cuda"
+                group["fused"] = False
                 group["foreach"] = None
-                if group["fused"]:
-                    for parameter in group["params"]:
-                        state = optimizer.state[parameter]
-                        if "step" in state:
-                            # Fused Adam expects its scalar step tensor on CUDA;
-                            # ordinary Adam checkpoints commonly store it on CPU.
-                            state["step"] = state["step"].to(parameter.device)
+                for parameter in group["params"]:
+                    state = optimizer.state[parameter]
+                    if "step" in state:
+                        state["step"] = state["step"].cpu()
 
     def on_load_checkpoint(self, checkpoint):
         """Translate Lightning's microbatch counters when execution size changes.
@@ -286,7 +285,7 @@ def migrate_execution(settings, output):
     Called only by the benchmark's --apply action, never implicitly on resume.
     Dataset, objectives, architecture and optimizer-step budgets must agree;
     checkpoint parameters/optimizer tensors are not rewritten. Attention backend
-    and fused Adam introduce floating-point differences, not new model weights.
+    changes introduce floating-point differences, not new model weights.
     """
     output = Path(output)
     with cache_lock(output/"campaign.lock"):
@@ -313,7 +312,7 @@ def migrate_execution(settings, output):
         history = dict(utc=datetime.now(timezone.utc).isoformat(), old_settings=old,
             new_settings=settings, previous_provenance=provenance, new_recipe_sha256=recipe,
             resume_step=step, checkpoint=str(checkpoint),
-            note="SDPA, fused Adam, cuDNN autotuning; RVQ EMA groups remain four. Not bitwise replay.")
+            note="SDPA, clipping-compatible Adam, cuDNN autotuning; RVQ EMA groups remain four. Not bitwise replay.")
         history_dir = output/"execution_history"
         history_dir.mkdir(exist_ok=True)
         name = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")

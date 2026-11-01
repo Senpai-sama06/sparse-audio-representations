@@ -167,13 +167,15 @@ Preprocessing may require substantial
 time and roughly 250 GB before compression. Paper WER/SIM/UTMOS benchmarks remain
 a later evaluation, not metrics computed by this training recipe.
 
-Execution uses SDPA attention with unchanged checkpoint keys, fused Adam,
+Execution uses SDPA attention with unchanged checkpoint keys, CUDA foreach Adam,
 cuDNN autotuning and above-normal Windows training-process priority. RVQ still
 updates its codebooks in groups of four, preserving the original EMA cadence.
-The 32-sample RVQ benchmark measured 1.24 s/optimizer step and 4.63 GiB allocated
-GPU memory, including the real loader (five steps, L0 running); the original
-4-sample reference measured 7.72 s/step. These are short throughput checks,
-not quality results or a full-campaign completion-time guarantee.
+The latest 32-sample RVQ benchmark measured 0.36 s/optimizer step and 4.63 GiB
+allocated GPU memory, including the real loader (five steps). Timing depends on
+system load; these short checks are not quality results or a full-campaign ETA.
+Outer optimizers disable fused mode because the installed Lightning AMP plugin
+rejects it with gradient clipping. Disposable Lightning tests verify BF16,
+norm clipping and checkpoint resume for RVQ, GS and predictor training.
 Exact measurements and conditions are in
 [`documentation/pitchflower_runtime_benchmark.json`](documentation/pitchflower_runtime_benchmark.json).
 `tools/benchmark_pitchflower.py --priority --loader --apply` benchmarks disposable
