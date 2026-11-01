@@ -32,6 +32,10 @@ def main():
                         help="Migrate the stopped campaign to the fastest tested batch below 13 GiB")
     parser.add_argument("--priority", action="store_true", help="Use production above-normal Windows CPU priority")
     parser.add_argument("--loader", action="store_true", help="Include the real DataLoader and CPU-to-GPU transfer")
+    parser.add_argument("--shuffle", action="store_true", help="Sample across the whole corpus, as training does")
+    parser.add_argument("--workers", type=int, help="Override loader worker count for this disposable check")
+    parser.add_argument("--lightning-amp", action="store_true", help="Disable autocast caching, matching Lightning")
+    parser.add_argument("--data-seed", type=int, default=0, help="Corpus sample seed; use fresh cohorts for storage checks")
     args = parser.parse_args()
     if args.steps < 1:
         parser.error("--steps must be positive")
@@ -42,15 +46,27 @@ def main():
     if args.priority:
         configure_runtime()
     settings = load_study_config(ROOT/"configs/study_pitchflower_librispeech.yaml").parameters
+    if args.workers is not None:
+        if args.workers < 0:
+            parser.error("--workers must be nonnegative")
+        settings["loader_workers"] = args.workers
     count = 32*(args.steps+2) if args.loader else 32
-    rows = [json.loads(line) for line in (ROOT/settings["train_manifest"]).read_text().splitlines()[:count]]
-    dataset = PitchDataset(rows, ROOT/settings["cache_dir"], settings["samples"], training=False)
+    rows = [json.loads(line) for line in (ROOT/settings["train_manifest"]).read_text().splitlines()]
+    if args.shuffle:
+        order = torch.randperm(len(rows), generator=torch.Generator().manual_seed(args.data_seed)).tolist()
+        rows = [rows[index] for index in order[:count]]
+    else:
+        rows = rows[:count]
+    dataset = PitchDataset(rows, ROOT/settings["cache_dir"], settings["samples"], training=args.shuffle)
     started = time.perf_counter()
     examples = [dataset[i] for i in range(32)]
     loading_seconds = time.perf_counter()-started
     batch = tuple(torch.stack([example[i] for example in examples]).cuda() for i in range(3))
     report = {"kind": args.kind, "attention": "reference" if args.reference_attention else "sdpa", "priority": args.priority,
               "optimizer_fused": False,
+              "shuffle": args.shuffle, "loader_workers": settings["loader_workers"],
+              "data_seed": args.data_seed,
+              "autocast_cache": not args.lightning_amp,
               "includes_loader": args.loader,
               "crop_loading_seconds_32": loading_seconds, "effective_batch": 32, "measurements": []}
     destination = ROOT/args.output
@@ -75,27 +91,36 @@ def main():
                 batches = iter(loader)
             def step():
                 optimizer.zero_grad(set_to_none=True)
+                loading = 0.
                 for first in range(0, 32, size):
-                    microbatch = (tuple(value.cuda(non_blocking=True) for value in next(batches))
-                                  if args.loader else tuple(value[first:first+size] for value in batch))
-                    with torch.autocast("cuda", dtype=torch.bfloat16):
+                    if args.loader:
+                        fetched = time.perf_counter()
+                        cpu_batch = next(batches)
+                        loading += time.perf_counter()-fetched
+                        microbatch = tuple(value.cuda(non_blocking=True) for value in cpu_batch)
+                    else:
+                        microbatch = tuple(value[first:first+size] for value in batch)
+                    with torch.autocast("cuda", dtype=torch.bfloat16, cache_enabled=not args.lightning_amp):
                         loss, _ = model(*microbatch)
                     (loss/(32//size)).backward()
                 norm = torch.nn.utils.clip_grad_norm_(model.parameters(), 1., error_if_nonfinite=True)
                 optimizer.step()
-                return float(loss.detach()), float(norm)
+                return float(loss.detach()), float(norm), loading
             # Warm up shape-specific cuDNN plans and optimizer state allocation.
             step()
             torch.cuda.synchronize()
             torch.cuda.reset_peak_memory_stats()
             durations = []
+            waits = []
             for _ in range(args.steps):
                 start = time.perf_counter()
-                value, norm = step()
+                value, norm, loading = step()
                 torch.cuda.synchronize()
                 durations.append(time.perf_counter()-start)
+                waits.append(loading)
             measurement = dict(micro_batch=size, seconds_per_step=sum(durations)/len(durations),
                 durations=durations, peak_gpu_gib=torch.cuda.max_memory_allocated()/2**30,
+                data_wait_seconds_per_step=sum(waits)/len(waits),
                 loss=value, gradient_norm=norm)
         except torch.cuda.OutOfMemoryError:
             measurement = dict(micro_batch=size, status="out_of_memory")

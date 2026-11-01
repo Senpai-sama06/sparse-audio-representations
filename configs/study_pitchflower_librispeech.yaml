@@ -16,7 +16,7 @@ parameters:
   predictor_accumulation: 1  # Predictor effective batch 16, as in GS-Codec Appendix A.
   learning_rate: 0.0001
   loader_workers: 2
-  prepare_workers: 8
+  prepare_workers: 2  # HDD: bound concurrent reads/writes while preparing mapped copies.
   validation_examples: 120
   validation_interval: 1000  # Optimizer steps, converted to microbatches by Trainer.
   checkpoint_interval: 500

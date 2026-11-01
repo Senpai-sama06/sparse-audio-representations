@@ -134,7 +134,8 @@ and [GS-Codec](https://github.com/ronaluf/gs-codec), pinned in
 .\tools\run_pitchflower.ps1
 ```
 
-It prepares a shared offline WORLD flat/shift cache, trains RVQ then GS sequentially
+It prepares a shared offline WORLD flat/shift cache and lossless memory-mapped
+copies, then trains RVQ and GS sequentially
 on the full cached train-clean-360 (104,014 files / 921 speakers / 363.6 hours),
 then trains the GS predictor and calibrates 6-bit scalar centroids. Original
 LibriSpeech is resampled from 16 to 24 kHz; dev-clean speakers are separate.
@@ -170,9 +171,10 @@ a later evaluation, not metrics computed by this training recipe.
 Execution uses SDPA attention with unchanged checkpoint keys, CUDA foreach Adam,
 cuDNN autotuning and above-normal Windows training-process priority. RVQ still
 updates its codebooks in groups of four, preserving the original EMA cadence.
-The latest 32-sample RVQ benchmark measured 0.36 s/optimizer step and 4.63 GiB
-allocated GPU memory, including the real loader (five steps). Timing depends on
-system load; these short checks are not quality results or a full-campaign ETA.
+The mapped-cache RVQ benchmark measured 0.35 s/optimizer step and 4.63 GiB
+allocated GPU memory on a warm 832-utterance subset (24 measured steps, real
+loader, random corpus sampling, Lightning autocast settings). This is a warm-cache
+throughput check, not a full-corpus speed or completion-time guarantee.
 Outer optimizers disable fused mode because the installed Lightning AMP plugin
 rejects it with gradient clipping. Disposable Lightning tests verify BF16,
 norm clipping and checkpoint resume for RVQ, GS and predictor training.
@@ -183,6 +185,15 @@ models and explicitly migrates the stopped campaign's execution settings/source
 hashes, retaining history in `execution_history/`. It never starts production
 training. Dataset/objective changes and effective-batch changes are rejected;
 ordinary resume continues to reject unexplained settings/source changes.
+
+The processed corpus is on the HDD. Compressed NPZ inputs require decompressing
+whole utterances to obtain 1.504-second crops; mapped NPY copies interleave both
+waveforms and read just the crop's pages. Tests verify identical arrays, crops,
+normalization and F0. Original NPZ files remain intact. The normal preparation
+phase builds these copies once, resumes partial conversion, and skips completed
+files. Allow roughly 239 GiB extra disk space and about two hours at the sampled
+conversion rate. Training can read either format, so `-Phase rvq` can bypass
+conversion if needed; use the normal command to prepare the faster layout first.
 
 ## Run and extend
 

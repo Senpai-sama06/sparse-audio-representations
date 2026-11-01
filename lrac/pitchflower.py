@@ -24,7 +24,7 @@ from pytorch_lightning.callbacks import ModelCheckpoint, TQDMProgressBar
 from pytorch_lightning.loggers import TensorBoardLogger
 from tqdm import tqdm
 
-from lrac.data.pitchflower import PitchDataset, cached_utterance, cache_lock
+from lrac.data.pitchflower import PitchDataset, mapped_utterance, cache_lock
 from lrac.models.pitchflower import PitchFlowerModel, GaussianPredictor, render_gaussians, configure_runtime
 from lrac.utils import file_hash, source_fingerprint, environment, write_json
 
@@ -87,25 +87,25 @@ def audit_data(settings, output):
 def _prepare_one(task):
     row, cache, seed = task
     torch.set_num_threads(1)
-    return str(cached_utterance(row, cache, seed))
+    return str(mapped_utterance(row, cache, seed))
 
 
 def prepare(rows, settings, output):
-    """Complete the shared offline cache, with bounded work and resumable files."""
+    """Prepare WORLD sources and lossless crop-readable copies, once per file."""
     cache = str(_path(settings["cache_dir"]))
     # Check immutable cache filenames in the parent. A resumed, fully prepared
     # corpus should not spawn 106,717 tiny tasks just to rediscover those files.
     missing = [row for row in rows if not (Path(cache)/(hashlib.sha256(
-        f"{row['id']}:{settings['seed']}:pitchflower24k-v1".encode()).hexdigest()+".npz")).exists()]
+        f"{row['id']}:{settings['seed']}:pitchflower24k-v1".encode()).hexdigest()+".npy")).exists()]
     count = len(rows)-len(missing)
     if not missing:
-        print(f"WORLD cache: all {count:,} utterances already prepared", flush=True)
+        print(f"WORLD + mapped cache: all {count:,} utterances already prepared", flush=True)
         return
     tasks = iter((row, cache, settings["seed"]) for row in missing)
     with ProcessPoolExecutor(max_workers=settings["prepare_workers"]) as pool:
         pending = deque()
         exhausted = False
-        with tqdm(total=len(rows), initial=count, desc="WORLD preprocessing (cached files reused)", unit="utterance") as bar:
+        with tqdm(total=len(rows), initial=count, desc="WORLD + lossless mapped cache", unit="utterance") as bar:
             while pending or not exhausted:
                 while len(pending) < 2*settings["prepare_workers"] and not exhausted:
                     task = next(tasks, None)
@@ -290,7 +290,7 @@ def migrate_execution(settings, output):
     output = Path(output)
     with cache_lock(output/"campaign.lock"):
         old = json.loads((output/"settings.json").read_text())
-        allowed = {"micro_batch", "accumulation", "predictor_accumulation", "loader_workers"}
+        allowed = {"micro_batch", "accumulation", "predictor_accumulation", "loader_workers", "prepare_workers"}
         changed = {key for key in set(old) | set(settings) if old.get(key) != settings.get(key)}
         if changed-allowed:
             raise ValueError(f"Not an execution-only migration: {changed-allowed}")
@@ -312,7 +312,7 @@ def migrate_execution(settings, output):
         history = dict(utc=datetime.now(timezone.utc).isoformat(), old_settings=old,
             new_settings=settings, previous_provenance=provenance, new_recipe_sha256=recipe,
             resume_step=step, checkpoint=str(checkpoint),
-            note="SDPA, clipping-compatible Adam, cuDNN autotuning; RVQ EMA groups remain four. Not bitwise replay.")
+            note="SDPA, clipping-compatible Adam, cuDNN autotuning, lossless mapped cache; RVQ EMA groups remain four. Not bitwise replay.")
         history_dir = output/"execution_history"
         history_dir.mkdir(exist_ok=True)
         name = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")

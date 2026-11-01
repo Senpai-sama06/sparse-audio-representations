@@ -87,6 +87,39 @@ def cached_utterance(row, cache, seed=0):
     return path
 
 
+def mapped_utterance(row, cache, seed=0):
+    """Losslessly repack a WORLD cache for reading short crops without inflation.
+
+    A single structured NPY stores the same three float32 arrays, with their
+    original lengths. Waveforms are interleaved to fetch both crops in one disk
+    region. Memory mapping reads only selected waveform/pitch pages;
+    compressed NPZ requires decoding entire utterances. The NPZ source remains
+    intact. Atomic replacement and the per-file lock allow resumable preparation
+    while another process reads completed files. No quantization is introduced.
+    """
+    source = cached_utterance(row, cache, seed)
+    destination = source.with_suffix(".npy")
+    if not destination.exists():
+        with cache_lock(destination.with_suffix(".npy.lock")):
+            if not destination.exists():
+                with np.load(source, allow_pickle=False) as archive:
+                    arrays = {name: archive[name] for name in ("original", "perturbed", "pitch")}
+                original, perturbed = arrays["original"], arrays["perturbed"]
+                if original.shape != perturbed.shape or original.dtype != perturbed.dtype:
+                    raise ValueError("Expected aligned WORLD waveform arrays with matching dtype")
+                dtype = np.dtype([("waveforms", original.dtype, (len(original), 2)),
+                                  ("pitch", arrays["pitch"].dtype, arrays["pitch"].shape)])
+                temporary = destination.with_suffix(f".{os.getpid()}.tmp.npy")
+                mapped = np.lib.format.open_memmap(temporary, mode="w+", dtype=dtype, shape=())
+                mapped["waveforms"][:, 0] = original
+                mapped["waveforms"][:, 1] = perturbed
+                mapped["pitch"][...] = arrays["pitch"]
+                mapped.flush()
+                del mapped  # Close the mapping before replacing a file on Windows.
+                temporary.replace(destination)
+    return destination
+
+
 class PitchDataset(Dataset):
     """Crop both waveforms and F0 at the same hop boundary; no speaker labels fed in."""
     def __init__(self, rows, cache, samples=36096, seed=0, training=True):
@@ -96,9 +129,16 @@ class PitchDataset(Dataset):
         return len(self.rows)
 
     def __getitem__(self, index):
-        path = cached_utterance(self.rows[index], self.cache, self.seed)
-        with np.load(path, allow_pickle=False) as data:
-            original, perturbed, pitch = data["original"], data["perturbed"], data["pitch"]
+        identity = hashlib.sha256(f"{self.rows[index]['id']}:{self.seed}:pitchflower24k-v1".encode()).hexdigest()
+        mapped = Path(self.cache)/f"{identity}.npy"
+        if mapped.exists():
+            data = np.load(mapped, mmap_mode="r", allow_pickle=False)
+            original, perturbed = data["waveforms"][:, 0], data["waveforms"][:, 1]
+            pitch = data["pitch"]
+        else:
+            path = cached_utterance(self.rows[index], self.cache, self.seed)
+            with np.load(path, allow_pickle=False) as data:
+                original, perturbed, pitch = data["original"], data["perturbed"], data["pitch"]
         frames = self.samples//256+1
         if len(original) < self.samples:
             original = np.tile(original, int(np.ceil(self.samples/len(original))))

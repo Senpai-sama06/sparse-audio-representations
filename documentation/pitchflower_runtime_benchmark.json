@@ -42,11 +42,11 @@
     "The corrected benchmark was collected later under potentially different system load; changes in time are not an optimizer-only speed comparison."
   ],
   "recipe_sha256": {
-    "lrac/pitchflower.py": "e828a6c485e4391c0dd7eb2fa83953f4400eb066104601e1d7e4012aefcc24da",
+    "lrac/pitchflower.py": "26720aa9779cd25a8066a96b9e1d57df2786db8b239cd426f88e69ee659635ff",
     "lrac/models/pitchflower.py": "e80a7613be361cd0239e19a6d901f945c92849a624935bf53c62c731ceabdc4a",
-    "lrac/data/pitchflower.py": "1ec435488d4818383e4f7ea57f833fd1bde0d558e2566a7d49787596c4a39aac"
+    "lrac/data/pitchflower.py": "7708a22ea95a30ec29729ed0a843e35e237d166acf166a5abea55699f86f6821"
   },
-  "updated_utc": "2026-11-01T15:02:32.592622+00:00",
+  "updated_utc": "2026-11-01T20:19:23.958791+00:00",
   "prior_fused_rvq": {
     "kind": "rvq",
     "attention": "sdpa",
@@ -121,5 +121,152 @@
     "optimizer_fused": false
   },
   "compatibility_fix": "Lightning 2.5.5 AMP rejects fused outer optimizers with gradient clipping. Use ordinary/foreach AdamW and Adam; retain fused Adam only inside detached GS fitting, which does not use Lightning clipping.",
-  "verification": "19 PitchFlower checks passed, including disposable actual Lightning BF16 clipping/save/resume for RVQ, GS and predictor."
+  "verification": "19 PitchFlower checks passed, including disposable actual Lightning BF16 clipping/save/resume for RVQ, GS and predictor.",
+  "storage_profile": {
+    "observed_live_step": 3242,
+    "observed_live_session_seconds": 5902.688,
+    "observed_live_session_steps": 2742,
+    "processed_cache_disk": "D: WDC WD20EZBX SATA mechanical HDD",
+    "compressed_cache_gib": 212.9491167664528,
+    "available_ssd_gib": 105.8235092163086,
+    "additional_mapped_cache_estimate_gib": 238.0217793211341,
+    "compressed_2workers": {
+      "kind": "rvq",
+      "attention": "sdpa",
+      "priority": true,
+      "optimizer_fused": false,
+      "shuffle": true,
+      "loader_workers": 2,
+      "autocast_cache": false,
+      "includes_loader": true,
+      "crop_loading_seconds_32": 1.3904405999928713,
+      "effective_batch": 32,
+      "measurements": [
+        {
+          "micro_batch": 32,
+          "seconds_per_step": 1.1053141249867622,
+          "durations": [
+            0.3966471999883652,
+            0.36187840020284057,
+            0.42971870000474155,
+            0.36578279989771545,
+            1.8269479000009596,
+            2.188716300064698,
+            1.4761375999078155,
+            1.7966840998269618
+          ],
+          "peak_gpu_gib": 4.628783702850342,
+          "data_wait_seconds_per_step": 0.7229526250157505,
+          "loss": 0.8130179643630981,
+          "gradient_norm": 4.437629222869873
+        }
+      ]
+    },
+    "compressed_8workers": {
+      "kind": "rvq",
+      "attention": "sdpa",
+      "priority": true,
+      "optimizer_fused": false,
+      "shuffle": true,
+      "loader_workers": 8,
+      "data_seed": 1,
+      "autocast_cache": false,
+      "includes_loader": true,
+      "crop_loading_seconds_32": 1.7155714000109583,
+      "effective_batch": 32,
+      "measurements": [
+        {
+          "micro_batch": 32,
+          "seconds_per_step": 1.189903445832897,
+          "durations": [
+            3.0820452999323606,
+            0.352283300133422,
+            0.3493093999568373,
+            0.3515876999590546,
+            0.3526010001078248,
+            0.35045730019919574,
+            0.3482853998430073,
+            0.3515907998662442,
+            11.412577699869871,
+            0.3531710000243038,
+            0.3494860997889191,
+            0.3484279001131654,
+            0.34994779992848635,
+            0.3485342999920249,
+            0.3496464998461306,
+            0.349180500023067,
+            6.291129600023851,
+            0.7628989999648184,
+            0.3524987001437694,
+            0.35167200001887977,
+            0.35058010020293295,
+            0.3492028000764549,
+            0.3509760999586433,
+            0.3495924000162631
+          ],
+          "peak_gpu_gib": 4.628783702850342,
+          "data_wait_seconds_per_step": 0.8084931583531821,
+          "loss": 0.7093783020973206,
+          "gradient_norm": 2.1661927700042725
+        }
+      ]
+    },
+    "mapped_2workers": {
+      "kind": "rvq",
+      "attention": "sdpa",
+      "priority": true,
+      "optimizer_fused": false,
+      "shuffle": true,
+      "loader_workers": 2,
+      "data_seed": 2,
+      "autocast_cache": false,
+      "includes_loader": true,
+      "crop_loading_seconds_32": 0.022058199858292937,
+      "effective_batch": 32,
+      "measurements": [
+        {
+          "micro_batch": 32,
+          "seconds_per_step": 0.3530336916640711,
+          "durations": [
+            0.3683426999486983,
+            0.3506277999840677,
+            0.3522560999263078,
+            0.3504554000683129,
+            0.3535641999915242,
+            0.3532398999668658,
+            0.3533995000179857,
+            0.3546965999994427,
+            0.3510929001495242,
+            0.350842900108546,
+            0.3513122000731528,
+            0.3490857998840511,
+            0.3575168999377638,
+            0.3540989998728037,
+            0.352831199998036,
+            0.35159229999408126,
+            0.35676179989241064,
+            0.34960300009697676,
+            0.35462030000053346,
+            0.35240610013715923,
+            0.35140320006757975,
+            0.3497077999636531,
+            0.35145039996132255,
+            0.3519005998969078
+          ],
+          "peak_gpu_gib": 4.628783702850342,
+          "data_wait_seconds_per_step": 5.5216660257428885e-05,
+          "loss": 0.7220376133918762,
+          "gradient_norm": 2.7024528980255127
+        }
+      ]
+    },
+    "conversion_subset_files": 832,
+    "conversion_subset_seconds": 57,
+    "verification": "21 PitchFlower checks passed; mapped/source array and random-crop equality tested, including short-signal tiling.",
+    "limitations": [
+      "Mapped subset was warm after preparation; full-corpus throughput has not yet been measured.",
+      "Different corpus cohorts were used; these are bottleneck diagnostics, not a controlled optimizer/worker-count speedup claim.",
+      "The exhaustive L0 process was not running during these storage checks."
+    ]
+  }
 }

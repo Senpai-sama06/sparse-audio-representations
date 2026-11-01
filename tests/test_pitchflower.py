@@ -8,7 +8,7 @@ import numpy as np
 import pytest
 import torch
 
-from lrac.data.pitchflower import PitchDataset
+from lrac.data.pitchflower import PitchDataset, mapped_utterance
 from lrac.models.pitchflower import GaussianBottleneck, GaussianPredictor, PitchFlowerModel, render_gaussians
 
 
@@ -235,6 +235,39 @@ def test_cached_crop_pitch_alignment_without_world_or_training(tmp_path):
     assert a.shape == b.shape == (1792,) and f0.shape == (8,)
     torch.testing.assert_close(f0, torch.arange(8).float())
     torch.testing.assert_close(a, b)
+
+
+@pytest.mark.parametrize("length", [700, 4096])
+def test_mapped_cache_preserves_arrays_random_crops_and_short_signal_tiling(tmp_path, length):
+    """Storage optimization must leave every training input bit-for-bit equal."""
+    row = {"id": "mapped-source"}
+    identity = hashlib.sha256(b"mapped-source:0:pitchflower24k-v1").hexdigest()
+    original = np.linspace(-.7, .8, length, dtype=np.float32)
+    perturbed = np.cos(np.arange(length, dtype=np.float32)*.031)
+    pitch = np.arange(length//256+1, dtype=np.float32)
+    source = tmp_path/f"{identity}.npz"
+    np.savez_compressed(source, original=original, perturbed=perturbed, pitch=pitch)
+    dataset = PitchDataset([row], tmp_path, samples=1792, training=True)
+    torch.manual_seed(7)
+    expected = dataset[0]
+    mapped = mapped_utterance(row, tmp_path)
+    arrays = np.load(mapped, mmap_mode="r", allow_pickle=False)
+    for actual, value in ((arrays["waveforms"][:, 0], original),
+                          (arrays["waveforms"][:, 1], perturbed), (arrays["pitch"], pitch)):
+        np.testing.assert_array_equal(actual, value)
+        assert actual.dtype == value.dtype and not actual.flags.writeable
+    torch.manual_seed(7)
+    actual = dataset[0]
+    for a, b in zip(actual, expected):
+        torch.testing.assert_close(a, b, rtol=0, atol=0)
+    # Returned tensors own their crops; downstream changes cannot corrupt cache.
+    actual[0].zero_()
+    actual[2].fill_(-1)
+    np.testing.assert_array_equal(arrays["waveforms"][:, 0], original)
+    np.testing.assert_array_equal(arrays["pitch"], pitch)
+    timestamp = mapped.stat().st_mtime_ns
+    assert mapped_utterance(row, tmp_path).stat().st_mtime_ns == timestamp
+    assert source.exists()  # Preserve the original compressed data/provenance.
 
 
 def test_official_predictor_renders_variable_primitive_counts():
