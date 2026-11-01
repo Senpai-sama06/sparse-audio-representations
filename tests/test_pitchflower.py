@@ -1,5 +1,8 @@
 """Component checks only: synthetic tensors; no Trainer.fit or training run."""
 import hashlib
+import copy
+import json
+from types import MethodType, SimpleNamespace
 
 import numpy as np
 import pytest
@@ -7,6 +10,129 @@ import torch
 
 from lrac.data.pitchflower import PitchDataset
 from lrac.models.pitchflower import GaussianBottleneck, GaussianPredictor, PitchFlowerModel, render_gaussians
+
+
+@pytest.mark.parametrize("device,channels", [("cpu", 32), ("cuda", 256), ("cuda", 512)])
+def test_sdpa_matches_reference_values_gradients_and_checkpoint_keys(device, channels):
+    """Check the actual upstream block, including RoPE and both CUDA head widths."""
+    if device == "cuda" and not torch.cuda.is_available():
+        pytest.skip("CUDA unavailable")
+    from lrac.models.pitchflower import reference_path, sdpa_attention
+    reference_path()
+    from pitchflower.transformer import AttnBlock
+    original = AttnBlock(channels).to(device)
+    optimized = copy.deepcopy(original)
+    optimized.forward = MethodType(sdpa_attention, optimized)
+    x = torch.randn(2, channels, 17, device=device, requires_grad=True)
+    y = x.detach().clone().requires_grad_()
+    with torch.autocast(device, dtype=torch.bfloat16, enabled=device == "cuda"):
+        a, b = original(x), optimized(y)
+    tolerance = dict(rtol=.025, atol=.015) if device == "cuda" else dict(rtol=2e-5, atol=2e-6)
+    torch.testing.assert_close(a, b, **tolerance)
+    a.square().mean().backward()
+    b.square().mean().backward()
+    torch.testing.assert_close(x.grad, y.grad, **tolerance)
+    assert original.state_dict().keys() == optimized.state_dict().keys()
+    for p, q in zip(original.parameters(), optimized.parameters()):
+        torch.testing.assert_close(p.grad, q.grad, **tolerance)
+
+
+def test_larger_batch_preserves_sequential_rvq_updates_and_commitment():
+    model = PitchFlowerModel("rvq", hidden=32, flow_channels=32, ae_layers=1, flow_layers=1)
+    # Bypass one-time k-means initialization; compare steady-state EMA updates
+    # from identical populated codebooks, as in the resumed production run.
+    for name, buffer in model.autoencoder.quantizer.named_buffers():
+        if name.endswith("inited"):
+            buffer.fill_(True)
+        elif name.endswith("embed") or name.endswith("embed_avg"):
+            buffer.normal_()
+        elif name.endswith("cluster_size"):
+            buffer.fill_(10.)
+    baseline = copy.deepcopy(model)
+    latent = torch.randn(8, 256, 8, requires_grad=True)
+    reference_latent = latent.detach().clone().requires_grad_()
+    value, penalty = model.condition(latent)
+    parts = [baseline.condition(part) for part in reference_latent.split(4)]
+    torch.testing.assert_close(value, torch.cat([part[0] for part in parts]), rtol=2e-5, atol=2e-6)
+    torch.testing.assert_close(penalty, sum(part[1] for part in parts)/2)
+    penalty.backward()
+    (sum(part[1] for part in parts)/2).backward()
+    torch.testing.assert_close(latent.grad, reference_latent.grad)
+    for name, buffer in model.autoencoder.quantizer.named_buffers():
+        torch.testing.assert_close(buffer, dict(baseline.autoencoder.quantizer.named_buffers())[name])
+
+
+def test_execution_migration_preserves_history_and_rejects_objective_changes(tmp_path, monkeypatch):
+    import lrac.pitchflower as recipe
+    old = dict(micro_batch=4, accumulation=8, predictor_accumulation=4, loader_workers=2,
+               steps=1000, gs_iterations=100)
+    (tmp_path/"settings.json").write_text(json.dumps(old))
+    (tmp_path/"provenance.json").write_text(json.dumps(dict(references={}, recipe_sha256={})))
+    folder = tmp_path/"rvq/checkpoints"
+    folder.mkdir(parents=True)
+    torch.save(dict(global_step=500, marker="unchanged"), folder/"last.ckpt")
+    monkeypatch.setattr(recipe, "source_fingerprint", lambda _: {})
+    monkeypatch.setattr(recipe, "environment", lambda: {})
+    with pytest.raises(ValueError, match="execution-only"):
+        recipe.migrate_execution(dict(old, gs_iterations=50), tmp_path)
+    with pytest.raises(ValueError, match="batch must remain 32"):
+        recipe.migrate_execution(dict(old, micro_batch=8), tmp_path)
+    new = dict(old, micro_batch=32, accumulation=1, predictor_accumulation=1)
+    assert recipe.migrate_execution(new, tmp_path) == 500
+    assert json.loads((tmp_path/"settings.json").read_text()) == new
+    history = json.loads(next((tmp_path/"execution_history").glob("*.json")).read_text())
+    assert history["old_settings"] == old and history["resume_step"] == 500
+    assert torch.load(folder/"last.ckpt", weights_only=False)["marker"] == "unchanged"
+
+
+def test_interruption_callback_saves_optimizer_checkpoint(tmp_path):
+    from lrac.pitchflower import LiveProgress
+    saved = []
+    trainer = SimpleNamespace(optimizers=[object()], global_step=994, save_checkpoint=saved.append)
+    callback = LiveProgress(tmp_path, "rvq", 1000000)
+    callback.on_exception(trainer, None, SystemExit(1))
+    assert saved == [tmp_path/"checkpoints/last.ckpt"]
+    assert json.loads((tmp_path/"progress.json").read_text())["step"] == 994
+
+
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA fused Adam required")
+def test_old_optimizer_state_can_resume_with_fused_adam(monkeypatch):
+    """Old CPU step tensors must move to CUDA without resetting Adam moments."""
+    import lrac.pitchflower as recipe
+    monkeypatch.setattr(recipe, "PitchFlowerModel", lambda *args, **kwargs: torch.nn.Linear(2, 2))
+    settings = dict(gs_density=.35, gs_iterations=100, gs_channels=32, samples=36096)
+    module = recipe.TrainingModule(settings, "rvq").cuda()
+    optimizer = torch.optim.AdamW(module.net.parameters(), fused=False)
+    module.net(torch.ones(2, 2, device="cuda")).square().mean().backward()
+    optimizer.step()
+    saved = [state["exp_avg"].clone() for state in optimizer.state.values()]
+    assert all(state["step"].device.type == "cpu" for state in optimizer.state.values())
+    module._trainer = SimpleNamespace(optimizers=[optimizer])
+    module.on_train_start()
+    for before, state in zip(saved, optimizer.state.values()):
+        torch.testing.assert_close(before, state["exp_avg"])
+        assert state["step"].device.type == "cuda" and float(state["step"]) == 1
+    optimizer.zero_grad(set_to_none=True)
+    module.net(torch.ones(2, 2, device="cuda")).square().mean().backward()
+    optimizer.step()
+    assert all(float(state["step"]) == 2 for state in optimizer.state.values())
+
+
+def test_resume_converts_microbatch_counts_without_changing_optimizer_steps(monkeypatch):
+    import lrac.pitchflower as recipe
+    monkeypatch.setattr(recipe, "PitchFlowerModel", lambda *args, **kwargs: torch.nn.Linear(2, 2))
+    settings = dict(micro_batch=32, gs_density=.35, gs_iterations=100, gs_channels=32, samples=36096)
+    module = recipe.TrainingModule(settings, "rvq")
+    counters = dict(ready=4000, started=4000, processed=4000, completed=3999)
+    checkpoint = dict(global_step=500, hyper_parameters=dict(settings=dict(settings, micro_batch=4)),
+        loops={"fit_loop": {"epoch_loop.batch_progress": dict(current=dict(counters), total=dict(counters)),
+                            "epoch_loop.state_dict": {"_batches_that_stepped": 499}}})
+    module.on_load_checkpoint(checkpoint)
+    for scope in ("current", "total"):
+        assert checkpoint["loops"]["fit_loop"]["epoch_loop.batch_progress"][scope] == dict(
+            ready=500, started=500, processed=500, completed=499)
+    assert checkpoint["global_step"] == 500
+    assert checkpoint["loops"]["fit_loop"]["epoch_loop.state_dict"]["_batches_that_stepped"] == 499
 
 
 def test_gaussian_renderer_and_straight_through_gradient():

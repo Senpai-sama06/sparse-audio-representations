@@ -9,11 +9,11 @@ parameters:
   expected_train_speakers: 921
   seed: 0
   samples: 36096  # Released 1.504-s recipe: 142 mel frames, even after decoding.
-  micro_batch: 4
-  accumulation: 8  # Effective batch 32; both variants use the same schedule.
+  micro_batch: 32
+  accumulation: 1  # Effective batch 32; both variants use the same schedule.
   steps: 1000000
   predictor_steps: 100000
-  predictor_accumulation: 4  # Predictor effective batch 16, as in GS-Codec Appendix A.
+  predictor_accumulation: 1  # Predictor effective batch 16, as in GS-Codec Appendix A.
   learning_rate: 0.0001
   loader_workers: 2
   prepare_workers: 8

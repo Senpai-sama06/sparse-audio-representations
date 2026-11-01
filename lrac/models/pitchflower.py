@@ -6,6 +6,7 @@ The GS equations and Adam initialization follow Aluf et al., Appendix A/code.
 """
 from pathlib import Path
 import sys
+from types import MethodType
 
 import torch
 from torch import nn
@@ -13,6 +14,43 @@ from torch.nn import functional as F
 
 
 REFERENCE_COMMIT = "4cef72ac9630cab632f13bd1d26b22cdae81cf17"
+
+
+def configure_runtime():
+    """Avoid CPU thread oversubscription and favor timely CUDA kernel submission.
+
+    Above-normal Windows priority applies only to this process; it does not stop
+    or alter the exhaustive L0 search. CUDA work is asynchronous, but its launch
+    thread still needs CPU time when all logical processors are occupied.
+    """
+    torch.set_num_threads(1)
+    torch.backends.cudnn.benchmark = True
+    if sys.platform == "win32":
+        import ctypes
+        from ctypes import wintypes
+        kernel = ctypes.WinDLL("kernel32", use_last_error=True)
+        kernel.GetCurrentProcess.restype = wintypes.HANDLE
+        kernel.SetPriorityClass.argtypes = [wintypes.HANDLE, wintypes.DWORD]
+        kernel.SetPriorityClass.restype = wintypes.BOOL
+        if not kernel.SetPriorityClass(kernel.GetCurrentProcess(), 0x8000):
+            raise OSError(ctypes.get_last_error(), "Unable to set training process priority")
+
+
+def sdpa_attention(self, x):
+    """Upstream single-head attention, using PyTorch's fused-kernel dispatcher.
+
+    RoPE, normalization, projections, scale and residual are unchanged. Keeping
+    this as an instance adapter preserves every checkpoint parameter name and
+    leaves the pinned reference checkout untouched. Backend selection depends
+    on dtype/head width; SDPA does not imply Flash Attention for every block.
+    """
+    h = self.norm(x)
+    q = self.rope.rotate_queries_or_keys(self.q(h).transpose(1, 2).unsqueeze(1))
+    k = self.rope.rotate_queries_or_keys(self.k(h).transpose(1, 2).unsqueeze(1))
+    v = self.v(h).transpose(1, 2).unsqueeze(1)
+    attended = F.scaled_dot_product_attention(q.contiguous(), k.contiguous(), v.contiguous(),
+                                            dropout_p=0., is_causal=False)
+    return x+self.proj_out(attended.squeeze(1).transpose(1, 2))
 
 
 def reference_path():
@@ -110,7 +148,8 @@ class GaussianPredictor(nn.Module):
 class PitchFlowerModel(nn.Module):
     """Identical upstream backbone for both bottlenecks; original waveform target."""
     def __init__(self, bottleneck="rvq", gs_density=80/225, gs_iterations=100,
-                 hidden=512, flow_channels=256, ae_layers=6, flow_layers=8, gs_channels=32):
+                 hidden=512, flow_channels=256, ae_layers=6, flow_layers=8, gs_channels=32,
+                 optimized_attention=True):
         super().__init__()
         reference_path()
         from pitchflower.modules import AutoEncoderRVQ
@@ -128,6 +167,11 @@ class PitchFlowerModel(nn.Module):
             self.autoencoder.quantizer = GaussianBottleneck(gs_density, gs_iterations)
         self.flow = FlowMatcher(sigma_min=1e-4, mels=100, channels=flow_channels,
                                 n_convs=[flow_layers]*4, strides=[1, 1, 1, 2])
+        if optimized_attention:
+            from pitchflower.transformer import AttnBlock
+            for module in self.modules():
+                if isinstance(module, AttnBlock):
+                    module.forward = MethodType(sdpa_attention, module)
         self.mel = MelSpectrogram(sample_rate=24000, n_fft=1024, n_mels=100,
                                   hop_length=256, center=True, power=1.)
 
@@ -140,7 +184,12 @@ class PitchFlowerModel(nn.Module):
         if self.kind == "gs":
             encoded, penalty = self.autoencoder.quantizer(latent)
         else:
-            encoded, _, penalty, _ = self.autoencoder.quantizer(latent, n_q=8)
+            # Preserve the original microbatch-4 codebook EMA update cadence
+            # when the expensive encoder/decoder/flow use larger GPU batches.
+            chunks = latent.split(4) if self.training else (latent,)
+            results = [self.autoencoder.quantizer(part, n_q=8) for part in chunks]
+            encoded = torch.cat([result[0] for result in results], dim=0)
+            penalty = sum(result[2]*len(part)/len(latent) for part, result in zip(chunks, results))
         return self.autoencoder.decoder(self.autoencoder.quantizer_out(encoded)), penalty
 
     def forward(self, original, perturbed, pitch, drop_probability=.1, commitment_weight=None):

@@ -10,6 +10,7 @@ from datetime import datetime, timezone
 import json
 import gc
 import math
+import hashlib
 from pathlib import Path
 import subprocess
 import time
@@ -24,7 +25,7 @@ from pytorch_lightning.loggers import TensorBoardLogger
 from tqdm import tqdm
 
 from lrac.data.pitchflower import PitchDataset, cached_utterance, cache_lock
-from lrac.models.pitchflower import PitchFlowerModel, GaussianPredictor, render_gaussians
+from lrac.models.pitchflower import PitchFlowerModel, GaussianPredictor, render_gaussians, configure_runtime
 from lrac.utils import file_hash, source_fingerprint, environment, write_json
 
 
@@ -92,12 +93,19 @@ def _prepare_one(task):
 def prepare(rows, settings, output):
     """Complete the shared offline cache, with bounded work and resumable files."""
     cache = str(_path(settings["cache_dir"]))
-    count = 0
-    tasks = iter((row, cache, settings["seed"]) for row in rows)
+    # Check immutable cache filenames in the parent. A resumed, fully prepared
+    # corpus should not spawn 106,717 tiny tasks just to rediscover those files.
+    missing = [row for row in rows if not (Path(cache)/(hashlib.sha256(
+        f"{row['id']}:{settings['seed']}:pitchflower24k-v1".encode()).hexdigest()+".npz")).exists()]
+    count = len(rows)-len(missing)
+    if not missing:
+        print(f"WORLD cache: all {count:,} utterances already prepared", flush=True)
+        return
+    tasks = iter((row, cache, settings["seed"]) for row in missing)
     with ProcessPoolExecutor(max_workers=settings["prepare_workers"]) as pool:
         pending = deque()
         exhausted = False
-        with tqdm(total=len(rows), desc="WORLD preprocessing (cached files reused)", unit="utterance") as bar:
+        with tqdm(total=len(rows), initial=count, desc="WORLD preprocessing (cached files reused)", unit="utterance") as bar:
             while pending or not exhausted:
                 while len(pending) < 2*settings["prepare_workers"] and not exhausted:
                     task = next(tasks, None)
@@ -163,8 +171,9 @@ class TrainingModule(pl.LightningModule):
 
     def configure_optimizers(self):
         if not self.predictor_stage:
-            return torch.optim.AdamW(self.net.parameters(), lr=self.settings["learning_rate"])
-        optimizer = torch.optim.Adam(self.predictor.parameters(), lr=5e-4)
+            return torch.optim.AdamW(self.net.parameters(), lr=self.settings["learning_rate"],
+                                     fused=self.device.type == "cuda")
+        optimizer = torch.optim.Adam(self.predictor.parameters(), lr=5e-4, fused=self.device.type == "cuda")
         total = self.settings["predictor_steps"]
         def multiplier(step):
             if step < 1000:
@@ -173,6 +182,49 @@ class TrainingModule(pl.LightningModule):
         scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, multiplier)
         return {"optimizer": optimizer, "lr_scheduler": {"scheduler": scheduler, "interval": "step"}}
 
+    def on_train_start(self):
+        # Restoring an older checkpoint also restores its optimizer flags. Set
+        # the execution backend after restoration while retaining Adam moments,
+        # parameter groups, learning rates and step counters verbatim.
+        for optimizer in self.trainer.optimizers:
+            for group in optimizer.param_groups:
+                group["fused"] = self.device.type == "cuda"
+                group["foreach"] = None
+                if group["fused"]:
+                    for parameter in group["params"]:
+                        state = optimizer.state[parameter]
+                        if "step" in state:
+                            # Fused Adam expects its scalar step tensor on CUDA;
+                            # ordinary Adam checkpoints commonly store it on CPU.
+                            state["step"] = state["step"].to(parameter.device)
+
+    def on_load_checkpoint(self, checkpoint):
+        """Translate Lightning's microbatch counters when execution size changes.
+
+        Model weights, Adam moments and optimizer-step counts stay untouched.
+        Without this conversion, old batch 4000 could exceed the new epoch's
+        3251 batches, causing a premature epoch boundary and shifted validation.
+        The one-batch lag in checkpoints saved on_train_batch_end is preserved
+        so Lightning's own restart bookkeeping can finish that callback normally.
+        """
+        old = checkpoint.get("hyper_parameters", {}).get("settings", self.settings)
+        before, after = old["micro_batch"], self.settings["micro_batch"]
+        if self.predictor_stage:
+            before, after = min(before, 16), min(after, 16)
+        if before == after:
+            return
+        progress = checkpoint.get("loops", {}).get("fit_loop", {}).get("epoch_loop.batch_progress")
+        if progress is None:
+            raise ValueError("Checkpoint lacks the expected pinned-Lightning batch progress")
+        for scope in ("current", "total"):
+            counts = progress[scope]
+            callback_pending = (counts["ready"] == counts["started"] == counts["processed"]
+                                and counts["completed"] == counts["processed"]-1)
+            for key in ("ready", "started", "processed", "completed"):
+                counts[key] = math.ceil(counts[key]*before/after)
+            if callback_pending:
+                counts["completed"] = max(0, counts["processed"]-1)
+
 
 class LiveProgress(TQDMProgressBar):
     """Terminal global-step counters plus a small machine-readable progress file."""
@@ -180,6 +232,12 @@ class LiveProgress(TQDMProgressBar):
         super().__init__(refresh_rate=1)
         self.output, self.stage, self.total = Path(output), stage, total
         self.previous, self.started = -1, time.monotonic()
+        self.initial_step = 0
+
+    def on_train_start(self, trainer, module):
+        super().on_train_start(trainer, module)
+        self.initial_step = trainer.global_step
+        self.started = time.monotonic()
 
     def get_metrics(self, trainer, model):
         metrics = super().get_metrics(trainer, model)
@@ -192,18 +250,25 @@ class LiveProgress(TQDMProgressBar):
             self.previous = trainer.global_step
             progress = dict(stage=self.stage, status="training",
                 step=trainer.global_step, total_steps=self.total, seconds=time.monotonic()-self.started,
+                steps_this_session=trainer.global_step-self.initial_step,
                 peak_gpu_gib=torch.cuda.max_memory_allocated()/2**30, **module.last_metrics)
             write_json(self.output/"progress.json", progress)
             write_json(self.output.parent/"progress.json", progress)
 
     def on_exception(self, trainer, module, exception):
+        # Lightning can turn Ctrl+C into SystemExit before fit returns. Save here
+        # too, so a foreground interruption retains model AND optimizer state.
+        if isinstance(exception, (KeyboardInterrupt, SystemExit)) and trainer.optimizers:
+            trainer.save_checkpoint(self.output/"checkpoints/last.ckpt")
         write_json(self.output/"progress.json", dict(stage=self.stage, status="interrupted",
             step=trainer.global_step, total_steps=self.total, error=f"{type(exception).__name__}: {exception}"))
 
 
-def _loader(rows, settings, training):
+def _loader(rows, settings, training, predictor=False):
     dataset = PitchDataset(rows, _path(settings["cache_dir"]), settings["samples"], settings["seed"], training)
-    return DataLoader(dataset, batch_size=settings["micro_batch"] if training else 1,
+    # Predictor training keeps effective batch 16 even if codec microbatch is 32.
+    size = min(settings["micro_batch"], 16) if predictor else settings["micro_batch"]
+    return DataLoader(dataset, batch_size=size if training else 1,
         shuffle=training, generator=torch.Generator().manual_seed(settings["seed"]),
         num_workers=settings["loader_workers"], pin_memory=True,
         persistent_workers=settings["loader_workers"] > 0)
@@ -215,8 +280,56 @@ def _checkpoint(folder):
     return last if last.exists() else next(iter(sorted((folder/"checkpoints").glob("best*.ckpt"))), None)
 
 
+def migrate_execution(settings, output):
+    """Explicitly authorize measured execution changes, retaining their history.
+
+    Called only by the benchmark's --apply action, never implicitly on resume.
+    Dataset, objectives, architecture and optimizer-step budgets must agree;
+    checkpoint parameters/optimizer tensors are not rewritten. Attention backend
+    and fused Adam introduce floating-point differences, not new model weights.
+    """
+    output = Path(output)
+    with cache_lock(output/"campaign.lock"):
+        old = json.loads((output/"settings.json").read_text())
+        allowed = {"micro_batch", "accumulation", "predictor_accumulation", "loader_workers"}
+        changed = {key for key in set(old) | set(settings) if old.get(key) != settings.get(key)}
+        if changed-allowed:
+            raise ValueError(f"Not an execution-only migration: {changed-allowed}")
+        for candidate in (old, settings):
+            if candidate["micro_batch"]*candidate["accumulation"] != 32:
+                raise ValueError("Codec effective batch must remain 32")
+            if min(candidate["micro_batch"], 16)*candidate["predictor_accumulation"] != 16:
+                raise ValueError("Predictor effective batch must remain 16")
+        provenance = json.loads((output/"provenance.json").read_text())
+        references = {name: subprocess.check_output(["git", "-C", str(ROOT/"runs/vendor"/name),
+            "rev-parse", "HEAD"], text=True).strip() for name in provenance["references"]}
+        if references != provenance["references"]:
+            raise ValueError("Reference sources changed; execution migration is insufficient")
+        recipe = {name: file_hash(ROOT/name) for name in provenance["recipe_sha256"]}
+        checkpoint = _checkpoint(output/"rvq")
+        state = torch.load(checkpoint, map_location="cpu", weights_only=False) if checkpoint else None
+        step = state["global_step"] if state else 0
+        del state
+        history = dict(utc=datetime.now(timezone.utc).isoformat(), old_settings=old,
+            new_settings=settings, previous_provenance=provenance, new_recipe_sha256=recipe,
+            resume_step=step, checkpoint=str(checkpoint),
+            note="SDPA, fused Adam, cuDNN autotuning; RVQ EMA groups remain four. Not bitwise replay.")
+        history_dir = output/"execution_history"
+        history_dir.mkdir(exist_ok=True)
+        name = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+        write_json(history_dir/f"{name}.json", history)
+        provenance.update(recipe_sha256=recipe, source=source_fingerprint(ROOT), environment=environment())
+        provenance.setdefault("execution_migrations", []).append(name)
+        write_json(output/"provenance.json", provenance)
+        write_json(output/"settings.json", settings)
+        write_json(output/"progress.json", dict(stage="rvq", status="paused", step=step,
+            total_steps=settings["steps"], reason="Execution optimized; resume from terminal"))
+        return step
+
+
 def fit(stage, train_rows, val_rows, settings, output):
     """Foreground fit with automatic checkpoint resume; no side effect until called."""
+    configure_runtime()
     folder = output/stage
     folder.mkdir(exist_ok=True)
     if (folder/"complete.json").exists():
@@ -247,11 +360,12 @@ def fit(stage, train_rows, val_rows, settings, output):
         check_val_every_n_epoch=None, num_sanity_val_steps=0,
         callbacks=[LiveProgress(folder, stage, total), best, latest],
         logger=TensorBoardLogger(save_dir=folder/"logs", name=""), log_every_n_steps=10,
-        default_root_dir=folder, enable_model_summary=True, inference_mode=False)
+        default_root_dir=folder, enable_model_summary=True, inference_mode=False, benchmark=True)
+    size = min(settings['micro_batch'], 16) if predictor else settings['micro_batch']
     print(f"\n{stage}: {sum(p.numel() for p in module.parameters()):,} parameters; "
-          f"microbatch {settings['micro_batch']} x accumulation {accumulation}; target {total:,} steps", flush=True)
+          f"microbatch {size} x accumulation {accumulation}; target {total:,} steps", flush=True)
     try:
-        trainer.fit(module, _loader(train_rows, settings, True), _loader(val_rows, settings, False),
+        trainer.fit(module, _loader(train_rows, settings, True, predictor), _loader(val_rows, settings, False),
                     ckpt_path=str(last) if last else None)
     except KeyboardInterrupt:
         trainer.save_checkpoint(checkpoint_dir/"last.ckpt")

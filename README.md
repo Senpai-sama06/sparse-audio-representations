@@ -128,8 +128,7 @@ for authoritative completion; a reboot requires the resume command.
 
 Prepared from the [official PitchFlower implementation](https://github.com/diegotg2000/PitchFlower)
 and [GS-Codec](https://github.com/ronaluf/gs-codec), pinned in
-`tools/setup_pitchflower.py`. **PitchFlower training has not been launched.**
-When ready, one foreground command runs the entire resumable campaign:
+`tools/setup_pitchflower.py`. One foreground command starts or resumes the campaign:
 
 ```powershell
 .\tools\run_pitchflower.ps1
@@ -142,8 +141,8 @@ LibriSpeech is resampled from 16 to 24 kHz; dev-clean speakers are separate.
 Crops use the released peak normalization convention, unlike the earlier
 amplitude-preserving baseline; waveform gains would need separate codec accounting.
 Both codecs use PitchFlower's ConvNeXt/attention/flow backbone, CFM plus commitment,
-1M optimizer steps, AdamW 1e-4 and effective batch 32 (microbatch 4 x accumulation 8).
-The GS predictor uses 100k steps and effective batch 16. Configuration:
+1M optimizer steps, AdamW 1e-4 and effective batch 32 (microbatch 32 x accumulation 1).
+The GS predictor uses 100k steps and microbatch/effective batch 16. Configuration:
 `configs/study_pitchflower_librispeech.yaml`.
 
 RVQ uses 8 x 512 entries, dimension 256. GS uses the paper's C=32, shared widths,
@@ -163,10 +162,25 @@ progress JSON and final Vocos waveform examples at -6/0/+6 semitones. The root
 `progress.json` mirrors the current phase. Rerun the same command after Ctrl+C
 to resume; model/optimizer state is restored, but data-order/crop replay is not
 guaranteed identical. Cached utterances are reused. `-Phase prepare|rvq|gs|predictor|calibrate`
-selects one phase; edit resource settings before the first run. This launcher does
-not stop or resize the ongoing L0 search. Preprocessing may require substantial
+selects one phase. This launcher does not stop or resize the ongoing L0 search.
+Preprocessing may require substantial
 time and roughly 250 GB before compression. Paper WER/SIM/UTMOS benchmarks remain
 a later evaluation, not metrics computed by this training recipe.
+
+Execution uses SDPA attention with unchanged checkpoint keys, fused Adam,
+cuDNN autotuning and above-normal Windows training-process priority. RVQ still
+updates its codebooks in groups of four, preserving the original EMA cadence.
+The 32-sample RVQ benchmark measured 1.24 s/optimizer step and 4.63 GiB allocated
+GPU memory, including the real loader (five steps, L0 running); the original
+4-sample reference measured 7.72 s/step. These are short throughput checks,
+not quality results or a full-campaign completion-time guarantee.
+Exact measurements and conditions are in
+[`documentation/pitchflower_runtime_benchmark.json`](documentation/pitchflower_runtime_benchmark.json).
+`tools/benchmark_pitchflower.py --priority --loader --apply` benchmarks disposable
+models and explicitly migrates the stopped campaign's execution settings/source
+hashes, retaining history in `execution_history/`. It never starts production
+training. Dataset/objective changes and effective-batch changes are rejected;
+ordinary resume continues to reject unexplained settings/source changes.
 
 ## Run and extend
 

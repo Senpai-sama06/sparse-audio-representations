@@ -1,0 +1,94 @@
+{
+  "created_utc": "2026-11-01T14:51:43.434086+00:00",
+  "hardware": {
+    "gpu": "NVIDIA RTX 2000 Ada Generation, 16 GB",
+    "logical_cpus": 32
+  },
+  "conditions": {
+    "l0_workers": 32,
+    "effective_codec_batch": 32,
+    "samples": 36096,
+    "precision": "bf16-mixed",
+    "warmup_optimizer_steps": 1,
+    "rvq_checkpoint_model_step": 500,
+    "benchmark_optimizer": "fresh AdamW state"
+  },
+  "baseline": {
+    "kind": "rvq",
+    "attention": "reference",
+    "crop_loading_seconds_32": 3.2107412999030203,
+    "effective_batch": 32,
+    "measurements": [
+      {
+        "micro_batch": 4,
+        "seconds_per_step": 7.721240200024719,
+        "durations": [
+          7.751191599993035,
+          7.749593900050968,
+          7.662935100030154
+        ],
+        "peak_gpu_gib": 2.094085693359375,
+        "loss": 5.145389556884766,
+        "gradient_norm": 76.99292755126953
+      }
+    ]
+  },
+  "optimized_rvq": {
+    "kind": "rvq",
+    "attention": "sdpa",
+    "priority": true,
+    "includes_loader": true,
+    "crop_loading_seconds_32": 0.8006323999725282,
+    "effective_batch": 32,
+    "measurements": [
+      {
+        "micro_batch": 32,
+        "seconds_per_step": 1.2370540199801325,
+        "durations": [
+          1.1987884000409395,
+          1.0493027998600155,
+          1.7968999999575317,
+          1.0683794000651687,
+          1.0718994999770075
+        ],
+        "peak_gpu_gib": 4.6308817863464355,
+        "loss": 2.8840088844299316,
+        "gradient_norm": 42.02518081665039
+      }
+    ]
+  },
+  "optimized_gs": {
+    "kind": "gs",
+    "attention": "sdpa",
+    "priority": true,
+    "includes_loader": false,
+    "crop_loading_seconds_32": 0.8104834998957813,
+    "effective_batch": 32,
+    "measurements": [
+      {
+        "micro_batch": 32,
+        "seconds_per_step": 1.3816673333446186,
+        "durations": [
+          1.551598000107333,
+          1.3074791999533772,
+          1.2859247999731451
+        ],
+        "peak_gpu_gib": 4.5639801025390625,
+        "loss": 51.74791717529297,
+        "gradient_norm": 549.5390625
+      }
+    ]
+  },
+  "limitations": [
+    "Short throughput checks, not convergence or quality comparisons.",
+    "Baseline uses normal CPU priority and resident GPU batches; optimized RVQ uses above-normal priority and the real loader.",
+    "This compares a bundle of execution changes, not an attention-only ablation.",
+    "GS uses fresh weights and resident batches. Its time is not a measured full-campaign ETA.",
+    "Peak memory is PyTorch allocated memory, not total driver-reported VRAM."
+  ],
+  "recipe_sha256": {
+    "lrac/pitchflower.py": "a947dadc2bd5102cf7cfe73fdb65c1ff4bcb1f792fdb0ea1609e39a28a8f1e04",
+    "lrac/models/pitchflower.py": "e80a7613be361cd0239e19a6d901f945c92849a624935bf53c62c731ceabdc4a",
+    "lrac/data/pitchflower.py": "1ec435488d4818383e4f7ea57f833fd1bde0d558e2566a7d49787596c4a39aac"
+  }
+}
