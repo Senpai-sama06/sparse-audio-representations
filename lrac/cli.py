@@ -43,7 +43,7 @@ def parser():
     command.add_argument("--config", required=True, help="Sweep specification with base, axis, and values")
     command.add_argument("--execute", action="store_true", help="Run sequentially; default only writes resolved configs")
     command = sub.add_parser("pitchflower", help="Foreground RVQ/GS training campaign with progress and resume")
-    command.add_argument("--config", default="configs/study_pitchflower_librispeech.yaml")
+    command.add_argument("--config", default="configs/study_pitchflower_hardware.yaml")
     command.add_argument("--phase", choices=["all", "prepare", "rvq", "gs", "predictor", "calibrate"], default="all")
     return p
 

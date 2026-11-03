@@ -1,5 +1,0 @@
-model:
-  kind: orthogonal
-  threshold: 0.01
-train:
-  learning_rate: 0.001

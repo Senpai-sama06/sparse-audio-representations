@@ -1,4 +1,0 @@
-extends: [data_synthetic.yaml, model_grouped.yaml]
-train:
-  name: synthetic_grouped
-  steps: 2000

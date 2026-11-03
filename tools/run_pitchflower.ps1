@@ -1,5 +1,5 @@
 param(
-    [string]$Config = "configs/study_pitchflower_librispeech.yaml",
+    [string]$Config = "configs/study_pitchflower_hardware.yaml",
     [ValidateSet("all", "prepare", "rvq", "gs", "predictor", "calibrate")]
     [string]$Phase = "all"
 )

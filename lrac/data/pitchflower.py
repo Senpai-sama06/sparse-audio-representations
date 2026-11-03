@@ -122,8 +122,15 @@ def mapped_utterance(row, cache, seed=0):
 
 class PitchDataset(Dataset):
     """Crop both waveforms and F0 at the same hop boundary; no speaker labels fed in."""
-    def __init__(self, rows, cache, samples=36096, seed=0, training=True):
+    def __init__(self, rows, cache, samples=36096, seed=0, training=True, prefer_mapped=True,
+                 cache_metadata=False):
         self.rows, self.cache, self.samples, self.seed, self.training = rows, cache, samples, seed, training
+        self.prefer_mapped = prefer_mapped
+        # Cache only small headers/F0 arrays in each persistent worker. Waveforms
+        # remain mapped on disk. Revisited utterances then need one crop read,
+        # without separate seeks to the NPY header and the pitch tail.
+        self.cache_metadata = cache_metadata
+        self._metadata = {}
 
     def __len__(self):
         return len(self.rows)
@@ -131,10 +138,19 @@ class PitchDataset(Dataset):
     def __getitem__(self, index):
         identity = hashlib.sha256(f"{self.rows[index]['id']}:{self.seed}:pitchflower24k-v1".encode()).hexdigest()
         mapped = Path(self.cache)/f"{identity}.npy"
-        if mapped.exists():
-            data = np.load(mapped, mmap_mode="r", allow_pickle=False)
-            original, perturbed = data["waveforms"][:, 0], data["waveforms"][:, 1]
-            pitch = data["pitch"]
+        if self.prefer_mapped and mapped.exists():
+            metadata = self._metadata.get(index)
+            if metadata is None:
+                data = np.load(mapped, mmap_mode="r", allow_pickle=False)
+                waveforms, pitch = data["waveforms"], data["pitch"]
+                if self.cache_metadata:
+                    pitch = pitch.copy()
+                    self._metadata[index] = (data.offset+data.dtype.fields["waveforms"][1],
+                                             waveforms.dtype, waveforms.shape, pitch)
+            else:
+                offset, dtype, shape, pitch = metadata
+                waveforms = np.memmap(mapped, mode="r", offset=offset, dtype=dtype, shape=shape)
+            original, perturbed = waveforms[:, 0], waveforms[:, 1]
         else:
             path = cached_utterance(self.rows[index], self.cache, self.seed)
             with np.load(path, allow_pickle=False) as data:

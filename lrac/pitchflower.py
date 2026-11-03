@@ -171,8 +171,14 @@ class TrainingModule(pl.LightningModule):
 
     def configure_optimizers(self):
         if not self.predictor_stage:
-            return torch.optim.AdamW(self.net.parameters(), lr=self.settings["learning_rate"],
-                                     fused=False)
+            optimizer = torch.optim.AdamW(self.net.parameters(), lr=self.settings["learning_rate"],
+                                          fused=False)
+            warmup = self.settings.get("codec_warmup_steps", 0)
+            if not warmup:
+                return optimizer
+            scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer,
+                lambda step: min(1., (step+1)/warmup))
+            return {"optimizer": optimizer, "lr_scheduler": {"scheduler": scheduler, "interval": "step"}}
         optimizer = torch.optim.Adam(self.predictor.parameters(), lr=5e-4, fused=False)
         total = self.settings["predictor_steps"]
         def multiplier(step):
@@ -263,8 +269,66 @@ class LiveProgress(TQDMProgressBar):
             step=trainer.global_step, total_steps=self.total, error=f"{type(exception).__name__}: {exception}"))
 
 
+class TrainingBudget(pl.Callback):
+    """Limit cumulative active training/validation time, including across resumes.
+
+    This is a research time budget, not a convergence claim. Check after each
+    batch and validation; one batch/validation can exceed the cap slightly.
+    A small ledger is flushed every 30 seconds and on normal stop/interruption.
+    An abrupt process kill can lose at most that unflushed interval of accounting.
+    Model/optimizer checkpoints remain managed by the existing callbacks.
+    """
+    def __init__(self, folder, hours):
+        self.path = Path(folder)/"time_budget.json"
+        self.limit = float(hours)*3600
+        if not math.isfinite(self.limit) or self.limit <= 0:
+            raise ValueError("Training hours must be finite and positive")
+        saved = json.loads(self.path.read_text()) if self.path.exists() else {}
+        if saved and saved["limit_seconds"] != self.limit:
+            raise ValueError("Stage time budget changed; use a separate run directory")
+        self.spent = saved.get("elapsed_seconds", 0.)
+        self.started = None
+        self.written = 0.
+        self.reached = self.spent >= self.limit
+
+    def elapsed(self):
+        return self.spent+(time.monotonic()-self.started if self.started is not None else 0.)
+
+    def check(self, trainer, force=False):
+        elapsed = self.elapsed()
+        self.reached = elapsed >= self.limit
+        if self.reached:
+            trainer.should_stop = True
+        if force or self.reached or elapsed-self.written >= 30:
+            write_json(self.path, dict(limit_seconds=self.limit, elapsed_seconds=elapsed,
+                remaining_seconds=max(0., self.limit-elapsed), reached=self.reached))
+            self.written = elapsed
+
+    def on_train_start(self, trainer, module):
+        self.started = time.monotonic()
+        self.check(trainer, force=True)
+
+    def on_train_batch_end(self, trainer, module, outputs, batch, batch_idx):
+        self.check(trainer)
+
+    def on_validation_end(self, trainer, module):
+        self.check(trainer)
+
+    def on_train_end(self, trainer, module):
+        self.check(trainer, force=True)
+        self.spent = self.elapsed()
+        self.started = None
+
+    def on_exception(self, trainer, module, exception):
+        self.check(trainer, force=True)
+        self.spent = self.elapsed()
+        self.started = None
+
+
 def _loader(rows, settings, training, predictor=False):
-    dataset = PitchDataset(rows, _path(settings["cache_dir"]), settings["samples"], settings["seed"], training)
+    dataset = PitchDataset(rows, _path(settings["cache_dir"]), settings["samples"], settings["seed"], training,
+                           prefer_mapped=settings.get("mapped_cache", True),
+                           cache_metadata=settings.get("cache_metadata", False))
     # Predictor training keeps effective batch 16 even if codec microbatch is 32.
     size = min(settings["micro_batch"], 16) if predictor else settings["micro_batch"]
     return DataLoader(dataset, batch_size=size if training else 1,
@@ -353,16 +417,24 @@ def fit(stage, train_rows, val_rows, settings, output):
     latest = ModelCheckpoint(dirpath=checkpoint_dir, filename="periodic_{step}", save_top_k=0,
         save_last=True, every_n_train_steps=settings["checkpoint_interval"], save_on_train_epoch_end=False)
     accumulation = settings["predictor_accumulation"] if predictor else settings["accumulation"]
+    hours = settings.get("stage_hours", {}).get(stage)
+    budget = TrainingBudget(folder, hours) if hours is not None else None
+    callbacks = [LiveProgress(folder, stage, total), best, latest]
+    if budget is not None:
+        callbacks.append(budget)
     trainer = pl.Trainer(accelerator="gpu", devices=1, precision="bf16-mixed",
         max_steps=total, max_epochs=-1, accumulate_grad_batches=accumulation,
         gradient_clip_val=1., val_check_interval=settings["validation_interval"]*accumulation,
         check_val_every_n_epoch=None, num_sanity_val_steps=0,
-        callbacks=[LiveProgress(folder, stage, total), best, latest],
+        callbacks=callbacks,
         logger=TensorBoardLogger(save_dir=folder/"logs", name=""), log_every_n_steps=10,
         default_root_dir=folder, enable_model_summary=True, inference_mode=False, benchmark=True)
     size = min(settings['micro_batch'], 16) if predictor else settings['micro_batch']
     print(f"\n{stage}: {sum(p.numel() for p in module.parameters()):,} parameters; "
           f"microbatch {size} x accumulation {accumulation}; target {total:,} steps", flush=True)
+    if budget is not None:
+        print(f"{stage}: active-time cap {hours:g} h; {budget.elapsed()/3600:.2f} h already used; "
+              "stop at the update cap or time cap, whichever comes first", flush=True)
     try:
         trainer.fit(module, _loader(train_rows, settings, True, predictor), _loader(val_rows, settings, False),
                     ckpt_path=str(last) if last else None)
@@ -372,10 +444,16 @@ def fit(stage, train_rows, val_rows, settings, output):
     if trainer.interrupted:
         trainer.save_checkpoint(checkpoint_dir/"last.ckpt")
         raise KeyboardInterrupt("Campaign interrupted; rerun the same command to resume")
+    if trainer.global_step < total and not (budget is not None and budget.reached):
+        raise RuntimeError("Training stopped before either its update cap or its time budget")
     trainer.save_checkpoint(checkpoint_dir/"last.ckpt")
     export_audio(module, val_rows[:2], settings, folder)
-    write_json(folder/"complete.json", dict(step=trainer.global_step, best_checkpoint=best.best_model_path))
-    write_json(folder/"progress.json", dict(stage=stage, status="complete", step=trainer.global_step, total_steps=total))
+    termination = "step_limit" if trainer.global_step >= total else "time_budget"
+    write_json(folder/"complete.json", dict(step=trainer.global_step, target_steps=total,
+        termination=termination, budget_hours=hours,
+        elapsed_training_seconds=budget.elapsed() if budget else None, best_checkpoint=best.best_model_path))
+    write_json(folder/"progress.json", dict(stage=stage, status="complete", step=trainer.global_step,
+        total_steps=total, termination=termination))
     del trainer, module
     gc.collect()
     torch.cuda.empty_cache()
@@ -386,7 +464,11 @@ def export_audio(module, rows, settings, folder):
     """Save original and 0/+6/-6-semitone samples using the paper's fixed Vocos."""
     from vocos import Vocos
     import soundfile as sf
-    module.eval()
+    # Lightning tears down fit by returning the module to CPU. Restore the
+    # inference device explicitly rather than passing CPU's index=None to CUDA
+    # RNG APIs, and keep a functional CPU export path for isolated checks.
+    device = torch.device("cuda", torch.cuda.current_device()) if torch.cuda.is_available() else module.device
+    module.to(device).eval()
     vocoder = Vocos.from_pretrained("charactr/vocos-mel-24khz").to(module.device).eval()
     destination = folder/"audio"
     destination.mkdir(exist_ok=True)
@@ -396,7 +478,7 @@ def export_audio(module, rows, settings, folder):
         sf.write(destination/f"{index}_original.wav", original.numpy(), 24000, subtype="FLOAT")
         for semitones in (-6, 0, 6):
             changed_pitch = torch.where(pitch > 0, pitch+semitones/12, pitch).to(module.device)[None]
-            with torch.random.fork_rng(devices=[module.device.index]):
+            with torch.random.fork_rng(devices=[module.device.index] if module.device.type == "cuda" else []):
                 torch.manual_seed(settings["seed"]+index)
                 mel = module.net.reconstruct_mel(perturbed.to(module.device)[None], changed_pitch,
                     predictor=module.predictor if module.predictor_stage else None)
@@ -439,8 +521,20 @@ def campaign(config, phase="all"):
         "expected_train_speakers", "seed", "samples", "micro_batch", "accumulation", "steps",
         "predictor_steps", "predictor_accumulation", "learning_rate", "loader_workers", "prepare_workers", "validation_examples",
         "validation_interval", "checkpoint_interval", "gs_density", "gs_iterations", "gs_channels", "rvq_commitment", "gs_commitment"}
-    if config.kind != "pitchflower" or set(settings) != required:
-        raise ValueError(f"PitchFlower settings mismatch: missing={required-set(settings)}, extra={set(settings)-required}")
+    optional = {"stage_hours", "codec_warmup_steps", "mapped_cache", "cache_metadata"}
+    if config.kind != "pitchflower" or required-set(settings) or set(settings)-required-optional:
+        raise ValueError(f"PitchFlower settings mismatch: missing={required-set(settings)}, extra={set(settings)-required-optional}")
+    if "stage_hours" in settings:
+        hours = settings["stage_hours"]
+        if set(hours) != {"rvq", "gs", "predictor"} or any(
+                not math.isfinite(float(value)) or float(value) <= 0 for value in hours.values()):
+            raise ValueError("stage_hours must specify positive finite hours for rvq, gs and predictor")
+    if not isinstance(settings.get("codec_warmup_steps", 0), int) or settings.get("codec_warmup_steps", 0) < 0:
+        raise ValueError("codec_warmup_steps must be a nonnegative integer")
+    if not isinstance(settings.get("mapped_cache", True), bool):
+        raise ValueError("mapped_cache must be boolean")
+    if not isinstance(settings.get("cache_metadata", False), bool):
+        raise ValueError("cache_metadata must be boolean")
     if settings["samples"] % 256 or (settings["samples"]//256+1) % 2:
         raise ValueError("The mel frame count must be even for the reference strided architecture")
     if min(settings[k] for k in ("prepare_workers", "micro_batch", "accumulation", "steps", "predictor_steps",

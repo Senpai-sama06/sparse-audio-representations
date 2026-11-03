@@ -10,8 +10,9 @@ Minimum support, minimum L1 norm and minimum encoded bitrate are different goals
   family is nonempty. A freely sample-adapted basis can make any nonzero finite
   waveform one-sparse, but describing that basis can carry the waveform itself.
   Existence therefore does not establish useful compression or an efficient search.
-  [Full proofs](documentation/sparsest_representation.pdf) and
-  [original problem](documentation/init/init.pdf) remain available in LaTeX/PDF.
+  Full proofs are available in the LaTeX source at
+  [documentation/sparsest_representation.tex](documentation/sparsest_representation.tex),
+  alongside the original problem source at `documentation/init/init.tex`.
 - **Learned baselines:** sparse nonlinear (S-NL), dense-trained nonlinear (D-NL)
   and sparse affine (S-AF) autoencoders were trained; S-AF performed best among
   those three. Targets are the input waveforms themselves (self-supervised).
@@ -20,7 +21,8 @@ Minimum support, minimum L1 norm and minimum encoded bitrate are different goals
   Training used normalized waveform MSE, 20,000 steps and sampled support budgets.
   A two-second input passes through 16,000 values before its 32,000-slot latent
   projection; full support is not a lossless reference. See the
-  [model mathematics](documentation/sparse_autoencoder_models.pdf).
+  Model mathematics are in the LaTeX source at
+  `documentation/sparse_autoencoder_models.tex`.
 - **Interpretation:** channels specialize in frequency bands and associate with
   voiced speech. Controlled pitch shifts support fixed-frequency filter behavior;
   they do not establish pitch/timbre slots. Channel 53 illustrates that retention
@@ -49,7 +51,7 @@ Earlier whole-utterance test-clean results (2,620 recordings; means):
 | S-AF, full | 0.1032 | 2.472 | 0.899 |
 
 These use unquantized codes: **S-AF bitrate has not been measured**.
-[Full model scores](documentation/sparse_autoencoder_test_results.csv).
+Full model scores are recorded in the project’s research results archive.
 
 The L1 pilot solves minimum coefficient magnitude sum in the fixed unit-norm
 impulse-plus-DCT dictionary, using float64 FISTA/lambda search. It encoded 120
@@ -71,10 +73,8 @@ L1 used more bytes on average in this setup; the rate difference at 0.01 has a
 limits differently, so perceptual comparisons are not at identical achieved NMSE.
 For L1 the corresponding NMSE/PESQ/STOI means were 0.0861/1.293/0.826,
 0.00372/2.744/0.979 and 0.000881/3.823/0.994. Self-reference PESQ/STOI were
-4.643888/~1.0. [Complete comparisons](documentation/l1_comparison.csv),
-[all coded measurements](documentation/l1_metrics.csv),
-[solver records](documentation/l1_solver.csv) and
-[rate/quality figure](documentation/l1_rate_distortion.png) retain the detail.
+4.643888/~1.0. Complete comparisons, coded measurements, solver records and the
+rate/quality figure are retained in the research results archive.
 
 S-AF and L1 used different recordings, durations and encoding conditions: a fair
 compression ranking requires S-AF serialization and evaluation on the same clips.
@@ -128,11 +128,30 @@ for authoritative completion; a reboot requires the resume command.
 
 Prepared from the [official PitchFlower implementation](https://github.com/diegotg2000/PitchFlower)
 and [GS-Codec](https://github.com/ronaluf/gs-codec), pinned in
-`tools/setup_pitchflower.py`. One foreground command starts or resumes the campaign:
+`tools/setup_pitchflower.py`. One foreground command starts or resumes the
+hardware-tuned weekly campaign:
 
 ```powershell
 .\tools\run_pitchflower.ps1
 ```
+
+The launcher now selects `configs/study_pitchflower_hardware.yaml`: batch 64,
+125k updates per codec (the same 8M crops as batch 32 x 250k), peak learning rate
+1.4142e-4 and 1,000-update linear warm-up. Validation/checkpoint intervals are
+halved in updates to retain their crop-based cadence. Predictor settings and
+72/72/12-hour caps are inherited unchanged. These are tuning choices, not a
+guarantee of equal convergence. Batch 64 matched batch 128's measured compute
+throughput while using about 7.9 rather than 14.6 GiB of allocated VRAM.
+The profile uses four data-loader workers and mapped NPY reads. Cold-corpus
+checks still show HDD waits; their throughput is substantially below resident-GPU
+throughput. Raw comparisons are recorded in
+the hardware tuning record; these are short samples during
+ongoing cache preparation, not full-run ETAs.
+The corrected upstream pitch KEEP-mask semantics are covered by a regression
+test: training drops pitch 10%, validation retains it, and the unconditional
+guidance branch drops it. This objective correction uses a fresh run under
+`runs/pitchflower_hardware`; older checkpoints remain preserved. Use
+`-Config configs/study_pitchflower_week.yaml` to select the older weekly schedule.
 
 It prepares a shared offline WORLD flat/shift cache and lossless memory-mapped
 copies, then trains RVQ and GS sequentially
@@ -142,23 +161,34 @@ LibriSpeech is resampled from 16 to 24 kHz; dev-clean speakers are separate.
 Crops use the released peak normalization convention, unlike the earlier
 amplitude-preserving baseline; waveform gains would need separate codec accounting.
 Both codecs use PitchFlower's ConvNeXt/attention/flow backbone, CFM plus commitment,
-1M optimizer steps, AdamW 1e-4 and effective batch 32 (microbatch 32 x accumulation 1).
-The GS predictor uses 100k steps and microbatch/effective batch 16. Configuration:
-`configs/study_pitchflower_librispeech.yaml`.
+AdamW 1e-4 and effective batch 32 in the baseline configuration. The baseline
+`configs/study_pitchflower_week.yaml` caps each codec at 250k total optimizer
+updates or 72 active hours, whichever comes first. The GS predictor is capped at
+100k steps or 12 hours, with effective batch 16. These caps total 156 active
+hours, leaving 12 hours within a week for setup and outputs under continuous
+operation. Interruptions/downtime and an unusually long batch can extend calendar
+time. This is a shorter exploratory baseline, not paper-level convergence.
+The original 1M-step settings remain in `configs/study_pitchflower_librispeech.yaml`.
+Weekly outputs are separate in `runs/pitchflower_week`. Both codecs start fresh
+because corrected pitch keep-mask semantics differ from the earlier RVQ run.
+The old checkpoint is preserved for provenance; it does not seed this comparison.
+On this machine that output directory is a junction to NVMe storage, keeping
+checkpoint/log writes off the dataset HDD; local `storage.json` records its target.
 
 RVQ uses 8 x 512 entries, dimension 256. GS uses the paper's C=32, shared widths,
 fixed uniform centers, 100 inner Adam steps at LR 0.4 and STE outer gradients.
 Its density 80/225 becomes 25 Gaussians over 71 latent frames here; this is a
 PitchFlower adaptation, not a reproduction of GS-Codec's SEANet/GAN backbone.
-Commitment weights are respectively 0.25 and 20. Paper CFG dropout is implemented
-as 10% per condition, correcting the inverted F0 comparison/absent content dropout
-in the reference loss. Neither RVQ dropout nor training-time GS quantization is used.
+Commitment weights are respectively 0.25 and 20. CFG dropout is implemented
+as 10% per condition, respecting the reference pitch keep-mask and adding content
+dropout. Neither RVQ dropout nor training-time GS quantization is used.
 The GS predictor uses the released implementation (four dilated blocks, positional
 encodings and one attention decoder); scalar PTQ comes
 after training. No measured bitrate or quality results are claimed yet.
 
 Terminal bars show preprocessing and optimizer-step/loss progress. Outputs are in
-`runs/pitchflower_librispeech/{rvq,gs,predictor}/`: checkpoints, TensorBoard logs,
+`runs/pitchflower_hardware/{rvq,gs,predictor}/` for the launcher's default profile
+(`runs/pitchflower_week` for the baseline): checkpoints, TensorBoard logs,
 progress JSON and final Vocos waveform examples at -6/0/+6 semitones. The root
 `progress.json` mirrors the current phase. Rerun the same command after Ctrl+C
 to resume; model/optimizer state is restored, but data-order/crop replay is not
@@ -167,6 +197,10 @@ selects one phase. This launcher does not stop or resize the ongoing L0 search.
 Preprocessing may require substantial
 time and roughly 250 GB before compression. Paper WER/SIM/UTMOS benchmarks remain
 a later evaluation, not metrics computed by this training recipe.
+Each stage's `time_budget.json` records cumulative active seconds across resumes.
+`complete.json` reports actual updates and whether the step cap or time cap ended
+training; compare actual update counts when a stage exhausts its time allowance.
+Budget accounting is flushed every 30 seconds and at normal stop/interruption.
 
 Execution uses SDPA attention with unchanged checkpoint keys, CUDA foreach Adam,
 cuDNN autotuning and above-normal Windows training-process priority. RVQ still
@@ -179,7 +213,7 @@ Outer optimizers disable fused mode because the installed Lightning AMP plugin
 rejects it with gradient clipping. Disposable Lightning tests verify BF16,
 norm clipping and checkpoint resume for RVQ, GS and predictor training.
 Exact measurements and conditions are in
-[`documentation/pitchflower_runtime_benchmark.json`](documentation/pitchflower_runtime_benchmark.json).
+the runtime benchmark record.
 `tools/benchmark_pitchflower.py --priority --loader --apply` benchmarks disposable
 models and explicitly migrates the stopped campaign's execution settings/source
 hashes, retaining history in `execution_history/`. It never starts production
@@ -235,12 +269,11 @@ study as `study_<topic>.py: run(output, *, ...)`, an explicit branch in `study.p
 and a small YAML. Reuse metrics/data routines; add no framework for one experiment.
 New models use `models/base.py` and selection/configuration in `models/__init__.py`
 and `config.py`. **Comment new code with useful docstrings and explanations of
-mathematics, units and non-obvious choices.** Check meaningful numerical changes
-with `python -m pytest -q`.
+mathematics, units and non-obvious choices.**
 
 Maintain this README as the only explanatory Markdown guide. Generated run reports
-stay in ignored `runs/`; selected numerical/figure/provenance artifacts stay in
-`documentation/`. Preserve the LaTeX/PDF sources and keep paper titles/authors in
+and numerical result artifacts stay outside Git. Preserve LaTeX source files and
+keep paper titles/authors in
 [bibliography.md](bibliography.md); that ledger includes screened and partially
 reviewed work, not a claim that every proof was audited. Git history retains the
 superseded Markdown discussions.

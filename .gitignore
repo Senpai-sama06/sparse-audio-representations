@@ -1,19 +1,49 @@
 # Python environments and generated package files
 .venv/
 venv/
+env/
 __pycache__/
 *.py[cod]
 *.egg-info/
 .pytest_cache/
 .ruff_cache/
+.mypy_cache/
+.tox/
 build/
 dist/
+coverage.xml
+.coverage
+htmlcov/
 
 # Local datasets, path-bearing manifests, and experiment products
 /data/
 /runs/
 /tmp/
 /output/
+/tests/
+/literature/
+/pitchflower_gs_standalone/
+*.yaml
+*.yml
+
+# Generated research outputs; preserve source documents and README instructions
+/documentation/*.csv
+/documentation/*.json
+/documentation/*.png
+/documentation/*.pdf
+/documentation/**/*.csv
+/documentation/**/*.json
+/documentation/**/*.png
+/documentation/**/*.pdf
+
+# Generated model artifacts and training logs (wherever a run writes them)
+*.ckpt
+*.tfevents.*
+lightning_logs/
+
+# Bundled copy of the standalone PitchFlower package; keep its source folder
+# and scripts versioned instead.
+/pitchflower_gs_standalone.zip
 
 # Credentials and machine-local editor settings
 .env
@@ -22,8 +52,10 @@ dist/
 kaggle.json
 .vscode/
 .idea/
+.history/
 .DS_Store
 Thumbs.db
+Desktop.ini
 
 # LaTeX intermediates; source, references, figures, and PDFs are committed
 *.aux

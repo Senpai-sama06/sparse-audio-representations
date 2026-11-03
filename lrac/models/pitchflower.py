@@ -195,9 +195,8 @@ class PitchFlowerModel(nn.Module):
     def forward(self, original, perturbed, pitch, drop_probability=.1, commitment_weight=None):
         """Paper CFM: xt=t*x1+[1-(1-sigma)t]*x0, target x1-(1-sigma)x0.
 
-        The upstream loss inverts its pitch dropout comparison and omits content
-        dropout. Here both conditions independently drop with probability 0.1,
-        matching the paper rather than reproducing that implementation discrepancy.
+        Both conditions independently drop with probability 0.1. Upstream's
+        pitch mask is a KEEP mask, whereas masked_fill uses a DROP mask.
         """
         target = self.mel(original.float()).clamp_min(1e-7).log()
         condition, commitment = self.condition(self.latents(perturbed))
@@ -205,10 +204,10 @@ class PitchFlowerModel(nn.Module):
         noise = torch.randn_like(target)
         interpolated = time[:, None, None]*target+(1-(1-self.flow.sigma_min)*time[:, None, None])*noise
         velocity = target-(1-self.flow.sigma_min)*noise
-        pitch_mask = torch.rand(target.shape[0], device=target.device) < drop_probability
+        pitch_keep = torch.rand(target.shape[0], device=target.device) >= drop_probability
         content_mask = torch.rand(target.shape[0], device=target.device) < drop_probability
         condition = condition.masked_fill(content_mask[:, None, None], 0.)
-        prediction = self.flow(interpolated, condition, pitch, time, f0_mask=pitch_mask)
+        prediction = self.flow(interpolated, condition, pitch, time, f0_mask=pitch_keep)
         flow_loss = F.mse_loss(prediction.float(), velocity.float())
         weight = commitment_weight if commitment_weight is not None else (.25 if self.kind == "rvq" else 20.)
         return flow_loss+weight*commitment, {"flow_loss": flow_loss.detach(), "commitment_loss": commitment.detach()}
@@ -230,7 +229,7 @@ class PitchFlowerModel(nn.Module):
             predicted = self.flow(x, condition, pitch, times)
             if guidance != 1:
                 unconditioned = self.flow(x, torch.zeros_like(condition), pitch, times,
-                    f0_mask=torch.ones(x.shape[0], dtype=torch.bool, device=x.device))
+                    f0_mask=torch.zeros(x.shape[0], dtype=torch.bool, device=x.device))
                 predicted = unconditioned+guidance*(predicted-unconditioned)
             return predicted
         for index in range(steps):
