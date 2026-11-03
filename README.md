@@ -229,6 +229,70 @@ files. Allow roughly 239 GiB extra disk space and about two hours at the sampled
 conversion rate. Training can read either format, so `-Phase rvq` can bypass
 conversion if needed; use the normal command to prepare the faster layout first.
 
+## Parametric: bare EMD/VMD window experiment
+
+`approaches/parametric/` compares reconstruction of a single local mono speech
+testcase at several window lengths. It runs on CPU without dataset training or
+downloads. Install the optional backends and speech metrics on the new machine:
+
+```powershell
+python -m pip install -e ".[parametric,speech-metrics]"
+python main.py parametric --audio path/to/speech.wav --window-ms 20 40 80 160 --duration-seconds 2
+```
+
+The same experiment is callable with Python variables in `main.py`:
+
+```python
+from approaches.parametric import run
+
+run("path/to/speech.wav", window_ms=(20, 40, 80, 160),
+    overlap=0.5, vmd_modes=8, vmd_alpha=2000.0)
+```
+
+Use `python main.py parametric --help` for crop, overlap, EMD/VMD parameters and
+output options. `python -m approaches.parametric` exposes the same arguments.
+Default analysis is 16 kHz, with 50% overlap, all extracted EMD IMFs and eight
+VMD modes. Requested windows are rounded to sample counts and actual lengths
+and hops are recorded. Native amplitude is retained. Frames use reflected
+context within the selected crop and normalized Hann synthesis; the original
+clip length, including an odd final sample, is preserved. Modes are summed
+within each frame before stitching; no mode matching across frames is assumed.
+
+Each method/window produces two distinct conditions: **modes only**, and
+**modes plus residual control**. The latter restores EMD's native residue or
+VMD's raw input-minus-mode-sum residual. Near-perfect residual-control scores
+are expected by construction and do not demonstrate compression. This is the
+decomposition/windowing baseline: no fitted parameter vectors, quantization,
+bitrate results or learned model are involved yet.
+
+PESQ-WB is the speech-quality proxy and STOI measures intelligibility. Both
+are evaluated on the full reconstructed testcase, alongside NMSE, SNR, SI-SDR
+and spectral errors, without gain fitting or time alignment. A self-reference
+condition supplies the metric ceiling for that clip. Missing/invalid speech
+scores have explicit statuses; `--no-speech-metrics` disables them deliberately.
+Use actual speech for interpreting those scores. The local HTML report includes
+reference/reconstructed audio for listening comparisons.
+
+Outputs are timestamped under `runs/parametric_*`: `index.html`, `metrics.csv`,
+`summary.json`, `settings.json`, source/environment records, progress, reconstructed
+FLOAT WAVs and per-frame statistics. Scoring reads back the saved WAVs. Optional
+`--save-modes` adds per-frame sampled modes/residuals as NPZ files for later
+investigation; those files are not a parametric bitstream. Explicit output
+directories must be new. VMD initialization is deterministic; its fit-time
+record is shared by the modes-only and residual-control conditions.
+
+Backends are [PyEMD / EMD-signal](https://github.com/laszukdawid/PyEMD) and the
+pinned [vmdpy 0.2 reference](https://github.com/vrcarva/vmdpy), whose maintained
+continuation is in sktime. The adapter boundary allows replacing either backend.
+See the [original VMD paper](https://ww3.math.ucla.edu/camreport/cam13-22.pdf)
+for the bandwidth-constrained decomposition.
+
+Run the frame-boundary, real-backend and artifact-roundtrip checks with:
+
+```powershell
+python -m pytest approaches/parametric/tests -q
+```
+
 ## Run and extend
 
 ```powershell
@@ -268,7 +332,7 @@ when changing data preparation. Keep source crops/speakers within one data role.
 Resolved settings, source hashes, metrics, audio and checkpoints live under `runs/`.
 
 Research approaches live in `approaches/`, grouped by method: `pitchflower/`,
-`representations/`, `sparse_coding/`, `sparse_search/` and `interpretation/`.
+`representations/`, `sparse_coding/`, `sparse_search/`, `parametric/` and `interpretation/`.
 Shared cross-approach helpers live in `util/`; keep domain-specific operations
 with their approach until the same behavior is genuinely reused. `main.py` is
 the project entry point, and `run.py` remains a compatibility entry point for

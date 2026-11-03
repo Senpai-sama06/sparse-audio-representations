@@ -29,6 +29,12 @@ class ExperimentCase:
 # current command-line workflows remain the default until cases are listed.
 EXPERIMENTS: list[ExperimentCase] = []
 
+# Bare EMD/VMD testcase sweep, with settings defined directly in Python:
+# from approaches.parametric import run as run_parametric
+# EXPERIMENTS = [ExperimentCase("parametric_windows", lambda: run_parametric(
+#     "data/my_speech.wav", window_ms=(20, 40, 80, 160), vmd_modes=8,
+# ))]
+
 
 def main():
     """Execute selected Python cases, or fall back to the existing CLI."""

@@ -45,11 +45,17 @@ def parser():
     command = sub.add_parser("pitchflower", help="Foreground RVQ/GS training campaign with progress and resume")
     command.add_argument("--config", default="configs/study_pitchflower_hardware.yaml")
     command.add_argument("--phase", choices=["all", "prepare", "rvq", "gs", "predictor", "calibrate"], default="all")
+    from approaches.parametric.cli import add_arguments
+    command = sub.add_parser("parametric", help="EMD/VMD testcase reconstruction over window lengths")
+    add_arguments(command)
     return p
 
 
 def main(argv=None):
     args = parser().parse_args(argv)
+    if args.command == "parametric":
+        from approaches.parametric.cli import run_from_args
+        return run_from_args(args)
     if hasattr(args, "limit") and args.limit is not None and args.limit <= 0:
         raise ValueError("--limit must be positive")
     if args.command == "experiment":
