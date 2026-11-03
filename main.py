@@ -29,6 +29,14 @@ class ExperimentCase:
 # current command-line workflows remain the default until cases are listed.
 EXPERIMENTS: list[ExperimentCase] = []
 
+# Isolated 40 ms capacity study: exactly one 640-sample block per testcase,
+# no overlap/stitching/quantization. Offsets are fixed before fitting.
+# from approaches.parametric.isolated import run as run_isolated
+# EXPERIMENTS = [ExperimentCase("isolated_40ms", lambda: run_isolated(
+#     source="data/testcase.wav", output="runs/parametric_isolated_40ms",
+#     offsets=(.96, 1.96, 2.96), restarts=3, max_steps=1600,
+# ))]
+
 # Full parametric coding grid (or call its module CLI):
 # from approaches.parametric.ablation import run_ablation
 # EXPERIMENTS = [ExperimentCase("parametric_coding", lambda: run_ablation(

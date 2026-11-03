@@ -1,5 +1,72 @@
 # Sparse audio representations
 
+## Isolated 40 ms representation study
+
+The multi-window pilot was stopped after its implementation audit. Its completed
+jobs remain in the run directory. The frozen standalone listening report is
+`runs/parametric_reports/preliminary_multi_window_sweep_stopped_after_audit.html`.
+It labels the pilot's empty low-budget models, inadequate nonlinear convergence,
+quantization/metadata costs and unvalidated PESQ outliers. It is not evidence of
+the best achievable performance of each representation family.
+
+`approaches/parametric/isolated.py` studies exactly 640 samples per testcase.
+There is no overlap, stitching, quantization or RVQ. Default offsets (.96, 1.96,
+2.96 seconds) are fixed before fitting; all three clips must exist in the source.
+Backends receive only the selected block, without neighboring speech. Native
+decomposition boundary extensions still apply. Each native residue is an ordinary
+component. A direct-waveform baseline and sampled decomposition controls are kept.
+
+```powershell
+./tools/run_isolated_parametric.ps1 -SourceAudio data/testcase.wav -Output runs/parametric_isolated_40ms
+```
+
+The 972-job default library compares five decomposers plus direct fitting across
+three clips and 53 candidates: degree 0–128 Chebyshev polynomials, 2–256 fixed
+uniform spline knots, 1–640 fixed-prefix DCT coefficients, 1–16 sinusoidal atoms,
+12 separate amplitude/phase polynomial-order pairs, and widths 1/2/4/8 for two
+hidden-layer sine/SnakeBeta networks. Zero crossings/extrema are diagnostics,
+never order-selection rules. All coefficients and all per-mode neural weights
+are counted. Counts are per isolated block, not per second; no minimum-size
+architecture is silently replaced by an empty model.
+
+Linear spaces report SVD numerical rank and condition. Full-rank least-squares
+results certify sampled MSE optimality only within that declared linear space;
+rank truncation is labeled. Nonlinear fits use three starts and up to 1600
+objective evaluations (analytic-Jacobian least squares) or Adam steps per start.
+AM–FM initialization uses Hilbert amplitude/unwrapped phase and an FFT alternative;
+amplitude is clipped nonnegative. Neural fits retain their best iterate and may
+stop on a documented plateau after at least 400 steps. Histories, termination,
+actual parameters and per-component errors remain in `jobs/*.json`. Local
+convergence is not a global capacity certificate. The full DCT candidate is an
+identity reconstruction control, not a compression result.
+
+Whole-block and component complexity–distortion plots include raw waveform NMSE,
+rectangular/Hann magnitude-spectrum error and separate edge/interior error.
+PESQ/STOI are deliberately absent for these short fragments. Threshold tables use
+exact dynamic programming over fitted candidates to minimize count under the
+triangle-inequality bound on summed component errors. This bound is conservative;
+the result is not a minimum over true summed-waveform distortion or all functions.
+Thresholds are .1/.03/.01/.003/.001 NMSE. Missing/failed fits stay explicit.
+
+`index.html` is the local report. `isolated_40ms_shareable.html` embeds all audio,
+figures and linked tables/settings, and can be shared on its own. WAV bytes are
+losslessly gzip-compressed and deduplicated; click **Load embedded audio** in a
+current Chrome/Edge browser. The report refreshes every 12 jobs. Exact float64
+JSON payloads can be independently decoded with the command below. Main metrics
+use float64 parameter decoding; browser listening WAVs use float32, with their
+separate `playback_nmse` recorded in the CSV:
+
+```powershell
+python -m approaches.parametric.isolated_payload MODEL.json decoded.wav
+python tools/check_portable_report.py runs/parametric_isolated_40ms/isolated_40ms_shareable.html
+```
+
+The same progress dashboard is available at http://127.0.0.1:8765/ with a JSON
+endpoint at `/progress.json`. Global ETA is provisional. Resume uses identical
+arguments/output and requires matching sources/settings. For manual grids call
+`isolated.run(...)` from `main.py`; the `library` argument accepts ordinary Python
+candidate dictionaries. No corpus training or learned codebooks are involved.
+
 ## Parametric coding ablations
 
 `approaches/parametric/ablation.py` compares EMD, VMD, EEMD, PyEMD's CEEMDAN
