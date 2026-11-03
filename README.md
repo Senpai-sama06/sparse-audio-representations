@@ -1,5 +1,67 @@
 # Sparse audio representations
 
+## Parametric coding ablations
+
+`approaches/parametric/ablation.py` compares EMD, VMD, EEMD, PyEMD's CEEMDAN
+(including later improvements), and PySDKit SVMD, plus direct waveform fitting.
+Each is paired with Chebyshev polynomials, natural cubic splines, sinusoidal
+atoms, polynomial amplitude/phase models, or two-layer sine/SnakeBeta networks.
+Network weights are fitted separately per mode and all are transmitted; there is
+no corpus-trained decoder. Uniform allocation is the default; `--allocation energy`
+is an explicitly different heuristic. Residues are parameterized within the total
+budget by default (`--residual omit` is a separate ablation). Mode identities are
+independent across frames. SVMD has explicit iteration/mode caps; cached sampled
+modes never enter the decoder.
+
+Install `pip install -e ".[parametric,speech-metrics]"`, then run:
+
+```powershell
+./tools/run_parametric_ablation.ps1 -Audio data/testcase.wav -Output runs/parametric_ablation
+```
+
+The hidden worker continues independently. The launcher returns its PID and the
+local dashboard URL (default http://127.0.0.1:8765/). `/progress.json` exposes global
+elapsed active time, completed jobs, current frame, heartbeat, failures and an ETA.
+ETA is provisional: fitting families, frame lengths, and backends have different
+costs. A stale heartbeat can indicate a stopped process; inspect `worker-error.log`
+and `launch.json`. Rerun the same settings/output to resume completed jobs. Failed
+jobs remain explicitly failed; choose a new output for corrected experiments.
+
+Default sweep: four windows (40,20,80,160 ms), 50% overlap, five budgets
+(500,1000,2000,4000,8000 model scalars/second), six backends including direct,
+six fitting families, and float32/16/12/8-bit serialization. This is 744 jobs,
+2,880 coded comparisons per testcase. Every overlap frame consumes budget.
+Actual scalar use may fall below the target because model sizes are discrete.
+Quantizer min/range scalars are counted in addition to model scalars. Actual byte
+rates include JSON timing/model metadata and quantizer data; no entropy coding
+is applied. Twelve-bit values are packed. These rates can exceed PCM for some
+settings; the report presents measured costs without assuming compression.
+
+Use ordinary Python arguments from `main.py`, or
+`python -m approaches.parametric.ablation --help` for reduced grids, repeated
+seeds, different fitting limits, and multiple local 16 kHz mono input files.
+Inputs are complete utterances; the caller chooses development/test files.
+There is no automatic corpus selection or hidden tuning on test results.
+
+Outputs: resumable per-job records, decomposition caches, `.par` parameter
+streams, decoded FLOAT WAVs, full-utterance PESQ/STOI/waveform/spectral metrics,
+`metrics.csv`, `pareto.csv`, scatter plots, a fixed-setting heatmap and a listening
+table in `index.html`. The Pareto frontier is per utterance and covers actual
+bitrate/PESQ. One-testcase rankings are exploratory; multiple-speaker validation
+and repeated seeds require explicit runs. Reports refresh every eight jobs.
+`manifest.json` records settings, package versions and source hashes; incompatible
+resumes are rejected. A fresh Python process verifies independent decoding.
+
+Decode a saved file without the encoder's source audio or caches:
+
+```powershell
+python -m approaches.parametric.payload runs/parametric_ablation/FILE.par decoded.wav
+python -m approaches.parametric.progress runs/parametric_ablation --port 8766
+```
+
+Meaningful component/stream checks:
+`python -m pytest approaches/parametric/tests -q`.
+
 Find the fewest values that reconstruct an audio sample accurately, allowing the
 representation to adapt without requiring a named transform or semantic features.
 Minimum support, minimum L1 norm and minimum encoded bitrate are different goals.

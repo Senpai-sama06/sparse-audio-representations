@@ -29,6 +29,14 @@ class ExperimentCase:
 # current command-line workflows remain the default until cases are listed.
 EXPERIMENTS: list[ExperimentCase] = []
 
+# Full parametric coding grid (or call its module CLI):
+# from approaches.parametric.ablation import run_ablation
+# EXPERIMENTS = [ExperimentCase("parametric_coding", lambda: run_ablation(
+#     audio="data/testcase.wav", output="runs/parametric_ablation",
+#     windows=(40, 20, 80, 160), budgets=(500, 1000, 2000, 4000, 8000),
+#     trials=32, steps=80,
+# ))]
+
 # Bare EMD/VMD testcase sweep, with settings defined directly in Python:
 # from approaches.parametric import run as run_parametric
 # EXPERIMENTS = [ExperimentCase("parametric_windows", lambda: run_parametric(
