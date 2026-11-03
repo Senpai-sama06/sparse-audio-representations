@@ -17,9 +17,9 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 import torch
-from lrac.config import load_study_config
-from lrac.data.pitchflower import PitchDataset
-from lrac.models.pitchflower import PitchFlowerModel, configure_runtime
+from approaches.runner.config import load_study_config
+from approaches.pitchflower.data import PitchDataset
+from approaches.pitchflower.model.pitchflower import PitchFlowerModel, configure_runtime
 
 
 def main():
@@ -175,7 +175,7 @@ def main():
             raise RuntimeError("No measured batch leaves enough GPU memory headroom")
         size = min(safe, key=lambda row: row["seconds_per_step"])["micro_batch"]
         settings.update(micro_batch=size, accumulation=32//size, predictor_accumulation=16//min(size, 16))
-        from lrac.pitchflower import migrate_execution
+        from approaches.pitchflower.training.campaign import migrate_execution
         step = migrate_execution(settings, ROOT/settings["run_dir"])
         config_path = ROOT/args.config
         text = config_path.read_text()

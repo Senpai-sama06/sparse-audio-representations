@@ -234,16 +234,20 @@ conversion if needed; use the normal command to prepare the faster layout first.
 ```powershell
 .\tools\bootstrap.ps1
 .\.venv\Scripts\Activate.ps1
-python run.py experiment --config configs/example.yaml
-python run.py study --config configs/study_l1_synthetic.yaml
-python run.py study --config configs/study_l1_librispeech.yaml
-python run.py evaluate --run runs/YOUR_RUN --split clean --metric-workers 4
+python main.py experiment --config configs/example.yaml
+python main.py study --config configs/study_l1_synthetic.yaml
+python main.py study --config configs/study_l1_librispeech.yaml
+python main.py evaluate --run runs/YOUR_RUN --split clean --metric-workers 4
 ```
 
 `experiment` prepares/audits data, trains, evaluates validation and reports;
 `study` runs numerical experiments without training. No downloads occur without
-`--download`. Use `python run.py COMMAND --help` for options. Saved checkpoints
+`--download`. Use `python main.py COMMAND --help` for options. Saved checkpoints
 supply the model for `evaluate`; `--data-config` selects external evaluation data.
+For Python-defined experiments and ablation lists, edit `EXPERIMENTS` in
+`main.py`; each named case can construct settings directly and call an
+approach-level training or study function. If the list is empty, `main.py` uses
+the existing command-line workflows.
 
 Copy an existing YAML. Training files use `data`, `model`, `train`, `evaluation`;
 `train.name` labels the run. Studies use `name`, `kind`, `parameters`, for example:
@@ -263,13 +267,24 @@ study-specific paths are resolved by the study. Use a separate manifest director
 when changing data preparation. Keep source crops/speakers within one data role.
 Resolved settings, source hashes, metrics, audio and checkpoints live under `runs/`.
 
-Code stays in flat `lrac/` modules, with `models/` and `data/` subfolders;
-settings in `configs/`, helpers in `tools/`, tests in `tests/`. Add a numerical
-study as `study_<topic>.py: run(output, *, ...)`, an explicit branch in `study.py`
-and a small YAML. Reuse metrics/data routines; add no framework for one experiment.
-New models use `models/base.py` and selection/configuration in `models/__init__.py`
-and `config.py`. **Comment new code with useful docstrings and explanations of
-mathematics, units and non-obvious choices.**
+Research approaches live in `approaches/`, grouped by method: `pitchflower/`,
+`representations/`, `sparse_coding/`, `sparse_search/` and `interpretation/`.
+Shared cross-approach helpers live in `util/`; keep domain-specific operations
+with their approach until the same behavior is genuinely reused. `main.py` is
+the project entry point, and `run.py` remains a compatibility entry point for
+the existing commands. PitchFlower codec and predictor training entry points
+live under `approaches/pitchflower/training/`.
+
+Training outputs and model checkpoints belong under unique run-specific
+directories in `runs/`, never beside source modules. The existing trainers
+already create checkpoint folders per run; when defining several cases, give
+each one a distinct run name or `run_dir`. Keep each case's settings, provenance
+and metrics beside its checkpoints so ablations do not overwrite one another.
+Generated run artifacts stay outside Git. Add a
+numerical study beside the approach it evaluates; reuse shared metrics/data
+helpers without adding a framework for one experiment. **Comment new code with
+useful docstrings and explanations of mathematics, units and non-obvious
+choices.**
 
 Maintain this README as the only explanatory Markdown guide. Generated run reports
 and numerical result artifacts stay outside Git. Preserve LaTeX source files and

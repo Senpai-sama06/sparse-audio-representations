@@ -16,11 +16,11 @@ pitch-analysis = ["pyworld==0.3.5"]
 pitchflower = ["torchaudio>=2.8,<2.9", "einops==0.8.1", "rotary-embedding-torch==0.8.9", "torchdyn==1.0.6", "vocos==0.1.0", "pytorch-lightning==2.5.5", "pyworld==0.3.5", "tqdm>=4.67"]
 
 [project.scripts]
-lrac = "lrac.cli:main"
+lrac = "approaches.runner.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["lrac*"]
+include = ["approaches*", "util*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

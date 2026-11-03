@@ -1,6 +1,6 @@
 """Resume an exhaustive search: python tools/resume_l0.py --run runs/YOUR_RUN."""
 import argparse
-from lrac.l0_parallel import resume_search_parallel
+from approaches.sparse_coding.l0_parallel import resume_search_parallel
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)

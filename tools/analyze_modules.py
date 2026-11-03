@@ -14,10 +14,11 @@ import torch
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from lrac.data.preprocessing import load_audio
-from lrac.models.autoencoder import ResidualBlock
-from lrac.train import load_run
-from lrac.utils import file_hash, write_json
+from util.data.preprocessing import load_audio
+from approaches.representations.models.autoencoder import ResidualBlock
+from approaches.representations.training import load_run
+from util.provenance import file_hash
+from util.io import write_json
 
 
 def rms(x):

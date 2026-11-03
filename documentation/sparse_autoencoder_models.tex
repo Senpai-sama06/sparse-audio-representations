@@ -538,15 +538,15 @@ The evaluator loads \code{checkpoints/best.pt} by default. Checkpoints contain m
 \toprule
 Source & Responsibility \\
 \midrule
-\code{lrac/models/autoencoder.py} & Convolutional stages, residual blocks, decoder ordering \\
-\code{lrac/models/sparse_autoencoder.py} & Length-safe encoding, global top-$k$, identity activation control \\
-\code{lrac/train.py} & Sampling, objective, AdamW, validation, checkpoint selection \\
-\code{lrac/losses.py} & Masked MSE and spectral diagnostics \\
-\code{lrac/metrics.py} & Waveform/STFT/speech metrics, speaker bootstrap \\
-\code{lrac/evaluate.py} & Budget sweep, support counts, tested-support search \\
-\code{lrac/data/datasets.py} & Speaker coverage, weighted sampling, crops, collation \\
-\code{lrac/data/manifests.py} & Deterministic subset construction and corpus indexing \\
-\code{lrac/data/audit.py} & Roles, speakers, source intervals, duplicate-hash audit \\
+\code{approaches/representations/models/autoencoder.py} & Convolutional stages, residual blocks, decoder ordering \\
+\code{approaches/representations/models/sparse_autoencoder.py} & Length-safe encoding, global top-$k$, identity activation control \\
+\code{approaches/representations/training/runner.py} & Sampling, objective, AdamW, validation, checkpoint selection \\
+\code{util/losses.py} & Masked MSE and spectral diagnostics \\
+\code{util/metrics.py} & Waveform/STFT/speech metrics, speaker bootstrap \\
+\code{approaches/representations/evaluation/evaluate.py} & Budget sweep, support counts, tested-support search \\
+\code{util/data/datasets.py} & Speaker coverage, weighted sampling, crops, collation \\
+\code{util/data/manifests.py} & Deterministic subset construction and corpus indexing \\
+\code{util/data/audit.py} & Roles, speakers, source intervals, duplicate-hash audit \\
 \code{tests/test_sparse_autoencoder.py} & Shapes, padding, code-only decode, gradients, affine control \\
 \bottomrule
 \end{tabularx}\end{center}

@@ -2,7 +2,7 @@
 from pathlib import Path
 import sys
 
-from lrac.cli import main
+from approaches.runner.cli import main
 
 
 if __name__ == "__main__":

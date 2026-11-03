@@ -12,11 +12,13 @@ from scipy import signal
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from lrac.channel_analysis import (PYIN, reference_voicing, affine_contributions,
+from approaches.interpretation.channels import (PYIN, reference_voicing, affine_contributions,
     voicing_counts, binary_correlation, contribution_spectrum, spectral_summary)
-from lrac.data.datasets import AudioDataset
-from lrac.train import load_run
-from lrac.utils import file_hash, write_json, seed_all
+from util.data.datasets import AudioDataset
+from approaches.representations.training import load_run
+from util.provenance import file_hash
+from util.io import write_json
+from util.runtime import seed_all
 
 
 def save_csv(path, rows):
@@ -90,8 +92,8 @@ def analyze(args):
         encoder_cudnn_allow_tf32=bool(torch.backends.cudnn.allow_tf32), decoder_cudnn_allow_tf32=False,
         decoder_cudnn_enabled=False,decoder_matmul_allow_tf32=bool(torch.backends.cuda.matmul.allow_tf32),
         decoder_precision="Native IEEE FP32 convolutions for attribution; original encoder precision and support retained",
-        script_sha256=file_hash(Path(__file__)), analysis_source_sha256=file_hash(Path("lrac/channel_analysis.py")),
-        model_source_sha256=file_hash(Path("lrac/models/autoencoder.py")))
+        script_sha256=file_hash(Path(__file__)), analysis_source_sha256=file_hash(Path("approaches/interpretation/channels.py")),
+        model_source_sha256=file_hash(Path("approaches/representations/models/autoencoder.py")))
     write_json(local/"protocol.json", protocol)
     # Choose examples by source duration and speaker order, before inspecting channels.
     examples, seen = {}, set()

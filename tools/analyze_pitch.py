@@ -12,10 +12,12 @@ from scipy import stats
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from lrac.pitch_intervention import (SR, SAMPLES, CORE, SHIFTS, TARGETS, SUPPORTS,
+from approaches.interpretation.pitch import (SR, SAMPLES, CORE, SHIFTS, TARGETS, SUPPORTS,
     analysis_filters, prepare_speaker, measure, spectral_prediction, normalize)
-from lrac.train import load_run
-from lrac.utils import file_hash, write_json, seed_all
+from approaches.representations.training import load_run
+from util.provenance import file_hash
+from util.io import write_json
+from util.runtime import seed_all
 
 
 DEFAULT_RUN = "runs/librispeech_sparse_autoencoder_affine_10h_20261027T114554258463Z_seed0"
@@ -77,7 +79,7 @@ def prepare(args):
         predictions="Unfitted fixed analysis-filter PSD overlap; ideal harmonic-envelope overlap (ignores aperiodicity); exact interior time-domain kernel check",
         negative_controls="Real unvoiced speech, envelope-matched WORLD aperiodic synthesis, seeded Gaussian broadband noise; no physical F0 assigned to controls",
         versions={p:metadata.version(p) for p in ["torch", "numpy", "scipy", "librosa", "pyworld"]},
-        source_sha256={p:file_hash(Path(p)) for p in ["lrac/pitch_intervention.py", "tools/analyze_pitch.py"]})
+        source_sha256={p:file_hash(Path(p)) for p in ["approaches/interpretation/pitch.py", "tools/analyze_pitch.py"]})
     if (local/"protocol.json").exists():
         old = json.loads((local/"protocol.json").read_text())
         for k in ["checkpoint_sha256", "manifest_sha256", "target_f0_hz", "speakers"]:
@@ -437,7 +439,7 @@ def report(args):
         execution_notes=["Two-speaker smoke run was separate from the 40-speaker experiment.",
             "Preparation initially stopped when WORLD changed its voicing decision after cropping. The same source-only eligibility check was moved into the candidate search; 37 already accepted sources were retained and the three unfinished speakers were completed. No model-response-based source selection.",
             "Preparation protocol is preserved with its original source hashes. Current measurement/report hashes are recorded separately."],
-        analysis_source_sha256={p:file_hash(Path(p)) for p in ["lrac/pitch_intervention.py", "tools/analyze_pitch.py"]})
+        analysis_source_sha256={p:file_hash(Path(p)) for p in ["approaches/interpretation/pitch.py", "tools/analyze_pitch.py"]})
     write_json(output/"saf_pitch_analysis.json",summary)
     write_json(local/"progress.json",dict(phase="complete",completed=len(cohort),total=len(cohort)))
     print(json.dumps({k:v for k,v in summary.items() if k not in ["protocol","analysis_source_sha256"]},indent=2),flush=True)

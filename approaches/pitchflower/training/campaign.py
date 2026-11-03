@@ -1,0 +1,591 @@
+"""Foreground PitchFlower campaign: prepare, RVQ, GS, predictor, calibration.
+
+Nothing runs on import. The user explicitly launches the campaign through run.py.
+Lightning handles AMP/accumulation/checkpoints; the existing sparse-autoencoder
+training routine has a different objective and is intentionally not repurposed.
+"""
+from collections import deque
+from concurrent.futures import ProcessPoolExecutor
+from datetime import datetime, timezone
+import json
+import gc
+import math
+import hashlib
+from pathlib import Path
+import subprocess
+import time
+
+import numpy as np
+import torch
+from torch.nn import functional as F
+from torch.utils.data import DataLoader
+import pytorch_lightning as pl
+from pytorch_lightning.callbacks import ModelCheckpoint, TQDMProgressBar
+from pytorch_lightning.loggers import TensorBoardLogger
+from tqdm import tqdm
+
+from approaches.pitchflower.data import PitchDataset, mapped_utterance, cache_lock
+from approaches.pitchflower.model.pitchflower import PitchFlowerModel, configure_runtime
+from approaches.pitchflower.model.bottlenecks.gaussian import render_gaussians
+from approaches.pitchflower.model.predictors.gaussian import GaussianPredictor
+from util.provenance import file_hash, source_fingerprint, environment
+from util.io import write_json
+
+
+ROOT = Path(__file__).resolve().parents[3]
+
+
+def _path(value):
+    path = Path(value).expanduser()
+    return path if path.is_absolute() else ROOT/path
+
+
+def _records(path):
+    return [json.loads(line) for line in _path(path).read_text(encoding="utf-8").splitlines() if line.strip()]
+
+
+def audit_data(settings, output):
+    """Require complete, native training utterances and disjoint speaker roles."""
+    train = _records(settings["train_manifest"])
+    validation = _records(settings["validation_manifest"])
+    for rows, split, role in ((train, "train-clean-360", "train"), (validation, "dev-clean", "validation")):
+        if not rows or len({r["id"] for r in rows}) != len(rows):
+            raise ValueError("Empty or duplicate source IDs")
+        if any(r["split"] != split or r["role"] != role or r["sample_rate"] != 16000 for r in rows):
+            raise ValueError("Unexpected LibriSpeech split, role or sampling rate")
+        if any(r.get("start", 0) != 0 or r.get("stop", r["num_samples"]) != r["num_samples"] for r in rows):
+            raise ValueError("Use complete source recordings, not an earlier crop/subset manifest")
+        if any(not Path(r["path"]).is_file() for r in rows):
+            raise FileNotFoundError("Missing source recordings; check cached LibriSpeech paths")
+    train_speakers, val_speakers = ({str(r["speaker"]) for r in rows} for rows in (train, validation))
+    if train_speakers & val_speakers:
+        raise ValueError("Training and validation speakers overlap")
+    if len(train) != settings["expected_train_files"] or len(train_speakers) != settings["expected_train_speakers"]:
+        raise ValueError("The configured training manifest is not the expected full cached split")
+    groups = {}
+    for row in sorted(validation, key=lambda r: r["id"]):
+        groups.setdefault(str(row["speaker"]), []).append(row)
+    # Round-robin sources provide balanced routine validation. Calibration uses
+    # different utterances; neither set contains training speakers or test-clean.
+    ordered = [group[i] for i in range(max(map(len, groups.values())))
+               for group in groups.values() if i < len(group)]
+    if len(ordered) < settings["validation_examples"]+40:
+        raise ValueError("Not enough disjoint development utterances for validation and calibration")
+    routine = ordered[:settings["validation_examples"]]
+    calibrated = ordered[settings["validation_examples"]:settings["validation_examples"]+40]
+    report = dict(train_files=len(train), train_speakers=len(train_speakers),
+        validation_files=len(validation), validation_speakers=len(val_speakers),
+        train_hours=sum(r["num_samples"]/16000 for r in train)/3600,
+        validation_ids=[r["id"] for r in routine], calibration_ids=[r["id"] for r in calibrated],
+        train_manifest_sha256=file_hash(_path(settings["train_manifest"])),
+        validation_manifest_sha256=file_hash(_path(settings["validation_manifest"])))
+    audit_path = output/"data_audit.json"
+    if audit_path.exists() and json.loads(audit_path.read_text()) != report:
+        raise ValueError("Dataset changed since campaign creation; use a new run directory")
+    write_json(audit_path, report)
+    print(f"Data: {len(train):,} training utterances / {len(train_speakers)} speakers / {report['train_hours']:.1f} h", flush=True)
+    return train, validation, routine, calibrated
+
+
+def _prepare_one(task):
+    row, cache, seed = task
+    torch.set_num_threads(1)
+    return str(mapped_utterance(row, cache, seed))
+
+
+def prepare(rows, settings, output):
+    """Prepare WORLD sources and lossless crop-readable copies, once per file."""
+    cache = str(_path(settings["cache_dir"]))
+    # Check immutable cache filenames in the parent. A resumed, fully prepared
+    # corpus should not spawn 106,717 tiny tasks just to rediscover those files.
+    missing = [row for row in rows if not (Path(cache)/(hashlib.sha256(
+        f"{row['id']}:{settings['seed']}:pitchflower24k-v1".encode()).hexdigest()+".npy")).exists()]
+    count = len(rows)-len(missing)
+    if not missing:
+        print(f"WORLD + mapped cache: all {count:,} utterances already prepared", flush=True)
+        return
+    tasks = iter((row, cache, settings["seed"]) for row in missing)
+    with ProcessPoolExecutor(max_workers=settings["prepare_workers"]) as pool:
+        pending = deque()
+        exhausted = False
+        with tqdm(total=len(rows), initial=count, desc="WORLD + lossless mapped cache", unit="utterance") as bar:
+            while pending or not exhausted:
+                while len(pending) < 2*settings["prepare_workers"] and not exhausted:
+                    task = next(tasks, None)
+                    if task is None:
+                        exhausted = True
+                    else:
+                        pending.append(pool.submit(_prepare_one, task))
+                if pending:
+                    pending.popleft().result()  # Raise errors; never silently omit a file.
+                    count += 1
+                    bar.update(1)
+                    if count % 100 == 0 or count == len(rows):
+                        write_json(output/"progress.json", dict(stage="prepare", completed=count, total=len(rows)))
+
+
+class TrainingModule(pl.LightningModule):
+    """One shared CFM training recipe; only the bottleneck-specific term changes."""
+    def __init__(self, settings, kind, predictor=False):
+        super().__init__()
+        self.settings, self.kind, self.predictor_stage = settings, kind, predictor
+        self.net = PitchFlowerModel(kind, gs_density=settings["gs_density"], gs_iterations=settings["gs_iterations"],
+                                    gs_channels=settings["gs_channels"])
+        frames = (settings["samples"]//256+1)//2
+        self.predictor = GaussianPredictor(channels=settings["gs_channels"], frames=frames,
+            count=max(2, round(frames*settings["gs_density"]))) if predictor else None
+        self.last_metrics = {}
+        if predictor:
+            self.net.requires_grad_(False)
+        self.save_hyperparameters()
+
+    def _loss(self, batch, training):
+        original, perturbed, pitch = batch
+        if self.predictor_stage:
+            self.net.eval()
+            with torch.no_grad():
+                latent = self.net.latents(perturbed)
+            count = max(2, round(latent.shape[-1]*self.settings["gs_density"]))
+            weights, scales = self.predictor(latent, count)
+            loss = F.mse_loss(render_gaussians(weights, scales, latent.shape[-1]).float(), latent.float())
+            return loss, {"latent_mse": loss.detach()}
+        weight = self.settings["rvq_commitment"] if self.kind == "rvq" else self.settings["gs_commitment"]
+        return self.net(original, perturbed, pitch, .1 if training else 0., commitment_weight=weight)
+
+    def training_step(self, batch, batch_idx):
+        loss, metrics = self._loss(batch, True)
+        if not torch.isfinite(loss):
+            raise FloatingPointError("Nonfinite PitchFlower loss; inspect the input/cache and bottleneck fit")
+        self.last_metrics = {key: float(value) for key, value in metrics.items()}
+        self.last_metrics["loss"] = float(loss.detach())
+        self.log("train/loss", loss, prog_bar=True, batch_size=len(batch[0]))
+        for key, value in metrics.items():
+            self.log(f"train/{key}", value, batch_size=len(batch[0]))
+        return loss
+
+    def validation_step(self, batch, batch_idx):
+        # Fixed seeded CFM noise makes comparisons across validations reproducible.
+        # fork_rng restores training RNG afterward, including when validation runs
+        # in the middle of an epoch.
+        with torch.random.fork_rng(devices=[self.device.index] if self.device.type == "cuda" else []):
+            torch.manual_seed(self.settings["seed"]+batch_idx)
+            loss, _ = self._loss(batch, False)
+        self.log("val/loss", loss, on_epoch=True, prog_bar=True, batch_size=len(batch[0]))
+
+    def configure_optimizers(self):
+        if not self.predictor_stage:
+            optimizer = torch.optim.AdamW(self.net.parameters(), lr=self.settings["learning_rate"],
+                                          fused=False)
+            warmup = self.settings.get("codec_warmup_steps", 0)
+            if not warmup:
+                return optimizer
+            scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer,
+                lambda step: min(1., (step+1)/warmup))
+            return {"optimizer": optimizer, "lr_scheduler": {"scheduler": scheduler, "interval": "step"}}
+        optimizer = torch.optim.Adam(self.predictor.parameters(), lr=5e-4, fused=False)
+        total = self.settings["predictor_steps"]
+        def multiplier(step):
+            if step < 1000:
+                return max(1, step)/1000
+            return .1+.9*.5*(1+math.cos(math.pi*min(1., (step-1000)/max(1, total-1000))))
+        scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, multiplier)
+        return {"optimizer": optimizer, "lr_scheduler": {"scheduler": scheduler, "interval": "step"}}
+
+    def on_train_start(self):
+        # Restoring an older checkpoint also restores its optimizer flags. Set
+        # the execution backend after restoration while retaining Adam moments,
+        # learning rates and step values. Lightning 2.5's AMP plugin rejects
+        # fused optimizers with gradient clipping, including unscaled BF16.
+        # foreach=None lets PyTorch choose its compatible CUDA foreach path.
+        for optimizer in self.trainer.optimizers:
+            for group in optimizer.param_groups:
+                group["fused"] = False
+                group["foreach"] = None
+                for parameter in group["params"]:
+                    state = optimizer.state[parameter]
+                    if "step" in state:
+                        state["step"] = state["step"].cpu()
+
+    def on_load_checkpoint(self, checkpoint):
+        """Translate Lightning's microbatch counters when execution size changes.
+
+        Model weights, Adam moments and optimizer-step counts stay untouched.
+        Without this conversion, old batch 4000 could exceed the new epoch's
+        3251 batches, causing a premature epoch boundary and shifted validation.
+        The one-batch lag in checkpoints saved on_train_batch_end is preserved
+        so Lightning's own restart bookkeeping can finish that callback normally.
+        """
+        old = checkpoint.get("hyper_parameters", {}).get("settings", self.settings)
+        before, after = old["micro_batch"], self.settings["micro_batch"]
+        if self.predictor_stage:
+            before, after = min(before, 16), min(after, 16)
+        if before == after:
+            return
+        progress = checkpoint.get("loops", {}).get("fit_loop", {}).get("epoch_loop.batch_progress")
+        if progress is None:
+            raise ValueError("Checkpoint lacks the expected pinned-Lightning batch progress")
+        for scope in ("current", "total"):
+            counts = progress[scope]
+            callback_pending = (counts["ready"] == counts["started"] == counts["processed"]
+                                and counts["completed"] == counts["processed"]-1)
+            for key in ("ready", "started", "processed", "completed"):
+                counts[key] = math.ceil(counts[key]*before/after)
+            if callback_pending:
+                counts["completed"] = max(0, counts["processed"]-1)
+
+
+class LiveProgress(TQDMProgressBar):
+    """Terminal global-step counters plus a small machine-readable progress file."""
+    def __init__(self, output, stage, total):
+        super().__init__(refresh_rate=1)
+        self.output, self.stage, self.total = Path(output), stage, total
+        self.previous, self.started = -1, time.monotonic()
+        self.initial_step = 0
+
+    def on_train_start(self, trainer, module):
+        super().on_train_start(trainer, module)
+        self.initial_step = trainer.global_step
+        self.started = time.monotonic()
+
+    def get_metrics(self, trainer, model):
+        metrics = super().get_metrics(trainer, model)
+        metrics.update(global_step=trainer.global_step, target_steps=self.total)
+        return metrics
+
+    def on_train_batch_end(self, trainer, module, outputs, batch, batch_idx):
+        super().on_train_batch_end(trainer, module, outputs, batch, batch_idx)
+        if trainer.global_step != self.previous:
+            self.previous = trainer.global_step
+            progress = dict(stage=self.stage, status="training",
+                step=trainer.global_step, total_steps=self.total, seconds=time.monotonic()-self.started,
+                steps_this_session=trainer.global_step-self.initial_step,
+                peak_gpu_gib=torch.cuda.max_memory_allocated()/2**30, **module.last_metrics)
+            write_json(self.output/"progress.json", progress)
+            write_json(self.output.parent/"progress.json", progress)
+
+    def on_exception(self, trainer, module, exception):
+        # Lightning can turn Ctrl+C into SystemExit before fit returns. Save here
+        # too, so a foreground interruption retains model AND optimizer state.
+        if isinstance(exception, (KeyboardInterrupt, SystemExit)) and trainer.optimizers:
+            trainer.save_checkpoint(self.output/"checkpoints/last.ckpt")
+        write_json(self.output/"progress.json", dict(stage=self.stage, status="interrupted",
+            step=trainer.global_step, total_steps=self.total, error=f"{type(exception).__name__}: {exception}"))
+
+
+class TrainingBudget(pl.Callback):
+    """Limit cumulative active training/validation time, including across resumes.
+
+    This is a research time budget, not a convergence claim. Check after each
+    batch and validation; one batch/validation can exceed the cap slightly.
+    A small ledger is flushed every 30 seconds and on normal stop/interruption.
+    An abrupt process kill can lose at most that unflushed interval of accounting.
+    Model/optimizer checkpoints remain managed by the existing callbacks.
+    """
+    def __init__(self, folder, hours):
+        self.path = Path(folder)/"time_budget.json"
+        self.limit = float(hours)*3600
+        if not math.isfinite(self.limit) or self.limit <= 0:
+            raise ValueError("Training hours must be finite and positive")
+        saved = json.loads(self.path.read_text()) if self.path.exists() else {}
+        if saved and saved["limit_seconds"] != self.limit:
+            raise ValueError("Stage time budget changed; use a separate run directory")
+        self.spent = saved.get("elapsed_seconds", 0.)
+        self.started = None
+        self.written = 0.
+        self.reached = self.spent >= self.limit
+
+    def elapsed(self):
+        return self.spent+(time.monotonic()-self.started if self.started is not None else 0.)
+
+    def check(self, trainer, force=False):
+        elapsed = self.elapsed()
+        self.reached = elapsed >= self.limit
+        if self.reached:
+            trainer.should_stop = True
+        if force or self.reached or elapsed-self.written >= 30:
+            write_json(self.path, dict(limit_seconds=self.limit, elapsed_seconds=elapsed,
+                remaining_seconds=max(0., self.limit-elapsed), reached=self.reached))
+            self.written = elapsed
+
+    def on_train_start(self, trainer, module):
+        self.started = time.monotonic()
+        self.check(trainer, force=True)
+
+    def on_train_batch_end(self, trainer, module, outputs, batch, batch_idx):
+        self.check(trainer)
+
+    def on_validation_end(self, trainer, module):
+        self.check(trainer)
+
+    def on_train_end(self, trainer, module):
+        self.check(trainer, force=True)
+        self.spent = self.elapsed()
+        self.started = None
+
+    def on_exception(self, trainer, module, exception):
+        self.check(trainer, force=True)
+        self.spent = self.elapsed()
+        self.started = None
+
+
+def _loader(rows, settings, training, predictor=False):
+    dataset = PitchDataset(rows, _path(settings["cache_dir"]), settings["samples"], settings["seed"], training,
+                           prefer_mapped=settings.get("mapped_cache", True),
+                           cache_metadata=settings.get("cache_metadata", False))
+    # Predictor training keeps effective batch 16 even if codec microbatch is 32.
+    size = min(settings["micro_batch"], 16) if predictor else settings["micro_batch"]
+    return DataLoader(dataset, batch_size=size if training else 1,
+        shuffle=training, generator=torch.Generator().manual_seed(settings["seed"]),
+        num_workers=settings["loader_workers"], pin_memory=True,
+        persistent_workers=settings["loader_workers"] > 0)
+
+
+def _checkpoint(folder):
+    """Prefer latest optimizer state; otherwise use the best validated checkpoint."""
+    last = folder/"checkpoints/last.ckpt"
+    return last if last.exists() else next(iter(sorted((folder/"checkpoints").glob("best*.ckpt"))), None)
+
+
+def migrate_execution(settings, output):
+    """Explicitly authorize measured execution changes, retaining their history.
+
+    Called only by the benchmark's --apply action, never implicitly on resume.
+    Dataset, objectives, architecture and optimizer-step budgets must agree;
+    checkpoint parameters/optimizer tensors are not rewritten. Attention backend
+    changes introduce floating-point differences, not new model weights.
+    """
+    output = Path(output)
+    with cache_lock(output/"campaign.lock"):
+        old = json.loads((output/"settings.json").read_text())
+        allowed = {"micro_batch", "accumulation", "predictor_accumulation", "loader_workers", "prepare_workers"}
+        changed = {key for key in set(old) | set(settings) if old.get(key) != settings.get(key)}
+        if changed-allowed:
+            raise ValueError(f"Not an execution-only migration: {changed-allowed}")
+        for candidate in (old, settings):
+            if candidate["micro_batch"]*candidate["accumulation"] != 32:
+                raise ValueError("Codec effective batch must remain 32")
+            if min(candidate["micro_batch"], 16)*candidate["predictor_accumulation"] != 16:
+                raise ValueError("Predictor effective batch must remain 16")
+        provenance = json.loads((output/"provenance.json").read_text())
+        references = {name: subprocess.check_output(["git", "-C", str(ROOT/"runs/vendor"/name),
+            "rev-parse", "HEAD"], text=True).strip() for name in provenance["references"]}
+        if references != provenance["references"]:
+            raise ValueError("Reference sources changed; execution migration is insufficient")
+        recipe = {name: file_hash(ROOT/name) for name in provenance["recipe_sha256"]}
+        checkpoint = _checkpoint(output/"rvq")
+        state = torch.load(checkpoint, map_location="cpu", weights_only=False) if checkpoint else None
+        step = state["global_step"] if state else 0
+        del state
+        history = dict(utc=datetime.now(timezone.utc).isoformat(), old_settings=old,
+            new_settings=settings, previous_provenance=provenance, new_recipe_sha256=recipe,
+            resume_step=step, checkpoint=str(checkpoint),
+            note="SDPA, clipping-compatible Adam, cuDNN autotuning, lossless mapped cache; RVQ EMA groups remain four. Not bitwise replay.")
+        history_dir = output/"execution_history"
+        history_dir.mkdir(exist_ok=True)
+        name = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+        write_json(history_dir/f"{name}.json", history)
+        provenance.update(recipe_sha256=recipe, source=source_fingerprint(ROOT), environment=environment())
+        provenance.setdefault("execution_migrations", []).append(name)
+        write_json(output/"provenance.json", provenance)
+        write_json(output/"settings.json", settings)
+        write_json(output/"progress.json", dict(stage="rvq", status="paused", step=step,
+            total_steps=settings["steps"], reason="Execution optimized; resume from terminal"))
+        return step
+
+
+def fit(stage, train_rows, val_rows, settings, output):
+    """Foreground fit with automatic checkpoint resume; no side effect until called."""
+    configure_runtime()
+    folder = output/stage
+    folder.mkdir(exist_ok=True)
+    if (folder/"complete.json").exists():
+        print(f"{stage}: already complete", flush=True)
+        return
+    predictor = stage == "predictor"
+    pl.seed_everything(settings["seed"], workers=True)
+    module = TrainingModule(settings, "gs" if predictor else stage, predictor)
+    last = _checkpoint(folder)
+    if predictor and last is None:
+        codec = _checkpoint(output/"gs")
+        if codec is None:
+            raise ValueError("Train the GS codec before its predictor")
+        # Only load our locally created checkpoint; optimizer state is not used
+        # when moving from codec training to frozen-codec predictor training.
+        state = torch.load(codec, map_location="cpu", weights_only=False)["state_dict"]
+        module.net.load_state_dict({k.removeprefix("net."): v for k, v in state.items() if k.startswith("net.")})
+    total = settings["predictor_steps"] if predictor else settings["steps"]
+    checkpoint_dir = folder/"checkpoints"
+    best = ModelCheckpoint(dirpath=checkpoint_dir, filename="best_{step}", monitor="val/loss",
+                           mode="min", save_top_k=1, save_last=False, save_on_train_epoch_end=False)
+    latest = ModelCheckpoint(dirpath=checkpoint_dir, filename="periodic_{step}", save_top_k=0,
+        save_last=True, every_n_train_steps=settings["checkpoint_interval"], save_on_train_epoch_end=False)
+    accumulation = settings["predictor_accumulation"] if predictor else settings["accumulation"]
+    hours = settings.get("stage_hours", {}).get(stage)
+    budget = TrainingBudget(folder, hours) if hours is not None else None
+    callbacks = [LiveProgress(folder, stage, total), best, latest]
+    if budget is not None:
+        callbacks.append(budget)
+    trainer = pl.Trainer(accelerator="gpu", devices=1, precision="bf16-mixed",
+        max_steps=total, max_epochs=-1, accumulate_grad_batches=accumulation,
+        gradient_clip_val=1., val_check_interval=settings["validation_interval"]*accumulation,
+        check_val_every_n_epoch=None, num_sanity_val_steps=0,
+        callbacks=callbacks,
+        logger=TensorBoardLogger(save_dir=folder/"logs", name=""), log_every_n_steps=10,
+        default_root_dir=folder, enable_model_summary=True, inference_mode=False, benchmark=True)
+    size = min(settings['micro_batch'], 16) if predictor else settings['micro_batch']
+    print(f"\n{stage}: {sum(p.numel() for p in module.parameters()):,} parameters; "
+          f"microbatch {size} x accumulation {accumulation}; target {total:,} steps", flush=True)
+    if budget is not None:
+        print(f"{stage}: active-time cap {hours:g} h; {budget.elapsed()/3600:.2f} h already used; "
+              "stop at the update cap or time cap, whichever comes first", flush=True)
+    try:
+        trainer.fit(module, _loader(train_rows, settings, True, predictor), _loader(val_rows, settings, False),
+                    ckpt_path=str(last) if last else None)
+    except KeyboardInterrupt:
+        trainer.save_checkpoint(checkpoint_dir/"last.ckpt")
+        raise
+    if trainer.interrupted:
+        trainer.save_checkpoint(checkpoint_dir/"last.ckpt")
+        raise KeyboardInterrupt("Campaign interrupted; rerun the same command to resume")
+    if trainer.global_step < total and not (budget is not None and budget.reached):
+        raise RuntimeError("Training stopped before either its update cap or its time budget")
+    trainer.save_checkpoint(checkpoint_dir/"last.ckpt")
+    export_audio(module, val_rows[:2], settings, folder)
+    termination = "step_limit" if trainer.global_step >= total else "time_budget"
+    write_json(folder/"complete.json", dict(step=trainer.global_step, target_steps=total,
+        termination=termination, budget_hours=hours,
+        elapsed_training_seconds=budget.elapsed() if budget else None, best_checkpoint=best.best_model_path))
+    write_json(folder/"progress.json", dict(stage=stage, status="complete", step=trainer.global_step,
+        total_steps=total, termination=termination))
+    del trainer, module
+    gc.collect()
+    torch.cuda.empty_cache()
+
+
+@torch.no_grad()
+def export_audio(module, rows, settings, folder):
+    """Save original and 0/+6/-6-semitone samples using the paper's fixed Vocos."""
+    from vocos import Vocos
+    import soundfile as sf
+    # Lightning tears down fit by returning the module to CPU. Restore the
+    # inference device explicitly rather than passing CPU's index=None to CUDA
+    # RNG APIs, and keep a functional CPU export path for isolated checks.
+    device = torch.device("cuda", torch.cuda.current_device()) if torch.cuda.is_available() else module.device
+    module.to(device).eval()
+    vocoder = Vocos.from_pretrained("charactr/vocos-mel-24khz").to(module.device).eval()
+    destination = folder/"audio"
+    destination.mkdir(exist_ok=True)
+    dataset = PitchDataset(rows, _path(settings["cache_dir"]), settings["samples"], settings["seed"], False)
+    for index in range(len(dataset)):
+        original, perturbed, pitch = dataset[index]
+        sf.write(destination/f"{index}_original.wav", original.numpy(), 24000, subtype="FLOAT")
+        for semitones in (-6, 0, 6):
+            changed_pitch = torch.where(pitch > 0, pitch+semitones/12, pitch).to(module.device)[None]
+            with torch.random.fork_rng(devices=[module.device.index] if module.device.type == "cuda" else []):
+                torch.manual_seed(settings["seed"]+index)
+                mel = module.net.reconstruct_mel(perturbed.to(module.device)[None], changed_pitch,
+                    predictor=module.predictor if module.predictor_stage else None)
+            waveform = vocoder.decode(mel).flatten().cpu().numpy()
+            sf.write(destination/f"{index}_shift{semitones:+d}.wav", waveform, 24000, subtype="FLOAT")
+
+
+def calibrate(rows, settings, output):
+    """Post-training scalar k-means PTQ, without injecting quantization into training."""
+    from sklearn.cluster import MiniBatchKMeans
+    predictor_file = _checkpoint(output/"predictor")
+    if predictor_file is None:
+        raise ValueError("Train the GS predictor before calibration")
+    module = TrainingModule(settings, "gs", predictor=True)
+    module.load_state_dict(torch.load(predictor_file, map_location="cpu", weights_only=False)["state_dict"])
+    module = module.cuda().eval()
+    parameters = {"weights": [], "scales": []}
+    with torch.no_grad():
+        for _, perturbed, _ in tqdm(_loader(rows, settings, False), desc="GS post-training calibration"):
+            latent = module.net.latents(perturbed.cuda())
+            count = max(2, round(latent.shape[-1]*settings["gs_density"]))
+            weights, scales = module.predictor(latent, count)
+            parameters["weights"].append(weights.cpu().numpy().reshape(-1))
+            parameters["scales"].append(scales.cpu().numpy().reshape(-1))
+    centers = {}
+    for name, values in parameters.items():
+        array = np.concatenate(values).reshape(-1, 1)
+        estimator = MiniBatchKMeans(n_clusters=64, random_state=settings["seed"], n_init=3, batch_size=4096)
+        centers[name] = np.sort(estimator.fit(array).cluster_centers_.reshape(-1))
+    np.savez(output/"gs_ptq_6bit.npz", **centers)
+    write_json(output/"calibration.json", dict(bits=6, source_ids=[r["id"] for r in rows],
+        positions="fixed uniform grid; no position payload", input_normalization=False,
+        scope="Bottleneck parameter centroids only; no measured waveform bitstream rate claimed"))
+
+
+def campaign(config, phase="all"):
+    """One explicit terminal command; phases are sequential to fit the 16-GB GPU."""
+    settings = config.parameters
+    required = {"run_dir", "train_manifest", "validation_manifest", "cache_dir", "expected_train_files",
+        "expected_train_speakers", "seed", "samples", "micro_batch", "accumulation", "steps",
+        "predictor_steps", "predictor_accumulation", "learning_rate", "loader_workers", "prepare_workers", "validation_examples",
+        "validation_interval", "checkpoint_interval", "gs_density", "gs_iterations", "gs_channels", "rvq_commitment", "gs_commitment"}
+    optional = {"stage_hours", "codec_warmup_steps", "mapped_cache", "cache_metadata"}
+    if config.kind != "pitchflower" or required-set(settings) or set(settings)-required-optional:
+        raise ValueError(f"PitchFlower settings mismatch: missing={required-set(settings)}, extra={set(settings)-required-optional}")
+    if "stage_hours" in settings:
+        hours = settings["stage_hours"]
+        if set(hours) != {"rvq", "gs", "predictor"} or any(
+                not math.isfinite(float(value)) or float(value) <= 0 for value in hours.values()):
+            raise ValueError("stage_hours must specify positive finite hours for rvq, gs and predictor")
+    if not isinstance(settings.get("codec_warmup_steps", 0), int) or settings.get("codec_warmup_steps", 0) < 0:
+        raise ValueError("codec_warmup_steps must be a nonnegative integer")
+    if not isinstance(settings.get("mapped_cache", True), bool):
+        raise ValueError("mapped_cache must be boolean")
+    if not isinstance(settings.get("cache_metadata", False), bool):
+        raise ValueError("cache_metadata must be boolean")
+    if settings["samples"] % 256 or (settings["samples"]//256+1) % 2:
+        raise ValueError("The mel frame count must be even for the reference strided architecture")
+    if min(settings[k] for k in ("prepare_workers", "micro_batch", "accumulation", "steps", "predictor_steps",
+                                  "predictor_accumulation", "validation_interval", "checkpoint_interval")) < 1:
+        raise ValueError("Counts must be positive")
+    if settings["loader_workers"] < 0 or settings["samples"] < 1024 or not 0 < settings["gs_density"] <= 1:
+        raise ValueError("Invalid worker count, crop length or Gaussian density")
+    if min(settings["gs_channels"], settings["gs_iterations"], settings["validation_examples"]) < 1:
+        raise ValueError("Channel, inner iteration and validation counts must be positive")
+    if phase != "prepare" and not torch.cuda.is_available():
+        raise RuntimeError("This recipe requires a CUDA GPU; --phase prepare can run on CPU")
+    # Setup downloads source/dependencies only. It never runs Trainer.fit itself.
+    from tools.setup_pitchflower import setup
+    setup(vocoder=phase in ("all", "rvq", "gs", "predictor"))
+    output = _path(settings["run_dir"])
+    output.mkdir(parents=True, exist_ok=True)
+    # One foreground campaign owns the output/checkpoint tree at a time.
+    with cache_lock(output/"campaign.lock"):
+        saved = output/"settings.json"
+        if saved.exists() and json.loads(saved.read_text()) != settings:
+            raise ValueError("Settings changed; use a new run_dir instead of silently changing a resumed experiment")
+        write_json(saved, settings)
+        references = {name: subprocess.check_output(["git", "-C", str(ROOT/"runs/vendor"/name), "rev-parse", "HEAD"], text=True).strip()
+                      for name in ("PitchFlower", "gs-codec")}
+        recipe = {name: file_hash(ROOT/name) for name in ("approaches/pitchflower/training/campaign.py", "approaches/pitchflower/model/pitchflower.py", "approaches/pitchflower/data.py")}
+        if (output/"provenance.json").exists():
+            if json.loads((output/"provenance.json").read_text())["recipe_sha256"] != recipe:
+                raise ValueError("Training recipe changed since checkpoint creation; preserve its source version to resume")
+        else:
+            write_json(output/"provenance.json", dict(created_utc=datetime.now(timezone.utc).isoformat(),
+                references=references, recipe_sha256=recipe, source=source_fingerprint(ROOT), environment=environment(),
+                papers={name: file_hash(ROOT/"literature"/name) if (ROOT/"literature"/name).exists() else None
+                        for name in ("pitchflower.pdf", "gs_bottleneck.pdf")}))
+        try:
+            train, validation, routine, calibrated = audit_data(settings, output)
+            print(f"Campaign outputs: {output}\nPhases: prepare -> RVQ -> GS -> GS predictor -> PTQ", flush=True)
+            if phase in ("all", "prepare"):
+                prepare(train+validation, settings, output)
+            for stage in ("rvq", "gs", "predictor"):
+                if phase in ("all", stage):
+                    fit(stage, train, routine, settings, output)
+            if phase in ("all", "calibrate"):
+                calibrate(calibrated, settings, output)
+            write_json(output/"progress.json", dict(stage=phase, status="complete"))
+        except BaseException as error:
+            progress_file = output/"progress.json"
+            progress = json.loads(progress_file.read_text()) if progress_file.exists() else {}
+            progress.update(status="interrupted" if isinstance(error, KeyboardInterrupt) else "failed",
+                            error=f"{type(error).__name__}: {error}")
+            write_json(progress_file, progress)
+            raise
