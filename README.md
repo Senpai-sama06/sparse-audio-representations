@@ -1,5 +1,68 @@
 # Sparse audio representations
 
+## Shared learned-function pilot (experiment 1)
+
+`approaches/parametric/learned.py` starts the learned-representation arm of
+experiment 1. It compares an uncentered PCA/SVD basis against shared conditional
+sine and SnakeBeta decoders. Both neural candidates have the same trainable
+Fourier features and FiLM conditioning; the activation differs. A small encoder
+maps a normalized component to a code. The shared decoder receives only the code
+and coordinates; its weights are stored once. Every component's mean and RMS
+gain are two additional transmitted scalars. This is not yet symbolic expression
+discovery, a learned selector, learned VMD, quantization or RVQ.
+
+The pilot has two separate data/model domains: direct 640-sample waveforms, and
+fixed eight-mode VMD plus its encoded residual. VMD receives only each isolated
+40 ms block. There is no overlap or stitching. Mode identities need not align
+across clips because the same decoder processes every component.
+
+Default frozen selection: 64 training speakers × 8 utterances × 8 nonoverlapping
+blocks (4096 blocks), 8 validation speakers × 4 utterances × 8 blocks (256), and
+8 test speakers with the same evaluation counts (256). Official train-clean-360,
+dev-clean and test-clean are local inputs. Speaker disjointness is checked;
+paths, utterance hashes and starts are in `data_manifest.json`. No quality-based
+block selection or downloads occur. This is a small training pilot, not a full
+corpus benchmark.
+
+```powershell
+./tools/train_parametric_representation.ps1 -CorpusRoot data/LibriSpeech
+```
+
+Code sizes 4/8/16/32/64 are trained jointly by cycling the active prefix. Each
+neural model runs 12,000 Adam steps (batch 32), validating every 1000. The loss is
+normalized component waveform MSE plus `1e-5` times mean squared code magnitude.
+Checkpoints are selected by mean whole-block validation NMSE across code budgets.
+Test blocks are evaluated only after checkpoint selection. Direct and VMD models
+are separately trained. Per-block scalar counts are `components × (code_size+2)`;
+shared decoder storage and encoder/decoder parameter counts are separate. These
+are unquantized float32 codes and do not establish a compressed bitrate.
+
+Training creates `last.ckpt` (optimizer and RNG state), `best.ckpt`, and independent
+`decoder_best.pt` assets. Identical settings/output resume from checkpoints;
+changed settings or source hashes require a new output. Small end-to-end smoke
+tests cover data preparation, all model/domain combinations, validation/test,
+asset+code decoding and HTML generation. Model tests also check masking, gain/
+mean inversion, decoder identity hashes and exact scalar accounting.
+
+The launcher returns a live dashboard (default http://127.0.0.1:8768/), a standalone
+audio/plot report and an archive index (http://127.0.0.1:8769/index.html). Data
+preparation is followed by actual training. Progress units combine prepared blocks,
+optimizer steps and final model evaluations; ETA is provisional. Reports refresh
+at validation checkpoints. Metrics name validation/test explicitly. Raw files,
+logs, caches and checkpoint assets remain under the chosen output directory.
+
+The previous two experiments have frozen progress/settings/metrics snapshots in
+`runs/parametric_reports/records/`, report checksums in `experiments.json`, and
+self-contained reports linked from `index.html`. Rebuild this archive with
+`python tools/register_parametric_runs.py`. The multi-window pilot is stopped at
+452/744; the isolated study completed 972/972. No raw results were deleted.
+
+Decode a new block from shared weights and its transmitted code only:
+
+```powershell
+python -m approaches.parametric.learned_payload decoder_best.pt CODE.json decoded.wav
+```
+
 ## Isolated 40 ms representation study
 
 The multi-window pilot was stopped after its implementation audit. Its completed

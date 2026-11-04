@@ -29,6 +29,13 @@ class ExperimentCase:
 # current command-line workflows remain the default until cases are listed.
 EXPERIMENTS: list[ExperimentCase] = []
 
+# Shared learned-function pilot for experiment 1 (fixed VMD; no RVQ):
+# from approaches.parametric.learned import run as train_shared_functions
+# EXPERIMENTS = [ExperimentCase("learned_mode_functions", lambda: train_shared_functions(
+#     corpus_root="data/LibriSpeech", output="runs/parametric_learned_representation",
+#     steps=12000, budgets=(4,8,16,32,64),
+# ))]
+
 # Isolated 40 ms capacity study: exactly one 640-sample block per testcase,
 # no overlap/stitching/quantization. Offsets are fixed before fitting.
 # from approaches.parametric.isolated import run as run_isolated
