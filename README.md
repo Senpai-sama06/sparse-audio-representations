@@ -1,5 +1,7 @@
 # Sparse audio representations
 
+Report instructions: [Documentation and results reports](documentation/REPORTS_README.md).
+
 ## Shared learned-function pilot (experiment 1)
 
 `approaches/parametric/learned.py` starts the learned-representation arm of

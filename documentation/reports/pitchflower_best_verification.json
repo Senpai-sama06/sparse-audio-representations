@@ -1,0 +1,21 @@
+{
+  "cases": 40,
+  "audio_clips": 120,
+  "spectrograms": 120,
+  "tables": 41,
+  "external_dependencies": [],
+  "style_or_script_elements": 0,
+  "html_bytes": 21900170,
+  "means": {
+    "stoi": 0.90491319896757,
+    "pesq_wb": 2.1628671258687975,
+    "vocoder_stoi": 0.9715575450955697,
+    "vocoder_pesq_wb": 3.4408994913101196
+  },
+  "bitrate_example": {
+    "latent_frames": 71,
+    "pitch_frames": 142,
+    "content_kbps": 3.3989361702127656,
+    "pitch_kbps": 3.021276595744681
+  }
+}
