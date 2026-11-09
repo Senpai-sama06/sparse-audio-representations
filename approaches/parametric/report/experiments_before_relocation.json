@@ -1,0 +1,77 @@
+[
+  {
+    "id": "multi_window_pilot",
+    "status": "stopped_by_user",
+    "jobs_completed": 452,
+    "jobs_total": 744,
+    "elapsed_seconds": 11054.926741361618,
+    "failures": 0,
+    "run_directory": "D:\\lrac2\\runs\\parametric_ablation_librispeech_1272_v2",
+    "report": "preliminary_multi_window_sweep_stopped_after_audit.html",
+    "report_bytes": 590899755,
+    "report_sha256": "30d653c0bd7021026bf11c41d8634c8a298b8d5ba83d9fb351b2fe691652fe78",
+    "snapshots": {
+      "progress.json": "b3d3e592401be63f8082137fa67d4ca0af8a98db44480081882361e58a320e3e",
+      "manifest.json": "98e82ab1dac59bf3986884f62e5e128cc7c48aa454e8c729ed7f9721333750f3",
+      "environment.json": "39c1f158e5ee644b3ccba6173f63c43dcd4da8261835b33ca3f6f1a3f939387a",
+      "metrics.csv": "ad67d6c1424c6ebd03631bff54ca7647ea9c7d4641e10e38d266117f7546c5f2",
+      "jobs.json": "465524254e2085d5aa2e16b84425c5412de0a823ced3c1a5982d14ce95b5d4c6"
+    }
+  },
+  {
+    "id": "isolated_40ms_capacity",
+    "status": "complete",
+    "jobs_completed": 972,
+    "jobs_total": 972,
+    "elapsed_seconds": 4734.053792715073,
+    "failures": 0,
+    "run_directory": "D:\\lrac2\\runs\\parametric_isolated_40ms_librispeech",
+    "report": "isolated_40ms_capacity_complete.html",
+    "report_bytes": 14174635,
+    "report_sha256": "629e3246c372c47014bf46f80b49035218cf2a314a6d40b1c56eeb7ad364859e",
+    "snapshots": {
+      "progress.json": "40bb24b311c7f75fc190e0759087816d7a1e4d6f5e198915c8678bd2166d8ca2",
+      "manifest.json": "486c7b7d435ef0442d38f142a0fd72eab2e7758b460983c4dbe0198e45cba97e",
+      "environment.json": "39c1f158e5ee644b3ccba6173f63c43dcd4da8261835b33ca3f6f1a3f939387a",
+      "metrics.csv": "6e5283c86a8c2c7f3fd761a5988ec20f4680c560721c98a65dfdb49ddc4101ad",
+      "selections.csv": "7b4e3eadc2eafd2f1f35e050952f8ce8d66e5682841290bfd10179aad1ab19c7",
+      "jobs.json": "2c7c03a81f86024738beb44d8c624d61720f8e85c78b435c51950c21fe461d73"
+    }
+  },
+  {
+    "id": "learned_representation_pilot",
+    "status": "complete",
+    "jobs_completed": 57224,
+    "jobs_total": 57224,
+    "elapsed_seconds": 772.3772122859955,
+    "failures": 0,
+    "run_directory": "D:\\lrac2\\runs\\parametric_learned_representation_pilot",
+    "report": "shared_representation_pilot_complete.html",
+    "report_bytes": 3661928,
+    "report_sha256": "f86a6fdb6c9f7341400fee04229c45f8e1bb63577afed12bd5f5c20783c9f99e",
+    "snapshots": {
+      "progress.json": "71cc3dc24d059b32bb64f72d24ac3def2b6cd564bbd5216623a9e9cb8451a5f4",
+      "manifest.json": "cc66776bdcc509079719bf8207d69e0982826a2a425cfc9a9c83fc458cf68262",
+      "environment.json": "39c1f158e5ee644b3ccba6173f63c43dcd4da8261835b33ca3f6f1a3f939387a",
+      "metrics.csv": "5636113b9fc35d09e15857d1f4488a4eafb17c67399052e84b120be894c3ae78",
+      "assets.json": "c5c6ea6f3575c1e5d1d14ddc74f215512f64bcec4a19250e95eccbd6086bb419",
+      "history.json": "33ee702b7cb281a00aabd503d357f1b664fd614fbaf8456ede5cfaf96ab8640d",
+      "training.csv": "646dcfa2d0c93e91921f4cef12b946fe48facc61106f99fc557c68ec29d7c5eb",
+      "data_manifest.json": "35e503c0d578cda9351371ce1eeb7a076572fcef3e228f277df7eac9c54c7195"
+    },
+    "live_progress": "http://127.0.0.1:8768/",
+    "note": "Exploratory shared representation pilot; does not discover explicit per-IMF functions."
+  },
+  {
+    "id": "symbolic_imf_discovery",
+    "status": "complete",
+    "jobs_completed": 1782,
+    "jobs_total": 1782,
+    "elapsed_seconds": 574.4978022575378,
+    "failures": 0,
+    "run_directory": "D:\\lrac2\\runs\\parametric_symbolic_imf_pilot",
+    "report": "symbolic_imf_pilot_complete.html",
+    "report_bytes": 9270593,
+    "live_progress": "http://127.0.0.1:8770/"
+  }
+]

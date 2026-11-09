@@ -1,0 +1,22 @@
+{
+  "status": "complete",
+  "pid": 31960,
+  "jobs_total": 57224,
+  "jobs_completed": 57224,
+  "current_job": "vmd:snakebeta",
+  "stage": "validation",
+  "frames_completed": 12000,
+  "frames_total": 12000,
+  "failures": 0,
+  "unit_definition": "One data block preparation, optimizer step, PCA fit, or final model evaluation; ETA provisional",
+  "device": "cuda",
+  "training_stage": "shared-representation experiment 1",
+  "elapsed_seconds": 772.3772122859955,
+  "heartbeat_unix": 1793766350.657846,
+  "percent": 100.0,
+  "seconds_per_job_by_stage": {},
+  "eta_note": "Provisional: job cost varies by decomposition, family and window; excludes pauses.",
+  "loss": 0.8821855187416077,
+  "latent_dimension": 64,
+  "eta_seconds": 0
+}

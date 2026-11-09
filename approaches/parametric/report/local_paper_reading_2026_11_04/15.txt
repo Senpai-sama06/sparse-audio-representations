@@ -1,0 +1,901 @@
+                                                                                          (Exhaustive) symbolic
+                                                                                          regression and model selection
+                 royalsocietypublishing.org/journal/rsta
+                                                                                          by minimum
+                                                                                          description length
+                 Review                                                                   Harry Desmond
+                                                                                          Institute of Cosmology and Gravitation, University of Portsmouth, Portsmouth, UK
+                 Cite this article: Desmond H. 2026                                           HD, 0000-0003-0685-9791
+                 (Exhaustive) symbolic regression and model
+                 selection by minimum description length.                                   Symbolic regression (SR) is the machine learning (ML)
+                 Phil. Trans. R. Soc. A 384: 20240584.                                      method for learning functions from data. After a
+                 https://doi.org/10.1098/rsta.2024.0584                                     brief overview of the SR landscape, I will describe
+                                                                                            the two main challenges that traditional algorithms
+                                                                                            face: they have an unknown (and probably significant)
+                 Received: 31 May 2025                                                      probability of failing to find any given good function,
+                 Accepted: 25 June 2025                                                     and they suffer from ambiguity and poorly justified
+                                                                                            assumptions in their function‑selection procedure.
+                                                                                            To address these, I propose an exhaustive search
+                 One contribution of 15 to a discussion meeting                             and model selection by the minimum description
+                 issue ‘Symbolic regression in the physical                                 length (MDL) principle, which allows accuracy and
+                 sciences’.                                                                 complexity to be directly traded off by measuring each
+                                                                                            in units of information. I showcase the resulting pub‑
+                                                                                            licly available Exhaustive Symbolic Regression (ESR)
+                 Subject Areas:                                                             algorithm on three open problems in astrophysics:
+                 astrophysics, cosmology, algorithmic                                       the expansion history of the universe, the effective
+                 information theory, artificial intelligence,                               behaviour of gravity in galaxies and the potential
+                                                                                            of the inflaton field. In each case, the algorithm
+                 computational physics
+                                                                                            identifies many functions superior to the literature
+                                                                                            standards. This general‑purpose methodology should
+                 Keywords:                                                                  find widespread utility in science and beyond.
+                                                                                               This article is part of the discussion meeting issue
+                 symbolic regression, minimum description
+                                                                                            ‘Symbolic regression in the physical sciences’.
+                 length, machine learning
+
+
+
+                 Author for correspondence:
+                                                                                          1. Introduction
+                 Harry Desmond
+                 e-mail: harry.desmond@port.ac.uk                                         A key activity in science is summarizing observational
+                                                                                          data with functional fits. Either one wants a ‘fitting func‑
+                                                                                          tion’ with which to propagate some correlation into an‑
+                                                                                          other part of the analysis, or one wishes to learn the ‘law’
+                                                                                          that governs the data. Traditionally, these two tasks have
+
+
+                                                                                            © 2026 The Authors. Published by the Royal Society under the terms of
+                                                                                            the Creative Commons Attribution License http://creativecommons.org/licenses/
+                                                                                            by/4.0/, which permits unrestricted use, provided the original author and source
+                                                                                            are credited.
+Downloaded from royalsocietypublishing.​org/​rsta/​article-pdf/​doi/​10.​1098/​rsta.​2024.​0584/​6131786/​rsta.​2024.​0584.​pdf
+by guest
+on 04 November 2026
+                     been tackled in different ways. The creation of fitting functions is normally done ‘by eye’: one
+                                                                                                                                                                                                                                                              2
+                     plots the data and estimates the types of operators and their composition that may give a good
+                     fit. This is supplemented with a trial‑and‑error step: if a given functional form does not give quite
+
+
+
+
+                                                                                                                                  .........................................................................................................................
+                                                                                                                                                                                                                                     royalsocietypublishing.org/journal/rsta Phil. Trans. R. Soc. A 384: 20240584
+                     the right asymptotic behaviour, for example, another one is tried and the process is iterated until
+                     a satisfactory fit is achieved. Such a procedure has on occasion been implemented also for learn‑
+                     ing ‘scientific laws’, the most notable example being Planck’s (and his antecedents’) discovery of
+                     (parts of) the blackbody function. More often, however, the discovery of laws is achieved primar‑
+                     ily by theory. Partially or completely independently of data, the theorist proposes principles or
+                     hypotheses that lead to certain functional relations between observables. These functions are then
+                     tested on the data to assess the theory’s veracity.
+                          This traditional approach has drawbacks. How can one be sure that the fitting functions one
+                     creates are in any sense optimal? One way is for the function to find a theoretical underpinning, as
+                     happened with the blackbody formula through quantum mechanics. But purely empirically, there
+                     is no guarantee that any particular aspect of the function that may be important in applications of
+                     it—say, its interpolation or extrapolation behaviour—is robust unless one has a quantitative as‑
+                     sessment of the function’s quality relative to others. Even if such a quality metric were available,
+                     assessing (all?) other possible functions seems infeasible. The same concerns apply to physical
+                     laws extracted empirically: the true features of the law may not be captured by an imperfect func‑
+                     tion generation procedure. The top‑down approach (creating functions in an extra‑empirical way
+                     before bringing in the data), of course, has different concerns: in that case, one must assess the
+                     reliability of theoretical arguments rather than a regression procedure. Might there be a way to
+                     greatly expand the capacity to learn laws directly from data, mitigating or even obviating these
+                     concerns?
+                          Enter symbolic regression (SR), the machine learning (ML) framework for extracting functions
+                     directly from data. SR aims to automate and perfect the process described above. To explain it,
+                     it is useful to begin with the better‑known form of regression, which I term regular or numerical.
+                     Here, one specifies a priori the functional form that one wants to fit, and the regression is only
+                     over the numerical values of the function’s free parameters. SR generalizes this procedure by
+                     bringing the functional form itself—the operators and their ordering—into the search space. This
+                     substantially increases the difficulty: not only is the search space much enlarged, but the lack of
+                     continuity between operators invalidates the use of techniques such as gradient descent that form
+                     the staple of parameter optimization. But there are also clear advantages, most obviously that in
+                     regular regression the functional form one imposes is likely to be suboptimal or just plain wrong.
+                     SR removes confirmation bias because the user is not required to make that important decision.
+                          While regular regression has a long and venerable history, the advent of ML has introduced
+                     some additional ‘competitors’ to SR. These are methods like neural networks, Gaussian pro‑
+                     cesses and random forests that can capture the correlations present in a dataset to high fidelity by
+                     compounding very many simple functions. These methods excel at ‘mindless’ regression and clas‑
+                     sification tasks: they can produce accurate predictions within the domain of their training set, but
+                     very rarely produce scientific insight into a system. This makes them best suited to summarizing
+                     correlations that one wishes to treat entirely as ‘nuisance’, either because the underlying physics
+                     is already thoroughly well‑known (e.g. the emergent behaviour of ‘baryonic physics’ in galaxy
+                     evolution), or because it is not believed to be possible to learn basic science from them. SR, on the
+                     other hand, excels in cases where one does care about the functional form of a relation, perhaps be‑
+                     cause one believes it to reflect the meaningful physics governing the system. When successful, SR
+                     uncovers either the true equation that generated the data—if there is one—or else simply the best
+                     possible functional representation. That said, SR can also be valuable for constructing emulators
+                     without any demand for, or benefit to be gained from, interpretability: such symbolic emulators
+                     are highly portable (e.g. they do not require the neural network emulator’s constrained weights
+                     and biases), rapid to evaluate and potentially very accurate (e.g. [1]).
+                          Exploring the parameter space is quite different when this includes operators. The most com‑
+                     mon method for generating trial functions is called a genetic algorithm (GA), which works by
+
+Downloaded from royalsocietypublishing.​org/​rsta/​article-pdf/​doi/​10.​1098/​rsta.​2024.​0584/​6131786/​rsta.​2024.​0584.​pdf
+by guest
+on 04 November 2026
+                     analogy with natural selection [2–4]. This begins by creating a population of functions with typi‑
+                                                                                                                                                                                                                                                              3
+                     cally random examples. One then calculates the ‘fitness’ of each one, which is its accuracy on the
+                     target dataset, and kills off the functions that fail some fitness cut. Then the next generation of
+
+
+
+
+                                                                                                                                  .........................................................................................................................
+                                                                                                                                                                                                                                     royalsocietypublishing.org/journal/rsta Phil. Trans. R. Soc. A 384: 20240584
+                     functions is produced through mutation and crossover. A mutation changes one part of a function,
+                     either a single operator or connected set of operators. A crossover mixes parts of two functions by
+                     swapping branches to produce two new functions. This new generation is then assessed against a
+                     stopping criterion—for example, whether a function of sufficient accuracy has been produced, or
+                     a time limit—and if the criterion is not met, the process is repeated in the hope of producing ever‑
+                     better functions. Popular algorithms in this category are Operon [5], PySR [6] and DataModeler
+                     (a proprietary Mathematica add‑on; [7]).
+                         This review focuses on an alternative, non‑stochastic approach to SR. A particular emphasis
+                     will be on the model selection metric, i.e. the quantity used to determine how good trial functions
+                     are. I begin by describing the traditional way in which functions are evaluated (§2). I then describe
+                     the approach of Exhaustive Symbolic Regression (ESR), which overhauls both the function gener‑
+                     ation and function assessment methodology (§3). Emphasis here is on the minimum description
+                     length (MDL) selection metric (§4). I then describe three astrophysical applications of ESR + MDL,
+                     showcasing its power on the expansion rate of the universe (§5a), galaxy dynamics (§5b) and cos‑
+                     mic inflation (§5c). I then describe future developments and conclude. Throughout the article log
+                     has base e.
+
+
+
+
+                     2. Traditional function assessment
+                     Suppose we have a set of trial functions (e.g. from a GA)—how should we score them? Let us con‑
+                     sider the analogy with regular regression again. The analogues of candidate functions in this case
+                     are points in the space of the pre‑defined function’s free parameters. In a Bayesian context, these
+                     are scored by two metrics: the likelihood they give the data, and their prior probability. These
+                     multiply by Bayes’ theorem, normalized by the evidence, to form the posterior. The best solution
+                     is the one that maximizes the posterior, with an uncertainty given by a confidence interval of the
+                     posterior probability distribution. In a frequentist context, one would use just the likelihood.
+                         In SR, focusing on the likelihood or posterior produces an immediate problem. Now that we are
+                     allowed to vary operators, we can produce arbitrarily complex functions, which typically means
+                     that they can be made arbitrarily accurate on the dataset in question. As an example, consider
+                     that one can perfectly fit any set of N datapoints with a polynomial of degree N − 1. But such
+                     extremely complex functions that maximize the likelihood are probably severely overfitted and
+                     hence extrapolate or generalize very poorly. This means that some measure of simplicity needs
+                     to be included in the function‑selection procedure: one wants some optimal trade‑off between
+                     simplicity and accuracy.
+                         The simplest way of doing this is (unfortunately) the approach traditionally taken in SR; this is
+                     to include simplicity as an incommensurate second objective in the regression. This is quantified
+                     with a ‘complexity’ heuristic, for example, the number of nodes in the function’s tree represen‑
+                     tation (i.e. the number of operators, parameters or variables in the function). Functions are then
+                     plotted on the two‑dimensional plane of accuracy (measured by maximum likelihood or pos‑
+                     terior value, or its poor‑man’s version mean square error (MSE)) and complexity, producing a
+                     Pareto (two‑objective) optimization problem. There is a privileged set of functions on the Pareto
+                     plane, which are the most accurate for their complexity. These functions—one at each complex‑
+                     ity value—form the Pareto front and are termed ‘Pareto optimal’: any other function has higher
+                     inaccuracy and/or complexity and is ‘Pareto dominated’ by the optimum functions.
+                         From this perspective, all functions along the Pareto front are ‘the best’, and they cannot be
+                     compared. No metric is provided for how much gain in accuracy is required for an increment
+                     of complexity to be warranted. A second heuristic is therefore required for deciding from where
+                     along the Pareto front to select the best function(s). One could eyeball the functions and pick the
+Downloaded from royalsocietypublishing.​org/​rsta/​article-pdf/​doi/​10.​1098/​rsta.​2024.​0584/​6131786/​rsta.​2024.​0584.​pdf
+by guest
+on 04 November 2026
+                     one deemed to be most attractive, one could decide one wants a function of a certain complex‑
+                                                                                                                                                                                                                                                              4
+                     ity, one could score the functions on both a training and test dataset and look for the complexity
+                     at which the accuracy of the latter starts to become significantly worse than that of the former
+
+
+
+
+                                                                                                                                  .........................................................................................................................
+                                                                                                                                                                                                                                     royalsocietypublishing.org/journal/rsta Phil. Trans. R. Soc. A 384: 20240584
+                     (indicative of overfitting), or one could stipulate some function of accuracy and complexity to de‑
+                     termine the final score. These procedures have no rigorous justification and are up to the user,
+                     yet they may radically alter the outcome of the regression. We shall see in the next section that a
+                     superior method exists.
+
+
+
+                     3. Exhaustive Symbolic Regression
+                     (a) Motivation and operation
+                     The traditional approach to SR outlined above faces two major challenges. First, a stochastic search
+                     has some completely unknown probability of failing to find any given good function. This may
+                     not be a serious issue if that probability is small in practice, but we shall see in §3b that this is
+                     not the case. The failure probability is a function of the algorithm’s hyperparameters, but one
+                     does not know in advance how to set those to maximize efficacy for the dataset in question.
+                     This makes SR results untrustworthy, as there may be any number of better‑performing func‑
+                     tions than those found. Second, judging equations on their Pareto‑optimality depends crucially
+                     on the definitions of accuracy and complexity. Changing these will move functions around on
+                     the accuracy–complexity plane and change the ones that lie on the Pareto front. Most algorithms
+                     adopt MSE as the accuracy measure, but this only accurately describes the data likelihood if the
+                     uncertainties on the data points are Gaussian and constant. More importantly, the complexity
+                     definition is largely arbitrary: some approaches use the number of operators, parameters and vari‑
+                     ables in the function, some use the depth of the function’s tree representation, while others adopt
+                     behavioural rather than structural measures like the degree to which the functions are nonlinear
+                     [8]. The incommensurability of accuracy and complexity then necessitates another unmotivated
+                     heuristic.
+                         ESR [9] is designed to overcome these problems. The first is solved by searching function space
+                     exhaustively, guaranteeing discovery of each and every good function and the second by replac‑
+                     ing complexity heuristics with a precise measure of the information content of the function called
+                     its description length.
+                         To do an exhaustive search, ESR generates every single possible function from some basis set
+                     of operators up to a maximum complexity, where complexity is defined as the number of nodes in
+                     the function’s tree representation. The operator basis set and maximum complexity are the only
+                     things that must be specified by the user, although the maximum complexity is typically set by
+                     the computational resources available. Generating all functions involves generating all possible
+                     tree templates, where the nodes are labelled by their arity (number of arguments), and decorating
+                     the trees by considering all permutations of the operators in the basis set with the correct arity.
+                     We then simplify the functions and remove duplicates using a set of function‑comparison rules
+                     (tree reordering, parameter permutations, simplifications, reparametrization invariance, parameter combi‑
+                     nations). This establishes the unique functions, which are all inequivalent to each other and are
+                     representatives of sets of behaviourally identical but structurally different functions (e.g. 𝜃x and
+                     x∕𝜃, where 𝜃 is a free parameter). Finally, we find the maximum‑likelihood values of the free pa‑
+                     rameters appearing in the unique functions through nonlinear optimization and broadcast these
+                     results to all other members of the equivalent sets using the Jacobians of the transformations that
+                     relate them. Although the maximum‑likelihood values of all functions in such a set must be iden‑
+                     tical, they may possess different description lengths (see below), and hence our search for the
+                     lowest description length function ranges over these variants as well as the unique functions. Full
+                     details may be found in [9].
+                         This is a computationally expensive procedure owing to the huge number of possible func‑
+                     tions at higher complexities. One’s computational budget, therefore, limits the complexity one
+Downloaded from royalsocietypublishing.​org/​rsta/​article-pdf/​doi/​10.​1098/​rsta.​2024.​0584/​6131786/​rsta.​2024.​0584.​pdf
+by guest
+on 04 November 2026
+                     can reach. A typical limit is complexity 10, for which a full ESR run takes approximately 200 CPU
+                                                                                                                                                                                                                                                              5
+                     hours (the scaling with complexity is exponential, so even greatly enhanced computational re‑
+                     sources could not extend the maximum complexity by greater than, or approximately equal to, 1).
+
+
+
+
+                                                                                                                                  .........................................................................................................................
+                                                                                                                                                                                                                                     royalsocietypublishing.org/journal/rsta Phil. Trans. R. Soc. A 384: 20240584
+                     This depends on the operator basis set (the more operators, the more functions at given complexity
+                     and hence the lower the maximum achievable complexity) and is necessarily approximate because
+                     the procedure is imperfectly parallelizable. Although the parameter fitting is embarrassingly par‑
+                     allelizable (each function is treated completely separately from all the others), the simplification
+                     steps must compare functions and hence cannot be done in isolation. Note that only the parameter
+                     fitting is dataset‑specific: the function generation and simplification depend only on the opera‑
+                     tor set, allowing the user to benefit from publicly available pre‑computed function sets [10]. This
+                     reduces runtime by more than a factor of 2. For reference, straight lines and power laws have com‑
+                     plexity 5, while the Navarro–Frenck–White (NFW; [11]) function describing halo density profiles
+                     (𝜃0 (x(x + 𝜃1 )𝜃2 )−1 ) has complexity 9: any function not much more complex is within the scope of
+                     ESR. The full ESR code is publicly available.1
+
+
+
+                     (b) Benchmarking
+                     To illustrate the advantage of a guaranteed search, this section demonstrates the unreliability of
+                     stochastic algorithms. We take perhaps the simplest benchmark dataset (feynman_I_6_2a) from
+                     the Penn Machine Learning Benchmarks dataset, as used in the SRBench competition [12]. This com‑
+                     prises 105 datapoints generated from an unknown univariate function without scatter. In addition
+                     to ESR, we ran five state‑of‑the‑art SR algorithms on the data: PySR, DataModeler [7], FFX [13],
+                     QLattice [14] and Operon. The test was conducted under exam conditions, with each algorithm
+                     given equal opportunity (full details in [9]).
+                        Figure 1 shows the Pareto front of MSE against complexity returned by each algorithm. The
+                     most noticeable feature is the cliff in MSE produced by ESR at complexity 7, which indicates a
+                     substantial improvement in the functional fit not seen by any other algorithm. The others can dis‑
+                     cover the most accurate functions up to complexity 5, but beyond that, they find only marginally
+                     improved solutions. On closer inspection, it is seen that not only has ESR produced the best‑fitting
+                     function, but in fact, it has achieved the holy grail of SR, which is to find the true function that
+                                                                                     2
+                     generated the data. The best complexity‑7 function is y = 𝜃1 𝜃0x , where 𝜃0 = 0.6065 and 𝜃1 = 0.3989.
+                                                           √             √
+                     This is remarkably similar to 𝜃0 = 1∕ e and 𝜃1 = 1∕ 2𝜋, suggesting that the data were drawn from
+                     a standard normal distribution. Inputting these exact values for the parameters yields an MSE
+                     = 3 × 10−33 , which is zero to within machine precision. That ESR did not achieve this directly is
+                     due to its numerical tolerance in the parameter optimization, which also explains why slightly
+                     different MSE values are produced for the variants of the standard normal at complexities 8–10.
+                     The other SR algorithms gave no indication of this true structure but simply produced approx‑
+                     imate fitting functions. The exception to this is Operon, which does in fact produce a standard
+                     normal, albeit overparameterized, so that it appears at complexity 11.
+                        The conclusion is that most SR algorithms fail even on very simple problems.
+
+
+
+                     4. The minimum description length principle
+                     With ESR, we are guaranteed not to miss any function (built from the user‑defined basis operator
+                     set and up to the maximum complexity), but the problem of ranking them remains. Placing them
+                     on the accuracy–complexity plane is sure to construct the true Pareto front (as in figure 1), but
+                     this does not address the arbitrariness of complexity measure or incommensurability of complex‑
+                     ity and accuracy. We need a metric that can put accuracy and complexity on the same footing to
+                     produce an objective, one‑dimensional ranking.
+
+                     1
+                         https://github.com/DeaglanBartlett/esr
+
+Downloaded from royalsocietypublishing.​org/​rsta/​article-pdf/​doi/​10.​1098/​rsta.​2024.​0584/​6131786/​rsta.​2024.​0584.​pdf
+by guest
+on 04 November 2026
+                                                                                                                                                                                                                                                                               6
+
+
+
+
+                                                                                                                                                   .........................................................................................................................
+                                                                                                                                                                                                                                                      royalsocietypublishing.org/journal/rsta Phil. Trans. R. Soc. A 384: 20240584
+                     Figure 1. Pareto front of MSE against function complexity produced by six SR algorithms on the feynman_I_6_2a bench-
+                     mark dataset. Only ESR and Operon identify that the data are drawn from a standard normal, and only ESR finds this function
+                     in its simplest form.
+
+
+
+                         Such an upgrade is analogous to that from maximum‑likelihood to Bayesian inference. Con‑
+                     sider deciding between two models for some data. Simply considering the maximum‑likelihood
+                     value, the more complex model is likely to be preferred, a procedure with no safeguard against
+                     overfitting. But the model selection metric of Bayesian inference—the Bayesian evidence—naturally
+                     penalizes the more complex model; this model has lower prior values over the region of parameter
+                     space that the data prefers, so it is less predictive. This is reflected in approximations such as the
+                     Bayesian information criterion, which trade‑off accuracy (maximum‑likelihood value L̂ ), with the
+                     number of free parameters p. The addition of another parameter must increase the likelihood by
+                     some minimum amount for it to be warranted by the data. An heuristic measure such as the PySR
+                     score for combining accuracy and complexity [15] is akin to making up a function for trading off
+                     L̂ and p in ignorance of the evidence.
+                         How can we generalize this argument to include also a penalization for more complex struc‑
+                     tures of functions, as well as more (and more finely tuned) parameters, as assessed by the evi‑
+                     dence? The answer is quite simple (perhaps the reader can already guess), but we shall find it
+                     instructive to come at it from the new angle of information theory.
+                         Why do we want a functional fit in the first place? From an information‑theoretic perspective, it
+                     is to provide a more efficient representation of the data: instead of communicating the full dataset
+                     directly, one can hope to convey almost as much by communicating the function instead, which
+                     requires many fewer bits. In the limiting case in which the function fits the data perfectly, this
+                     is completely lossless; otherwise, one must either accept a loss of information or supplement the
+                     communication with the residuals of the data around the function’s expectation, allowing the data
+                     to be fully reconstructed. This is formalized in the MDL principle, which states that the goodness
+                     of each functional fit is quantified by the number of nats (log‑e bits) of information needed to con‑
+                     vey the data with the help of the function, which is called the description length [16,17]. The best
+                     function minimizes this.
+                         This requires communicating the function, or hypothesis H, and the residuals D|H, where D
+                     denotes the data. This may be written as L(D) = L(H) + L(D|H), where L is the description length
+                     operator. (L(D|H) may alternatively be considered the information loss, which acts as a penaliza‑
+                     tion term.) How many nats are needed for each piece? Under an optimal coding scheme called
+                     Shannon–Fano [18], the residual term is simply the minimum negative log‑likelihood, describing
+                     the function’s accuracy on the data: L(D|H) = − log(L̂ ). L(H) comprises the information content of
+                     the operators in the function and the values of any free parameters it contains. If the function’s
+Downloaded from royalsocietypublishing.​org/​rsta/​article-pdf/​doi/​10.​1098/​rsta.​2024.​0584/​6131786/​rsta.​2024.​0584.​pdf
+by guest
+on 04 November 2026
+                     tree contains k nodes (what we are calling the function’s complexity) populated by n distinct oper‑
+                                                                                                                                                                                                                                                                                    7
+                     ators, there are nk possible permutations corresponding to log(nk ) = k log(n) nats of information.
+                     Note that the value of this depends on the operator basis set: for example, it is smaller for tan(x)
+
+
+
+
+                                                                                                                                                        .........................................................................................................................
+                                                                                                                                                                                                                                                           royalsocietypublishing.org/journal/rsta Phil. Trans. R. Soc. A 384: 20240584
+                     (if tan is included in the operator set) than sin(x)/cos(x) (if only sin, cos and ÷ are included). Any
+                                                                                                                  ∑
+                     natural numbers cj arising as part of the function simplification process are encoded in j log(cj )
+                     further nats.
+                         Finally, we must encode the values of the maximum‑likelihood parameters, 𝜃̂i . This is done by
+                     choosing a precision ∆i with which to record the ith parameter, thus representing it as |𝜃i |∕∆i in‑
+                     crements encoded in log(|𝜃i |∕∆i ) nats. The larger ∆i , the fewer nats are required to convey |𝜃i |∕∆i ,
+                     but the worse the hit to the likelihood when 𝜃i is rounded to the nearest ∆i . We choose the ∆i
+                     that optimizes this trade‑off to produce the lowest total description length. This is found to be
+                     at ∆i = (12∕Iii )1∕2 , where I is the observed Fisher information matrix at the maximum‑likelihood
+                                                |
+                                     𝜕 2 log L ||
+                     point, Iij = −             | . The sign of the parameter must be communicated with a further log(2)
+                                      𝜕𝜃i 𝜕𝜃j ||| ̂
+                                                  𝜃
+                     nats. Putting this all together produces our final formula for the description length [9],
+                                                                                                               p
+                                                                                       p          ∑            ∑  1
+                                                  ̂ + k log(n) −
+                                   L(D) = − log(L(𝜃))                                    log(3) +   log(cj ) +   ( log(Iii ) + log(|𝜃̂i |)) .   (4.1)
+                                                                                       2          j            i
+                                                                                                                  2
+
+                     This is the quantity with which we score functions, lower being better.
+                        We seem to have gone a long way from the Bayesian evidence discussed at the start of the
+                     section. In fact, we have unknowingly come full circle. Consider the generalization of the evi‑
+                               (    )
+                     dence Z D|fi for the probability of function fi given the data, including explicitly a prior P(fi ) on
+                     the function itself,
+                                                                                               ( )
+                                           (     )    1     (          ) (       ) ( )        P fi  (    )
+                                          P fi |D =      ∫ P D|fi , 𝜽 i P 𝜽 i |fi P fi d𝜽 i ≡      Z D|fi .          (4.2)
+                                                    P(D)                                      P(D)
+                     Up to the overall normalization term P(D) (the probability of getting the data from any function),
+                     this simply multiplies the standard evidence by the function prior. Generalizing the implemen‑
+                     tation of Occam’s razor with regard to parametric complexity, it seems clear that in the Bayesian
+                     context, the penalization of structural complexity must derive from this functional prior term. Just
+                     as introducing additional parameters is apt to lower the prior over the high‑likelihood region
+                     of numerical parameter space, introducing additional operators should lower the prior over the
+                     high‑likelihood region of functional parameter space. The more operators one has, the less likely
+                     any given combination is. This is the ‘quite simple’ solution alluded to above.
+                         How does this relate to L(D)? To see the connection, calculate Z under the Laplace approxima‑
+                     tion, which treats the posterior as a multidimensional Gaussian around the maximum‑posterior
+                     point
+                                (     )         ( )        (    )         ( )           p        1          H
+                         − log P fi |D ≃ − log P fi − log Z D|fi ≃ − log P fi − log Ĥ − log 2𝜋 + log det Î ,                                  (4.3)
+                                                                                        2        2
+                     where the first relation neglects the overall normalizing constant P(D) and the second implements
+                                                                                  H
+                     the Laplace approximation; H denotes the posterior and Î is the observed Fisher information
+                     matrix for the posterior at the maximum‑posterior point. Equations (4.3) and (4.1) now look suspi‑
+                     ciously similar: both have terms depending on the maximum‑likelihood value, the number of free
+                     parameters and the observed Fisher information. It is simple to show [19] that the two equations
+                     are effectively equivalent provided
+                                                              ( )             ∑
+                                                       − log P fi = k log n +   log c𝛼 .                           (4.4)
+                                                                                                               𝛼
+
+                     In other words, the description length is nothing more than (the negative log‑likelihood of) the
+                     Bayesian probability for the model under a specific choice of prior that penalizes more structurally
+                     complex functions.
+Downloaded from royalsocietypublishing.​org/​rsta/​article-pdf/​doi/​10.​1098/​rsta.​2024.​0584/​6131786/​rsta.​2024.​0584.​pdf
+by guest
+on 04 November 2026
+                         This parallel also reveals a key freedom we have in calculating L(D). In Bayesian statistics,
+                                                                                                                                                                                                                                                                      8
+                     priors are subjective, representing our degree of belief before measurements are made. We may
+                                                                                      ∑
+                     therefore consider replacing the functional prior k log(n) + j log(cj ) by something else. Why
+
+
+
+
+                                                                                                                                          .........................................................................................................................
+                                                                                                                                                                                                                                             royalsocietypublishing.org/journal/rsta Phil. Trans. R. Soc. A 384: 20240584
+                     would we want to do that? One reason could be that the prior is completely ignorant of the struc‑
+                     ture of successful functions in the domain in question, for example, those that describe ‘more
+                     physical’ solutions. As an example, suppose one is considering an oscillatory system and wishes
+                     to assess whether some response goes as sin(x1 ) + sin(x2 ) or sin(sin(x1 + x2 )). These possess ex‑
+                     actly the same operators and hence have identical values of k log(n). However, our background
+                     physics knowledge tells us that oscillatory systems are frequently described by sums of sines but
+                     very rarely nested sines, so it is intuitively reasonable that our prior should favour the former
+                     function.
+                         This may be formalized by adapting an algorithm from language processing called the Katz
+                     back‑off model [20]. This takes in a training set of equations describing successful functions within
+                     some pertinent domain, from which it learns probabilities of operator combinations. A hyperpa‑
+                     rameter controls the length of these combinations, and another controls the minimum number
+                     of occurrences of the combination in the training set for its probability to be directly calculated;
+                     for combinations that do not appear that many times, the algorithm ‘backs off’ to instead con‑
+                     sider a combination of one shorter length. This method, therefore, models prior probabilities for
+                     SR‑generated functions according to their similarity to those in the training set, the hope being
+                     (i) that that set successfully describes something about the problem in question, and (ii) that that
+                     success is reflected in the prevalence of various operator combinations and hence may be learnt
+                     by the model. We have constructed an implementation of the Katz model, which may readily be
+                                                                           ∑
+                     used as a drop‑in replacement for the k log(n) + j log(cj ) prior [19],2 where it is also shown to
+                     perform well on a variety of benchmark tests.
+
+
+                     5. Astrophysical applications
+                     We want SR whenever we want a functional form for some relation. Sometimes, theory (estab‑
+                     lished or speculative) predicts a function, and we want to know how good it is. At other times,
+                     there is no prediction, but we want either empirical inspiration for the governing law or a fit‑
+                     ting formula to summarize the phenomenology. This section describes three cases in the former
+                     category, where concordance cosmology, gravity theory or inflationary model building makes
+                     a prediction in astrophysics. We wish to see how well it performs relative to all other possible
+                     predictions and whether we could have recovered the theory directly from the empirical data.
+
+
+                     (a) The cosmic expansion rate
+                     Cosmology studies the overall structure and evolution of the universe. The standard cosmological
+                     model is called ΛCDM because it posits that the present‑day universe consists primarily of dark
+                     energy (Λ) and cold dark matter (CDM). ΛCDM makes predictions called the Friedmann equations
+                     for the expansion rate H of the universe as a function of time. They are written not in terms of time
+                     directly, which is unobservable in cosmology, but rather in terms of redshift z, which describes
+                     the amount by which photons’ wavelengths have been stretched owing to the expansion of the
+                     universe en route to us. This acts as a proxy for time, with higher redshift meaning further into
+                     the past.
+                        The simplest Friedmann equation, assuming matter is pressureless, is
+
+                                                                            H2 (z) = H20 (ΩΛ + Ωm (1 + z)3 ),                     (5.1)
+
+                     where H0 ≡ H(0) is the current expansion rate and ΩΛ and Ωm are dimensionless quantities de‑
+                     scribing the relative prevalence of dark energy and dark matter, respectively. This equation can
+
+                     2
+                         https://github.com/DeaglanBartlett/katz
+
+Downloaded from royalsocietypublishing.​org/​rsta/​article-pdf/​doi/​10.​1098/​rsta.​2024.​0584/​6131786/​rsta.​2024.​0584.​pdf
+by guest
+on 04 November 2026
+                                                                                                                                                                                                                                                                               9
+
+
+
+
+                                                                                                                                                   .........................................................................................................................
+                                                                                                                                                                                                                                                      royalsocietypublishing.org/journal/rsta Phil. Trans. R. Soc. A 384: 20240584
+                     Figure 2. Left: Top 150 ESR H(z) functions overplotted on the CC data (upper panel), and the residuals from equation (5.1)
+                     (lower panel). Right: Pareto fronts for both datasets with the literature standards (Friedmann equations) shown as separate
+                     symbols. Reproduced from [9].
+
+
+                     be fitted to H(z) data and its parameters constrained. We could even calculate the goodness‑of‑fit
+                     relative to alternative functions, for example, with different equations of state for dark energy or
+                     dark matter, through the Bayesian evidence. But this procedure necessarily specifies the models
+                     under consideration a priori and can only rank them against each other; how can we see how good
+                     the model is relative to all possible others?
+                         SR offers the promise of determining the optimal form of H(z) directly from the data, without
+                     requiring theorists to first come up with trial functions. In particular, ESR produces the complete
+                     list of all possible (simple) H(z) functions and scores them on the data, producing an objective
+                     ranking from which one can see how any given model fares relative to all others. This is the closest
+                     one can come to absolute goodness‑of‑fit testing in a Bayesian context.
+                         We use two datasets to do this [9]. The first, simpler datasets involved cosmic chronometers
+                     (CCs), stellar populations in galaxies that evolve passively, such that their relative ages can be
+                     determined from spectroscopy. Combined with the difference in their measured redshifts, this
+                     affords a determination of ∆z∕∆t, a discrete approximation to −(1 + z)H(z). This dataset contains
+                     32 points and derives from [21]. The second utilizes Type Ia Supernovae (SNe), which are explo‑
+                     sions of massive stars at the end of their lives. SNe are ‘standardizable candles’, meaning that,
+                     after some corrections relating to properties of their light curves, their luminosity is universal.
+                     This enables the calculation of their luminosity distances, from which may be calculated H(z).
+                     Here, we adopt 1590 SNe from the Pantheon+ sample, including the covariance matrix between
+                     SNe, which modulates the likelihood [22]. We simply plug these datasets separately into ESR (us‑
+                     ing the k log(n) function prior) and turn the crank to produce all possible H(z) functions and their
+                     description lengths (DLs). We use the operator basis set {x ≡ 1 + z, 𝜃, inv, +, −, ×, ÷, pow}.
+                         The results are shown in figure 2: the left‑hand panel shows the 150 best functions found by
+                     ESR, colour‑coded by their description length relative to the best function, compared to the CC
+                     data, along with their residuals relative to equation (5.1) in the lower panel. The right‑hand panel
+                     shows the best DL and log L discovered at each complexity in both datasets compared to the Fried‑
+                     mann equations. ‘Λfluid’ is a generalization of equation (5.1) that allows matter to have pressure.
+                     For both datasets, we find that the MDL function has complexity 5, lower than the Friedmann
+                     equations at complexity 7. These MDL functions are
+
+
+                                                    H2 (z) = 𝜃0 (1 + z)2            (CCs) ,           H2 (z) = 𝜃0 (1 + z)1+z      (SNe),   (5.2)
+
+                     and are preferred over the simple Friedmann equation (equation (5.1)) by 7.12 and 4.91 nats for
+                     the CC and SN data, respectively, which corresponds to probability ratios of 1240 and 136. We
+                     find 38 functions better than equation (5.1) for CCs and 36 for SNe. Note that while the Pareto
+                     front, as traditionally defined in terms of likelihood, continues falling to high complexity, L(D)
+Downloaded from royalsocietypublishing.​org/​rsta/​article-pdf/​doi/​10.​1098/​rsta.​2024.​0584/​6131786/​rsta.​2024.​0584.​pdf
+by guest
+on 04 November 2026
+                     has a well‑defined minimum beyond which the small gain in accuracy is swamped by the loss in
+                                                                                                                                                                                                                                                                      10
+                     simplicity. This informs the user whether sufficiently complex functions have been considered: if
+                     not, the minimum in L(D) will not yet have been seen.
+
+
+
+
+                                                                                                                                          .........................................................................................................................
+                                                                                                                                                                                                                                             royalsocietypublishing.org/journal/rsta Phil. Trans. R. Soc. A 384: 20240584
+                         What are we to make of the sub‑optimality of the Friedmann equations? It is premature to
+                     conclude that they are ruled out as the equations governing the data. It will be noticed that both
+                     functions in equation (5.2) produce the same Taylor expansion for H(z) as the Friedmann equation
+                     up to second order in z, making their behaviour (hence likelihood) very similar over the limited
+                     redshift range of the data. They are, however, simpler functions, with smaller complexity terms in
+                     their description lengths. It is indeed a feature of the MDL procedure that with limited quality or
+                     quantity of data, the likelihood term is less important than the complexity terms and hence sim‑
+                     pler functions will be preferred. More data are therefore needed to settle definitively on the best
+                     function(s), and the MDL formalism can tell us precisely what properties of the data are required
+                     [9].
+
+
+                     (b) The radial acceleration relation
+                     From the late‑time expansion rate of the universe, we turn to the internal dynamics of galaxies
+                     [23]. A puzzle here has been the enduring success of an alternative to the dark matter hypothesis
+                     on which ΛCDM is based. This theory—modified Newtonian dynamics (MOND) [24–26]—posits
+                     that the ‘missing gravity problem’ in galaxies (e.g. that rotation curves become flat at large galac‑
+                     tocentric radius rather than declining in a Keplerian fashion) is due not to missing mass, but rather
+                     to an alteration in either objects’ gravity or inertia at exceedingly low accelerations below a new
+                     universal parameter a0 ≈ 1.2 × 10−10 m s−2 . This takes the form
+
+                                                                                  g⃗ obs = 𝜈(gbar ∕a0 ) g⃗ bar ,                  (5.3)
+
+                     where gbar is the acceleration sourced by the visible stars and gas in galaxies (‘baryons’) and gobs is
+                     the dynamical acceleration that drives objects’ motions. 𝜈(x)—the ‘interpolating function’ (IF)—
+                     can take any form provided it satisfies the limits 𝜈(x) → 1 for x ≫ 1 and 𝜈(x) → x−1∕2 for x ≪ 1.
+                     These are called the ‘Newtonian’ and ‘deep‑MOND’ limits; the former recovers Newtonian dy‑
+                     namics at a ≫ a0 (e.g. in the Solar System), while the latter is the modification required to get
+                     flat rotation curves. Classic IF choices are the ‘Simple’
+                                                                         √       (𝜈(x) = 1∕2 + (1∕4 + 1∕x)1∕2 ) and ‘radial
+                     acceleration relation’ (RAR) (𝜈(x) = 1∕(1 − exp(− x))) functions.
+                         This bizarre theory has astonishing successes and atrocious failures (see [27] for a recent re‑
+                     view). Its principal success is in predicting and explaining the properties of the RAR, which
+                     directly correlates gbar and gobs through measurements of late‑type galaxies’ HI and optical pho‑
+                     tometry and rotation curves through spectroscopy [28]. This relation has been found to possess
+                     a minute scatter and no correlated deviations from MOND predictions [29], to satisfy four strin‑
+                     gent criteria for ‘fundamentality’ in galaxies’ radial dynamics [30], and to evince a continuation to
+                     much lower accelerations through weak lensing [31]. We wish to use SR to determine (i) whether
+                     the classic MOND IFs are optimal descriptions of the RAR data, and (ii) if not, whether the op‑
+                     timal functions possess the correct limits to be considered new IFs. This will help determine the
+                     extent to which the RAR supports MOND.
+                         We adopt the operator basis set gbar , 𝜃, exp, sqrt, square, inv, +, −, ×, ÷, pow, and once again
+                     simply plug the data into ESR using the k log(n) function prior to create and score the full set of
+                     simple gobs (gbar ) functions. The results are shown in figure 3. We find many functions better than
+                     the MOND IFs. While most of these possess a Newtonian limit, very few possess a deep‑MOND
+                     limit: more commonly gobs tends to a constant at low gbar . Indeed, the fact that the probability of
+                     a function is ∝ exp −L(D) (§4) lets us compute a probability over all functions for certain limiting
+                     behaviour, which in this case is approximately 1 for gobs → const as gbar → 0. However, this is
+                     also found to be true on mock data generated using the RAR IF, which explicitly possesses such
+                     a limit [23]. Thus, while the best functions are not MONDian, one would not expect them to be
+                     even if MOND did in fact generate the data, given the data’s limited dynamic range and sizeable
+Downloaded from royalsocietypublishing.​org/​rsta/​article-pdf/​doi/​10.​1098/​rsta.​2024.​0584/​6131786/​rsta.​2024.​0584.​pdf
+by guest
+on 04 November 2026
+                                                                                                                                                                                                                                                                                  11
+
+
+
+
+                                                                                                                                                      .........................................................................................................................
+                                                                                                                                                                                                                                                         royalsocietypublishing.org/journal/rsta Phil. Trans. R. Soc. A 384: 20240584
+                     Figure 3. Left: Pareto front identified by ESR for the RAR compared to the three most common literature fits. Right: Logarith-
+                     mic slopes of the 10 best ESR functions in the limit gbar → 0 (blue) and gbar → inf (red) and at the lower (cyan) and upper
+                     (magenta) edges of the data. Where these depend on free parameters of the function, they are shown as bands indicating the
+                     95% C.L. The MOND lower and upper slopes are shown by vertical dashed lines; especially the lower slope is rarely satisfied by
+                     the best functions. Reproduced from [23].
+
+
+                     uncertainties. This is similar to the situation in §5a, where the data could not have been expected
+                     to return unambiguously the Friedmann equation even if it did in fact generate the data. Better
+                     measurements are therefore required to know whether or not the RAR significantly evidences
+                     MOND in its functional form.
+
+
+                     (c) Inflation
+                     For our final application, we move to the very early universe [32]. A largely accepted add‑on to
+                     ΛCDM postulates that within approximately 10−32 s of the Big Bang, the universe underwent a
+                     period of accelerated expansion known as inflation. This caused the universe to grow by a factor
+                     approximately e60 , smoothing it out and producing the seeds of structure growth through quan‑
+                     tum fluctuations. Inflation is driven by one or more scalar fields, called inflatons. The simplest
+                     scenario is single‑field, slow‑roll inflation in which a single inflaton 𝜙 rolls down a shallow po‑
+                     tential gradient, generating a de Sitter‑like epoch manifesting exponential expansion. This has a
+                     simple Lagrangian and equation of motion,
+                                                                1
+                                                           L = − g𝜇𝜈 𝜕𝜇 𝜙𝜕𝜈 𝜙 − V(𝜙) ⇒ 𝜙̈ + 3H𝜙̇ + V′ (𝜙) = 0.                               (5.4)
+                                                                2
+                     The unknown in these equations is the potential V(𝜙): the task for SR is to find the best such
+                     functions.
+                        Part of the problem with inflation—and the reason it is so amenable to SR—is that it is highly
+                     underdetermined: there is a dazzling variety of theories of inflation [33], but effectively only
+                     three numbers with which to test them. These are the amplitude and tilt of the primordial power
+                     spectrum and upper limit on the tensor‑to‑scalar ratio, all measured from the cosmic microwave
+                     background by the Planck satellite [34,35],
+
+                                           As = (0.027 ± 0.0027)Mpl , ns = 0.9649 ± 0.0042, r < 0.028 (95% C.L.).                            (5.5)
+
+                     These are the data with which we infer V(𝜙) using ESR. To explore the effect of the operator basis
+                     set, we consider two possibilities: set A: {𝜙, 𝜃, inv, exp, log, sin, sqrt, square, cube, +, −, ×, ÷} and
+                     set B: {𝜙, 𝜃, inv, exp, log, +, −, ×, ÷, pow}. Set A favours powers that are simply composed of sqrt,
+                     square and cube, while set B increases flexibility with the general pow operator.
+Downloaded from royalsocietypublishing.​org/​rsta/​article-pdf/​doi/​10.​1098/​rsta.​2024.​0584/​6131786/​rsta.​2024.​0584.​pdf
+by guest
+on 04 November 2026
+                                                                                                                                                                                                                                                                                      12
+
+
+
+
+                                                                                                                                                          .........................................................................................................................
+                                                                                                                                                                                                                                                             royalsocietypublishing.org/journal/rsta Phil. Trans. R. Soc. A 384: 20240584
+                     Figure 4. Left: Pareto front for inflaton potentials using operator basis set B, using fiducial MDL (solid) or Katz back-off model
+                     (dashed) function priors. Right: The potential favoured by the k log(n) prior, exp(− exp(exp(exp(𝜙)))), with the slow-roll
+                     region over which inflation occurs shown by the red shaded band.
+
+
+                         The Pareto front for basis set B is shown in figure 4 (left), using both the k log(n) (solid)
+                     and Katz (dashed) function priors. For both basis sets, the MDL function, at complexity 6, is
+                     exp(− exp(exp(exp(𝜙)))), which, despite its byzantine structure, produces a very well‑behaved
+                     slow‑roll region (figure 4, right). It is, however, unlikely to derive from a sensible underlying
+                     particle physics theory of inflation. We therefore consider replacing the k log(n) prior, favour‑
+                     ing structurally simpler functions, with the Katz prior presented in §4, which favours functions
+                     more similar to those in a training set. We choose as a training set the Encyclopaedia Inflationaris,
+                     containing almost all known literature theories of inflation and their corresponding inflaton po‑
+                     tentials [33]. The hope is that the ‘physicality’ of these potentials (that is, their derivability from
+                     well‑behaved particle physics theories) is reflected in the structure of their operator combina‑
+                     tions and may therefore be picked up by the Katz model. With this prior, the MDL functions are
+                     𝜃0 (𝜃1 + log(𝜙)2 ) for operator set A and 𝜃0 𝜙𝜃1 ∕𝜙 for set B. These are more reasonable functions that
+                     may have a physical underpinning.
+                         We can also use the full ranking afforded by ESR to compare the best functions to literature
+                     standards. As an example, for operator set B with the k log(n) prior, the Starobinsky, quadratic and
+                     quartic models are placed at ranks 1272, 8697 and 10 839, respectively. Clearly, as in the previous
+                     applications, SR is required to find the best functions.
+
+
+
+                     6. Upcoming developments and future work
+                     SR is an exciting, emergent field with much potential for the future. On an approximately 10 year
+                     time scale, it is set to become a key method of the physicist’s (and scientist’s) toolbox, not only
+                     for finding fitting functions in a principled and automated way but also for learning physical
+                     laws directly from data. The symbolic side of ML will begin to see the successes and widespread
+                     application that the ‘numerical’ side already has.
+                        We are planning a range of upgrades and further applications of ESR to realize this potential.
+                     The most significant is a comprehensive set of upgrades to the ESR algorithm itself. This involves a
+                     rewrite in Julia for automatic differentiation, expediting the parameter optimization and descrip‑
+                     tion length calculation and using a faster and more efficient scheme for simplifying functions and
+                     removing duplicates. This will raise the complexity cap from 10 to approximately 13. ESR 2.0 will
+                     also enable the modelling of multiple independent variables and of snapping parameters to in‑
+                     tegers, rational numbers and fundamental constants (e.g. c, e, 𝜋) where that would reduce the
+                     description length. We are also planning ways to combine the virtues of ESR at low complexity
+                     and GAs at higher complexity. This could include using the complete characterization of function
+                     space afforded by ESR to initialize GAs with the best‑performing low‑complexity functions, or to
+                     optimize their hyperparameters through knowledge of the relations between such functions. The
+Downloaded from royalsocietypublishing.​org/​rsta/​article-pdf/​doi/​10.​1098/​rsta.​2024.​0584/​6131786/​rsta.​2024.​0584.​pdf
+by guest
+on 04 November 2026
+                     MDL principle is independent of ESR and already finding use in GAs, where it has been shown
+                                                                                                                                                                                                                                                                        13
+                     to improve performance [36].
+                         On the practical side, we have only scratched the surface of applications in astrophysics, let
+
+
+
+
+                                                                                                                                            .........................................................................................................................
+                                                                                                                                                                                                                                               royalsocietypublishing.org/journal/rsta Phil. Trans. R. Soc. A 384: 20240584
+                     alone science more generally. Our next priority is to use ESR to learn the optimal functional
+                     forms of halo density profiles, both from N‑body simulations and observations of galaxy kine‑
+                     matics. This is a case where the standard, NFW profile was identified using the ‘by‑eye’ method
+                     described in §1 and hence has scant justification despite being a crucial component of many astro‑
+                     physical and cosmological analyses. Similarly, the so‑called halo mass function and galaxy mass
+                     and luminosity functions, describing the abundance of galaxies and dark matter halos as a func‑
+                     tion of their luminosities and masses. The standard here is the Schechter function [37], which is
+                     also highly likely to be improvable by a rigorous SR procedure. Indeed, any of the multifold fit‑
+                     ting functions prevalent in astrophysics may be upgraded by applying SR, and ESR provides a
+                     simple and effective method for doing so.
+
+
+                     7. Summary and conclusion
+                     SR is the ML method that codifies and automates the practice of empirical science, namely the cre‑
+                     ation of functions and equations describing data. While this is traditionally done ‘by eye’, SR is a
+                     task for computers—affording an enormous increase in processing power—if effective methods
+                     can be constructed.
+                         SR is traditionally achieved by stochastic algorithms (e.g. genetic programming), with candi‑
+                     date functions assessed by locating the Pareto front in accuracy and complexity and then applying
+                     an additional ad hoc rule for selecting a single ‘best’ function. I have argued that such methods
+                     face two serious challenges: (i) they have a significant probability of failing to find any given
+                     good function, and (ii) the model selection procedure is unfounded in its arbitrary definition of
+                     complexity and unjustified heuristic for breaking the Pareto front degeneracy. To overcome the
+                     first, I propose ESR, and to overcome the second, I propose the MDL principle. ESR implements
+                     an efficient algorithm for generating and optimizing the parameters of all functions composed
+                     of a user‑defined basis set of operators up to a maximum complexity, guaranteeing discovery of
+                     all good solutions. MDL measures functions’ quality with an information‑theory‑motivated met‑
+                     ric that makes accuracy and simplicity commensurable, affording a principled one‑dimensional
+                     ranking. It is essentially the Bayesian evidence plus a prior on functions that penalizes those con‑
+                     taining more and more varied operators. An alternative prior, based on a Katz back‑off language
+                     model, instead penalizes functions with combinations of operators that are rarer in a training set
+                     of equations.
+                         I showcase ESR + MDL on three hot topics in astrophysics: the late‑time expansion rate of
+                     the universe, the effective behaviour of gravity in galaxies and the potential of the field driv‑
+                     ing inflation. In each case, ESR discovers functions considerably superior to literature standards
+                     (the Friedmann equation, MOND and Starobinsky, quadratic and quartic inflation, respectively),
+                     illustrating its ability to uncover effective symbolic representations of data purely empirically.
+                     This bodes well for future discovery, not only of optimal fitting functions but, more ambitiously,
+                     of physical laws directly from data.
+                         SR is only just starting to take off. The near future will see an extensive overhaul of the ESR
+                     algorithm, greatly improving its efficiency and capabilities. Synergy with GAs is also promising,
+                     combining their advantages in different regimes of complexity. At the same time, there is a range
+                     of astrophysical (and other) fitting functions ripe for improvement. I suspect the golden age of
+                     symbolic ML is not far away.
+
+                     Data accessibility. This article has no additional data.
+                     Declaration of AI use. I have not used AI‑assisted technologies in creating this article.
+                     Authors’ contributions. H.D.: conceptualization, data curation, formal analysis, funding acquisition, investigation,
+                     methodology, project administration, resources, software, supervision, validation, visualization, writing—
+                     original draft, writing—review and editing.
+
+Downloaded from royalsocietypublishing.​org/​rsta/​article-pdf/​doi/​10.​1098/​rsta.​2024.​0584/​6131786/​rsta.​2024.​0584.​pdf
+by guest
+on 04 November 2026
+                     Conflict of interest declaration. I declare I have no competing interests.
+                                                                                                                                                                                                                                                              14
+                     Funding. I am supported by a Royal Society University Research Fellowship (grant no. 211046).
+                     Acknowledgements. I thank Deaglan Bartlett, Pedro Ferreira, Gabriel Kronberger, Lukas Kammerer and Tomas
+
+
+
+
+                                                                                                                                  .........................................................................................................................
+                                                                                                                                                                                                                                     royalsocietypublishing.org/journal/rsta Phil. Trans. R. Soc. A 384: 20240584
+                     Sousa for the collaborations on which this work is based.
+
+
+
+
+                     References
+                      1. Sui C, Bartlett DJ, Pandey S, Desmond H, Ferreira PG, Wandelt BD. 2024 syren‑new: pre‑
+                         cise formulae for the linear and nonlinear matter power spectra with massive neutrinos and
+                         dynamical dark energy. arXiv arXiv:2410.14623. (doi:10.48550/arXiv.2410.14623)
+                      2. Turing AM. 1950 I.—Computing machinery and intelligence. Mind LIX, 433–460. (doi:10.1093/
+                         mind/LIX.236.433)
+                      3. David E. 1989 Genetic algorithms in search, optimization and machine learning. Reading, MA:
+                         Addison‑Wesley.
+                      4. Haupt R, Haupt S. 2004 Practical genetic algorithms, 2nd edition. Hoboken, NJ: Wiley. (doi:10.
+                         1002/0471671746)
+                      5. Burlacu B, Kronberger G, Kommenda M. 2020 Operon c++: an efficient genetic programming
+                         framework for symbolic regression. In Proceedings of the 2020 Genetic and Evolutionary Compu‑
+                         tation Conference Companion (GECCO 2020 Companion), pp. 1562–1570. New York, NY, USA:
+                         Association for Computing Machinery (ACM). (doi:10.1145/3377929.3398099)
+                      6. Cranmer M, Sanchez‑Gonzalez A, Battaglia P, Xu R, Cranmer K, Spergel D, Ho S. 2020 Dis‑
+                         covering symbolic models from deep learning with inductive biases. In Proceedings of the 2020
+                         Genetic and Evolutionary Computation Conference Companion (GECCO 2020 Companion). New
+                         York, NY, USA: Association for Computing Machinery (ACM).
+                      7. Evolved Analytics LLC. 2021 Data Modeler 9.5.1. Evolved analytics LLC. See https://evolved‑
+                         analytics.com/.
+                      8. Vladislavleva EJ, Smits GF, den Hertog D. 2009 Order of nonlinearity as a complexity measure
+                         for models generated by symbolic regression via pareto genetic programming. IEEE Trans.
+                         Evol. Comput. 13, 333–349. (doi:10.1109/tevc.2008.926486)
+                      9. Bartlett DJ, Desmond H, Ferreira PG. 2024 Exhaustive symbolic regression. IEEE Trans. Evol.
+                         Computat. 28, 950–964. (doi:10.1109/TEVC.2023.3280250)
+                     10. Bartlett DJ, Desmond H, Ferreira PG. 2022 Exhaustive symbolic regression function sets (doi:
+                         10.5281/zenodo.7339113)
+                     11. Navarro JF, Frenk CS, White SDM. 1996 The structure of cold dark matter halos. APJ 462, 563.
+                         (doi:10.1086/177173)
+                     12. La Cava W, Burlacu B, Virgolin M, Kommenda M, Orzechowski P, de França FO, Jin Y, Moore
+                         JH. 2021 Contemporary symbolic regression methods and their relative performance. arXiv
+                         arXiv:2107.14351. (doi:10.48550/arXiv.2107.14351)
+                     13. McConaghy T. 2011 FFX: fast, scalable, deterministic symbolic regression technology, pp. 235–260.
+                         New York, NY: Springer New York. (doi:10.1007/978‑1‑4614‑1770‑5_13)
+                     14. René Broløs K, Vieira Machado M, Cave C, Kasak J, Stentoft‑Hansen V, Galindo Batanero
+                         V, Jelen T, Wilstrup C. 2021 An approach to symbolic regression using Feyn. arXiv
+                         arXiv:2104.05417. (doi:10.48550/arXiv.2104.05417)
+                     15. Cranmer M. 2020 PySR: fast & parallelized symbolic regression in Python/Julia (doi:10.5281/
+                         zenodo.4041459)
+                     16. Rissanen J. 1978 Modeling by shortest data description. Automatica 14, 465–471. (doi:10.1016/
+                         0005‑1098(78)90005‑5)
+                     17. Grünwald P, Roos T. 2019 Minimum description length revisited. arXiv arXiv:1908.08484. (doi:
+                         10.1142/S2661335219300018)
+                     18. Cover TM, Thomas JA. 2005 Elements of information theory. Hoboken, NJ: Wiley. (doi:10.1002/
+                         047174882X)
+                     19. Bartlett D, Desmond H, Ferreira P. 2023 Priors for symbolic regression. arXiv arXiv:2112.03863.
+                         (doi:10.48550/arXiv.2304.06333)
+Downloaded from royalsocietypublishing.​org/​rsta/​article-pdf/​doi/​10.​1098/​rsta.​2024.​0584/​6131786/​rsta.​2024.​0584.​pdf
+by guest
+on 04 November 2026
+                     20. Katz S. 1987 Estimation of probabilities from sparse data for the language model component
+                                                                                                                                                                                                                                                              15
+                         of a speech recognizer. IEEE Trans. Acoust. Speech Signal Process 35, 400–401. (doi:10.1109/
+                         TASSP.1987.1165125)
+
+
+
+
+                                                                                                                                  .........................................................................................................................
+                                                                                                                                                                                                                                     royalsocietypublishing.org/journal/rsta Phil. Trans. R. Soc. A 384: 20240584
+                     21. Moresco M et al. 2022 Unveiling the Universe with emerging cosmological probes. Living Rev.
+                         Relativ. 25, 6. (doi:10.1007/s41114‑022‑00040‑z)
+                     22. Scolnic D. 2021 The Pantheon+ analysis: the full dataset and light‑curve release. arXiv
+                         arXiv:2112.03863. (doi:10.48550/arXiv.2112.03863)
+                     23. Desmond H, Bartlett DJ, Ferreira PG. 2023 On the functional form of the radial acceleration
+                         relation. MNRAS 521, 1817–1831. (doi:10.1093/mnras/stad597)
+                     24. Milgrom M. 1983 A modification of the Newtonian dynamics as a possible alternative to the
+                         hidden mass hypothesis. ApJ 270, 365. (doi:10.1086/161130)
+                     25. Milgrom M. 1983 A modification of the Newtonian dynamics ‑ implications for galaxy
+                         systems. ApJ 270, 384. (doi:10.1086/161132)
+                     26. Milgrom M. 1983 A modification of the Newtonian dynamics ‑ implications for galaxies. ApJ
+                         270, 371–389. (doi:10.1086/161131)
+                     27. Desmond H. 2025 Modified Newtonian dynamics: observational successes and failures. arXiv
+                         arXiv:2505.21638. (doi:10.48550/arXiv.2505.21638)
+                     28. Lelli F, McGaugh SS, Schombert JM, Pawlowski MS. 2017 One law to rule them all: the radial
+                         acceleration relation of galaxies. ApJ 836, 152. (doi:10.3847/1538‑4357/836/2/152)
+                     29. Desmond H. 2023 The underlying radial acceleration relation. MNRAS 526, 3342–3351. (doi:
+                         10.1093/mnras/stad2762)
+                     30. Stiskalek R, Desmond H. 2023 On the fundamentality of the radial acceleration relation for
+                         late‑type galaxy dynamics. MNRAS 525, 6130–6145. (doi:10.1093/mnras/stad2675)
+                     31. Mistele T, McGaugh S, Lelli F, Schombert J, Li P. 2024 Radial acceleration relation of galaxies
+                         with joint kinematic and weak‑lensing data. JCAP 2024, 020. (doi:10.1088/1475‑7516/2024/04/
+                         020)
+                     32. Sousa T, Bartlett DJ, Desmond H, Ferreira PG. 2024 Optimal inflationary potentials. PRD 109,
+                         083524. (doi:10.1103/PhysRevD.109.083524)
+                     33. Martin J, Ringeval C, Vennin V. 2014 Encyclopædia Inflationaris. arXiv arXiv:1303.3787. (doi:
+                         10.48550/arXiv.1303.3787)
+                     34. Planck Collaboration. 2020 Planck 2018 results. X. Constraints on inflation. AAP 641, A10. (doi:
+                         10.1051/0004‑6361/201833887)
+                     35. Galloni G, Bartolo N, Matarrese S, Migliaccio M, Ricciardone A, Vittorio N. 2023 Updated
+                         constraints on amplitude and tilt of the tensor primordial spectrum. JCAP 2023, 062. (doi:10.
+                         1088/1475‑7516/2023/04/062)
+                     36. Burlacu B. 2023 GECCO’2022 Symbolic Regression Competition: Post‑Analysis of the Operon
+                         Framework. In Proc. of the Companion Conference on Genetic and Evolutionary Computation
+                         GECCO ’23 Companion, Lisbon Portugal, pp. 2412–2419. New York, NY, USA: Association for
+                         Computing Machinery. (doi:10.1145/3583133.3596390)
+                     37. Schechter P. 1976 An analytic expression for the luminosity function for galaxies. APJ 203, 297.
+                         (doi:10.1086/154079)
+
+
+
+
+Downloaded from royalsocietypublishing.​org/​rsta/​article-pdf/​doi/​10.​1098/​rsta.​2024.​0584/​6131786/​rsta.​2024.​0584.​pdf
+by guest
+on 04 November 2026
+

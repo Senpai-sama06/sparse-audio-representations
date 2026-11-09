@@ -254,6 +254,6 @@ def analyze(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run",default="runs/librispeech_sparse_autoencoder_affine_10h_20261027T114554258463Z_seed0")
-    parser.add_argument("--output",default="documentation")
+    parser.add_argument("--output",default="approaches/interpretation/reports")
     parser.add_argument("--device",default="auto")
     analyze(parser.parse_args())

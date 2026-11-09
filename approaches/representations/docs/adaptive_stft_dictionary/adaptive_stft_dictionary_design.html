@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Proposed adaptive STFT dictionary. Model blocks, signal checks, feature preparation, alternative methods, and paper references.">
+<title>Adaptive STFT dictionary: model description</title>
+<style>
+body { max-width: 1100px; margin: 2em auto; padding: 0 1em; line-height: 1.5; color: #000; background: #fff; }
+table { border-collapse: collapse; width: 100%; }
+th, td { border: 1px solid #999; padding: 0.5em; text-align: left; vertical-align: top; }
+.table-scroll, .figure-scroll { overflow-x: auto; }
+figure { margin: 1.5em 0; }
+figure svg { display: block; width: 100%; min-width: 760px; }
+figure svg text { font-family: Arial, sans-serif; }
+figure .block { fill: #fff; stroke: #555; stroke-width: 1.5; }
+figure .learn { fill: #eee; stroke: #333; stroke-width: 1.5; }
+figure .stage { fill: #fff; stroke: #555; stroke-dasharray: 7 5; stroke-width: 1.5; }
+figure .wire, figure .feedback { fill: none; stroke: #333; stroke-width: 2; marker-end: url(#arrow); }
+figure .feedback { stroke-dasharray: 6 4; }
+figure .label { font-size: 14px; font-weight: bold; fill: #000; }
+figure .sub { font-size: 11px; fill: #222; }
+figure .wire-label { font-size: 10px; fill: #222; }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+@media print { body { max-width: none; margin: 0; padding: 0; } figure svg { min-width: 0; } .table-scroll { overflow: visible; } h2, h3 { break-after: avoid; } }
+</style>
+</head>
+<body>
+<header>
+<h1>Adaptive STFT dictionary: model description</h1>
+<p><a href="adaptive_stft_dictionary_training_run.html">Read the completed training run documentation.</a> <a href="../../reports/adaptive_stft_dictionary/adaptive_stft_dictionary_testcases.html">Open all test cases.</a></p>
+<p>Date: 7 November 2026. Status: proposed model. This document contains no new experiment results.</p>
+<p>The model makes a different spectral dictionary for each input recording.</p>
+</header>
+<nav aria-label="Contents">
+<h2>Contents</h2>
+<ol>
+<li><a href="#scope">Purpose and technical terms</a></li>
+<li><a href="#architecture">Model diagram and settings</a></li>
+<li><a href="#blocks">Model blocks</a></li>
+<li><a href="#debug">Signal checks</a></li>
+<li><a href="#features">Feature preparation</a></li>
+<li><a href="#alternatives">Alternative blocks from the papers</a></li>
+<li><a href="#experiment">First experiment</a></li>
+<li><a href="#references">Paper references</a></li>
+<li><a href="#language">Language reference</a></li>
+</ol>
+</nav>
+<main>
+<section id="scope">
+<h2>1. Purpose and technical terms</h2>
+<p>The model learns how to make spectral atoms from an audio recording. The atom values change with each recording.</p>
+<p>One dictionary serves all valid STFT frames in that recording. The coefficients change between frames.</p>
+<p>The first experiment examines reconstruction quality. The number of atoms stays constant during each run.</p>
+<p>Later experiments can examine sparsity, quantization, description length, RVQ, and IMF decomposition.</p>
+<h3>1.1 Shared parameters and input-specific values</h3>
+<ul>
+<li>The encoder, atom generator, and correction networks have shared network weights.</li>
+<li>Training changes the shared network weights.</li>
+<li>Each recording has its own dictionary and coefficients.</li>
+<li>During evaluation, the shared network weights stay constant.</li>
+<li>The update stages still change the dictionary and coefficients for each recording.</li>
+</ul>
+<h3>1.2 Technical terms</h3>
+<p>The following terms have the same meaning throughout this document. Paper titles keep their published wording.</p>
+<div class="table-scroll"><table>
+<thead><tr><th>Term</th><th>Meaning in this document</th></tr></thead>
+<tbody>
+<tr><td>STFT</td><td>Short-time Fourier transform. It converts a waveform into complex frequency values for successive time windows.</td></tr>
+<tr><td>Inverse STFT</td><td>The operation that converts a complex STFT into a waveform.</td></tr>
+<tr><td>Atom</td><td>One complex spectral pattern across all positive-frequency bins.</td></tr>
+<tr><td>Dictionary, D</td><td>The complete set of atoms for one recording.</td></tr>
+<tr><td>Coefficient, A</td><td>A complex value that sets the strength and phase rotation of an atom in one frame.</td></tr>
+<tr><td>Encoder</td><td>A network that converts the input STFT into features.</td></tr>
+<tr><td>Atom generator</td><td>A network that uses input features to calculate atom values.</td></tr>
+<tr><td>Query</td><td>A learned vector that receives input information through attention.</td></tr>
+<tr><td>Attention</td><td>A network operation that calculates weighted combinations of input features.</td></tr>
+<tr><td>Residual</td><td>The difference between a calculated signal and its reference signal.</td></tr>
+<tr><td>Loss</td><td>A numerical measure that training tries to decrease.</td></tr>
+<tr><td>Gradient</td><td>A derivative that gives a direction for a parameter update.</td></tr>
+<tr><td>Prior</td><td>A rule or learned restriction on a dictionary or its coefficients.</td></tr>
+<tr><td>Checkpoint</td><td>A saved model state and its training information.</td></tr>
+<tr><td>Complex channels</td><td>The real channel and the imaginary channel of a complex signal.</td></tr>
+<tr><td>Unrolled model</td><td>A model that represents successive solver steps as network stages.</td></tr>
+<tr><td>CNN</td><td>Convolutional neural network.</td></tr>
+<tr><td>RMS</td><td>Root mean square. The model uses this signal measure to set the input gain.</td></tr>
+<tr><td>SVD</td><td>Singular value decomposition. It supplies a reference matrix factorization.</td></tr>
+<tr><td>NMSE</td><td>Normalized mean squared error.</td></tr>
+<tr><td>SI-SDR</td><td>Scale-invariant signal-to-distortion ratio.</td></tr>
+<tr><td>PESQ and STOI</td><td>Speech quality and intelligibility scores, respectively.</td></tr>
+<tr><td>PSNR and SSIM</td><td>Image measures for reconstruction fidelity and structural similarity, respectively.</td></tr>
+<tr><td>LPIPS</td><td>A learned image metric for perceptual similarity.</td></tr>
+<tr><td>IoU and F1</td><td>Measures of segmentation or classification performance.</td></tr>
+<tr><td>RVQ</td><td>Residual vector quantization.</td></tr>
+<tr><td>IMF</td><td>Intrinsic mode function.</td></tr>
+</tbody></table></div>
+</section>
+<section id="architecture">
+<h2>2. Model diagram and settings</h2>
+<p>Figure 1 shows the signal flow. Gray blocks contain networks with shared weights. White blocks perform specified signal operations.</p>
+<p>The dashed boundary contains four update stages. The stages use the same correction networks.</p>
+<figure><div class="figure-scroll">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 570" role="img" aria-labelledby="diagram-title diagram-desc">
+      <title id="diagram-title">Model for an adaptive STFT dictionary</title>
+      <desc id="diagram-desc">The model converts audio to an STFT. An encoder supplies features to an atom generator. Four stages update atoms and coefficients. The model multiplies atoms and coefficients. An inverse STFT gives the output audio.</desc>
+      <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#333"/></marker><marker id="arrowAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#333"/></marker></defs>
+      <a href="#block1"><rect class="block" x="20" y="35" width="215" height="104" rx="12"/><text class="label" x="37" y="65">1 · Audio → STFT</text><text class="sub" x="37" y="91">One gain for both channels</text><text class="sub" x="37" y="114">S: B × 2 × F × T</text></a>
+      <a href="#block2"><rect class="learn" x="270" y="35" width="215" height="104" rx="12"/><text class="label" x="287" y="65">2 · Audio encoder</text><text class="sub" x="287" y="91">CNN with frequency coordinates</text><text class="sub" x="287" y="114">Features H: B × T × 128</text></a>
+      <a href="#block3"><rect class="learn" x="520" y="35" width="235" height="104" rx="12"/><text class="label" x="537" y="65">3 · Atom generator</text><text class="sub" x="537" y="91">K queries attend to H</text><text class="sub" x="537" y="114">D⁰: B × 2 × F × K</text></a>
+      <a href="#block4"><rect class="block" x="790" y="35" width="270" height="104" rx="12"/><text class="label" x="807" y="65">4 · Calculate initial coefficients</text><text class="sub" x="807" y="91">Projection and scale correction</text><text class="sub" x="807" y="114">A⁰: B × 2 × K × T</text></a>
+      <path class="wire" d="M235 87H266"/><path class="wire" d="M485 87H516"/><path class="wire" d="M755 87H786"/>
+      <rect class="stage" x="270" y="205" width="790" height="205" rx="14"/><text class="label" x="291" y="234">5 · Update D and A × 4</text><text class="sub" x="291" y="254">Each input has its own D and A. The stages use the same network weights.</text>
+      <rect class="learn" x="292" y="275" width="210" height="72" rx="10"/><text class="label" x="309" y="304">Update coefficients</text><text class="sub" x="309" y="327">Data step and learned correction</text>
+      <rect class="learn" x="548" y="275" width="210" height="72" rx="10"/><text class="label" x="565" y="304">Update atoms</text><text class="sub" x="565" y="327">Data step and learned correction</text>
+      <rect class="block" x="804" y="275" width="235" height="72" rx="10"/><text class="label" x="821" y="304">Calculate output error</text><text class="sub" x="821" y="327">Ŝ = Π(DA), residual Ŝ − S</text>
+      <path class="wire" d="M502 310H544"/><path class="wire" d="M758 310H800"/>
+      <path class="wire" d="M925 139V181H1048V265H397V271"/><text class="wire-label" x="535" y="174">Initial D⁰ and A⁰; encoder features H supply context</text>
+      <path class="feedback" d="M921 347V380H397V351"/><text class="wire-label" x="536" y="397">The next stage uses the error. Each stage normalizes the atoms.</text>
+      <path class="wire" d="M126 139V310H266"/><text class="wire-label" x="35" y="270">Original S</text><text class="wire-label" x="35" y="287">supplies the reference</text>
+      <a href="#block6"><rect class="block" x="520" y="463" width="238" height="80" rx="12"/><text class="label" x="537" y="494">6 · Calculate the output STFT</text><text class="sub" x="537" y="519">Final D, A → Π(DA)</text></a>
+      <a href="#block7"><rect class="block" x="804" y="463" width="256" height="80" rx="12"/><text class="label" x="821" y="494">7 · Calculate output audio</text><text class="sub" x="821" y="519">Restore the length and gain</text></a>
+      <path class="wire" d="M653 410V459"/><path class="wire" d="M758 503H800"/>
+      <text class="sub" x="25" y="484">During training, compare each</text><text class="sub" x="25" y="503">stage output with x and S.</text><text class="sub" x="25" y="527">Gradients change the network weights.</text>
+    </svg>
+</div><figcaption>Figure 1. Proposed model. Select a numbered block to read its description.</figcaption></figure>
+<h3>2.1 Main equations</h3>
+<pre>D_i^0 = G_theta(E_phi(S_i))
+S_hat_i = Pi(D_i^L A_i^L)
+x_hat_i = gain_i * inverse_STFT(S_hat_i)</pre>
+<ul>
+<li>E is the encoder.</li>
+<li>G is the atom generator.</li>
+<li>Pi removes the imaginary values at the DC and Nyquist output bins.</li>
+<li>L is the number of update stages.</li>
+<li>The subscript i identifies a recording.</li>
+</ul>
+<h3>2.2 Proposed settings</h3>
+<p>These settings are design choices for the first experiment. They are not results from the cited papers.</p>
+<div class="table-scroll"><table>
+<thead><tr><th>Item</th><th>Setting</th><th>Purpose</th></tr></thead><tbody>
+<tr><td>Input audio</td><td>Mono, 16 kHz, one-second excerpts.</td><td>Supply enough frames to examine repeated spectral patterns.</td></tr>
+<tr><td>STFT</td><td>FFT length: 512. Window length: 512. Hop: 128. Periodic Hann window. Centered frames. Constant boundary padding.</td><td>Use reproducible analysis and inverse settings.</td></tr>
+<tr><td>STFT dimensions</td><td>257 positive-frequency bins. 126 frames for exactly 16,000 samples.</td><td>Keep all positive-frequency values and preserve the original sample count.</td></tr>
+<tr><td>Dictionary size</td><td>32 atoms initially. Separate runs with 16 and 64 atoms.</td><td>Compare fixed atom counts.</td></tr>
+<tr><td>Encoder features</td><td>128 values per time frame.</td><td>Supply information to the atom generator and correction networks.</td></tr>
+<tr><td>Update stages</td><td>Four stages with shared network weights.</td><td>Compare the effect of successive updates.</td></tr>
+</tbody></table></div>
+<h3>2.3 Tensor dimensions</h3>
+<p>B is the batch size. F is the number of frequency bins. T is the number of time frames.</p>
+<p>K is the number of atoms. The dimension 2 identifies the real and imaginary channels.</p>
+<ul>
+<li>Input STFT S: B &times; 2 &times; F &times; T.</li>
+<li>Encoder features H: B &times; T &times; 128.</li>
+<li>Dictionary D: B &times; 2 &times; F &times; K.</li>
+<li>Coefficients A: B &times; 2 &times; K &times; T.</li>
+</ul>
+</section>
+<section id="blocks">
+<h2>3. Model blocks</h2>
+<h3 id="block1">3.1 Block 1: prepare the waveform and calculate the STFT</h3>
+<p>This block controls the signal scale and keeps the phase information.</p>
+<ol>
+<li>Read the waveform, sample rate, and valid sample count.</li>
+<li>Calculate one RMS gain for the recording.</li>
+<li>Apply a specified lower limit to the gain for silence.</li>
+<li>Divide the waveform by the gain.</li>
+<li>Keep the gain for the inverse operation.</li>
+<li>Calculate the complex STFT.</li>
+<li>Make a mask that identifies valid frames.</li>
+</ol>
+<p>Both complex channels use the same gain. Independent channel normalization changes their relationship.</p>
+<p>The frame mask excludes padded data from attention and loss calculations.</p>
+<p><strong>Check:</strong> the waveform, gain, sample count, frame mask, and complex channels. Check the STFT inverse before training.</p>
+<h3 id="block2">3.2 Block 2: extract features with the audio encoder</h3>
+<p>The encoder supplies information about frequency content and changes over time.</p>
+<p>The proposed encoder has a convolutional stem and residual blocks. Its successive feature widths are 32, 64, and 128 channels.</p>
+<p>The encoder reduces the frequency dimension slowly. It keeps the time grid.</p>
+<p>A frequency coordinate gives the position of each input bin. The encoder output contains 128 values per time frame.</p>
+<p>Frequency reduction inside the encoder does not remove frequency bins from the reconstruction target.</p>
+<p><strong>Check:</strong> feature values, gradient values, frequency sensitivity, and frame masks. Examine weak high-frequency signals after each reduction step.</p>
+<h3 id="block3">3.3 Block 3: generate atoms for the input</h3>
+<p>The atom generator makes the initial dictionary for the current recording.</p>
+<ol>
+<li>Use K learned query vectors.</li>
+<li>Apply cross-attention between the queries and encoder features.</li>
+<li>Use four attention heads.</li>
+<li>Apply a residual feed-forward block.</li>
+<li>Project each query output to 2F values.</li>
+<li>Reshape these values into the real and imaginary parts of an atom.</li>
+<li>Normalize each atom over its complex frequency values.</li>
+</ol>
+<p>The queries provide starting vectors. The encoder features make their outputs different for each recording.</p>
+<p>The model learns sampled spectral shapes. It does not select atoms from a fixed list of complete mathematical functions.</p>
+<p>One dictionary serves the complete excerpt. A dictionary that changes within an excerpt requires a separate experiment.</p>
+<p>The proposed encoder uses the complete excerpt. Causal operation requires a different input policy.</p>
+<p><strong>Check:</strong> atom magnitude, atom phase, query attention, and repeated atoms. Compare dictionaries from different recordings.</p>
+<h3 id="block4">3.4 Block 4: calculate initial coefficients</h3>
+<p>The coefficients control atom strength and phase rotation in each frame.</p>
+<p>Use the projection D<sup>H</sup>S as an initial estimate. Apply a scale correction based on the dictionary operator norm.</p>
+<p>The superscript H means conjugate transpose. The projection is not an inverse for a general nonorthogonal dictionary.</p>
+<p>A regularized least-squares solve is an alternative initialization method.</p>
+<pre>Real(D A) = D_R A_R - D_I A_I
+Imaginary(D A) = D_R A_I + D_I A_R</pre>
+<p>The first experiment permits dense coefficients. A threshold can describe effective activity, but it does not establish learned sparsity.</p>
+<p><strong>Check:</strong> initial error, coefficient scale, activity over time, and phase rotation.</p>
+<h3 id="block5">3.5 Block 5: update coefficients and atoms</h3>
+<p>Each stage uses the reconstruction residual to change the coefficients and atoms.</p>
+<p>The data steps follow the fidelity loss. Learned correction networks supply rules from the training data.</p>
+<pre>A_temp = A - eta_A * gradient_A L_complex(Pi(D A), S)
+A_new = A_temp + bounded_correction_A(A_temp, H)
+D_temp = D - eta_D * gradient_D L_complex(Pi(D A_new), S)
+D_new = normalize[D_temp + bounded_correction_D(D_temp, H)]</pre>
+<p>The coefficient correction network operates over time. The atom correction network operates over frequency.</p>
+<p>Both networks receive encoder features. The step sizes are positive and have specified upper limits.</p>
+<p>Start the residual correction outputs at zero. This starts the model near the specified data-update operations.</p>
+<p>Use the same correction-network weights in all four stages.</p>
+<p>The alternating update structure follows ideas from DCDicL <a href="#ref1">[1]</a> and the seismic method <a href="#ref8">[8]</a>.</p>
+<h4>Atom normalization</h4>
+<p>Normalization must preserve the represented signal.</p>
+<ol>
+<li>Calculate the norm n of each updated atom.</li>
+<li>Divide the atom by n.</li>
+<li>Multiply its coefficient row by n.</li>
+<li>Use a specified procedure for atoms with a near-zero norm.</li>
+</ol>
+<p>This scale change preserves the product D A.</p>
+<h4>Gradient calculation</h4>
+<p>Include the endpoint projection Pi in the loss calculation. Obtain gradients through the actual real and imaginary operations.</p>
+<p>A complex update formula can give an incorrect gradient if it excludes the projection.</p>
+<p><strong>Check:</strong> error before and after each substep, update size, gradient norm, and step-size limits.</p>
+<p>A learned correction can increase the error. Measure the result at every stage.</p>
+<h3 id="block6">3.6 Block 6: calculate the output STFT</h3>
+<p>This block makes the complete output spectrum from the final atoms and coefficients.</p>
+<ol>
+<li>Multiply D by A.</li>
+<li>Set the imaginary DC value to zero.</li>
+<li>Set the imaginary Nyquist value to zero.</li>
+</ol>
+<p>The endpoint rule applies to the proposed even FFT length.</p>
+<p>Complex coefficients can make the product endpoints imaginary. Real atom endpoints alone do not prevent this.</p>
+<p>All output audio must pass through the dictionary product. The model has no encoder-to-waveform bypass.</p>
+<p><strong>Check:</strong> real and imaginary errors, frequency-band errors, and values removed by the endpoint projection.</p>
+<p>Also compare the predicted spectrum with STFT(inverse_STFT(predicted spectrum)). This difference measures STFT consistency.</p>
+<p>Correct endpoint values do not guarantee STFT consistency across overlapping frames.</p>
+<h3 id="block7">3.7 Block 7: calculate output audio and the loss</h3>
+<p>The inverse operation must use the same window, hop, and centering settings as the analysis operation.</p>
+<ol>
+<li>Calculate the inverse STFT.</li>
+<li>Set the output length to the original sample count.</li>
+<li>Restore the stored input gain.</li>
+<li>Save the output without automatic alignment or gain correction.</li>
+</ol>
+<p>The proposed training loss has three terms.</p>
+<pre>L_total = lambda_c * L_complex
+        + lambda_w * L_waveform
+        + lambda_m * L_multiresolution
+
+L_complex = ||Pi(D A) - S||^2 / (||S||^2 + epsilon)</pre>
+<div class="table-scroll"><table>
+<thead><tr><th>Loss term</th><th>Purpose</th></tr></thead><tbody>
+<tr><td>Complex STFT error</td><td>Decrease errors in the real and imaginary channels.</td></tr>
+<tr><td>Waveform L1 error</td><td>Decrease the waveform error after the inverse STFT. Use the normalized waveform for this term.</td></tr>
+<tr><td>Multiresolution spectral error</td><td>Compare log magnitude and spectral convergence at several window sizes.</td></tr>
+</tbody></table></div>
+<p>Apply valid-region masks. Specify separate handling for silence.</p>
+<p>Start with equal weights for the normalized loss terms. Record each term separately.</p>
+<p>Give the final stage a supervision weight of 1. Divide a total weight of 0.5 among the earlier stages.</p>
+<p>These weights are proposed experiment settings. Separate comparisons must examine their effects.</p>
+<p>Backpropagation passes through the complete sequence of updates. It changes the shared network weights during training.</p>
+<p><strong>Check:</strong> output timing, gain, boundary error, clipping, and gradients from each loss term.</p>
+<p>Use complete utterances for PESQ and STOI. These scores do not give reliable evidence for isolated 40 ms signals.</p>
+</section>
+<section id="debug">
+<h2>4. Signal checks</h2>
+<p>The following checks specify data to collect during implementation. They do not contain measured model results.</p>
+<h3>4.1 Check the analysis and inverse operations</h3>
+<ol>
+<li>Save the input waveform, input gain, STFT, and masks.</li>
+<li>Calculate the inverse of the unchanged STFT.</li>
+<li>Measure the error, output length, time delay, and amplitude ratio.</li>
+<li>Measure boundary error separately from interior error.</li>
+</ol>
+<p>If this check fails, examine the window, padding, centering, sample rate, and inverse length.</p>
+<h3>4.2 Check the encoder information</h3>
+<ol>
+<li>Save feature norms by time and frequency.</li>
+<li>Save attention masks and gradient maps.</li>
+<li>Supply tones, harmonic mixtures, chirps, and time-shifted signals.</li>
+<li>Compare changes in features, attention, and atoms.</li>
+</ol>
+<p>If the encoder misses signal changes, examine frequency reduction, normalization, coordinates, and masks.</p>
+<h3>4.3 Check changes in the dictionary</h3>
+<ol>
+<li>Use a fixed set of recordings for inspection.</li>
+<li>Save the initial and final dictionaries.</li>
+<li>Plot atom magnitude and phase.</li>
+<li>Repeat inference for the same input.</li>
+<li>Compare the result with dictionaries from other inputs.</li>
+</ol>
+<p>Match atom order before comparison. Correct equivalent complex phase rotations before comparison.</p>
+<p>If the dictionary stays constant, examine the input connections, attention, and generator gradients.</p>
+<h3>4.4 Check atom utility and repeated atoms</h3>
+<ol>
+<li>Save the complex Gram matrix D<sup>H</sup>D.</li>
+<li>Save atom norms, coefficient energy, and dictionary singular values.</li>
+<li>Remove one atom.</li>
+<li>Measure the error before a new coefficient solve.</li>
+<li>Solve the remaining coefficients again.</li>
+<li>Measure the error after that solve.</li>
+</ol>
+<p>This procedure separates immediate atom use from replacement by other atoms.</p>
+<p>Useful atoms can overlap in frequency. Do not require orthogonality without a separate comparison.</p>
+<h3>4.5 Check coefficient inference</h3>
+<ol>
+<li>Save initial and final coefficients.</li>
+<li>Keep the dictionary constant.</li>
+<li>Calculate a strong least-squares or regularized solution.</li>
+<li>Compare its error with the learned inference error.</li>
+</ol>
+<p>If the numerical solve gives lower error, improve inference before you increase dictionary capacity.</p>
+<h3>4.6 Check each update stage</h3>
+<ol>
+<li>Record the loss before the coefficient data step.</li>
+<li>Record the loss after the coefficient data step.</li>
+<li>Record the loss after its learned correction.</li>
+<li>Repeat these measurements for the atom update.</li>
+<li>Record the loss after atom normalization.</li>
+<li>Record update norms and step sizes.</li>
+</ol>
+<p>If the error oscillates, examine the step limits and correction sizes. Check the coefficient scale change during normalization.</p>
+<h3>4.7 Check spectrum and phase errors</h3>
+<ol>
+<li>Save reference and predicted magnitude spectra.</li>
+<li>Save real and imaginary residuals.</li>
+<li>Measure errors by frequency band.</li>
+<li>Measure the endpoint projection change.</li>
+<li>Measure STFT consistency error.</li>
+<li>Measure phase error only in bins with sufficient reference energy.</li>
+</ol>
+<p>A correct magnitude plot does not establish correct audio reconstruction.</p>
+<h3>4.8 Check the output waveform</h3>
+<ol>
+<li>Save the original waveform and each stage output.</li>
+<li>Preserve the original amplitude in listening files.</li>
+<li>Measure waveform NMSE, SI-SDR, spectral error, and boundary error.</li>
+<li>Listen for clicks, missing speech components, and gain changes.</li>
+</ol>
+<p>If clicks occur, examine the inverse framing and normalization. Do not correct output timing silently before the primary measurements.</p>
+<h3>4.9 Check training and generalization</h3>
+<ol>
+<li>Record training and validation losses separately.</li>
+<li>Record each loss term and each stage result.</li>
+<li>Keep the initial, best, and last checkpoints.</li>
+<li>Record learning rates and gradients for each module.</li>
+<li>Use validation speakers that do not occur in the training set.</li>
+</ol>
+<p>If only training improves, examine capacity, data selection, and leakage. Keep the initial validation result as a baseline.</p>
+<h3>4.10 Check whether adaptation causes the improvement</h3>
+<ol>
+<li>Replace the input dictionary with a fixed dictionary.</li>
+<li>Solve its coefficients with the same inference budget.</li>
+<li>Replace the dictionary with another recording's dictionary.</li>
+<li>Solve its coefficients with the same inference budget.</li>
+<li>Compare these errors with the original result.</li>
+<li>Compare generation alone with generation followed by updates.</li>
+</ol>
+<p>A dictionary and its coefficients must remain a matched pair. An unmatched pair can fail without proving useful adaptation.</p>
+<h3>4.11 Interpretation limits</h3>
+<p>Atom order can change without changing the represented signal.</p>
+<p>A complex phase factor can move from an atom into its coefficients. The product D A can stay constant.</p>
+<p>Use atom matching and controlled replacements. Different atom plots alone do not establish useful adaptation.</p>
+<h3>4.12 Required inspection records</h3>
+<ul>
+<li>Input identity, source offset, sample count, and analysis settings.</li>
+<li>Stored gain and valid-region masks.</li>
+<li>Dictionary and coefficient values at each stage.</li>
+<li>Stage errors, band errors, and solver information.</li>
+<li>Waveform plots and audio files.</li>
+<li>Checkpoint identity and experiment settings.</li>
+</ul>
+<p>Keep full evaluation tables separate from selected examples. Include difficult examples and failed runs.</p>
+<p>A future results report must contain its own plots and audio data. This permits sharing one HTML file.</p>
+</section>
+<section id="features">
+<h2>5. Feature preparation</h2>
+<p>Feature preparation defines the information that the model receives. The model learns the atom shapes.</p>
+<div class="table-scroll"><table>
+<thead><tr><th>Item</th><th>Initial choice</th><th>Alternative or check</th></tr></thead><tbody>
+<tr><td>Frequency representation</td><td>Use real and imaginary STFT values on a linear frequency axis.</td><td>Magnitude or mel features can supply additional encoder information. Keep the complex reconstruction target.</td></tr>
+<tr><td>Amplitude scale</td><td>Use one RMS gain per recording.</td><td>Compare with no normalization. Check silence handling and gain restoration.</td></tr>
+<tr><td>Frequency position</td><td>Supply a coordinate f / f_Nyquist.</td><td>Compare an encoder without this coordinate.</td></tr>
+<tr><td>Time information</td><td>Keep time tokens and valid-frame masks. Use local convolutions and attention.</td><td>Examine time coordinates separately. Absolute frame positions can encourage position-specific solutions.</td></tr>
+<tr><td>Dynamic range</td><td>Use linear complex values as the primary input.</td><td>Test log magnitude as an additional encoder channel. Specify its scale.</td></tr>
+<tr><td>Frequency weights</td><td>Use no preferred frequency band in the primary complex loss.</td><td>Test high-frequency loss weights separately, as suggested by HyperSound <a href="#ref6">[6]</a>. Report errors in every band.</td></tr>
+<tr><td>Atom shape restrictions</td><td>Permit unrestricted sampled spectral shapes.</td><td>Test frequency-spread or smoothness penalties separately. Narrow-band restrictions can remove useful harmonic or broadband patterns.</td></tr>
+<tr><td>Training data changes</td><td>Use random waveform crops and separate speaker groups.</td><td>Test time shifts with controlled signals. Treat pitch shifts and added noise as separate experiments.</td></tr>
+<tr><td>Phase information</td><td>Use both complex channels. Do not supply separate phase labels.</td><td>Exclude low-energy bins from phase-error summaries.</td></tr>
+</tbody></table></div>
+<p>Do not apply a real logarithm to signed real or imaginary values.</p>
+<p>The model receives no prescribed atom-frequency labels. Frequency centers, bandwidths, and harmonic relationships are measurements after training.</p>
+<p>An association with a speech sound does not prove a unique atom meaning.</p>
+</section>
+<section id="alternatives">
+<h2>6. Alternative blocks from the papers</h2>
+<p>Each subsection gives one separate replacement experiment. The audio adaptations are our proposals.</p>
+<p>Codebook entries, feature tokens, and spectral atoms are different technical objects. Their names do not make their methods equivalent.</p>
+<h3>6.1 DCDicL: replace the update procedure [1]</h3>
+<p><strong>Source method:</strong> alternate dictionary and coefficient data solves with learned priors.</p>
+<p><strong>Replacement:</strong> use half-quadratic splitting in block 5. Use regularized least-squares subproblems and separate learned priors for D and A.</p>
+<p><strong>Question:</strong> do these data solves improve stability or reduce the required stages?</p>
+<p>A learned correction does not guarantee an exact minimum. See <a href="#ref1">reference 1</a>.</p>
+<h3>6.2 AdaCode: restrict the atom generator [2]</h3>
+<p><strong>Source method:</strong> combine quantized features from shared codebooks with input-specific weights.</p>
+<p><strong>Replacement:</strong> learn shared spectral dictionary templates. Predict weights for the current recording. Combine the templates to obtain D.</p>
+<pre>D_i = sum_m w_i,m * B_m</pre>
+<p><strong>Question:</strong> does this restricted adaptation improve generalization?</p>
+<p>This equation is our proposed analogy. It is not the exact AdaCode implementation. See <a href="#ref2">reference 2</a>.</p>
+<h3>6.3 Masked sparse representation: mask adaptation weights [3]</h3>
+<p><strong>Source method:</strong> mask codebook-combination weights and recover their effect with a learned network.</p>
+<p><strong>Replacement:</strong> mask selected template weights after the template-mixture method works. Train a network to recover useful missing information.</p>
+<p><strong>Question:</strong> how much adaptation information can the model remove before reconstruction fails?</p>
+<p>This is a later experiment. Quantization and bitrate objectives require additional work. See <a href="#ref3">reference 3</a>.</p>
+<h3>6.4 Adaptive Token Dictionary: repeat query adaptation [4]</h3>
+<p><strong>Source method:</strong> refine dictionary tokens with input features and use category-based attention.</p>
+<p><strong>Replacement:</strong> repeat attention between atom queries and encoder features in blocks 2 and 3.</p>
+<p>Convert the resulting tokens into explicit spectra.</p>
+<p><strong>Question:</strong> does repeated attention improve D A reconstruction over one attention step?</p>
+<p>The paper uses internal feature tokens. Spectral synthesis atoms are our extension. See <a href="#ref4">reference 4</a>.</p>
+<h3>6.5 Dynamic segmentation dictionary: exchange information in both directions [5]</h3>
+<p><strong>Source method:</strong> alternate attention between image features and class embeddings.</p>
+<p><strong>Replacement:</strong> let features update atom tokens. Then let atom tokens update the context for the next stage.</p>
+<p><strong>Question:</strong> does this exchange improve adaptation?</p>
+<p>The segmentation paper uses class labels and a contrastive loss. Our reconstruction task has no equivalent class targets.</p>
+<p>Do not transfer that loss without appropriate targets. See <a href="#ref5">reference 5</a>.</p>
+<h3>6.6 HyperSound: generate atom functions [6]</h3>
+<p><strong>Source method:</strong> a hypernetwork generates a neural function for each audio input.</p>
+<p><strong>Replacement:</strong> replace the direct projection in block 3. Generate parameters for functions that give complex atom values at frequency coordinates.</p>
+<p><strong>Question:</strong> does a continuous atom function improve reconstruction or generalization?</p>
+<p>This is our extension of HyperSound. Measure function evaluation cost and high-frequency errors. See <a href="#ref6">reference 6</a>.</p>
+<h3>6.7 Instance-adaptive compression: add per-recording optimization [7]</h3>
+<p><strong>Source method:</strong> adapt a pretrained model to an input instance. Include transmitted model updates in its rate objective.</p>
+<p><strong>Replacement:</strong> use the generator output as the initial state for optional per-recording optimization.</p>
+<p><strong>Question:</strong> does additional optimization improve reconstruction at a specified computation budget?</p>
+<p>Updating D and A differs from updating shared network weights. Identify these alternatives separately.</p>
+<p>Transmission costs belong to a later coding experiment. See <a href="#ref7">reference 7</a>.</p>
+<h3>6.8 Seismic DCDL: use learned priors or convolutional atoms [8]</h3>
+<p><strong>Source method:</strong> use a dictionary for each seismic slice. Apply alternating data solves and learned coefficient and dictionary priors.</p>
+<p><strong>Replacement A:</strong> use its update structure in block 5.</p>
+<p><strong>Replacement B:</strong> replace spectral-column atoms with small time-frequency patches and convolutional coefficients.</p>
+<p><strong>Question:</strong> do patches represent useful local structures that spectral columns miss?</p>
+<p>Run these replacements separately. Frequency translation can change harmonic spacing and its physical meaning.</p>
+<p>The seismic method builds on DCDicL. These papers are related precedents. See <a href="#ref8">reference 8</a>.</p>
+</section>
+<section id="experiment">
+<h2>7. First experiment</h2>
+<h3>7.1 Establish reference results</h3>
+<ol>
+<li>Verify unchanged STFT inversion.</li>
+<li>Evaluate a fixed complex dictionary with a strong coefficient solve.</li>
+<li>Evaluate per-recording truncated complex SVD.</li>
+<li>Include tones, chirps, mixtures, speech, and silence.</li>
+</ol>
+<h3>7.2 Train the atom generator</h3>
+<ol>
+<li>Train the encoder, atom generator, and coefficient inference blocks.</li>
+<li>Exclude dictionary-update stages from this first model.</li>
+<li>Keep the atom count constant.</li>
+<li>Compare the initial and trained checkpoints on unseen speakers.</li>
+</ol>
+<h3>7.3 Add joint updates</h3>
+<ol>
+<li>Compare one, two, and four stages.</li>
+<li>Compare data updates alone with data updates plus learned corrections.</li>
+<li>Keep input context, atom count, and loss settings constant.</li>
+<li>Record inference time separately.</li>
+</ol>
+<h3>7.4 Measure useful adaptation</h3>
+<ol>
+<li>Perform the dictionary-replacement checks in section 4.10.</li>
+<li>Repeat the strongest settings with several random seeds.</li>
+<li>Report individual recording errors and the complete evaluation summary.</li>
+<li>Keep difficult examples and failures.</li>
+</ol>
+<h3>7.5 Select checkpoints</h3>
+<p>Use a fixed composite validation reconstruction score. Record all its terms.</p>
+<p>Keep the initial checkpoint. Use a specified training budget or a specified validation-plateau rule.</p>
+<p>Fix the checkpoint choice before final testing.</p>
+<p>The experiment succeeds if adaptation improves unseen-recording reconstruction under the declared comparison conditions.</p>
+<p>A lower training loss alone does not establish this result.</p>
+<h3>7.6 Interpret the SVD reference</h3>
+<p>With dense coefficients, D A has rank at most K.</p>
+<p>Truncated complex SVD gives the optimal rank-K approximation for unweighted complex-matrix squared error.</p>
+<p>It does not optimize the complete waveform and spectral loss in this proposal.</p>
+<h3>7.7 Interpret short excerpts</h3>
+<p>The proposed STFT settings give six frames for 640 samples.</p>
+<p>With K of at least six, an unrestricted matrix factorization can reproduce that spectrum exactly in principle.</p>
+<p>Thus, exact reconstruction of one 40 ms excerpt gives weak evidence for useful learned atoms.</p>
+<h3>7.8 Proposed code modules</h3>
+<p>Use <code>approaches/stft_dictionary/</code> for the new approach.</p>
+<ul>
+<li><code>transform.py</code>: waveform normalization, STFT, and inverse STFT.</li>
+<li><code>encoder.py</code>: feature extraction.</li>
+<li><code>atoms.py</code>: atom generation.</li>
+<li><code>inference.py</code>: coefficient estimation.</li>
+<li><code>refinement.py</code>: joint update stages.</li>
+<li><code>model.py</code>: complete model assembly.</li>
+<li><code>training.py</code>: training and checkpoint selection.</li>
+<li><code>evaluation.py</code>: metrics and controlled comparisons.</li>
+<li><code>report.py</code>: plots, tables, and audio reports.</li>
+</ul>
+<p>Define experiment variables in <code>main.py</code>. Reuse shared data, provenance, and checkpoint utilities.</p>
+<p>These module names describe future work. This document does not implement or start model training.</p>
+</section>
+<section id="references">
+<h2>8. Paper references</h2>
+<p>The following titles and author names retain their source wording. External links require an internet connection.</p>
+<article id="ref1">
+<h3>[1] Deep Convolutional Dictionary Learning for Image Denoising</h3>
+<p>Hongyi Zheng, Hongwei Yong, Lei Zhang. CVPR, 2021, pages 630-641.</p>
+<p>The method learns dictionary and coefficient priors. It adapts a reconstruction dictionary to each image.</p>
+<p>Training uses L1 supervision at successive stages. Evaluation uses PSNR and SSIM.</p>
+<p>This paper supplies the main alternating-update precedent.</p>
+<p><a href="https://openaccess.thecvf.com/content/CVPR2021/html/Zheng_Deep_Convolutional_Dictionary_Learning_for_Image_Denoising_CVPR_2021_paper.html">Publication page</a>. <a href="https://www4.comp.polyu.edu.hk/~cslzhang/paper/DCDicL-cvpr21-final.pdf">Author PDF</a>.</p>
+</article>
+<article id="ref2">
+<h3>[2] Learning Image-Adaptive Codebooks for Class-Agnostic Image Restoration</h3>
+<p>Kechun Liu, Yitong Jiang, Inchang Choi, Jinwei Gu. ICCV, 2023.</p>
+<p>AdaCode predicts image-specific weights for combinations of codebook representations.</p>
+<p>Its stages use reconstruction, perceptual, adversarial, and code-level losses.</p>
+<p>This method suggests a restricted adaptation space for our atom generator.</p>
+<p><a href="https://arxiv.org/html/2306.06513">Paper text</a>. <a href="https://openaccess.thecvf.com/content/ICCV2023/papers/Liu_Learning_Image-Adaptive_Codebooks_for_Class-Agnostic_Image_Restoration_ICCV_2023_paper.pdf">Published PDF</a>.</p>
+</article>
+<article id="ref3">
+<h3>[3] Neural Image Compression Using Masked Sparse Visual Representation</h3>
+<p>Wei Jiang, Wei Wang, Yue Chen. WACV, 2024.</p>
+<p>The method predicts combination weights for fixed pretrained codebooks. It masks some weights and learns how to recover useful information.</p>
+<p>Evaluation compares PSNR, SSIM, and LPIPS with bitrate. The bit count includes codebook indices and combination weights.</p>
+<p>This method informs a later adaptation-cost experiment.</p>
+<p><a href="https://arxiv.org/html/2309.11661">Paper text</a>. <a href="https://openaccess.thecvf.com/content/WACV2024/papers/Jiang_Neural_Image_Compression_Using_Masked_Sparse_Visual_Representation_WACV_2024_paper.pdf">Published PDF</a>.</p>
+</article>
+<article id="ref4">
+<h3>[4] Transcending the Limit of Local Window: Advanced Super-Resolution Transformer with Adaptive Token Dictionary</h3>
+<p>Leheng Zhang, Yawei Li, Xingyu Zhou, Xiaorui Zhao, Shuhang Gu. CVPR, 2024.</p>
+<p>The method adapts feature tokens to each image. It uses these tokens in attention operations.</p>
+<p>Training uses L1 pixel loss. Evaluation uses PSNR and SSIM.</p>
+<p>Our proposed extension converts the adapted tokens into explicit spectral atoms.</p>
+<p><a href="https://arxiv.org/html/2401.08209">Paper and supplement</a>. <a href="https://openaccess.thecvf.com/content/CVPR2024/html/Zhang_Transcending_the_Limit_of_Local_Window_Advanced_Super-Resolution_Transformer_with_CVPR_2024_paper.html">Publication page</a>.</p>
+</article>
+<article id="ref5">
+<h3>[5] Dynamic Dictionary Learning for Remote Sensing Image Segmentation</h3>
+<p>Xuechao Zou, Yue Li, Shun Zhang, Kai Li, Shiying Wang, Pin Tao, Junliang Xing, Congyan Lang. ICCV, 2025.</p>
+<p>The method adapts class embeddings through alternating cross-attention.</p>
+<p>Training uses segmentation losses and a dictionary contrastive loss. Evaluation uses IoU, F1, and accuracy.</p>
+<p>The attention mechanism is relevant to our model. Its class-discrimination objective requires different supervision.</p>
+<p><a href="https://arxiv.org/html/2503.06683v1">Accessible paper version</a>. <a href="https://openaccess.thecvf.com/content/ICCV2025/html/Zou_Dynamic_Dictionary_Learning_for_Remote_Sensing_Image_Segmentation_ICCV_2025_paper.html">Published version</a>.</p>
+</article>
+<article id="ref6">
+<h3>[6] Hypernetworks build Implicit Neural Representations of Sounds</h3>
+<p>Filip Szatkowski, Karol J. Piczak, Przemysław Spurek, Jacek Tabor, Tomasz Trzciński. ECML PKDD, 2023.</p>
+<p>HyperSound generates neural function parameters for each recording.</p>
+<p>Training uses waveform L1 and multiresolution mel-STFT losses. Evaluation examines reconstruction and perceptual quality.</p>
+<p>This paper supports audio-conditioned parameter generation. Generating separate atom functions is our proposed extension.</p>
+<p><a href="https://www.karolpiczak.com/papers/Szatkowski2023-ECML.pdf">Author PDF</a>. <a href="https://arxiv.org/html/2302.04959v2">Accessible paper version</a>.</p>
+</article>
+<article id="ref7">
+<h3>[7] Overfitting for Fun and Profit: Instance-Adaptive Data Compression</h3>
+<p>Ties van Rozendaal, Iris A. M. Huijben, Taco S. Cohen. ICLR, 2021.</p>
+<p>The method adapts a pretrained compression model to a video.</p>
+<p>Its objective includes reconstruction distortion, latent rate, and model-update rate.</p>
+<p>This paper informs a controlled per-recording optimization comparison. Its transmission-cost objective belongs to a later coding study.</p>
+<p><a href="https://arxiv.org/html/2101.08687">Paper and algorithms</a>. <a href="https://openreview.net/forum?id=oFp8Mx_V5FL">Conference record</a>.</p>
+</article>
+<article id="ref8">
+<h3>[8] Three-dimensional seismic denoising based on deep convolutional dictionary learning</h3>
+<p>Yuntong Li, Lina Liu. Results in Applied Mathematics, volume 24, article 100516, 2024.</p>
+<p>DOI: 10.1016/j.rinam.2024.100516.</p>
+<p>The supplied paper has six pages. Figure 1 and equations 2-5 describe the adaptive dictionary procedure.</p>
+<p>The method learns a dictionary for each seismic slice. It uses alternating data solves and learned priors.</p>
+<p>Training uses grayscale natural images. Evaluation examines seismic signal-to-noise ratio, structure preservation, and computation time.</p>
+<p>The paper denotes the outer loss by L. It does not give a complete loss specification or training schedule.</p>
+<p>Do not assume these details from DCDicL.</p>
+<p><a href="https://doi.org/10.1016/j.rinam.2024.100516">Publisher page</a>.</p>
+</article>
+<h3>8.1 Suggested reading order</h3>
+<ol>
+<li>Read papers 1 and 8 for joint updates.</li>
+<li>Read paper 6 for audio-conditioned function generation.</li>
+<li>Read papers 4 and 5 for attention methods.</li>
+<li>Read paper 2 for restricted adaptation.</li>
+<li>Read papers 3 and 7 for later coding work.</li>
+</ol>
+</section>
+<section id="language">
+<h2>9. Language reference</h2>
+<p>This revision uses ASD-STE100 Issue 9 writing rules as its language reference.</p>
+<p>The text uses short sentences, direct instructions, and consistent technical terms. Section 1.2 defines the main technical terms.</p>
+<p>Published titles, author names, mathematical symbols, and code identifiers keep their original forms.</p>
+<p><a href="https://www.asd-ste100.org/assets/files/ASD-STE100_ISSUE9.pdf">ASD-STE100 Issue 9</a>. <a href="https://www.asd-ste100.org/faq.html">Technical vocabulary guidance</a>.</p>
+</section>
+</main>
+<footer>
+<hr>
+<p>Adaptive STFT dictionary. Design revision 2. 7 November 2026.</p>
+<p>This file contains its own diagram and styles. The document works without an internet connection.</p>
+<p>External paper links require an internet connection.</p>
+</footer>
+</body>
+</html>

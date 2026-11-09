@@ -11,6 +11,7 @@ import html
 import mimetypes
 from pathlib import Path
 import re
+import time
 
 
 def export_html(source, destination, *, title=None, notice=''):
@@ -55,7 +56,15 @@ async function loadEmbeddedAudio(button,id){
  }catch(e){button.disabled=false;button.textContent='Load failed: '+e.message;}
 }
 </script>''')
-    temp.replace(destination)
+    # Windows HTTP readers and antivirus may briefly hold the current HTML
+    # without delete sharing. Preserve the old complete report while retrying.
+    for attempt in range(80):
+        try:
+            temp.replace(destination)
+            break
+        except PermissionError:
+            if attempt == 79:raise
+            time.sleep(.05)
     return dict(path=str(destination),bytes=destination.stat().st_size,unique_audio=len(assets))
 
 

@@ -1,0 +1,2235 @@
+Learnable Empirical Mode Decomposition based on
+Mathematical Morphology
+Santiago Velasco-Forero, Romain Pagès, Jesus Angulo
+
+To cite this version:
+Santiago Velasco-Forero, Romain Pagès, Jesus Angulo. Learnable Empirical Mode Decomposition based on
+Mathematical Morphology. SIAM Journal on Imaging Sciences, 2022, 15 (1), ⟨10.1137/21M1417867⟩. ⟨hal03221652v3⟩
+
+HAL Id: hal-03221652
+https://hal.science/hal-03221652v3
+Submitted on 26 Aug 2021
+
+HAL is a multi-disciplinary open access archive
+for the deposit and dissemination of scientific research documents, whether they are published or not.
+The documents may come from teaching and research
+institutions in France or abroad, or from public or private research centers.
+
+L’archive ouverte pluridisciplinaire HAL, est destinée au dépôt et à la diffusion de documents scientifiques de niveau recherche, publiés ou non, émanant
+des établissements d’enseignement et de recherche
+français ou étrangers, des laboratoires publics ou
+privés.
+
+HAL Authorization
+
+1
+
+Learnable Empirical Mode Decomposition based on Mathematical Morphology ∗
+
+2
+
+Santiago Velasco-Forero† , R. Pagès‡ , and Jesus Angulo §
+
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+
+Abstract. Empirical mode decomposition (EMD) is a fully data driven method for multiscale decomposing
+signals into a set of components known as intrinsic mode functions. EMD is based on lower and
+upper envelopes of the signal in an iterated decomposition scheme. In this paper, we put forward a
+simple yet effective method to learn EMD from data by means of morphological operators. We propose an end-to-end framework by incorporating morphological EMD operators into deeply learned
+representations, trained using standard backpropagation principle and gradient descent-based optimization algorithms. Three generalizations of morphological EMD are proposed: a) by varying the
+family of structuring functions, b) by varying the pair of morphological operators used to calculate
+the envelopes, and c) by considering a convex sum of envelopes instead of the mean point used
+in classical EMD. We discuss in particular the invariances that are induced by the morphological
+EMD representation. Experimental results on supervised classification of hyperspectral images by
+1D convolutional networks demonstrate the interest of our method.
+
+16
+
+Key words. Deep Learning, Mathematical morphology, Hyperspectral image processing
+
+17
+
+AMS subject classifications. 68U10, 94A12, 68T07
+
+18
+
+1. Introduction. Deep convolutional neural networks (DCNN) provide state-of-the-art
+results in many tasks for signal and image classification [4]. The DCNN architectures combine low complexity signal/image operators, like convolution with small kernels or pooling
+estimation, with the ability to optimize the corresponding weights of the operators in evolved
+and hierarchical networks. Traditional models for signal/image representation and associated
+feature extraction are generally not compatible with the DCNN paradigm. The main limitation is the incompatibility of the backpropagation principle used to train the parameters of
+the neural networks by gradient descent algorithms. In the case of traditional signal/image
+processing, the interpretability of the operators and features is often straightforward. We
+focus here in particular in the Empirical Mode Decomposition (EMD) [23], which is a simple
+and powerful technique used to represent the features of a signal (without any assumption on
+its frequency content) from a geometric viewpoint, basically using lower and upper envelopes
+of the signal in an iterated decomposition. The two main ingredients of EMD: detection of
+local extrema and the interpolation between them, are not naturally formulated in the neural
+network paradigm. Inspired by the work of Diop and co-workers [12, 11, 13], we revisit EMD
+using morphological operators to deal with lower/upper envelopes. Additionally, we propose
+three generalizations: a) by varying the family of structuring functions, b) by varying the pair
+of morphological operators used to calculate the envelopes, and c) by considering a convex
+
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+
+∗
+
+Funding: This work was funded by the Fondation Jacques Hadamard under PGMO-IRSDI 2019 program.
+CMM, MINES ParisTech, PSL Research University, France (santiago.velasco@mines-paristech.com, http://cmm.
+ensmp.fr/∼velasco/).
+‡
+École Centrale de Lyon, France (romain.pages@ecl18.ec-lyon.fr) .
+§
+CMM, MINES ParisTech, PSL Research University, France (angulo@mines-paristech.com, http://cmm.ensmp.
+fr/∼angulo/) .
+†
+
+1
+
+This manuscript is for review purposes only.
+
+2
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+
+S. VELASCO-FORERO, R. PAGÈS AND J. ANGULO
+
+sum of envelopes instead of the mean point used in classical EMD. All the parameters of our
+proposition can be learnt using backpropagation and gradient descent techniques and therefore
+the associated morphological EMD can be integrated into standard DCNN representations for
+end-to-end learning. The integration of morphological operators into DCNN pipelines is an
+active research area. First attempts were based on approximation of dilation and erosion using
+standard convolution [32]. More recently, straightforward approaches of dilation and erosion
+optimization have been explored [14, 33, 37]. However, plugging morphological operators into
+standard networks is far from being trivial from the optimization based on backpropagation
+of gradients through all layers by the chain rule. Max-plus operators are indeed differentiable
+only on a local and specific domain. Here we focus on standard gradient descent strategies
+and we provide a better understanding of how the gradient of morphological operators, in
+particular those associated to parametric structuring functions, is defined. Additionally, we
+show that our morphological EMD induces the invariance to additive shift in standard DCNN.
+To the best of our knowledge, these technical aspects have not been previously discussed in
+the field of morphological deep neural networks.
+
+1.1. Related work. In what follows we review the state-of-the-art that is most relevant
+52 for the proposed morphological EMD.
+51
+
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+
+1.1.1. Empirical Mode Decomposition. EMD is an algorithm introduced by Huang et al.
+[23] for analysing linear and non-stationary time series. It is a way to decompose a signal in order to obtain instantaneous frequency data. In this original version of the EMD isP
+an iterative
+process which decomposes real signals f into simpler signals (modes), f (x) = M
+i=1 Φj (x),
+where each mono-component signal Φ should be written in the form Φ(x) = r(x) cos(θx),
+where the amplitude and phase are both physically and mathematically meaningful [48]. Unlike some other common transforms like the Fourier transform for example, the EMD was
+built as an algorithm and lacks theoretical background then. The problem of EMD to represent a signal as a sum of amplitude modulation (AM) and frequency modulation (FM)
+components at multiple scales was first proposed in [31] where the problem of finding the
+AM-FM components and their envelopes was solved using multiscale Gabor filters and nonlinear Teager-Kaiser Energy Operators via an Energy Separation Algorithm (ESA). In the
+original EMD, there is no parametric family of filters used to estimate the envelopes.
+From an algorithmic point of view, the EMD is obtained following the iterative process
+[23]:
+1. Find all the local extrema of the function f .
+2. Interpolate all the local maxima together to get the function fˆ (upper envelope), and
+all the local minima together to get the function fˇ (lower envelope)
+3. Calculate the local mean as the average of the both interpolations; the obtained function is called Intrinsic Mode Function:
+
+1ˆ
+IM F (x) =
+f (x) + fˇ(x)
+2
+4. Iterate this process (that is called the sifting process) on the residual, i.e.,
+r(x) = f (x) − IM F (x)
+
+71
+
+until a selected tolerance criterion is respected.
+
+This manuscript is for review purposes only.
+
+LEARNABLE EMPIRICAL MODE DECOMPOSITION BASED ON MATHEMATICAL MORPHOLOGY
+72
+
+Thus, the original signal is decomposed as:
+
+73
+
+(1.1)
+
+f (x) =
+
+n
+X
+
+3
+
+IM Fk (x) + r(x)
+
+k=1
+
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+
+where IM Fk is the k-th intrinsic mode function and r is the last residual. The EMD can be
+efficiently applied to 1D-signals. However the selection of interpolation method for the second
+step gives a wide variety of possibilities, from the original formulation using cubic splines [23],
+passing by sparse filtering [22], filtering from wavelet based decomposition [15] and partial
+differential equation based formulations [10].
+The EMD method can be justified only under certain very restrictive assumptions that
+are seldom satisfied by practical data. The EMD method is also known to be very sensitive
+to noisy data. Recently, a compendium of practical advice for EMD in real life examples
+has been presented in [50]. Some works extend EMD to 2D [12, 49, 11] and 3D images [18].
+However, the main limitations of EMD for both 2D and 3D are both the choice of maxima
+and minima detector, and the choice of the interpolation algorithm.
+An alternative characterisation of the EMD computation was introduced by Diop et al. in
+[12, 13] according to the definition of local mean, i.e., the sifting process is fully determined
+by the sequence (hn )n∈N defined by :
+
+hn+1 = hn − Φ(hn ) = (Id − Φ) hn
+(1.2)
+h0 = f
+
+where Φ(hn ) = ĥn +2 ȟn , and ĥn (resp. ȟn ) denotes a continuous interpolation of the maxima
+90 (resp. minima) of hn .
+91
+In the following subsection, we formulated an EMD by means of dilation and erosion
+92 operators.
+89
+
+1.1.2. Dilation/Erosion. We study here functions f : E → R, where R it allowed to be
+extended-real-valued, i.e., to take values in R = [−∞, ∞]. Accordingly, the set of all such
+95 functions is denoted by F(E, R). We will use the two basic morphological operators dilation
+96 and erosion, which correspond respectively to the convolution in the (max, +) algebra and its
+97 dual.
+93
+
+94
+
+99
+
+Definition 1.1. In mathematical morphology [47], the dilation (sup-convolution) δSE (f ) of
+f is given by:
+
+100
+
+(1.3)
+
+98
+
+δSE (f )(x) := sup {f (y) + SE(x − y)} = sup {f (x − w) + SE(w)}
+y∈E
+
+w∈E
+
+where SE ∈ F(E, R) is the (additive) structuring function which determines the effect of the
+102 operator. Here the inf-addition rule ∞ − ∞ = ∞ is to be used in case of conflicting infinities.
+103 sup f and inf f refer to the supremum (least upper bound) and infimum (greatest lower bound)
+104 of f . In the discrete case where the function is a finite set of points, max and min are used.
+
+101
+
+106
+
+The erosion [47] εSE (f ), known as inf-convolution in convex analysis [35], is the adjoint
+operator to the dilation (1.3), and it is defined as
+
+107
+
+(1.4)
+
+105
+
+εSE (f )(x) := −δSE
+ˇ (−f )(x) = inf {f (y) − SE(y − x)} = inf {f (x + w) − SE(w)}
+y∈E
+
+w∈E
+
+This manuscript is for review purposes only.
+
+4
+
+S. VELASCO-FORERO, R. PAGÈS AND J. ANGULO
+Observed signal
+
+EMD
+
+8
+
+MEMD
+
+6
+
+6
+
+4
+
+4
+
+2
+
+2
+
+6
+
+4
+
+2
+0
+
+0
+0
+0.0
+
+0.5
+
+1.0
+
+1.5
+
+2.0
+
+2.5
+
+3.0
+
+0
+
+50
+
+100
+
+Observed signal
+
+150
+
+200
+
+250
+
+300
+
+0
+
+50
+
+100
+
+EMD
+
+8
+
+6
+
+150
+
+200
+
+250
+
+300
+
+200
+
+250
+
+300
+
+MEMD
+
+6
+
+6
+
+4
+
+4
+
+2
+
+2
+
+0
+
+0
+
+4
+
+2
+
+0
+300
+0.0
+
+0.5
+
+1.0
+
+1.5
+
+2.0
+
+2.5
+
+3.0
+
+0
+
+50
+
+100
+
+150
+
+200
+
+250
+
+300
+
+0
+
+50
+
+100
+
+150
+
+Figure 1. First Row: Noise-free example a) f (x) = 2x+1+cos(20x)+cos(60x), b) Classical EMD c) MEMD
+with flat structuring functions. Second Row: Noisy example a) f (x) = 2x + 1 + cos(20x) + cos(60x) + N (0, 18 ),
+b) Classical EMD c) MEMD with flat structuring functions.
+
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+
+ˇ
+where the transposed structuring function is SE(x)
+= SE(−x).
+Remark 1.2. ∀f, g ∈ F(E, R)
+1. The operators (1.3) and (1.4) are translation invariant.
+2. (1.3) and (1.4) correspond to one another through the duality relation δSE (f )(x) ≤
+g(x) ⇐⇒ f (x) ≤ εSE (g)(x), called adjunction [16].
+3. An operator ξ is called increasing if f (x) ≥ g(x) ⇒ ξ(f )(x) ≥ ξ(g)(x) ∀x. The dilation
+(1.3) and erosion (1.4) are increasing for all SE.
+4. An operator ξ is called extensive (resp. antiextensive) if ξ(f )(x) ≥ f (x) (resp.
+ξ(f )(x) ≤ f (x)), ∀x. The dilation (1.3) (resp. erosion (1.4)) is extensive (resp. antiextensive) if and only if SE(0) ≥ 0, i.e., the structuring function evaluated at the origin
+is non-negative.
+5. εSE (f )(x) ≤ f (x) ≤ δSE (f )(x) if and only if SE(0) ≥ 0.
+6. δSE (resp. εSE ) does not introduce any local maxima (resp. local minima) if SE ≤ 0
+and SE(0) = 0. In this case, we say that SE is centered.
+Proof. (1) and (2) are classical results from [47]. As explained in [20] and [30], the adjunction is related to a well-known concept in group and lattice theory, the Galois connection. (3)
+and (6) are easy to prove directly from the definition of the operators. It has been also proved
+in the original paper of inf-convolution (Proposition 6.d) in [35]. (4) ∀f, δSE (x) ≥ f (x) ⇒
+∀f, sup (f (x − w) + SE(w) − f (x)) (x) ≥ 0 ⇒ SE(0) ≥ 0. Now, sup f (x − w) + SE(w) ≥
+f (x) + SE(0), if SE(0) ≥ 0 ⇒ sup f (x − w) + SE(w) ≥ f (x). From (3) and (4) is easy to prove
+(5).
+
+The most commonly studied framework for dilation/erosion of functions is based on flat struc130 turing functions, where structuring elements are viewed as shapes. More precisely, given the
+129
+
+This manuscript is for review purposes only.
+
+LEARNABLE EMPIRICAL MODE DECOMPOSITION BASED ON MATHEMATICAL MORPHOLOGY
+
+5
+
+structuring element B ⊆ E, its associated structuring function is
+
+0
+if y ∈ B
+B(y) =
+132 (1.5)
+−∞ if y ∈ B c
+131
+
+Hence, the flat dilation δB (f ) and flat erosion εB (f ) can be computed respectively by the
+moving local maxima and minima filters. The shape of B is often a disk of radius λ, denoted
+135 by Bλ .
+
+0
+if kwk ≤ λ
+Bλ (w) =
+136 (1.6)
+−∞ if kwk > λ
+
+133
+
+134
+
+A Morphological Empirical Mode Decomposition (MEMD) where the pair (ĥ, ȟ) correspond
+138 to (εBλ , δBλ ) has been proposed in [13].
+137
+
+139
+
+140
+
+Definition 1.3. The Flat Morphological Empirical Mode [13] is defined as
+(1.7)
+
+Φε,δ,Bλ (f )(x) :=
+
+δBλ (f )(x) + εBλ (f )(x)
+2
+
+The operator (1.7) was proposed to generate an EMD based on solving a morphological PDE
+[13]. As a manner of example, EMD and MEMD are shown for a mono-component signal in
+143 the first row of Figure 1. In the second row of Figure 1, we illustrated how the addition of
+144 noisy perturbed more the results of classical EMD than the proposed morphological one.
+141
+142
+
+Remark 1.4. Note that using (1.7) twice, the first residual (1.2) is 2(f − Φλ (f )) = (f −
+δBλ (f )) + (f − εBλ (f )) = 2f − δBλ (f ) − εBλ (f ). This expression, up to a minus sign, cor147 responds just to the so-called morphological Laplace operator [53], and therefore provides an
+148 interpretation of the EMD as an iterated second-order derivative decomposition of the function
+149 f .
+145
+
+146
+
+150
+151
+152
+153
+154
+155
+
+156
+
+1.2. Our proposal. The main motivation of this paper is to define EMD learnable in the
+sense of neural networks approaches. Note that last property in Remark 1.2 together with
+the extensivity/antiextensivity (i.e., upper/lower envelopes) imply that the pair of operators
+(εSE , δSE ) are candidate functions for (ĥ, ȟ) in (1.2). Accordingly, we proposed a simple
+generalization by considering non-flat structuring functions.
+Definition 1.5. The Morphological Empirical Mode (MEM) is defined as
+(1.8)
+
+Φε,δ,SE (f ) =
+
+δSE (f )(x) + εSE (f )(x)
+2
+
+This operator can be formulated in any dimension (from 1D to nD signals) and avoid using
+158 an interpolation method which is the bottleneck of the original definition of EMD.
+157
+
+159
+160
+161
+162
+
+1.3. Contributions of the paper. In what follows we study,
+• A formulation of EMD based on pairs of morphological operators in a general case.
+• The proposition of a parametric morphological empirical mode whose sifting process
+is invariant to additive intensity shifts.
+
+This manuscript is for review purposes only.
+
+6
+
+• A approach to learn the structuring functions of a morphological operator in a deep
+learning framework.
+• A convex sum of envelopes instead of mean points to learn morphological EMD.
+• A number of numerical experiments for hyperspectral signal classification to illustrate
+the relevance of our proposal.
+
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+
+S. VELASCO-FORERO, R. PAGÈS AND J. ANGULO
+
+1.4. Organization of the paper. The rest of the paper is organised as follows. In section 2, we review the general definition of Empirical Mode Decomposition approach to decompose signals and we introduce how morphological extensive/antiextensive filters are naturally
+adapted to implement a MEMD computation. We consider different possibilities in the choice
+of structuring functions and the pair of lower and upper envelopes. Additionally, an α-MEM
+is proposed as a generalization of the mean of envelopes. Section 3 is devoted to the implementation of morphological EMD operators as layers in a neural network pipeline. Section 4
+presents the experimental results of hyperspectral image classification using DCNNs which
+integrate morphological EMD layers. Conclusions and perspectives are discussed in section 5.
+
+2. Morphological Empirical Mode and its variants. In this section, three kinds of gen178 eralization will be explored: a) different types of structuring functions, b) different pairs of
+179 functions to compute the lower and upper envelopes, and c) a convex sum of lower and upper
+180 envelopes.
+177
+
+2.1. Varying the structuring function. In this subsection, firstly we will study a parametric family of symmetric quadratic shape structuring functions. Secondly, similarly to classical
+183 CNNs, the structuring function plays a similar role to the kernel in standard convolution.
+184 Accordingly a structuring function without any parametric constraint is also considered.
+181
+182
+
+2.1.1. Quadratic MEM. From the theory of morphological scale-spaces, the most useful
+nonflat structuring functions are those which depend on a scale parameter [21, 46]. The only
+187 separable and rotationally invariant structuring functions is the called quadratic structuring
+188 function[51]:
+
+185
+186
+
+qλ (z) = −
+
+kzk2
+,
+2λ
+
+189
+
+(2.1)
+
+190
+
+such that the corresponding dilation and erosion are equal to the Lax–Oleinik operators or
+viscosity solutions of the standard Hamilton–Jacobi PDE, also known as morphological PDE:
+ut (t, x) ∓ kux (t, x)k2 = 0, (t, x) ∈ (0, +∞) × E; u(0, x) = f (x), x ∈ E. It plays also a canonical
+role in the definition of dilation and erosion on Riemannian manifolds [2] and their behaviour
+with respect to the maxima/minima is well understood [25]. The morphological PDE was
+proposed and analyzed using 2D boundary propagation in [52] and further analyzed using the
+morphological slope transform in [19].
+
+191
+192
+193
+194
+195
+196
+
+Remark 2.1. The erosion by a quadratic structuring function with parameter λ is defined
+by
+(2.2)
+
+
+kzk2
+εqλ (f )(x) := inf {f (y) − qλ (y − x)} = inf {f (z − x) − qλ (z)} = inf f (z − x) +
+199
+.
+y∈E
+z∈E
+z∈E
+2λ
+197
+198
+
+This manuscript is for review purposes only.
+
+LEARNABLE EMPIRICAL MODE DECOMPOSITION BASED ON MATHEMATICAL MORPHOLOGY
+
+Flat Dilation
+Flat Erosion
+Flat MEMD
+
+5
+
+4
+
+3
+
+3
+
+2
+
+2
+
+1
+
+1
+
+0
+
+0
+0
+
+50
+
+100
+
+Quadratic Dilation
+Quadratic Erosion
+Quadratic MEMD
+
+5
+
+4
+
+150
+
+200
+
+250
+
+300
+
+350
+
+400
+
+7
+
+0
+
+50
+
+100
+
+150
+
+200
+
+250
+
+300
+
+350
+
+400
+
+Figure 2. The blue points corresponds to the observed signal, a) Flat dilation/erosion based Morphological
+Empirical Mode (1.7) with a disk of λ = 5, b) Quadratic dilation/erosion based Morphological Empirical Mode
+(2.3) with λ = 3.
+
+The erosion of a function f by a quadratic structuring function with parameter λ is known as
+the Moreau envelope or Moreau-Yosida approximation [35, 43, 40], which offers many benefits
+202 specially for optimization purposes [34]. Additionally, (2.2) induces an additive scale-space
+203 [19, 24], i.e., εqλ (εqλ (f )) = εqλ +λ (f ).
+1
+2
+1
+2
+200
+
+201
+
+205
+
+Definition 2.2. The quadratic morphological empirical mode (QMEM) is defined as a MEM
+where the pair (ĥ, ȟ) corresponds to erosion/dilation with a quadratic structuring functions,
+
+206
+
+(2.3)
+
+207
+
+An example of (2.3) for a 1D signal with noise is shown in Figure 2.
+
+204
+
+Φε,δ,qλ (f ) =
+
+εqλ (f ) + δqλ (f )
+.
+2
+
+2.1.2. Nonflat Morphological MEM. The most general case of nonflat structuring function involves different additive weights Wy (x) at each position x of the local neighborhood B
+210 centered at pixel y, i.e., a nonflat structuring function SEW of support shape B at y is defined
+211 as
+
+Wy (x) if x ∈ B(y)
+212 (2.4)
+SEWy (x) =
+−∞
+otherwise
+208
+
+209
+
+213
+214
+
+The case (2.4) includes flat, nonflat, either local or nonlocal structuring functions [54]. In the
+translation invariant case, the weighting function Wy (x) is equal for all y ∈ E.
+
+2.2. Varying the Envelope. We have explored above several possible structuring functions
+that produce multiple pairs of (εSE , δSE ) as basic ingredient for the Morphological Empirical
+217 Mode (1.8). At this point, we can consider the use of the composition of erosion and dilation
+218 to obtain other upper/lower envelopes, typically of the form (δSE ◦ εSE , εSE ◦ δSE ).
+215
+
+216
+
+2.2.1. Opening/Closing MEM. The theory of morphological filtering is based on the
+opening γSE (f )(x) and closing ϕSE (f )(x) operators, obtained respectively by the composi221 tion product of erosion-dilation and dilation-erosion, i.e., γSE (f )(x) = δSE (εSE (f )) (x) and
+219
+
+220
+
+This manuscript is for review purposes only.
+
+8
+
+S. VELASCO-FORERO, R. PAGÈS AND J. ANGULO
+
+Flat Closing
+Flat Opening
+Flat Opening/Closing MEMD
+
+5
+
+Quadratic Closing
+Quadratic Opening
+Quadratic Closing/Opening MEMD
+
+5
+
+4
+
+4
+
+4
+
+3
+
+3
+
+3
+
+2
+
+2
+
+2
+
+1
+
+1
+
+1
+
+0
+
+0
+0
+
+50
+
+100
+
+150
+
+200
+
+250
+
+300
+
+350
+
+400
+
+LasryLions DilationErosion
+LasryLions ErosionDilation
+LasryLions MEMD
+
+5
+
+0
+0
+
+50
+
+100
+
+150
+
+200
+
+250
+
+300
+
+350
+
+400
+
+0
+
+50
+
+100
+
+150
+
+200
+
+250
+
+300
+
+350
+
+400
+
+Figure 3. a) Flat OCMEM with a disk of λ = 5, b) Quadratic OCMEM with λ = 3 and c) Lasry-Lions
+MEM with λ = 3 and c = .9
+222
+223
+224
+225
+226
+227
+228
+
+ϕSE (f )(x) = εSE (δSE (f )) (x). Opening (resp. closing) is increasing, idempotent and antiextensive (resp. extensive), independently of the properties of the structuring function. The
+opening can be seen as the supremum of the invariant parts of f under-swept by SE and it
+can be again rewritten as a maximal lower envelope of structuring functions (resp. minimal
+upper envelope of negative symmetric structuring functions). We highlight that the quadratic
+envelope also called as proximal hull [7] is an opening with a quadratic structuring function,
+i.e., a quadratic erosion followed by a quadratic dilation.
+
+230
+
+Definition 2.3. The opening/closing morphological empirical mode (OCMEM) is defined as
+a MEM where the pair (ĥ, ȟ) corresponds to (γSE , ϕSE ), i.e.,
+
+231
+
+(2.5)
+
+232
+
+For the case of flat disks Bλ , the operator (2.5) was called a morphological locally monotonic
+(LOMO) filter in [5]. A signal is monotonic over an interval if it is either non-increasing or
+non-decreasing over that interval. A 1-D signal is locally monotonic of degree n (LOMO-n)
+if and only if the signal is monotonic within every interval of length n. In the general case, a
+LOMO filter of f is defined as the fixed point of iterating Φγ,ϕ,Bλ (f ), which is simultaneously
+idempotent to both the opening and closing by a flat disk as structuring function. Two
+examples of (2.5) for both flat and quadratic structuring function for the 1D signal with noise
+are shown in Figure 3.
+
+229
+
+233
+234
+235
+236
+237
+238
+239
+
+Φγ,ϕ,SE (f ) =
+
+γSE (f ) + ϕSE (f )
+.
+2
+
+245
+
+2.2.2. Lasry–Lions MEM. Besides their feature extraction properties, morphological dilation and erosion using quadratic structuring functions are a powerful tool for Lipschitz
+regularization. For the nonconvex case, the Lasry–Lions double envelope is defined as the
+composition of two different Moreau envelopes, or using the morphological vocabulary, the
+composition of an erosion followed by a dilation with quadratic structuring functions. For all
+0 < c < 1 and 0 < λ, the so-called Lasry–Lions regularizers [27] are defined as
+
+246
+
+γλc (f )(x) := δqcλ (εqλ (f )) (x),
+
+247
+
+ϕcλ (f )(x) := εqcλ (δqλ (f )) (x),
+
+240
+241
+242
+243
+244
+
+such that if f is bounded, the functions γλc and ϕλc are bounded and one has the ordering
+249 properties for the following envelopes:
+248
+
+This manuscript is for review purposes only.
+
+LEARNABLE EMPIRICAL MODE DECOMPOSITION BASED ON MATHEMATICAL MORPHOLOGY
+
+• if λ1 ≥ λ2 > 0, for any 0 < c < 1 then
+
+250
+
+γλc 1 (f )(x) ≤ γλc 2 (f )(x) ≤ f ≤ ϕcλ2 (f )(x) ≤ ϕcλ1 (f )(x);
+
+251
+
+• if 0 < c2 < c1 < 1, for any λ > 0 then
+
+252
+
+γλc2 (f )(x) ≤ γλc1 (f )(x) ≤ f ≤ ϕcλ1 (f )(x) ≤ ϕcλ2 (f )(x).
+
+253
+254
+255
+
+9
+
+For any bounded function f , Lasry–Lions regularizers provide a function with a Lipschitz
+continuous gradient, i.e.,
+
+|∇γλc (f )(x) − ∇γλc (f )(y)| ≤ Mλ,c kx − yk, |∇ϕcλ (f )(x) − ∇ϕcλ (f )(y)| ≤ Mλ,c kx − yk.
+
+257 where the Lipschitz constant is Mλ,c = max (cλ)−1 , ((1 − c)λ)−1 . If f is bounded and
+258 Lipschitz continuous, one has
+256
+
+Lip(γλc (f )) ≤ Lip(f ) and Lip(ϕcλ (f )) ≤ Lip(f ),
+
+259
+260
+
+with
+
+Lip(g) = sup
+
+261
+
+
+|g(x) − g(y)|
+n
+; x, y ∈ R , x 6= y .
+kx − yk
+
+For more details on the properties of Lasry–Lions regularizers in the context of mathematical
+263 morphology, see [1].
+262
+
+264
+265
+266
+267
+268
+
+Remark 2.4. The following statements are interesting about the composition of quadratic
+morphological operators [43, 9]. Let 0 < µ < λ,
+1. εqλ (γqλ (f )) = εqλ (f );
+2. γqµ (εqλ−µ (f )) = εqλ−µ (γqλ (f ));
+3. γqλ−cλ ϕcλ (f ) = ϕcλ (f ).
+
+Definition 2.5. The Lasry-Lions morphological empirical mode (LLMEM) is defined as a
+270 MEM where the pair (ĥ, ȟ) corresponds to (γλc , ϕcλ ), i.e.,
+
+269
+
+(2.6)
+
+272
+
+An example of (2.6) for a 1D signal is shown in Figure 3(c).
+
+273
+
+2.3. Parametric family of morphological empirical mode operators. The choices of the
+structuring function and the class of lower and upper envelopes give extra possibilities for the
+formulation of an EMD approach. Besides, a third degree of freedom is considered now by
+including a parameter to weight the contribution of the two envelopes. We have been inspired
+by the recent work on proximal average [9] to propose a convex generalization of MEMs.
+
+274
+275
+276
+277
+
+Φγ,ϕ,c,λ (f ) :=
+
+γλc (f ) + ϕcλ (f )
+.
+2
+
+271
+
+Definition 2.6. Let α be a real value with 0 ≤ α ≤ 1, the α-Morphological Empirical Mode
+279 based on the pair (ȟ, ĥ) is defined as:
+
+278
+
+280
+
+(2.7)
+
+Φαȟ,ĥ (f ) = αĥ(f ) + (1 − α)ȟ(f ).
+
+This manuscript is for review purposes only.
+
+10
+
+S. VELASCO-FORERO, R. PAGÈS AND J. ANGULO
+
+Definition 2.7. Let Tg : F(E, R) 7→ F(E, R) be a set of transformations on the space E for
+the abstract group g ∈ G. We say a function φ is invariant to g if for all transformations Tg ,
+283 and for all f ∈ F(E, R) one has
+
+281
+
+282
+
+284
+
+(2.8)
+
+φ(Tg (f )) = φ(f )
+
+285
+286
+
+This says that the feature extracted by φ does not change as the transformation is applied to
+the input.
+
+287
+
+In this context, an important fact to consider are the invariances of the operator (2.7).
+
+Remark 2.8. For any SE, ∀0 ≤ α ≤ 1, and all the pairs (ȟ, ĥ) previously considered, the
+289 operator (2.7) is increasing, invariant to translation, and the sifting process f − Φα (f ) is
+ȟ,ĥ
+288
+
+290
+
+invariant to additive intensity shifts, i.e., ∀c ∈ R and ∀f ∈ F(E, R),
+
+291
+
+(f (x) + c) − Φαȟ,ĥ (f (x) + c) = f (x) − Φαȟ,ĥ (f (x)).
+
+292
+
+3. Learnable Morphological Empirical Mode Decomposition. One of the main advantages of EMD is that it can be considered as a parameter-free decomposition [50] and, for
+this reason, the inclusion of the structuring function and the parameter α can be seen as
+inconvenient. However, in the following, we consider EMD in the context of learning from
+data [29], where one would be interested in using EMD decomposition as a preprocessing of
+an input signal before using a machine learning or deep learning methods [42, 3, 26].
+
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+
+3.1. Neural network-based learning of parameters. The simplest form of a neural network is the called multilayer architecture, which is a stack by composition of modules, each
+module implements a function Xn = Fn (θn , Xn−1 ), where Xn is a vector representing the
+output of module, θn is the vector of learnable parameters in the module, and Xn−1 is the
+module input vector (as well as the output of the previous module). The input of the first
+module X0 is an input pattern Z0 , the output of the whole system is the one of the last module which denoted Zl , where l is the number of layers. In gradient-based learning methods,
+given a cost function Lp (·, ·) measuring the discrepancy between the output of the system
+Zlp and Dp the “correct” or desired output for the p-th input pattern. One is interested on
+minimizing the average discrepancy over a set of input/output pairs called the training set,
+{(Z00 , D0 ), (Z01 , D1 ), . . . , (Z0n , Dn )}. The network is initialized with randomly chosen weights
+θ0 . The gradient of the error function with respect to each parameter is computed and gradient
+descent is used to update the weights in each layer, i.e., for the i-th iteration, θi+1 = θi −η ∂L(θ)
+∂θi
+
+where η is a learning rate, and the computation of ∂L(θ)
+, is performed by backpropagation al∂θi
+gorithm through the layers [44]. Additionally, for data structured like images, convolutional
+neural networks (CNN) are nowadays the recommended solution. In CNNs, the same operator
+is computed in each pixel of the image. This mechanism is called weight sharing, and it has
+several advantages such as it can reduce the model complexity and make the network easier
+to train [38]. Including any new layer, like EMD, requires therefore the computation of the
+corresponding gradient of the layer with respect to the parameters to be learnt.
+3.2. Derivatives of Morphological EMD in discrete domains.
+
+This manuscript is for review purposes only.
+
+LEARNABLE EMPIRICAL MODE DECOMPOSITION BASED ON MATHEMATICAL MORPHOLOGY 11
+319
+320
+321
+322
+323
+324
+325
+326
+327
+
+328
+
+329
+330
+331
+332
+333
+
+334
+
+3.2.1. Derivative of dilation and erosion. Our approach involves dilation and erosion
+operators as defined in (1.3) and (1.4). However, in the discrete domain as it is the case of
+nD images, the sup operator is computed via max. Consequently, for dilation operator (1.3),
+is computed by δλ (x) = maxw {f (x − w) + SEλ (w)}. To understand how to compute the
+derivative of δλ (x) with respect to λ, we rewrite δλ (x) = maxw∈SEλ u(w). The max operator
+has no gradient with respect to non-maximum values, since changing them slightly does not
+affect the output. In general for rank operators, their derivative is zero in every coordinate,
+except for that of the value attending the desired rank [41, 36]. Accordingly, the derivative
+with respect to a parameter in the additive structuring function is given by
+(
+∂SEλ (w)
+if w ∈ arg maxx δλ (x)
+∂δλ (x)
+∂δλ (x) ∂u(w)
+∂λ
+=
+=
+(3.1)
+∂λ
+∂u(w) ∂λ
+0 otherwise
+where the operator arg maxx f (x) := {x | ∀y : f (y) ≤ f (x)}. In other words, arg max is
+the set of points x, for which f (x) attains the largest value of the function. Note that we
+do not regard maximum as being attained at any x when f (x) = ∞, nor do we regard the
+minimum as being attained at any x when f (x) = −∞. Similarly for the erosion, ελ (x) =
+minw [f (x + w) − SEλ (w)] = minw∈SEλ u(w)
+(
+λ (w)
+if w ∈ arg minx ελ (x)
+− ∂SE∂λ
+∂ελ (x) ∂u(w)
+∂ελ (x)
+(3.2)
+=
+=
+∂λ
+∂u(w) ∂λ
+0 otherwise
+
+there is only gradient with respect to minimum values. As a manner of example, for the
+dilation by quadratic structuring element (2.1), one has
+( 2
+kwk
+∂qλ (z)
+∂δλ (x)
+2 if w ∈ arg maxx δλ (x)
+2 −1
+2
+= (2λ ) kzk =⇒
+= 2λ
+337
+∂λ
+∂λ
+0 otherwise
+335
+336
+
+338
+
+339
+340
+341
+342
+343
+344
+
+345
+
+Therefore, for Quadratic EMD (2.3) the derivative with respect of λ,
+kwδ k2 − kwε k2
+∂Φλ (x)
+=
+,
+∂λ
+4λ2
+where wδ ∈ arg maxx δλ (x) and wδ ∈ arg minx ελ (x). Thus, the evolution of the parameter
+λ depends on the difference of the norm to the value where the morphological operator attains their value, normalised by the square of the current value of λ. Curiously the nonflat
+translation invariant MEM (2.4) has a derivative that does not depend on the scale of the
+parameters, i.e, for SEW = [w0 , . . . , wk ],
+
+1/2 if wi ∈ arg maxx δSEW (x)
+∂ΦSEW (x) 
+−1/2 if wi ∈ arg minx εSEW (x)
+(3.3)
+=
+
+∂wi
+0 otherwise
+
+Finally, the derivative for composition operators, as opening or closing, can be easily computed
+347 by the chain rule.
+346
+
+This manuscript is for review purposes only.
+
+12
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+
+S. VELASCO-FORERO, R. PAGÈS AND J. ANGULO
+
+3.3. Implementation. Different methods for learning morphological operators in neural
+networks have been proposed in the literature:
+1. Replace maximum and minimum operator by smooth differentiable approximations,
+making possible the use of conventional gradient descent learning approach via backpropagation, for instance using an approximation by counter-harmonic mean [32] or
+other generalizations [28].
+2. Morphological operations can be computed by combinations of depthwise and pointwise convolution with depthwise pooling [37] allowing the use of classical optimization
+procedures.
+3. Use original definition of morphological operator, and in the backpropagation step
+follows the approach used in max-pooling layers [6, 14, 33].
+We follow the last approach. That means that the gradient in (3.1) and (3.2) will have values different from zero only for the first element equal to the arg max or arg min instead
+of the complete equivalence class. This is the implementation used in deep learning modules based on Tensorflow or Pytorch. An implementation of our approach is available in
+http://www.cmm.mines-paristech.fr/∼velasco/morpholayers/
+3.3.1. Example of learning parameters in morphological operators. We present a dummy
+example of supervised classification in two classes for 1D signals of dimension p. Both classes
+have been generated by the function f (x) = sin( 2π
+c (x + ))), for x = 0, . . . , 10, with spatial
+step of 0.02 and where  is a random realisation of a normalized Gaussian distribution. For
+the first class, we have used a period c = 2 and for the second class a period c = 1.75. Some
+examples are illustrated in Figure 4(a). We explore the training process by using a simple
+1
+architecture: ẑ := model(x) = 1+exp(− 1 P
+, i.e, a morphological dilation followed by
+p
+δ (x ))
+p
+
+371
+372
+373
+374
+375
+376
+
+i=1 λ
+
+i
+
+a global average pooling with a sigmoid activation function, also called the logistic function.
+Now, we want to show the computation of the partial derivative with respect to a given loss
+function. As a manner of example, we use the mean squared error as a loss function, i.e.,
+loss(z, ẑ) = (z − ẑ)2 . One can compute the gradient ∂loss(z,ẑ)
+by using the chain rule of
+∂λ
+derivative
+P
+∂loss(z, ẑ)
+∂loss(z, ẑ) ∂ ẑ
+∂σ
+∂ δλ /p
+P
+=
+,
+∂λ
+∂ ẑ
+∂σ ∂ δλ /p
+∂λ
+
+1
+where σ(x) := 1+exp(−x)
+is the sigmoid function. Remember that the derivative of the sigmoid
+Pp
+378 function is σ(x)σ(1−x). By defining m =
+i=1 δλ (xi )/p, the mean value of the dilation, which
+379 is used as decision function, the derivative of the parameter of the dilation with respect to the
+380 loss function can be written by
+
+377
+
+p
+
+381
+
+∂loss(z, ẑ)
+(2m)(m(1 − m)) X ∂δλ (x)
+=
+.
+∂λ
+p
+∂λ
+i=1
+
+The first term is computed in the forward pass and it is the same for every parameter. We
+decided to train a nonflat structuring function, so from (3.3), one can interpret the second
+384 term as a counts the number of number of times that the spatial position in the structuring
+385 function attains the maximal value, which is illustrated in Figure 4(c) for the last epoch of the
+382
+383
+
+This manuscript is for review purposes only.
+
+LEARNABLE EMPIRICAL MODE DECOMPOSITION BASED ON MATHEMATICAL MORPHOLOGY 13
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+
+training. Additionally, the evolution of structuring function weights is given in Figure 4(d).
+As a manner of example, two signals and its corresponding learned dilation are shown for the
+initialization (as a flat structuring function) in Figure 4(e) and after convergence in Figure 4(f).
+Finally, the decision function (mean value of the learned dilation) is shown for all the training
+examples at initialisation Figure 4(g) and after convergence Figure 4(h). We highlight that
+the learned structuring function seems to be an asymmetric quadratic with a negative shift
+in the maximum value, which can be considerer as an additive bias. That is the reason why
+the learned dilation is less than the original function in Figure 4(f).
+4. Experimental results on hyperspectral classification. In this section, we investigate
+the application of the proposed morphological empirical mode layer to the problem of signal
+classification. In particular, we will focus in the case of supervised classification of highdimensional 1D signals in hyperspectral images. The architecture chosen as baseline is the one
+recommended in [39] and illustrated in Figure 5. More specifically, the network is composed
+of convolution layers, RELU, max-pooling. Each stage consists of twenty convolution layers
+with a kernel size of 24 channels followed by ReLU activation, and a dense layer with batch
+normalization. In the experimenal section, the proposed morphological empirical mode will
+be used as the first layer of an architecture of the baseline neural network.
+4.1. Considered datasets. The aim of this section is to compare the results obtained by
+different proposed EMD for 1D supervised classification problems. Accordingly, we used as
+benchmark two classical hyperspectral images (HIS):
+• Pavia University hyperspectral is a scene acquired by the ROSIS sensor in the north
+of Italy. The dataset contains nine different classes including multiple solid structures,
+natural objects and shadows (Figure 6(a-c)). After discarding the noisy bands, the
+considered scene contains 103 spectral bands, with a size of 610 × 340 pixels with
+spatial resolution of 1.3 mpp and covering the spectral range from 0.43 to 0.86 µm.
+• Indian Pines dataset is a hyperspectral image captured over an agricultural area characterized by its crops of regular geometry and also irregular forest regions. The scene
+consists of 145 × 145 pixels and with 224 spectral bands, which have been collected
+in the wavelength range from 0.4 to 2.5 µm. There are 16 different classes for training/testing set with a highly unbalanced distribution (Figure 6(d-f)).
+4.1.1. Protocol. HSI scenes generally suffer from high intraclass variability and interclass
+similarity, resulting from uncontrolled phenomena such as variations in illumination, presence
+of areas shaded and/or covered by clouds, among others. Accordingly, the selection of training
+samples must be carried out very carefully. Deep learning models for HSI have been traditionally trained by extracting random samples from available ground-truth. However, some
+works emphasize that the random sampling strategy has a great influence on the reliability
+and the quality of the solution obtained in HSI [39]. In order to avoid this important issue, we
+have followed the recommendation of using spatial-disjoint samples, i.e, we have used a strict
+spatial separation between training and testing sets, allowing us to compare our models in a
+difficult and realistic case. The selected training and testing samples have been illustrated in
+Figure 6(b-c) for Pavia University and (e-f) for Indian Pines datasets.
+In gradient descent approaches the selection of random initialization of the parameter
+
+This manuscript is for review purposes only.
+
+14
+
+S. VELASCO-FORERO, R. PAGÈS AND J. ANGULO
+
+2π
+(a) Class 1, f (x) = sin( 1.95(x+)
+)
+
+(c)
+
+Pp
+
+i=1
+
+∂δλ (x)
+∂λ
+
+2π
+(b) Class 2, f (x) = sin( 1.75(x+)
+)
+
+(d) Evolution of learned structuring function
+
+(e) In the initialization
+
+(f) After convergence
+
+(g) In the initialization
+
+(h) After convergence
+
+Figure 4. Evolution in the case of Nonflat structuring function learning in a classification problem based
+on dilation and average pooling.
+
+This manuscript is for review purposes only.
+
+LEARNABLE EMPIRICAL MODE DECOMPOSITION BASED ON MATHEMATICAL MORPHOLOGY 15
+
+Figure 5. Baseline architecture vs Baseline architecture applied to EMD. The baseline uses a 20 convolutions 2D with a kernel size of (24, 1) followed by a max-pooling reduction of size (5, 1) and a RELU activation.
+For the case presented in the experimental section the same baseline architecture is used. In (b) is the same
+baseline architecture adapted for ten empirical modes.
+
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+
+value is critical. The aim of this initialization is to prevent layer activation outputs from
+exploding or vanishing during the course of a forward pass [17]. While the source of difficulty
+is well-understood, there is no universal remedy. For our MEM layers, we have used the
+following initialization:
+1. For non-flat structuring functions, a flat structuring element, i.e., SEW is a zero matrix.
+2. For quadratic structuring functions, λ is a random realization of a uniform distribution
+between one and four, and for the parameter c, a uniform distribution between .5 and
+.95.
+3. For the parameter α in (2.7), the value .5 is used.
+4.1.2. Quantitative results. We explore the use of proposed EMDs as preprocessing layers, that means instead of learning the classification task from the original spectral signals,
+we will use the residual of a single step of the decomposition by MEMD. The parameters of
+the MEMD are learned in a gradient-based learning method. As a manner of comparison,
+we report in Figure 8 and Figure 9 the accuracy over testing samples for different proposed
+envelopes by varying both the number of MEM from 10 to 40 and the type of structuring
+function. Each point is the performance for the best model trained from different random initialization and an early stopping parameter of ten, i.e, we have stopped the training process if
+it is not improving during ten successive epochs. As it is common in supervised classification
+problems, we have used categorical cross-entropy as loss function. Additionally, for quantitative comparisons, we have reported best, mean and standard deviation after ten repetitions on
+both Indian Pines HSI (Table 1) and Pavia University HSI (Table 2). In general, the following
+results can be highlighted:
+• Learning the parameter in the α-Morphological Empirical Mode (2.7) improves the
+performance. This can be observed in Table 1) and Pavia University HSI (Table 2)
+by comparing the performance of models trained with α = 0.5 and models where
+this parameter is learned. Additionally, in Figure 8 and Figure 9 this fact has been
+highlighted by using different colors in the representation.
+• Quadratic MEMDs perform significantly worse than non-flat ones. However, we would
+like to highlight that the number of parameters is less in the first case.
+
+This manuscript is for review purposes only.
+
+16
+
+S. VELASCO-FORERO, R. PAGÈS AND J. ANGULO
+
+(a) In Pavia University HSI, each data point
+corresponding to a vector is 103 dimensions.
+An example per class is shown from the training
+set in (c).
+
+(b) In Indian Pines HSI, each data point corresponds to a vector in 224 dimensions. An
+example per class is shown from the training
+set in (e).
+
+(c) Spatial position of training set in nine
+classes for Pavia University HSI.
+
+(d) Spatial position of testing set for Pavia University HSI.
+
+(e) Spatial position of training set in 16 classes for(f) Spatial position of testing set for Indian
+Indian Pines HSI.
+Pines HSI.
+Figure 6. For considered HSI dataset, (a) an example per class in Pavia University and (b) Indian Pines.
+Spatial disjoint distribution of training and testing sets: for Pavia University in (c-d) and for Indian Pines in
+(e-f ). In both cases, white pixels are not considered in the evaluation.
+
+This manuscript is for review purposes only.
+
+LEARNABLE EMPIRICAL MODE DECOMPOSITION BASED ON MATHEMATICAL MORPHOLOGY 17
+
+Figure 7. Analysis of invariance against additive shift for the training sample of Indian Pines. Norm of
+the Difference in the predictions with and without additive shift, i.e., ||pred(x) − pred(x + c)||22 for different
+values of c is given for three models: a) MEMD by (ε, δ), b) baseline model, c) baseline model with a data
+augmentation by random additive constant. We highlight that by Remark 2.8 all the MEMD based models are
+invariant to additive shifts.
+
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+
+• In the considered HSI supervised classification problems, the best of the proposed approaches have a performance equivalent to our baseline, which is the state-of-the-art
+for the considered problems (Table 3). However, we remark that the inclusion of morphological EMDs induces an invariant to additive intensity shifts in the classification
+model. To illustrate this fact, we have trained a classical model Figure 5 with and
+without a random data augmentation by using an additive shift as transformation.
+That is the usual approach to include some invariance in deep learning models. This
+gives an improvement in the invariance measure in Figure 7. We highlight that by
+Remark 2.8 all the MEMD based models are intrinsically invariant to additive shifts,
+which is illustrated in Figure 7.
+5. Discussion. The paper investigated the formulation of EMD based on morphological
+operators and its integration into deep learning architectures. The training of the layers
+realizing the EMD process allows them to adapt the morphological models to the signals to
+be classified. The assessments have been done for supervised classification problem in 1D
+signals from hyperspectral images (i.e., pixelwise spectra), but the proposed approaches are
+applicable to CNN architectures for nD images, without conceptual or algorithmic problem.
+1D signals have been used for the only reason that the effects of the process on such signals
+are easier to interpret in a research perspective. Several variants of the morphological layers
+have been used. However, we think that for a better understanding of some of the elements of
+the approach: behaviour of the gradient of the layers during the optimization, contribution of
+
+This manuscript is for review purposes only.
+
+18
+
+S. VELASCO-FORERO, R. PAGÈS AND J. ANGULO
+
+Figure 8. Test accuracy for spatial-disjoint samples in Indian Pines Hyperspectral image. Envelopes
+produces by opening/closing MEMD (left figure) and erosion/dilation MEMD(right figure) by flat structuring
+function are used in the architecture presented inFigure 5. In both the number of MEMD varies from 10 to 40.
+Each point is the performance for the best model trained from different random initialization and same early
+stopping parameter (patience of ten epochs). The horizontal lines indicate the maximum/average/minimum
+performance of baseline architecture [39] on original data. Blue points correspond to α = .5, i.e., when this
+parameter was not learned.
+
+Figure 9. Test accuracy for spatial-disjoint samples in Indian Pines Hyperspectral image. Envelopes
+produces by Lasry-Lions operator (left figure), erosion/dilation (central figure), and opening/closing (right
+figure) by quadratic structuring functions are used in the architecture presented inFigure 5. The number of
+MEMD varies from 10 to 40. Each point is the performance for the best model trained from different random
+initialization and same early stopping parameter (patience of 10 epochs). The horizontal lines indicate the
+maximum/average/minimum performance of baseline architecture [39] on original data. Blue points correspond
+to α = .5, where this parameter was not learned.
+
+This manuscript is for review purposes only.
+
+LEARNABLE EMPIRICAL MODE DECOMPOSITION BASED ON MATHEMATICAL MORPHOLOGY 19
+
+Type
+Baseline
+NonFlat
+
+Operator
+—
+(γ, ϕ)
+(ε, δ)
+(ε, δ) SE(0) ≥ 0
+
+Quadratic
+
+(γ, ϕ)
+(ε, δ)
+Lasry-Lions
+
+α
+—
+.5
+True
+.5
+True
+.5
+True
+.5
+True
+.5
+True
+.5
+True
+
+Overall Val. Acc.
+Best
+µ±σ
+85.035
+83.929±0.654
+84.080 83.239 ± 0.512
+84.420 83.490 ± 0.656
+83.252 82.764 ± 0.576
+85.311 84.052 ± 1.227
+83.379 82.870 ± 0.261
+85.247 83.821 ± 0.787
+79.495 78.024 ± 0.754
+80.959 77.971 ± 1.563
+81.363 79.798 ± 1.006
+81.596 80.847 ± 0.537
+81.384 79.909 ± 0.876
+82.424 81.299 ± 0.983
+
+Overall Training Acc.
+Best
+µ±σ
+93.443
+91.413±1.696
+97.012
+95.495±1.184
+97.223 96.012 ± 0.847
+97.451 95.226 ± 2.065
+95.922 94.015 ± 2.717
+96.889 95.621 ± 1.043
+96.168 94.874 ± 1.120
+96.080 93.580 ± 2.625
+97.645 95.043 ± 1.565
+96.484 94.964± 1.111
+97.223 95.066± 1.191
+96.924 95.273 ± 1.336
+96.941 95.674 ± 0.927
+
+Table 1
+Experiment on hyperspectral Indian Pines Disjoint classification problem. Each experiment has been repeated ten times varying the initialization of base architecture. Twenty filters of MEMD in a single level of
+simplification. The training was performed without any data augmentation technique. The constraint SE(0) ≥ 0
+is used to assure the order relation among envelopes (See Remark 1.2)
+
+Type
+Baseline
+NonFlat
+
+Operator
+—
+(γ, ϕ)
+(ε, δ)
+(ε, δ), SE(0) ≥ 0
+
+Quadratic
+
+(γ, ϕ)
+(ε, δ)
+Lasry-Lions
+
+α
+—
+.5
+True
+.5
+True
+.5
+True
+.5
+True
+.5
+True
+.5
+True
+
+Overall Val. Acc.
+Best
+µ±σ
+85.468 83.396± 2.420
+79.543 78.189 ± 0.726
+82.353 79.293 ± 1.767
+84.261 82.681 ± 0.798
+84.133 82.529 ± 1.131
+83.908 81.740 ± 1.295
+85.483 83.994 ± 1.238
+74.516 70.821 ± 2.023
+73.539 69.399 ± 2.339
+77.411 75.432 ± 1.193
+81.196 77.923 ± 1.700
+77.461 76.396 ± 0.614
+80.971 78.501 ± 1.332
+
+Overall Training Acc.
+Best
+µ±σ
+92.527 86.447 ± 8.960
+95.715 92.219 ± 2.408
+96.353 91.525 ± 4.335
+93.726 88.794 ± 4.998
+93.879 89.735 ± 2.118
+93.216 84.575 ± 7.334
+94.389 89.617 ± 3.289
+91.201 80.951 ± 6.432
+93.828 87.360 ± 6.443
+95.052 86.470 ± 5.939
+92.476 86.593 ± 6.585
+97.067 90.826 ± 6.223
+96.123 87.082 ± 8.221
+
+Table 2
+Experiment on hyperspectral Pavia University for a disjoint training sample. Nine different classes. Each
+experiment has been repeated ten times varying the initialization of base architecture. Twenty filters of MEMD
+in a single level of simplification. The training was performed without any data augmentation technique. The
+constraint SE(0) ≥ 0 is used to assure the order relation among envelopes (See Remark 1.2)
+
+This manuscript is for review purposes only.
+
+20
+
+S. VELASCO-FORERO, R. PAGÈS AND J. ANGULO
+
+Method
+Random Forest
+Multinomial Logistic regression
+Support Vector Machines
+MLP
+CNN1D
+Φαε,δ + CNN1D
+
+Indian Pines
+65.79
+83.81
+85.08
+83.81
+85.03
+85.31
+
+Pavia University
+69.64
+72.23
+77.80
+81.96
+85.47
+85.48
+
+Table 3
+Comparison (in terms of OA) between different HSI classification models trained on spatial-disjoint samples. The performance for first four models are included for comparison from [39].
+
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+
+the different parts of the signals to the optimization, effect of the initialization, etc. a deeper
+theoretical and empirical study is required. Additionally, we have illustrated the use of only
+one decomposition but the presented framework allows us to go further. In the future work,
+we are planning to use some interesting approaches to propose more adapted optimization
+schemes [8] for max-plus based layers, which reveals remarkable properties of network pruning
+by these operators [55]. Additionally, we will explore: a) the use for the MEMD of other
+structuring functions as Poweroids or Anisotropic Quadratic functions as proposed in [46], b)
+to consider the interest of MEMD to produce Scale Equivariant Neural Networks as in [45].
+Finally, we highlight that the study of theoretical properties of morphological networks in the
+sense of their expressiveness and universality [56] is fundamental to have a full understanding
+of the limits of these types of layers when they are integrated in DL architectures.
+
+Acknowledgments. This work has been supported by Fondation Mathématique Jacques
+Hadamard (FMJH) under the PGMO-IRSDI 2019 program. This work was granted access to
+490 the Jean Zay supercomputer under the allocation 2020-AD011012212.
+488
+489
+
+491
+
+REFERENCES
+
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+
+[1] J. Angulo, Lipschitz Regularization of Images supported on Surfaces using Riemannian Morphological
+Operators. Preprint, Nov. 2014, https://hal-mines-paristech.archives-ouvertes.fr/hal-01108130.
+[2] J. Angulo and S. Velasco-Forero, Riemannian mathematical morphology, Pattern Recognition Letters, 47 (2014), pp. 93–101.
+[3] J. Bedi and D. Toshniwal, Empirical mode decomposition based deep learning for electricity demand
+forecasting, Ieee Access, 6 (2018), pp. 49144–49156.
+[4] Y. Bengio, Y. LeCun, and H. Hinton, Deep learning, Nature, 521 (2015), pp. 436–444.
+[5] J. Bosworth and S. T. Acton, The morphological lomo filter for multiscale image processing, in Proceedings 1999 International Conference on Image Processing (Cat. 99CH36348), vol. 4, IEEE, 1999,
+pp. 157–161.
+[6] Y.-L. Boureau, J. Ponce, and Y. LeCun, A theoretical analysis of feature pooling in visual recognition,
+in ICML 2010, 2010, pp. 111–118.
+[7] M. Carlsson, On convex envelopes and regularization of non-convex functionals without moving global
+minima, Journal of Optimization Theory and Applications, 183 (2019), pp. 66–84.
+[8] V. Charisopoulos and P. Maragos, Morphological perceptrons: Geometry and training algorithms, in
+Mathematical Morphology and Its Applications to Signal and Image Processing, Springer International Publishing, 2017, pp. 3–15.
+[9] J. Chen, X. Wang, and C. Planiden, A proximal average for prox-bounded functions, SIAM Journal
+
+This manuscript is for review purposes only.
+
+LEARNABLE EMPIRICAL MODE DECOMPOSITION BASED ON MATHEMATICAL MORPHOLOGY 21
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546
+547
+548
+549
+550
+551
+552
+553
+554
+555
+556
+557
+558
+559
+560
+561
+562
+563
+
+on Optimization, 30 (2020), pp. 1366–1390.
+[10] E. Deléchelle, J. Lemoine, and O. Niang, Empirical mode decomposition: an analytical approach for
+sifting process, IEEE Signal Processing Letters, 12 (2005), pp. 764–767.
+[11] E. H. S. Diop and R. Alexandre, Analysis of intrinsic mode functions based on curvature motion-like
+pdes, in Curves and Surfaces, J.-D. Boissonnat, A. Cohen, O. Gibaru, C. Gout, T. Lyche, M.-L.
+Mazure, and L. L. Schumaker, eds., Cham, 2015, Springer International Publishing, pp. 202–209.
+[12] E. H. S. Diop, R. Alexandre, and L. Moisan, Intrinsic nonlinear multiscale image decomposition: A
+2D empirical mode decomposition-like tool, Computer Vision and Image Understanding, 116 (2012),
+pp. 102–119. Virtual Representations and Modeling of Large-scale Environments (VRML).
+[13] E.-H. S. Diop, R. Alexandre, and V. Perrier, A PDE model for 2d intrinsic mode functions, IEEE
+ICIP, (2009).
+[14] G. Franchi, A. Fehri, and A. Yao, Deep morphological networks, Pattern Recognition, 102 (2020),
+p. 107246.
+[15] J. Gilles, Empirical wavelet transform, IEEE Transactions on Signal Processing, 61 (2013), pp. 3999–
+4010.
+[16] J. Goutsias and H. Heijmans, Mathematical Morphology, IOS Press, 2000.
+[17] B. Hanin and D. Rolnick, How to start training: The effect of initialization and architecture, in
+Advances in Neural Information Processing Systems, 2018, pp. 571–581.
+[18] Z. He, J. Li, L. Liu, and Y. Shen, Three-dimensional empirical mode decomposition (TEMD): A fast
+approach motivated by separable filters, Signal Processing, 131 (2017), pp. 307–319.
+[19] H. J. Heijmans and P. Maragos, Lattice calculus of the morphological slope transform, Signal Processing, 59 (1997), pp. 17–42.
+[20] H. J. Heijmans and C. Ronse, The algebraic basis of mathematical morphology i. dilations and erosions,
+Computer Vision, Graphics, and Image Processing, 50 (1990), pp. 245–295.
+[21] H. J. Heijmans and R. van den Boomgaard, Algebraic framework for linear and morphological scalespaces, Journal of Visual Communication and Image Representation, 13 (2002), pp. 269–301.
+[22] T. Y. Hou and Z. Shi, Adaptive data analysis via sparse time-frequency representation, Advances in
+Adaptive Data Analysis, 3 (2011), pp. 1–28.
+[23] N. Huang, S. Zheng, S. Long, M. Wu, H. Shih, Q. Zheng, N.-C. Yen, C. Tung, and H. Liu, The
+empirical mode decomposition and the Hilbert spectrum for nonlinear and non-stationary time series
+analysis, The Royal Society, 454 (1998), pp. 903–995.
+[24] P. T. Jackway, Morphological scale-spaces, in Advances in Imaging and Electron Physics, P. W. Hawkes,
+ed., vol. 99, Elsevier, 1997, pp. 1–64.
+[25] P. T. Jackway and M. Deriche, Scale-space properties of the multiscale morphological dilation-erosion,
+IEEE Transactions on Pattern Analysis and Machine Intelligence, 18 (1996), pp. 38–51.
+[26] X.-B. Jin, N.-X. Yang, X.-Y. Wang, Y.-T. Bai, T.-L. Su, and J.-L. Kong, Deep hybrid model
+based on emd with classification by frequency characteristics for long-term air quality prediction,
+Mathematics, 8 (2020), p. 214.
+[27] P.-L. L. J.M. Lasry, A remark on regularization in Hilbert spaces, Israel Journal of Mathematics, 55
+(1986), pp. 257–266.
+[28] A. Kirszenberg, G. Tochon, É. Puybareau, and J. Angulo, Going beyond p-convolutions to learn
+grayscale morphological operators, in Discrete Geometry and Mathematical Morphology, J. Lindblad,
+F. Malmberg, and N. Sladoje, eds., Cham, 2021, Springer International Publishing, pp. 470–482.
+[29] D. Looney and D. P. Mandic, A machine learning enhanced empirical mode decomposition, in IEEE
+ICASSP, IEEE, 2008, pp. 1897–1900.
+[30] P. Maragos, Representations for morphological image operators and analogies with linear operators,
+Advances in imaging and electron physics, 177 (2013), pp. 45–187.
+[31] P. Maragos, J. F. Kaiser, and T. F. Quatieri, Energy separation in signal modulations with application to speech analysis, IEEE Transactions on Signal Processing, 41 (1993), pp. 3024–3051.
+[32] J. Masci, J. Angulo, and J. Schmidhuber, A learning framework for morphological operators using
+counter–harmonic mean, in Mathematical Morphology and Its Applications to Signal and Image
+Processing, Springer, 2013, pp. 329–340.
+[33] R. Mondal, M. S. Dey, and B. Chanda, Image restoration by learning morphological opening-closing
+network, Mathematical Morphology - Theory and Applications, 4 (01 Jan. 2020), pp. 87 – 107.
+
+This manuscript is for review purposes only.
+
+22
+564
+565
+566
+567
+568
+569
+570
+571
+572
+573
+574
+575
+576
+577
+578
+579
+580
+581
+582
+583
+584
+585
+586
+587
+588
+589
+590
+591
+592
+593
+594
+595
+596
+597
+598
+599
+600
+601
+602
+603
+604
+605
+606
+607
+608
+609
+610
+611
+612
+613
+614
+
+S. VELASCO-FORERO, R. PAGÈS AND J. ANGULO
+
+[34] J.-J. Moreau, Proximité et dualité dans un espace hilbertien, Bulletin de la Société mathématique de
+France, 93 (1965), pp. 273–299.
+[35] J. J. Moreau, Inf-convolution, sous-additivité, convexité des fonctions numériques, Journal de
+Mathématiques Pures et Appliquées, (1970).
+[36] M. Nakashizuka, Image regularization with higher-order morphological gradients, in 2015 23rd European
+Signal Processing Conference (EUSIPCO), IEEE, 2015, pp. 1820–1824.
+[37] K. Nogueira, J. Chanussot, M. D. Mura, W. R. Schwartz, and J. A. dos Santos, An introduction
+to deep morphological networks, 2019, https://arxiv.org/abs/1906.01751.
+[38] S. J. Nowlan and G. E. Hinton, Simplifying neural networks by soft weight-sharing, Neural computation, 4 (1992), pp. 473–493.
+[39] M. Paoletti, J. Haut, J. Plaza, and A. Plaza, Deep learning classifiers for hyperspectral imaging:
+A review, ISPRS Journal of Photogrammetry and Remote Sensing, 158 (2019), pp. 279–317.
+[40] N. Parikh and S. Boyd, Proximal algorithms, Foundations and Trends in optimization, 1 (2014),
+pp. 127–239.
+[41] L. F. Pessoa and P. Maragos, MRL-filters: A general class of nonlinear systems and their optimal
+design for image processing, IEEE Transactions on Image Processing, 7 (1998), pp. 966–978.
+[42] X. Qiu, Y. Ren, P. N. Suganthan, and G. A. Amaratunga, Empirical mode decomposition based
+ensemble deep learning for load demand time series forecasting, Applied Soft Computing, 54 (2017),
+pp. 246–255.
+[43] R. T. Rockafellar and R. J.-B. Wets, Variational analysis, vol. 317, Springer Science & Business
+Media, 2009.
+[44] R. Rojas, The backpropagation algorithm, in Neural networks, Springer, 1996, pp. 149–182.
+[45] M. Sangalli, S. Blusseau, S. Velasco-Forero, and J. Angulo, Scale equivariant neural networks
+with morphological scale-spaces, in Discrete Geometry and Mathematical Morphology, J. Lindblad,
+F. Malmberg, and N. Sladoje, eds., Cham, 2021, Springer International Publishing, pp. 483–495.
+[46] M. Schmidt and J. Weickert, Morphological counterparts of linear shift-invariant scale-spaces, Journal
+of Mathematical Imaging and Vision, 56 (2016), pp. 352–366.
+[47] J. Serra, Image Analysis and Mathematical Morphology, Academic Press, Inc., Orlando, FL, USA, 1983.
+[48] R. C. Sharpley and V. Vatchev, Analysis of the intrinsic mode functions, Constructive Approximation,
+24 (2006), pp. 17–47.
+[49] S. Sinclair and G. Pegram, Empirical mode decomposition in 2-d space and time: a tool for space-time
+rainfall analysis and nowcasting, Hydrology and Earth System Sciences, 9 (2005), pp. 127–137.
+[50] A. Stallone, A. Cicone, and M. Materassi, New insights and best practices for the successful use of
+empirical mode decomposition, iterative filtering and derived algorithms, Scientific reports, 10 (2020),
+pp. 1–15.
+[51] R. Van Den Boomgaard, L. Dorst, S. Makram-Ebeid, and J. Schavemaker, Quadratic structuring
+functions in mathematical morphology, in Mathematical morphology and its applications to image and
+signal processing, Springer, 1996, pp. 147–154.
+[52] R. Van den Boomgaard and A. Smeulders, The morphological structure of images: The differential
+equations of morphological scale-space, IEEE Transactions on Pattern Analysis and Machine Intelligence, 16 (1994), pp. 1101–1113.
+[53] L. J. van Vliet, I. T. Young, and G. L. Beckers, A nonlinear Laplace operator as edge detector in
+noisy images, Computer Vision, Graphics, and Image Processing, 45 (1989), pp. 167 – 195.
+[54] S. Velasco-Forero and J. Angulo, On nonlocal mathematical morphology, in International Symposium on Mathematical Morphology and Its Applications to Signal and Image Processing, Springer,
+2013, pp. 219–230.
+[55] Y. Zhang, S. Blusseau, S. Velasco-Forero, I. Bloch, and J. Angulo, Max-plus operators applied to filter selection and model pruning in neural networks, in Mathematical Morphology and Its
+Applications to Signal and Image Processing, Springer International Publishing, 2019, pp. 310–322.
+[56] D.-X. Zhou, Universality of deep convolutional neural networks, Applied and computational harmonic
+analysis, 48 (2020), pp. 787–794.
+
+This manuscript is for review purposes only.
+
+

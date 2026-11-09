@@ -1,0 +1,405 @@
+Interspeech 2024
+1-5 September 2024, Kos, Greece
+
+
+
+                           Differentiable Time-Varying Linear Prediction
+                        in the Context of End-to-End Analysis-by-Synthesis
+
+                                                 Chin-Yun Yu, György Fazekas
+
+                                          Queen Mary University of London, UK
+                                chin-yun.yu@qmul.ac.uk, george.fazekas@qmul.ac.uk
+
+
+                          Abstract                                          mation. We conducted an end-to-end analysis-by-synthesis ex-
+                                                                            periment and compared the performance of several differen-
+Training the linear prediction (LP) operator end-to-end for au-             tiable components with two classic synthesiser formulations.
+dio synthesis in modern deep learning frameworks is slow due                We also compare the spectral envelopes of different methods’
+to its recursive formulation. In addition, frame-wise approxi-              learnt LPCs.
+mation as an acceleration method cannot generalise well to test
+time conditions where the LP is computed sample-wise. Effi-
+cient differentiable sample-wise LP for end-to-end training is                                    2. Background
+the key to removing this barrier. We generalise the efficient               2.1. Harmonic-plus-noise GOLF
+time-invariant LP implementation from the GOLF vocoder to
+time-varying cases. Combining this with the classic source-                 GlOttal flow LPC Filter (GOLF) is a singing vocoder proposed
+filter model, we show that the improved GOLF learns LP co-                  by Yu et al. [8]. Given mel-spectrograms as conditions, a neu-
+efficients and reconstructs the voice better than its frame-wise            ral network encoder converts them into synthesis parameters,
+counterparts. Moreover, in our listening test, synthesised out-             which are then passed to the decoder, also known as a synthe-
+puts from GOLF scored higher in quality ratings than the state-             siser. The synthesiser has the following form:
+of-the-art differentiable WORLD vocoder.
+Index Terms: speech synthesis, linear prediction, differentiable                           S(z) ≡ G(z)H(z) + N (z)C(z),                     (1)
+DSP, source-filter model, harmonic-plus-noise model
+                                                                            where S(z) is the voice signal which consists of G(z) the
+                                                                            glottal pulses filtered by a LP filter H(z) and a white noise
+                     1. Introduction                                        N (z) ∼ N (0, 1) controlled by another LP filter C(z). This
+Efficiency and interpretability are important aspects of neural             resembles the classic harmonic-plus-noise (HpN) model [17],
+voice synthesis. Instead of building high-quality but computa-              which has been used in several related works [13, 14, 18] with
+tionally expensive black-box vocoders [1, 2, 3, 4], efforts have            different harmonics and noise components. GOLF generate
+been made to increase controllability and reduce computational              G(z) using wavetable synthesis, where the wavetables are sam-
+complexity while retaining the same voice quality. One promis-              pled from the transformed LF model [19] with different Rd .
+ing approach is utilising synthesis components in the classic
+source-filter framework to split the workload of neural networks            2.2. Differentiable time-invariant LP
+and train them jointly [5, 6]. The filter in this framework rep-            Although the response of the vocal tract varies from time to time
+resents the response of the vocal tract, which is often modelled            in speech, we can assume it is invariant in a short time. Based
+using linear prediction (LP) based on the varying diameters tube            on this assumption, the computation of the LP filter is given by
+model [7]. The LP coefficients (LPCs) are very compact fea-
+tures and require low transmission bandwidth.                                                s(t) = LPa (e(t))
+     Although LP has a long history in voice modelling [7],                                                   M
+                                                                                                              X                             (2)
+its recursive computation makes end-to-end training extremely                                      = e(t) −         ai s(t − i),
+slower than non-recursive filters due to the overhead for build-                                              i=1
+ing deep computational graph [8]. LPCNet series [5, 9] ad-
+dress this problem by modelling the inverse filtered speech,                where s(t) is the time-domain speech signal, e(t) the excitation
+thus utilising parallel computation. Several works parallelise              signal, a = [a1 , . . . , aM ] the LP coefficients with a chosen or-
+LP by frame-wise processing and overlap-add [10, 11], while                 der M . e(t) and s(t) are zero for t < 0. Yu et al. and Forgione
+Yu et al. [8] accelerate it further with custom kernels for gra-            et al. [8, 20] show that given a loss function L and the gradients
+                                                                             ∂L                       ∂L       ∂L
+dient backpropagation. Other works seek to approximate the                  ∂s(t)
+                                                                                   , the gradients ∂e(t)  and ∂a i
+                                                                                                                   can be computed as
+vocal tract filter using FIRs [12, 13, 14, 15]. Besides LPCs,
+different filter representations have been explored as well, such                          ∂L    XT
+                                                                                                      ∂L
+as linear/mel-scale spectral envelope [14, 15] or cepstral coeffi-                             =           LPa (−s(t − i))                  (3)
+                                                                                           ∂ai       ∂s(t)
+cients [13, 16].                                                                                 t=0
+                                                                                                                       
+     This paper proposes a new differentiable vocoder based on                                ∂L                 ∂L
+the GOLF vocoder [8]. We extend their custom backpropa-                                              = LPa                ,                 (4)
+                                                                                           ∂e(T − t)          ∂s(T − t)
+gation method to work with time-varying LP, removing mis-
+matches between training and evaluation conditions with the                 where T + 1 is the number of audio samples and T − t
+cost of slightly slower training speed than frame-wise approxi-             means reverse indexing. As the computation only consists of
+
+
+
+
+                                                                     1820                            10.21437/Interspeech.2024-1187
+the same filter and matrix multiplication, one can register non-                        form so we can reuse LPã(t) to reduce computational cost. Let
+differentiable but efficient LP implementation into the computa-                        us plug bd (t + d) into (8) and get
+tional graph to speed up gradient backpropagation in deep learn-
+                                                                                                                             |q|                        j
+                                                                                                                                                                       !
+ing frameworks.                                                                                           X                  Y                          X
+                                                                                          bd (t + d) =          (−1)|q|             ãqj       t+d−            Q(q)k
+                                                                                                         q∈Gd             j=1                           k=1
+                      3. Methodology                                                                                                                                  
+                                                                                                                                             |q|               |q|
+3.1. Source-filter GOLF                                                                                         =
+                                                                                                                      X
+                                                                                                                             (−1)     |q|
+                                                                                                                                             Y
+                                                                                                                                                   ãqj t +
+                                                                                                                                                               X
+                                                                                                                                                                     qk 
+Our first improvement to GOLF is using the following form:                                                            q∈Gd                  j=1                k=j
+
+                                                                                                                                    |q̃|                j
+                                                                                                                                                                       !
+              S(z) ≡ (G(z) + N (z)C(z)) H(z),                              (5)                                X              |q̃|
+                                                                                                                                    Y                   X
+                                                                                                          =           (−1)                 âq̃j   t+         Q(q̃)k       ,
+which closely resembles the source-filter (SF) model in [21],                                                 q̃∈Gd                 j=1                 k=1
+giving more explainability to the model, and has been used in                                                                                                          (11)
+several works [10, 15, 16]. Also, we empirically found that
+this form provides a more stable training curve and lower train-                        where q̃ = [q|q| , . . . , q1 ], âi (t) = ãi (t + i). Comparing (11)
+ing loss than (1). This simple form is sufficient to model both                         to (8) after replacing q̃ with q (valid as both belong to Gd ), we
+voiced and unvoiced sounds by controlling the noise filter mag-                         observe that the IIRs bd (t + d) can be computed by applying
+nitude |N (z)|. We use the FIR filter from [14] as C(z), while                          â(t) = [â1 (t), . . . , âM (t)] LP backwards (t = T → t = 0 due
+H(z) is our proposed LP filter with an input gain.                                      to changing the minus sign to plus sign). Utilise this finding
+                                                                                        and (10), we can express the gradients as
+3.2. Differentiable time-varying LP                                                                                                             
+                                                                                                          ∂L                               ∂L
+Given ã(t) = [ã1 (t), . . . , ãM (t)] as time-varying filter coeffi-                                              = LPâ(T −t)                  .      (12)
+                                                                                                     ∂e(T − t)                         ∂s(T − t)
+cients, the sample-wise LP filter is:
+                  s(t) = LPã(t) (e(t))                                                 3.2.2. The gradients to ã(t)
+                                       M
+                                       X                                   (6)          Let zi (t) = −ãi (t)s(t − i) and express s(t) as e(t) + z1 (t) +
+                                                                                                                                      ∂L
+                      = e(t) −               ãi (t)s(t − i).                           · · · + zM (t). The chain rule tells us that ∂e(t)  = ∂z∂L
+                                                                                                                                                 i (t)
+                                                                                                                                                       be-
+                                       i=1                                                    ∂s(t)     ∂s(t)                                   ∂L
+                                                                                        cause ∂e(t) = ∂z  i (t)
+                                                                                                                = 1. Moreover, we already have ∂e(t)
+Yu et al. [8] divide the signal into short and overlapping frames                       from (12). Thus, the gradients to the coefficients are
+and perform time-invariant LP independently on each frame to
+approximate (6). However, this method does not guarantee that                                     ∂L         ∂L ∂zi (t)          ∂L
+                                                                                                          =                  =−       s(t − i).                        (13)
+the learnt coefficients generalise well after removing the ap-                                   ∂ãi (t)   ∂zi (t) ∂ãi (t)    ∂e(t)
+proximation. The frame size and overlap ratio also affect syn-
+thesis quality and must be chosen carefully. We solved these                                 The techniques above can also be applied to time-invariant
+issues by extending differentiable time-invariant LP (Sec. 2.2)                         cases and are more efficient than Yu et al. [8] because only
+to time-varying cases.                                                                  one LP filter is needed while the latter requires two. This is
+                                                                                        because we get rid of the filter for the intermediate gradients
+                                                                                        ∂s(t)
+3.2.1. The gradients to e(t)                                                             ∂ai
+                                                                                               = LPa (−s(t − i)). We implemented time-varying LP
+                                                                                        kernels for CPU and GPU using Numba. This reduces the run-
+Eq. (6) equals filtering e(t) with time-varying infinite impulse                        time hundreds of times compared to a naive implementation us-
+responses (IIRs) b(t) = [b1 (t), b2 (t), . . . ] as                                     ing PyTorch operators [22].
+                                       t
+                                       X
+                  s(t) = e(t) +              bd (t)e(t − d)                (7)                                  4. Experiment
+                                       d=1
+                                      |q|
+                                                                                        We conducted an analysis-by-synthesis experiment to examine
+                                                        j
+                                                                      !
+                   X            |q|
+                                      Y                 X                               the end-to-end training ability of the proposed differentiable LP.
+       bd (t) =          (−1)               ãqj   t−         Q(q)k        (8)
+                                                                                        Given a voice recording, a neural encoder (analyser) predicts its
+                  q∈Gd                j=1               k=1
+                                                                                        time-varying latent representations (synthesis parameters) for
+                      min(d,M )
+                          [                                                             the decoder (synthesiser), and we trained the encoder end-to-
+               Gd =                   {[i; q] : q ∈ Gd−i } ,               (9)          end with a simple reconstruction loss. The decoders are made
+                          i=1                                                           of interpretable signal-processing components (oscillators and
+where Q(q) = [0; q]. As the system is causal, the gradients to                          filters). We made our filter implementation1 and experiments
+e(t) depend on the future frames s(> t) and can be expressed                            code2 available on GitHub.
+as
+                                                                                        4.1. Dataset and training configurations
+                                      T −t
+     ∂L      ∂L ∂s(t) X      ∂L    ∂s(t + d)                                            We used the mic1 recordings from VCTK [23] for training and
+          =             +
+    ∂e(t)   ∂s(t) ∂e(t)   ∂s(t + d) ∂e(t)                                               evaluation. We selected the last eight speakers as the test set,
+                                      d=1
+                                                                          (10)          p225 to p241 for validation and the rest for training. All the
+                          T −t
+               ∂L     X               ∂L                                                recordings were downsampled to 24 kHz. We follow [8] to slice
+            =       +   bd (t + d)           ,
+              ∂s(t)                ∂s(t + d)                                            the training and validation data into overlapping segments with
+                          d=1
+
+which means filtering the gradients backwards in time with                                 1 https://github.com/DiffAPF/torchlpc
+
+shifted bd (t). The issue is how to represent the filter in recursive                      2 https://github.com/iamycy/golf
+
+
+
+
+                                                                                 1821
+a duration of 2 s. We used a batch size of 64 and trained all the            hours for most decoders, 121 hours for DDSP, and 135 hours
+encoders for 1 M steps using Adam [24] with a 0.0001 learning                for GOLF-ss, measured on an RTX A5000.
+rate. We clipped the gradient norm to 0.5 at each step and found
+it effectively stabilised the training for GOLFs (Sec. 4.3) and
+improved convergence for all the evaluated models. We used
+the same multi-resolution spectral (MSS) loss in [8] with FFT
+sizes [509, 1021, 2053]. We picked the checkpoints with the
+lowest validation loss for evaluation.
+
+4.2. Speaker-independent encoder
+We extract fundamental frequency (f0) using Dio [25] and log-
+magnitude spectrograms as encoder features. The window and
+hop sizes are 1024 and 240 (10 ms). Four 2D convolution layers
+with a kernel size (9, 3) are applied to the spectrograms. The
+hidden channel sizes are [32, 64, 128, 256]. Each convolution
+is followed by batch normalisation, ReLU, and a max-pooling
+layer along the frequency dimension with a size of 4. Then, the
+frequency and channel dimensions are flattened, concatenated
+with log-f0, and fed into three layers of Bi-LSTM, with a 0.1
+dropout and 256 channel size. Finally, a time-distributed linear
+layer, whose size depends on its corresponding decoder, con-
+verts the hidden features into synthesis parameters. The number
+of parameters is 6.1 M.                                                      Figure 1: Flow diagram of the proposed experiment. For DDSP,
+                                                                             the G(z)H(z) is jointly modelled using an additive synthesiser.
+4.3. Decoders
+We trained the following four variants of GOLF:
+• GOLF-v1: the original HpN GOLF from [8]                                              5. Evaluations and discussions
+• GOLF-ss: the proposed SF GOLF in Eq. (5)                                   5.1. Objective evaluations
+• GOLF-ff: GOLF-ss but with frame-wise LP [8]
+                                                                             For objective evaluations, we used MSS, mel-cepstral distortion
+• GOLF-fs: GOLF-ff but use sample-wise LP for inference
+                                                                             (MCD) [28], perceptual evaluation of speech quality (PESQ),
+We linearly upsample the LPCs to the sample rate for sample-                 and fréchet audio distance (FAD) [29]. We used the same α
+wise LP. For all GOLFs, we oversample the signal to 96 kHz                   as MLSA for MCD. We computed FAD using fadtk [30] and
+during wavetable synthesis (Sec. 2.1) to reduce frequency alias-             the embeddings from descript audio codec [31] because it was
+ing caused by linear interpolation. We replace the cascaded bi-              trained on VCTK. The FAD is calculated separately for each
+quads parameterisation with reflection coefficients [5] to tackle            test speaker, and we report their mean and standard deviation;
+the responsibility problem [26] in the encoder’s last layer. We              the others are averages over the test set. We include original
+use 256 frequency bins for C(z). The rest of the settings were               WORLD [25] as a non-differentiable baseline.
+the same as in [8] except that unvoiced gating is removed for a                   Looking at all the GOLF variants in Table 1, we see adapt-
+fair comparison to the baselines.                                            ing to SF formulation (ff) and sample-wise LP (ss) consis-
+     We compared GOLFs with the following baselines:                         tently improves the scores, with GOLF-ss performing the best
+DDSP [18], neural homomorphic vocoder (NHV) [13], differ-                    in most metrics except FAD. MLSA also perform competi-
+entiable WORLD (∇WORLD) [15], and differentiable mel-                        tively to GOLF-ss. NHV has the lowest MSS loss, while
+cepstral synthesis (MLSA) [16], using the original configura-                ∇WORLD dominates in all other metrics, indicating modelling
+tions as closely as possible. For NHV, we set the cepstrum or-               mel-frequencies directly for vocal tract filter is likely the best
+der to 240 and use minimum-phase filters, as phase character-                for low reconstruction loss.
+istics are not learnable through our spectral loss. For MLSA,
+we set the filter order to 24 with α = 0.46. We perform                      5.2. Spectral analysis
+MLSA in the frequency domain with short-time Fourier trans-
+form (STFT) using diffsptk [27] as we found that training                    Figure 2 shows the H(z) spectra of GOLFs. GOLF-v1 shows
+cannot converge with the Taylor-expansion-based implementa-                  spectral peaks with high resonance. This could lead to unstable
+tion. 80 mel-frequencies are used for ∇WORLD. Band-limited                   training and is likely why the output overflows easily when we
+pulse train is used for NHV, MLSA, and ∇WORLD. We use                        evaluated GOLF-v1 with sample-wise LP. We think the reason
+the DDSP implementation from [8]. All baselines use the same                 is that only the periodic signal is fed to H(z), and their energies
+C(z) as GOLFs, 1024 FFT size and hanning window for win-                     are highly centred around the harmonics. If high resonant peaks
+dowing.                                                                      exist between harmonics, they are not easily detectable due to
+     We add a trainable FIR filter with 128 coefficients at the end          a lack of energy in these regions. There are two obvious peaks
+of all decoders to capture the global characteristics of the VCTK            in high frequencies of GOLF-v1 spectra (with one very close to
+dataset. For the unvoiced speech, we sampled random oscillator               Nyquist frequency), probably due to low energy in the high fre-
+frequency in Hertz from U (50, 500) during training to reduce                quencies of glottal pulses. The windowing during frame-wise
+the chance of utilising harmonics for transient events [14] and              processing also smooths out these peaks.
+used 150 Hz for inference. Figure 1 briefly illustrates the design                Changing to SF (ff) greatly reduces this issue as the input
+of the whole experiment. The training time is around 80 to 95                signal includes filtered white noise, so energy is more evenly
+
+
+
+
+                                                                      1822
+Figure 2: The running spectra converted from the encoded LPCs using 0.4 seconds of speech from speaker p360. The rightmost LPCs
+are computed using the auto-correlation method from SPTK with the same filter order as GOLFs.
+
+
+distributed. However, the formants’ position and amplitude                             100
+tend to fluctuate periodically. This problem is not obvious in                          80      p360   p361
+
+
+
+
+                                                                              MUSHRA
+the synthesised outputs due to overlap-add, as the formants in
+                                                                                        60
+the overlapped frames are mixed. We use 75% overlap in this
+paper. This explains why GOLF-fs’s performance deteriorates                             40
+in Table 1. In contrast, GOLF-ss has the smoothest transition                           20
+of formants, emphasising the importance of end-to-end training
+                                                                                         0
+sample-wise LP. We also see that synthesis-based LPCs are dif-                               Anchor    NHV    ∇WORLD GOLF-ss Reference
+ferent from traditional analysis-based LPCs, due to different as-
+sumptions on the excitation signal (either flat spectra or glottal          Figure 3: The average ratings of each speaker with a 95% con-
+model), which is an interesting characteristic worth exploring              fidence interval.
+in the future.
+
+Table 1: Summary of the copy-synthesis evaluation. The values
+are better if they are lower, except PESQ.
+                                                                            example as much as possible. The orders of the examples and
+                                                                            models were randomised. Among 21 participants, we excluded
+  Form.    Model         MSS      MCD     PESQ          FAD
+                                                                            four as they did not consistently rate the low anchor the lowest.
+           DDSP          2.965    3.42     2.42      32.7±7.7
+                                                                            According to self-reports, all the remaining participants used
+  HpN      NHV           2.914    3.32     2.58       31.8±7.4
+           GOLF-v1       3.026    3.54     2.36       39.6±9.4
+                                                                            headphones.
+           WORLD         3.515    6.07     1.77     270.6±56.1                   The result is shown in Figure 3. For speaker p360, GOLF
+           MLSA          3.006    3.35     2.48      40.1±10.0              significantly outperforms the others. After inspecting the sam-
+           ∇WORLD        2.918    3.26     2.66       22.4±5.6              ples, we found NHV and ∇WORLD have a slight but audi-
+   SF
+           GOLF-ss       3.005    3.43     2.49       38.4±9.2              ble robotic timbre. We hypothesise that the use of pulse trains
+           GOLF-ff       3.011    3.46     2.39       34.0±7.7
+                                                                            largely contributes to this issue. In contrast, we do not see the
+           GOLF-fs       3.074    3.70     2.16      44.1±10.1
+                                                                            same trend in ratings for speaker p361. We found that the pitch
+                                                                            estimator (Dio) performs poorly on p361, with more misclas-
+                                                                            sification of voiced/unvoiced signals than p360. This leads to
+5.3. Subjective evaluation                                                  breathy voice artefacts, whose effect surpasses the robotic tim-
+                                                                            bre issue, decreasing overall ratings and making the compari-
+Based on the results from Table 1, we picked GOLF-ss, NHV,                  son of GOLF and ∇WORLD harder. One possible solution is
+and ∇WORLD (represent the best models for GOLFs/HpN/SF,                     switching to a more accurate pitch estimator during training or
+respectively) for a MUSHRA listening test. We selected p360                 evaluation.
+(male) and p361 (female) from the test set as they have the low-
+est FAD score on average. We picked ten different utterances
+and randomly assigned five to each speaker. The duration of the                          6. Conclusions and future work
+audio ranged from 5 to 7 seconds. Each test example consists
+of re-synthesised audio by the selected models and a low an-                In this paper, we derived and implemented efficient gradi-
+chor model, using the same utterance. The low anchor is pulse               ent backpropagation for differentiable time-varying LP, which
+trains with traditional LPC analysis. The ground truth recording            helps train sample-rate level LP filters end-to-end in a rea-
+is included as a hidden reference.                                          sonable time. In the copy-synthesis evaluation, we show that
+     The test was conducted on Go Listen [32]. We sent out                  changing the vocoder to source-filter form or replacing frame-
+the test to the mailing lists of related research communities. A            wise LP approximation with the proposed implementation both
+different utterance from p360 was used to train the participant             help the model learn smoother LPCs. Nevertheless, more work
+before the test, using the low anchor and the ground truth. We              is needed to analyse the learnt synthesis parameters and the
+asked the participants to rate the audio quality on a scale from            cause of robotic timbre when using pulse trains as periodic
+0 to 100 and encouraged them to use the full scale for each                 sources, which constitute future work.
+
+
+
+
+                                                                     1823
+                 7. Acknowledgements                                              [16] T. Yoshimura, S. Takaki, K. Nakamura, K. Oura, Y. Hono,
+                                                                                       K. Hashimoto, Y. Nankaku, and K. Tokuda, “Embedding a differ-
+We thank Takenori Yoshimura for giving feedback on our early                           entiable mel-cepstral synthesis filter to a neural speech synthesis
+drafts. The first author is a research student at the UKRI Cen-                        system,” in IEEE International Conference on Acoustics, Speech
+tre for Doctoral Training in AI and Music, supported jointly by                        and Signal Processing, 2023, pp. 1–5.
+UKRI [grant number EP/S022694/1] and Queen Mary Univer-                           [17] X. Serra and J. Smith, “Spectral modeling synthesis: A sound
+sity of London.                                                                        analysis/synthesis system based on a deterministic plus stochastic
+                                                                                       decomposition,” Computer Music Journal, vol. 14, no. 4, p. 12,
+                                                                                       1990.
+                        8. References
+                                                                                  [18] G. Fabbro, V. Golkov, T. Kemp, and D. Cremers, “Speech
+ [1] J. Shen, R. Pang, R. J. Weiss, M. Schuster, N. Jaitly, Z. Yang,                   synthesis and control using differentiable DSP,” arXiv preprint
+     Z. Chen, Y. Zhang, Y. Wang, R. Skerrv-Ryan, R. A. Saurous,                        arXiv:2010.15084, 2020.
+     Y. Agiomvrgiannakis, and Y. Wu, “Natural TTS synthesis by con-
+     ditioning WaveNet on MEL spectrogram predictions,” in IEEE                   [19] G. Fant, “The LF-model revisited. transformations and frequency
+     International Conference on Acoustics, Speech and Signal Pro-                     domain analysis,” Speech Trans. Lab. Q. Rep., Royal Inst. of Tech.
+     cessing, 2018, pp. 4779–4783.                                                     Stockholm, vol. 2, no. 3, p. 40, 1995.
+ [2] J. Kong, J. Kim, and J. Bae, “HiFi-GAN: Generative adversar-                 [20] M. Forgione and D. Piga, “dynoNet: A neural network archi-
+     ial networks for efficient and high fidelity speech synthesis,” Ad-               tecture for learning dynamical systems,” International Journal of
+     vances in Neural Information Processing Systems, vol. 33, pp.                     Adaptive Control and Signal Processing, vol. 35, no. 4, pp. 612–
+     17 022–17 033, 2020.                                                              626, 2021.
+ [3] R. Prenger, R. Valle, and B. Catanzaro, “WaveGlow: A flow-                   [21] H.-L. Lu and J. O. Smith III, “Glottal source modeling for singing
+     based generative network for speech synthesis,” in IEEE Inter-                    voice synthesis,” in International Computer Music Conference,
+     national Conference on Acoustics, Speech and Signal Processing,                   2000.
+     2019, pp. 3617–3621.                                                         [22] B. Hayes, J. Shier, C.-Y. Yu, D. Südholt, and R. Diaz,
+ [4] Z. Kong, W. Ping, J. Huang, K. Zhao, and B. Catanzaro, “Dif-                      “Introduction to differentiable audio synthesizer programming:
+     fWave: A versatile diffusion model for audio synthesis,” in Inter-                Implementing differentiable IIR in PyTorch,” 2023. [Online].
+     national Conference on Learning Representations, 2021.                            Available: https://intro2ddsp.github.io/filters/iir torch.html
+ [5] J.-M. Valin and J. Skoglund, “LPCNet: Improving neural speech                [23] J. Yamagishi, C. Veaux, and K. MacDonald, “CSTR VCTK
+     synthesis through linear prediction,” in IEEE International Con-                  corpus: English multi-speaker corpus for CSTR voice cloning
+     ference on Acoustics, Speech and Signal Processing, 2019, pp.                     toolkit (version 0.92),” University of Edinburgh. The Centre for
+     5891–5895.                                                                        Speech Technology Research (CSTR), 2019. [Online]. Available:
+                                                                                       https://doi.org/10.7488/ds/2645
+ [6] X. Wang, S. Takaki, and J. Yamagishi, “Neural source-filter-based
+     waveform model for statistical parametric speech synthesis,” in              [24] D. P. Kingma and J. Ba, “Adam: A method for stochastic opti-
+     IEEE International Conference on Acoustics, Speech and Signal                     mization,” in International Conference on Learning Representa-
+     Processing, 2019, pp. 5916–5920.                                                  tions, 2015.
+
+ [7] J. D. Markel and A. H. Gray, Linear Prediction of Speech, ser.               [25] M. Morise, F. Yokomori, and K. Ozawa, “WORLD: A vocoder-
+     Communication and Cybernetics. Berlin, Heidelberg: Springer,                      based high-quality speech synthesis system for real-time appli-
+     1976, vol. 12.                                                                    cations,” IEICE Transactions on Information and Systems, vol.
+                                                                                       E99.D, no. 7, pp. 1877–1884, 2016.
+ [8] C.-Y. Yu and G. Fazekas, “Singing voice synthesis using differen-
+     tiable LPC and glottal-flow-inspired wavetables,” in Proc. Inter-            [26] Y. Zhang, J. Hare, and A. Prügel-Bennett, “FSPool: Learning set
+     national Society for Music Information Retrieval, 2023, pp. 667–                  representations with featurewise sort pooling,” in International
+     675.                                                                              Conference on Learning Representations, 2019.
+
+ [9] K. Subramani, J. Valin, U. Isik, P. Smaragdis, and A. Krish-                 [27] T. Yoshimura, T. Fujimoto, K. Oura, and K. Tokuda, “SPTK4:
+     naswamy, “End-to-end LPCNet: A neural vocoder with fully-                         An open-source software toolkit for speech signal processing,” in
+     differentiable LPC estimation,” in Proc. INTERSPEECH, 2022,                       12th ISCA Speech Synthesis Workshop, 2023, pp. 211–217.
+     pp. 818–822.                                                                 [28] J. Kominek, T. Schultz, and A. W. Black, “Synthesizer voice
+[10] A. R. MV and P. K. Ghosh, “SFNet: A computationally efficient                     quality of new languages calibrated with mean mel cepstral dis-
+     source filter model based neural speech synthesis,” IEEE Signal                   tortion,” in Proc. Speech Technology for Under-Resourced Lan-
+     Processing Letters, vol. 27, pp. 1170–1174, 2020.                                 guages, 2008, pp. 63–68.
+
+[11] K. Schulze-Forster, G. Richard, L. Kelley, C. S. Doire, and                  [29] K. Kilgour, M. Zuluaga, D. Roblek, and M. Sharifi, “Fréchet
+     R. Badeau, “Unsupervised music source separation using differ-                    audio distance: A reference-free metric for evaluating music
+     entiable parametric source models,” IEEE/ACM Transactions on                      enhancement algorithms,” in Proc. INTERSPEECH, 2019, pp.
+     Audio, Speech, and Language Processing, vol. 31, pp. 1276–1289,                   2350–2354.
+     2023.                                                                        [30] A. Gui, H. Gamper, S. Braun, and D. Emmanouilidou, “Adapting
+[12] L. Juvela, B. Bollepalli, J. Yamagishi, and P. Alku, “GELP:                       frechet audio distance for generative music evaluation,” in IEEE
+     GAN-excited liner prediction for speech synthesis from mel-                       International Conference on Acoustics, Speech and Signal Pro-
+     spectrogram,” in Proc. INTERSPEECH, 2019, pp. 694–698.                            cessing, 2024.
+
+[13] Z. Liu, K. Chen, and K. Yu, “Neural homomorphic vocoder,” in                 [31] R. Kumar, P. Seetharaman, A. Luebs, I. Kumar, and K. Kumar,
+     Proc. INTERSPEECH, Oct. 2020, pp. 240–244.                                        “High-fidelity audio compression with improved RVQGAN,” in
+                                                                                       Advances in Neural Information Processing Systems, vol. 36,
+[14] D.-Y. Wu, W.-Y. Hsiao, F.-R. Yang, O. Friedman, W. Jackson,                       2023, pp. 27 980–27 993.
+     S. Bruzenak, Y.-W. Liu, and Y.-H. Yang, “DDSP-based singing
+     vocoders: A new subtractive-based synthesizer and a comprehen-               [32] D. Barry, Q. Zhang, P. W. Sun, and A. Hines, “Go Listen: An end-
+     sive evaluation,” in Proc. International Society for Music Infor-                 to-end online listening test platform,” Journal of Open Research
+     mation Retrieval, 2022, pp. 76–83.                                                Software, vol. 9, no. 1, 2021.
+
+[15] S. Nercessian, “Differentiable world synthesizer-based neural
+     vocoder with application to end-to-end audio style transfer,” in
+     Audio Engineering Society Convention 154, 2023.
+
+
+
+
+                                                                           1824
+

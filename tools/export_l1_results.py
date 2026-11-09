@@ -66,6 +66,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run", required=True)
     parser.add_argument("--synthetic-run")
-    parser.add_argument("--output", default="documentation")
+    parser.add_argument("--output", default="approaches/sparse_coding/reports")
     args = parser.parse_args()
     export(args.run, args.output, args.synthetic_run)

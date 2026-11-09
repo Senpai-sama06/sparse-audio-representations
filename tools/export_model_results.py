@@ -122,7 +122,7 @@ def export(study_path, output, split="validation"):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--study", type=Path, default=Path("runs/concurrent_training.json"))
-    parser.add_argument("--output", type=Path, default=Path("documentation"))
+    parser.add_argument("--output", type=Path, default=Path("approaches/representations/reports/sparse_autoencoder"))
     parser.add_argument("--split", choices=["validation", "clean"], default="validation")
     args = parser.parse_args()
     export(args.study, args.output, args.split)

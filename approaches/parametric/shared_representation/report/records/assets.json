@@ -1,0 +1,52 @@
+{
+  "direct/pca": {
+    "decoder": "direct_pca\\decoder.pt",
+    "bytes": 165481,
+    "shared_learned_values": 40960
+  },
+  "direct/sine": {
+    "shared_decoder_trainable_values": 37601,
+    "encoder_trainable_values": 205248,
+    "latest_decoder_bytes": 158797,
+    "best_validation_score": 0.6767667531967163,
+    "decoder": "direct_sine\\decoder_best.pt",
+    "decoder_bytes": 158753,
+    "selected_step": 12000,
+    "independent_decode_verified": true
+  },
+  "direct/snakebeta": {
+    "shared_decoder_trainable_values": 37985,
+    "encoder_trainable_values": 205248,
+    "latest_decoder_bytes": 161957,
+    "best_validation_score": 0.6352070927619934,
+    "decoder": "direct_snakebeta\\decoder_best.pt",
+    "decoder_bytes": 161901,
+    "selected_step": 12000,
+    "independent_decode_verified": true
+  },
+  "vmd/pca": {
+    "decoder": "vmd_pca\\decoder.pt",
+    "bytes": 165481,
+    "shared_learned_values": 40960
+  },
+  "vmd/sine": {
+    "shared_decoder_trainable_values": 37601,
+    "encoder_trainable_values": 205248,
+    "latest_decoder_bytes": 158797,
+    "best_validation_score": 0.7072270154953003,
+    "decoder": "vmd_sine\\decoder_best.pt",
+    "decoder_bytes": 158753,
+    "selected_step": 12000,
+    "independent_decode_verified": true
+  },
+  "vmd/snakebeta": {
+    "shared_decoder_trainable_values": 37985,
+    "encoder_trainable_values": 205248,
+    "latest_decoder_bytes": 161957,
+    "best_validation_score": 0.7077673077583313,
+    "decoder": "vmd_snakebeta\\decoder_best.pt",
+    "decoder_bytes": 161901,
+    "selected_step": 12000,
+    "independent_decode_verified": true
+  }
+}

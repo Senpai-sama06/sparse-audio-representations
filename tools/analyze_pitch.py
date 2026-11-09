@@ -55,7 +55,7 @@ def prepare(args):
         if row["id"] not in excluded:
             groups.setdefault(str(row["speaker"]), []).append(row)
     speakers = sorted(groups, key=int)[:args.speakers]
-    expected = next(r for r in json.loads(Path("documentation/sparse_autoencoder_test_runs.json").read_text())["runs"]
+    expected = next(r for r in json.loads(Path("approaches/representations/reports/sparse_autoencoder/sparse_autoencoder_test_runs.json").read_text())["runs"]
                     if r["run_name"] == run.name)["checkpoint_sha256"]
     if file_hash(run/"checkpoints/best.pt") != expected:
         raise ValueError("Checkpoint differs from the frozen study")
@@ -452,7 +452,7 @@ if __name__ == "__main__":
     parser.add_argument("--speakers", type=int,default=40)
     parser.add_argument("--workers",type=int,default=8)
     parser.add_argument("--device",default="auto")
-    parser.add_argument("--output",default="documentation")
+    parser.add_argument("--output",default="approaches/interpretation/reports")
     parser.add_argument("--force",action="store_true",help="Recompute cached model responses")
     args = parser.parse_args()
     for name, function in [("prepare",prepare),("analyze",analyze),("report",report)]:

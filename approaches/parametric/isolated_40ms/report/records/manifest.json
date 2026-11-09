@@ -1,0 +1,361 @@
+{
+  "version": 1,
+  "source_path": "D:\\lrac2\\runs\\parametric_librispeech_1272_128104_0000\\reference.wav",
+  "source_sha256": "8ced93d3265be7440c2e82f31fc7b1d9e34d82e2d50c96d3adbd74f276e350c6",
+  "starts": [
+    15360,
+    31360,
+    47360
+  ],
+  "samples": 640,
+  "sample_rate": 16000,
+  "methods": [
+    "emd",
+    "vmd",
+    "eemd",
+    "ceemdan",
+    "svmd",
+    "direct"
+  ],
+  "trials": 32,
+  "restarts": 3,
+  "max_steps": 1600,
+  "seed": 42,
+  "library": [
+    {
+      "family": "polynomial",
+      "degree": 0
+    },
+    {
+      "family": "polynomial",
+      "degree": 1
+    },
+    {
+      "family": "polynomial",
+      "degree": 2
+    },
+    {
+      "family": "polynomial",
+      "degree": 4
+    },
+    {
+      "family": "polynomial",
+      "degree": 8
+    },
+    {
+      "family": "polynomial",
+      "degree": 16
+    },
+    {
+      "family": "polynomial",
+      "degree": 32
+    },
+    {
+      "family": "polynomial",
+      "degree": 64
+    },
+    {
+      "family": "polynomial",
+      "degree": 96
+    },
+    {
+      "family": "polynomial",
+      "degree": 128
+    },
+    {
+      "family": "spline",
+      "knots": 2
+    },
+    {
+      "family": "spline",
+      "knots": 4
+    },
+    {
+      "family": "spline",
+      "knots": 8
+    },
+    {
+      "family": "spline",
+      "knots": 16
+    },
+    {
+      "family": "spline",
+      "knots": 32
+    },
+    {
+      "family": "spline",
+      "knots": 64
+    },
+    {
+      "family": "spline",
+      "knots": 128
+    },
+    {
+      "family": "spline",
+      "knots": 256
+    },
+    {
+      "family": "dct",
+      "coefficients": 1
+    },
+    {
+      "family": "dct",
+      "coefficients": 2
+    },
+    {
+      "family": "dct",
+      "coefficients": 4
+    },
+    {
+      "family": "dct",
+      "coefficients": 8
+    },
+    {
+      "family": "dct",
+      "coefficients": 16
+    },
+    {
+      "family": "dct",
+      "coefficients": 32
+    },
+    {
+      "family": "dct",
+      "coefficients": 64
+    },
+    {
+      "family": "dct",
+      "coefficients": 128
+    },
+    {
+      "family": "dct",
+      "coefficients": 256
+    },
+    {
+      "family": "dct",
+      "coefficients": 640
+    },
+    {
+      "family": "sinusoid",
+      "components": 1
+    },
+    {
+      "family": "sinusoid",
+      "components": 2
+    },
+    {
+      "family": "sinusoid",
+      "components": 4
+    },
+    {
+      "family": "sinusoid",
+      "components": 8
+    },
+    {
+      "family": "sinusoid",
+      "components": 16
+    },
+    {
+      "family": "amfm",
+      "amplitude_degree": 0,
+      "phase_degree": 1
+    },
+    {
+      "family": "amfm",
+      "amplitude_degree": 0,
+      "phase_degree": 2
+    },
+    {
+      "family": "amfm",
+      "amplitude_degree": 0,
+      "phase_degree": 4
+    },
+    {
+      "family": "amfm",
+      "amplitude_degree": 1,
+      "phase_degree": 1
+    },
+    {
+      "family": "amfm",
+      "amplitude_degree": 1,
+      "phase_degree": 2
+    },
+    {
+      "family": "amfm",
+      "amplitude_degree": 1,
+      "phase_degree": 4
+    },
+    {
+      "family": "amfm",
+      "amplitude_degree": 2,
+      "phase_degree": 1
+    },
+    {
+      "family": "amfm",
+      "amplitude_degree": 2,
+      "phase_degree": 2
+    },
+    {
+      "family": "amfm",
+      "amplitude_degree": 2,
+      "phase_degree": 4
+    },
+    {
+      "family": "amfm",
+      "amplitude_degree": 4,
+      "phase_degree": 1
+    },
+    {
+      "family": "amfm",
+      "amplitude_degree": 4,
+      "phase_degree": 2
+    },
+    {
+      "family": "amfm",
+      "amplitude_degree": 4,
+      "phase_degree": 4
+    },
+    {
+      "family": "sine_network",
+      "width": 1
+    },
+    {
+      "family": "sine_network",
+      "width": 2
+    },
+    {
+      "family": "sine_network",
+      "width": 4
+    },
+    {
+      "family": "sine_network",
+      "width": 8
+    },
+    {
+      "family": "snakebeta_network",
+      "width": 1
+    },
+    {
+      "family": "snakebeta_network",
+      "width": 2
+    },
+    {
+      "family": "snakebeta_network",
+      "width": 4
+    },
+    {
+      "family": "snakebeta_network",
+      "width": 8
+    }
+  ],
+  "quantization": false,
+  "rvq": false,
+  "stitching": false,
+  "overlap": false,
+  "selection": "DP minimum count for triangle-inequality error bound over available fitted candidates",
+  "boundary": "Only 640 original samples passed to backend; native backend extensions allowed and versioned; no neighboring samples",
+  "optimizer": "Analytic-Jacobian scipy least_squares for AMFM/sinusoids; Adam multi-start for periodic networks; SVD linear projections",
+  "versions": {
+    "EMD-signal": "1.10.0",
+    "vmdpy": "0.2",
+    "pysdkit": "0.4.56",
+    "scipy": "1.13.1",
+    "torch": "2.8.0+cu128"
+  },
+  "source": {
+    "files": {
+      "approaches/__init__.py": "63b137160cdaca737ee00b2f7c67df8e96190e0914c533232476ce90b3430d4c",
+      "approaches/interpretation/__init__.py": "aa5aa4fe067c0ef736de9ba76ac5200040feb6aa2b7428b1cefb43e7cbfa980a",
+      "approaches/interpretation/channels.py": "705700e072de26e39789b0ebd3f10f0652488816092e8a98f5a5b7ec95dbdd7c",
+      "approaches/interpretation/pitch.py": "3f787bc5d1696ebbe59d286105a3cca93ef2adf1967d3bd225fa3df99f96d2bc",
+      "approaches/parametric/__init__.py": "6d3c94a15bd7168093082860971a380e7ee4f01021dfec192832c0f7db56108f",
+      "approaches/parametric/__main__.py": "48ea46cb461b555110070dfa09cfd7d4e600c87959090f792aaf93b9e1356a2d",
+      "approaches/parametric/ablation.py": "1f009e7e662d7a9a1ca5691f2b653b36296f1857705f2987c8d391030201d51d",
+      "approaches/parametric/ablation_report.py": "dec1687b695849c424e3d7f0212c4c3b397b8d0612fcef0c2fd2182913d9d36f",
+      "approaches/parametric/backends.py": "b0e3ee091fe08d10eea30abd5ef44f60e06671e255b1cf473dbc32b00a28f578",
+      "approaches/parametric/cli.py": "02f31c0b4087a2b59cda88c2cc7421aa9604d990b12f359886288ad3385b1749",
+      "approaches/parametric/decomposition.py": "3ac8a6456344728bf9140a8ecc0028c3ccbd8d36d6ada180608cc1cf070be1bb",
+      "approaches/parametric/experiment.py": "d0a0f9338012c1c1e43b7da7583df28761967089826c850cd4c9a5be6dff8ff4",
+      "approaches/parametric/isolated.py": "c1c68484df952bc65b07de169ae80d3cd138d2da6b729b091e5a672aed6491ff",
+      "approaches/parametric/isolated_models.py": "1998aa72ad85f9ed65e7d65a865fce47c7035e12b0fff08bd9d98c01ceecdd4c",
+      "approaches/parametric/isolated_payload.py": "af2f09935435329cc13ae2433a6f7198636a77d2dada9b7d8fd9303910d16858",
+      "approaches/parametric/isolated_report.py": "78b8e571658d271a3bc1507e32463993d156892a6d6e7f21a8c739dca2d23f24",
+      "approaches/parametric/isolated_selection.py": "17849398863063b2ad2f2dc27ea3fd1091a93577547a21d89b5fcc9aab4e2e87",
+      "approaches/parametric/models.py": "71bd198b81631a654fcd9234fa07a278cde5d87dfe0b9910346e4d7b8766ada2",
+      "approaches/parametric/payload.py": "8cf11841bdf538c150aba0a675a82157971cead3a130cf24156b00d05e58d583",
+      "approaches/parametric/portable_report.py": "38c33f7d2802fc5b16fb66fbe8c2db847d4336c70b18178c3364399a67fbb2d2",
+      "approaches/parametric/progress.py": "4f0ef39dde89572a5ad530e79f255398ad6465885a331a8a82e96c73adc22988",
+      "approaches/parametric/reconstruction.py": "c9b6c711dd02cf123fecfe7eaa7345d98826d9f355838265519114c917d9fb94",
+      "approaches/parametric/report.py": "d15eae20764e65e8f1e50db77ac9dc29d9c63571db3c5714d4bac9df9ecce758",
+      "approaches/parametric/tests/test_coding.py": "839c7b9711286f51b0e4b55f511ac57aef6dab391b6c90bc917806471583c9f1",
+      "approaches/parametric/tests/test_isolated.py": "3df20ec05c3fb6bc0be635fc81eed0c2174634e783603c3fc005a567d03054ba",
+      "approaches/parametric/tests/test_reconstruction.py": "fc7a2a844ed2f47df937a8483a2fa988c262c1080b60bd73f2defb738e502e75",
+      "approaches/pitchflower/__init__.py": "58370aca95c4faae4af9abb7366b2e658586d539d98f5ae524f8c2b50b7ccbb9",
+      "approaches/pitchflower/data.py": "3fbd8cf91daaf8ffca759993f783cb025d078c3c11bf75af39838c1c8017b1ce",
+      "approaches/pitchflower/model/__init__.py": "192390630efbdac7aa7dfe5bdc7cc4eba21618aef340f4340f1e60256f6cc49c",
+      "approaches/pitchflower/model/bottlenecks/__init__.py": "b8429d13188c7477d95918f618bd66f94a70b2381fcb3c0ac19ee73baafeb54b",
+      "approaches/pitchflower/model/bottlenecks/base.py": "01536639076c6fd3461cb7b1a665ea4efb1ec666a01a7262a4ceb8f01b538eb4",
+      "approaches/pitchflower/model/bottlenecks/gaussian.py": "a40cc6cfc9039ada2aa4f7a6cd097eae6e3ca34eb2f0fa9d9c8283502e612791",
+      "approaches/pitchflower/model/bottlenecks/gaussian_adapter.py": "9e8849db0ea2f341b4b222aa387d2cd5f34e925c16b029c78de35543308fce0f",
+      "approaches/pitchflower/model/bottlenecks/rvq.py": "bbc63c10c37fd8e4326e5e5b65f16760e0c9a1f478a1a95534ca848baa7c1d60",
+      "approaches/pitchflower/model/pitchflower.py": "3b7986f33de019cf5b292a068ee8870a396ee71fdd36db87aa648abc356e8503",
+      "approaches/pitchflower/model/predictors/__init__.py": "b938a9f7ca44983a869b4d3f8e888be0051f68da30f3f3e211ea7ed5dc565843",
+      "approaches/pitchflower/model/predictors/gaussian.py": "223fa171a4fdb3f1801116045bce54eb7dc29cf0289512c63f9bf1ff734c36bf",
+      "approaches/pitchflower/training/__init__.py": "971c673d9b23e53f5613236e79377be2af31157a131ccfd1d8d312051def9102",
+      "approaches/pitchflower/training/campaign.py": "c1ccf6f81d9fa3ed315343be353900e3e9dff750fff3adc93c0abb84ce209642",
+      "approaches/pitchflower/training/train_codec.py": "74408ec2ca97456bea4c997a0df76e562f38130c87cc0d695e30ca33aa607b60",
+      "approaches/pitchflower/training/train_predictor.py": "0cd23ced73006f8172380da278a62ce210b3fac4ca147f95aee6957c88e8c940",
+      "approaches/representations/__init__.py": "ee27893b32f3c12c3f3f2d3a2fe8549ad4c3bf61eee6a8c039c8372b78423e62",
+      "approaches/representations/analysis.py": "1227479e60da0ad60512d8f904c685999f7a5a4cf8332d4a62040d98956fa6f6",
+      "approaches/representations/evaluation/__init__.py": "3631b7f9763f2370085a13041d2ea3876355d8b81783ebb42f70292b176ffa2e",
+      "approaches/representations/evaluation/evaluate.py": "4c53f9011b0a05e4426a05d30e54b3ff9a8d12afe32b4cc44841186e1927932a",
+      "approaches/representations/evaluation/report.py": "ccc9a28860edfeb70ba5d39b4fcc7a7e9da24275312e139b56de8ae3eeb9bc29",
+      "approaches/representations/experiment.py": "36ef60ab12f5c07e01c97d63260668ab73da41a8b2f9af6618adfa6f19994156",
+      "approaches/representations/models/__init__.py": "eda21a54ca7c071111d95af6d23f658d003e4fee2652c192b111f1627993d4e7",
+      "approaches/representations/models/autoencoder.py": "6c1cefeba12bb01722e88dc0c4d4e4c16caeb2c8d8cd243164a7effe05ceef9a",
+      "approaches/representations/models/base.py": "661a76d29c1ed3247d3316383aed4f2bfddde0094350faeffb6a35005a4fba65",
+      "approaches/representations/models/block_orthogonal.py": "751a9293746b0a7a2125a53791f955bcbc307c96ef7725be040f195d65892bf7",
+      "approaches/representations/models/convolutional.py": "a8948bad61ee4e262a306ab17d30c557135acea7cc3ea7087ea49eeba561c8b5",
+      "approaches/representations/models/dictionaries.py": "cf6157e3b0f83302a3d868c8f676199a775c61708e4c42b57972ba794331ad7b",
+      "approaches/representations/models/sparse_autoencoder.py": "9d60aaca51cb7adb79ce9dbe36402b214a4a7323f413be1f84f03e233882a13f",
+      "approaches/representations/models/transforms.py": "a9c2093f7376a8f67c5706258c5da284d2b942b2b10bac804ee7b4e382c87007",
+      "approaches/representations/sparse.py": "404cccc59009bd76d07f20b73700b02a051380fb7105b5157c42bce9626aa4ef",
+      "approaches/representations/training/__init__.py": "9750ce273fa63ebcf167ce0c9bebc499971be4c4c2a07322823278af47e0a87f",
+      "approaches/representations/training/runner.py": "d0caabdc1ba988e3a14a0b10a784d2141ad1afc321c0ad4fa077450f7430f772",
+      "approaches/runner/__init__.py": "12186d04013c897d692bb32107a6c92fdd00ccd055f91161609ad2dd782b6fa9",
+      "approaches/runner/cli.py": "65c94b0b694c3dff91a5a14c0a45693266d3ba630fb28d3c48d7573ea0d21f5e",
+      "approaches/runner/config.py": "6d78766bf58dbab0bba552905e3382c1d2252bd053ea65ccf8b7a91e4d3c8125",
+      "approaches/runner/study.py": "7f688df1a24e8f0725ae51f8434f80a49b94028965333a59fd5ca1360f54366a",
+      "approaches/sparse_coding/__init__.py": "33a342725a840c55f19def347b173cadf54f660e4e4a5ec1aaffd1b3f4a02215",
+      "approaches/sparse_coding/codec.py": "4475c9739197495c2fc47d82d5e098eb0c7222629ce9ab3cc1a2f61f94104bf7",
+      "approaches/sparse_coding/examples.py": "33278321d745a081ade12c1285449264be0faed786e1d495bb87899f33e8613e",
+      "approaches/sparse_coding/l0.py": "401f672efd39547d3205c97bfe8d7a7e615f906ccda36f4f263a0fcf354c38ad",
+      "approaches/sparse_coding/l0_parallel.py": "a73c08ea78c119a848dba274f65f76688335f399cb5033ca0bb8a402361dcb67",
+      "approaches/sparse_coding/l1.py": "064cb9414d399852b06c8755434a9e84e837d47d9d5fd46aa7ea2ed33e38f1e7",
+      "approaches/sparse_coding/linear.py": "65e1e3b7572439294f0e93a1e5978db38850b53cc672aae637fcf2235ed85f70",
+      "approaches/sparse_coding/study_l0.py": "be0f41401da6760bdf2adb00c37a1d8268842d674383cf2ff46dc6e4e7d39e0f",
+      "approaches/sparse_coding/study_l1.py": "cdba60bcf29ba83c6c7f7faff431cee7a0aa4a6bbb0953a9256643dfb137b602",
+      "approaches/sparse_search/__init__.py": "7cf064b1e7c7ca4e00f761bf726d8700cfdaef990a73e216ce8e07aa81c081da",
+      "approaches/sparse_search/cues.py": "a32ee6e83a401aa71149a92ce70ee43c036c592e3ae4f5f9d1ab9c5ffd6eddda",
+      "approaches/sparse_search/examples.py": "3cc7478e23120a09797b187f279c822775513f0ff96abe2c78ae6c9c23ade02e",
+      "approaches/sparse_search/rotations.py": "84a966b52268b5e934047e43dbc01e189ede1bfc191758a058fd3b28139a214c",
+      "approaches/sparse_search/study_cues.py": "2a65a8a02c524a361f582ec0dad3610c7428ec0366a7679ec165e96aae1ceb91",
+      "approaches/sparse_search/study_search.py": "021cbb3899a3286322be9aa234bf1b353f519e89a9e32478ba488bbc386fa24f",
+      "util/__init__.py": "58b1b2205688174f732fe0eafb56d25ac2bd619b78890453fc1da759cb5143db",
+      "util/data/__init__.py": "050a608ca26b593253d5b39835a2acd5d6fbb96b19673673de71733e73b9e7c0",
+      "util/data/audit.py": "b4c1d1d394399220129dc50eace36d908a85617bf6c234b4b7eaeb976c4a126d",
+      "util/data/datasets.py": "ba76921fe95650142c487db5b66ee44e384ac729684218fe7e1743cb3adf9eec",
+      "util/data/downloads.py": "e946213c81d2b3db3b9ea592c963958b1524b3d9294834eb672e6c438c80cb2c",
+      "util/data/manifests.py": "2cda70a994216e1d14e640dbdac514f843091425f7ed7f4ece3388c42511db3b",
+      "util/data/preprocessing.py": "12ac1df88db371acc37eb43316b4e8de474f21da171572fd8c5e4d2375076c7a",
+      "util/data/synthetic.py": "8624aed51feef5aba90303ae12b915ae77571aff6e56fa33af483159d127ceb1",
+      "util/io.py": "3081ae3dbfeb302abc87211b157a6614a578ce194b1b256f2c7797186805c78f",
+      "util/losses.py": "b124c568bf98764287810d60263b4c90386e2b47d454f23d4a00501d9a2c53b6",
+      "util/metrics.py": "a44ec8213b09195b79a23c4af2277da65504ac332d05e1607875dfa1114e94fa",
+      "util/provenance.py": "e16d6563f50c2ddab11697b8f472c83fe12aa2a521589d18df99516e6ce2024a",
+      "util/runtime.py": "3bee9a7262de0e0b21f3ad8c2cccc93f4e41885c03e9dff189db52266280ce1b",
+      "pyproject.toml": "82abc72de69633a23ad619471da69ee7003a681c9b707544aacc6f1806b93853",
+      "requirements-lock.txt": "faac023f3b663ba1744de2b46e53050db65df54205dba72c53058c6a5d75ad51"
+    },
+    "combined_sha256": "7bf3a19143683b2d60a6b7ff7b7e96bfd5d874ebd16f3e578ae3e0aa1554f126"
+  }
+}

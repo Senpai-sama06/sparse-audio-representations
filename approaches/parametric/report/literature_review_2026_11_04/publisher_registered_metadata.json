@@ -1,0 +1,437 @@
+[
+  {
+    "doi": "10.1098/rsta.2024.0584",
+    "error": "HTTP Error 429: Too Many Requests"
+  },
+  {
+    "doi": "10.1109/TPAMI.2026.3722883",
+    "error": "HTTP Error 429: Too Many Requests"
+  },
+  {
+    "doi": "10.1109/TNNLS.2024.3475271",
+    "title": [
+      "Weighted Hermite Variable Projection Networks for Classifying Visually Evoked Potentials"
+    ],
+    "venue": [
+      "IEEE Transactions on Neural Networks and Learning Systems"
+    ],
+    "published": {
+      "date-parts": [
+        [
+          2025,
+          7
+        ]
+      ]
+    },
+    "print": {
+      "date-parts": [
+        [
+          2025,
+          7
+        ]
+      ]
+    },
+    "online": null,
+    "url": "https://doi.org/10.1109/tnnls.2024.3475271",
+    "authors": [
+      {
+        "ORCID": "https://orcid.org/0000-0003-0919-4385",
+        "authenticated-orcid": false,
+        "given": "Tam\u00e1s",
+        "family": "D\u00f3zsa",
+        "sequence": "first",
+        "affiliation": [
+          {
+            "name": "Institute for Computer Science and Control, Hungarian Research Network, Budapest, Hungary"
+          }
+        ],
+        "role": [
+          {
+            "role": "author",
+            "vocabulary": "crossref"
+          }
+        ]
+      },
+      {
+        "ORCID": "https://orcid.org/0000-0003-2207-2411",
+        "authenticated-orcid": false,
+        "given": "Carl",
+        "family": "B\u00f6ck",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "JKU LIT SAL eSPML Laboratory, Institute of Signal Processing, Johannes Kepler University Linz, Linz, Austria"
+          }
+        ],
+        "role": [
+          {
+            "role": "author",
+            "vocabulary": "crossref"
+          }
+        ]
+      },
+      {
+        "ORCID": "https://orcid.org/0000-0002-8727-2257",
+        "authenticated-orcid": false,
+        "given": "Jens",
+        "family": "Meier",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Clinic of Anesthesiology and Intensive Care Medicine, Johannes Kepler University Linz, Linz, Austria"
+          }
+        ],
+        "role": [
+          {
+            "role": "author",
+            "vocabulary": "crossref"
+          }
+        ]
+      },
+      {
+        "ORCID": "https://orcid.org/0000-0002-0772-9721",
+        "authenticated-orcid": false,
+        "given": "P\u00e9ter",
+        "family": "Kov\u00e1cs",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Department of Numerical Analysis, E&#x00F6;tv&#x00F6;s Lor&#x00E1;nd University, Budapest, Hungary"
+          }
+        ],
+        "role": [
+          {
+            "role": "author",
+            "vocabulary": "crossref"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "doi": "10.1016/j.automatica.2025.112300",
+    "title": [
+      "Variable Projection algorithms: Theoretical insights and a novel approach for problems with large residual"
+    ],
+    "venue": [
+      "Automatica"
+    ],
+    "published": {
+      "date-parts": [
+        [
+          2025,
+          7
+        ]
+      ]
+    },
+    "print": {
+      "date-parts": [
+        [
+          2025,
+          7
+        ]
+      ]
+    },
+    "online": null,
+    "url": "https://doi.org/10.1016/j.automatica.2025.112300",
+    "authors": [
+      {
+        "given": "Guangyong",
+        "family": "Chen",
+        "sequence": "first",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Peng",
+        "family": "Xue",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Min",
+        "family": "Gan",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Jing",
+        "family": "Chen",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Wenzhong",
+        "family": "Guo",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "C.L. Philip",
+        "family": "Chen",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "doi": "10.1016/j.sigpro.2025.110203",
+    "error": "HTTP Error 429: Too Many Requests"
+  },
+  {
+    "doi": "10.1007/s11760-013-0433-6",
+    "title": [
+      "HHT-based audio coding"
+    ],
+    "venue": [
+      "Signal, Image and Video Processing"
+    ],
+    "published": {
+      "date-parts": [
+        [
+          2013,
+          3,
+          2
+        ]
+      ]
+    },
+    "print": {
+      "date-parts": [
+        [
+          2015,
+          1
+        ]
+      ]
+    },
+    "online": {
+      "date-parts": [
+        [
+          2013,
+          3,
+          2
+        ]
+      ]
+    },
+    "url": "https://doi.org/10.1007/s11760-013-0433-6",
+    "authors": [
+      {
+        "given": "Kais",
+        "family": "Khaldi",
+        "sequence": "first",
+        "affiliation": [],
+        "role": [
+          {
+            "role": "author",
+            "vocabulary": "crossref"
+          }
+        ]
+      },
+      {
+        "given": "Abdel-Ouahab",
+        "family": "Boudraa",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "role": "author",
+            "vocabulary": "crossref"
+          }
+        ]
+      },
+      {
+        "given": "Bruno",
+        "family": "Torresani",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "role": "author",
+            "vocabulary": "crossref"
+          }
+        ]
+      },
+      {
+        "given": "Thierry",
+        "family": "Chonavel",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "role": "author",
+            "vocabulary": "crossref"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "doi": "10.1109/TSP.2026.3675233",
+    "title": [
+      "Density-Based Adaptive Mode Decomposition"
+    ],
+    "venue": [
+      "IEEE Transactions on Signal Processing"
+    ],
+    "published": {
+      "date-parts": [
+        [
+          2026
+        ]
+      ]
+    },
+    "print": {
+      "date-parts": [
+        [
+          2026
+        ]
+      ]
+    },
+    "online": null,
+    "url": "https://doi.org/10.1109/tsp.2026.3675233",
+    "authors": [
+      {
+        "ORCID": "https://orcid.org/0000-0003-1356-7463",
+        "authenticated-orcid": false,
+        "given": "Hao",
+        "family": "Jia",
+        "sequence": "first",
+        "affiliation": [
+          {
+            "name": "School of Medicine, Nankai University, Tianjin, China"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "ORCID": "https://orcid.org/0009-0004-1009-6568",
+        "authenticated-orcid": false,
+        "given": "Chunyu",
+        "family": "Yang",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Department of Mechanical Engineering, Universitat Polit&#x00E8;cnica de Catalunya-BarcelonaTech, Terrassa, Spain"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "ORCID": "https://orcid.org/0000-0001-5437-6095",
+        "authenticated-orcid": false,
+        "given": "Cesar F.",
+        "family": "Caiafa",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Instituto Argentino de Radioastronom&#x00ED;a (CCT-CONICET La Plata/CIC-PBA/UNLP), Villa Elisa, Argentina"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "ORCID": "https://orcid.org/0000-0002-6531-0769",
+        "authenticated-orcid": false,
+        "given": "Zhe",
+        "family": "Sun",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Computational, Bioengineering Laboratory, Faculty of Health Data Science, Juntendo University, Tokyo, Japan"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "ORCID": "https://orcid.org/0000-0002-2179-2460",
+        "authenticated-orcid": false,
+        "given": "Feng",
+        "family": "Duan",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Tianjin Key Laboratory of Interventional Brain-Computer Interface and Intelligent Rehabilitation, Nankai University, Tianjin, China"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "ORCID": "https://orcid.org/0000-0002-6534-1979",
+        "authenticated-orcid": false,
+        "given": "Jordi",
+        "family": "Sol\u00e9-Casals",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Data and Signal Processing Research Group, University of Vic-Central University of Catalonia, Vic, Spain"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ]
+  }
+]

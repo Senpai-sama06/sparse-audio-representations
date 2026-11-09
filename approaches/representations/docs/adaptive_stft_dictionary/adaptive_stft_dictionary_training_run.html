@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Adaptive STFT dictionary: training run</title>
+</head>
+<body>
+<h1>Adaptive STFT dictionary: training run</h1>
+<p>Run ID: <code>adaptive_stft_dictionary_librispeech_20261107</code>. Training completed on 7 November 2026.</p>
+
+<h2>Purpose</h2>
+<p>This experiment examines a model that generates spectral atoms for each audio input. It tests reconstruction with a fixed atom count.</p>
+
+<h2>Scope</h2>
+<p>Training used one-second LibriSpeech excerpts. The model has 32 complex atoms and dense complex coefficients.</p>
+<p>The test group contains 64 test-clean utterances from 40 speakers. Each utterance has an excerpt case and a complete-recording case.</p>
+<p>The report contains all 128 selected cases. No selected case failed or was excluded.</p>
+<p>This experiment does not test residual vector quantization, intrinsic mode functions, or a minimum-size dictionary objective.</p>
+<p>A compressed codec bitstream is not available. The measured files contain an uncompressed float32 representation.</p>
+
+<h2>Method</h2>
+<p>STFT means short-time Fourier transform. It gives the real and imaginary frequency values for successive time windows.</p>
+<pre>Input audio
+  -&gt; shared gain normalization
+  -&gt; complex STFT
+  -&gt; audio encoder
+  -&gt; input-specific atom generator
+  -&gt; initial coefficient calculation
+  -&gt; four joint dictionary and coefficient update stages
+  -&gt; dictionary product and endpoint correction
+  -&gt; inverse STFT and gain restoration
+  -&gt; reconstructed audio</pre>
+<p>The encoder and atom generator share network weights across recordings. Each recording receives different atom values.</p>
+<p>One dictionary serves all frames in an input. The coefficients change over time.</p>
+<p>The update stages change both atoms and coefficients. Their correction networks share weights across stages.</p>
+<p>All output audio passes through the dictionary product. The model has no waveform bypass and no vocoder.</p>
+<p>The loss combines complex STFT error, waveform L1 error, and multiresolution spectral error. Earlier stages also receive reconstruction supervision.</p>
+
+<h2>Training procedure</h2>
+<p>FLAC means Free Lossless Audio Codec.</p>
+<ol>
+<li>Resolve the cached KaggleHub dataset <code>pypiahmad/librispeech-asr-corpus/versions/1</code>.</li>
+<li>Check FLAC headers and official partition names.</li>
+<li>Check that training, validation, and test speakers do not overlap.</li>
+<li>Save the file index and fixed validation offsets.</li>
+<li>Evaluate the initial model on 64 fixed dev-clean excerpts.</li>
+<li>Train for 20,000 updates.</li>
+<li>Evaluate validation excerpts every 500 updates.</li>
+<li>Save the checkpoint with the lowest final-stage composite validation loss.</li>
+<li>Evaluate the saved best checkpoint on the fixed test group.</li>
+</ol>
+<p>The index contained 104,014 train-clean-360 files, 2,703 dev-clean files, and 2,620 test-clean files.</p>
+<p>No source file was excluded for insufficient length. Training selected speakers uniformly before it selected an utterance and crop offset.</p>
+<p>The batch size was eight. The run used 160,000 sampled one-second excerpts, equivalent to 44.44 hours of sampled audio.</p>
+<p>This sampling schedule does not equal one pass through all 360 hours.</p>
+
+<h2>Recorded settings</h2>
+<table border="1" cellpadding="6">
+<tr><th>Item</th><th>Value</th></tr>
+<tr><td>Sample rate and channels</td><td>16,000 Hz, mono</td></tr>
+<tr><td>Training input length</td><td>16,000 samples; 1.000 s</td></tr>
+<tr><td>STFT settings</td><td>512-sample periodic Hann window; 128-sample hop; centered frames; constant boundary padding</td></tr>
+<tr><td>Atom count</td><td>32 complex atoms per input</td></tr>
+<tr><td>Encoder feature width</td><td>128 values per frame</td></tr>
+<tr><td>Attention heads</td><td>4</td></tr>
+<tr><td>Initial coefficient steps</td><td>4</td></tr>
+<tr><td>Joint update stages</td><td>4</td></tr>
+<tr><td>Trainable parameters</td><td>848,254</td></tr>
+<tr><td>Optimizer</td><td>AdamW; learning rate 0.0001; weight decay 0.0001</td></tr>
+<tr><td>Random seed</td><td>42</td></tr>
+<tr><td>Early stopping</td><td>Disabled; all 20,000 updates completed</td></tr>
+<tr><td>Best checkpoint</td><td><code>best.pt</code>, update 20,000</td></tr>
+<tr><td>GPU</td><td>NVIDIA RTX 2000 Ada Generation</td></tr>
+<tr><td>Active training and validation time</td><td>65.97 min; initial file indexing is excluded</td></tr>
+</table>
+
+<h2>Evidence</h2>
+<p>The composite validation loss decreased from 3.6439 to 1.8937. This is a 48.0% decrease.</p>
+<p>The final validation waveform normalized mean squared error was 0.1883 across 64 fixed excerpts.</p>
+<p>These observations support improved reconstruction. They do not identify which model component caused the improvement.</p>
+<p>PESQ means perceptual evaluation of speech quality. STOI means short-time objective intelligibility.</p>
+<p>WB means wideband. PESQ-WB is the wideband PESQ score.</p>
+<p>The following arithmetic means use 64 test cases per mode. All PESQ and STOI calculations returned valid scores.</p>
+<table border="1" cellpadding="6">
+<tr><th>Test mode</th><th>PESQ-WB</th><th>STOI</th><th>Measured raw payload rate</th></tr>
+<tr><td>One-second excerpt</td><td>1.7476</td><td>0.8490</td><td>786.192 kbit/s</td></tr>
+<tr><td>Complete recording</td><td>1.5367</td><td>0.8338</td><td>322.775 kbit/s</td></tr>
+</table>
+<p>The rate uses total payload bits divided by total source duration. One kbit/s means 1,000 bit/s.</p>
+<p>The payload includes the dictionary, coefficients, gain, and header. The decoder needs no learned network weights.</p>
+<p>PCM means pulse-code modulation. Playback audio uses mono 16 kHz float32 WAV files.</p>
+<p>Its PCM data rate is 512 kbit/s, excluding WAV headers.</p>
+<p>For comparison, mono PCM16 at 16 kHz requires 256 kbit/s. Both raw payload rates exceed that reference.</p>
+<p><a href="../../reports/adaptive_stft_dictionary/adaptive_stft_dictionary_testcases.html">Open the portable report with all 128 case tables.</a></p>
+<p><a href="../../reports/adaptive_stft_dictionary/adaptive_stft_dictionary_metrics.json">Read the metric records.</a> <a href="../../reports/adaptive_stft_dictionary/adaptive_stft_dictionary_verification.json">Read the verification record.</a></p>
+
+<h2>Limits and unresolved problems</h2>
+<ul>
+<li>The test group is a selected subset. It is not the complete test-clean dataset.</li>
+<li>Complete-recording inference extends the one-second training context.</li>
+<li>The excerpt and complete-recording modes evaluate different audio durations.</li>
+<li>The scores alone do not establish listening quality or intelligibility.</li>
+<li>A stronger coefficient solve can improve reconstruction on the small validation diagnostic group.</li>
+<li>A fixed-dictionary training comparison has not been completed.</li>
+<li>The available evidence does not isolate the benefit of input-specific atoms.</li>
+<li>The raw payload results do not establish compression.</li>
+</ul>
+<p>The original training artifacts do not record a Git revision. The model source SHA-256 identifies the actual training script.</p>
+<p><code>39c78c6c2e9946e7d2d3159c40628e3803db87fa16ab4c21215dec1f14e15750</code></p>
+<p>The results report records the checkpoint SHA-256 and report-build revision separately.</p>
+
+<h2>Next action</h2>
+<ol>
+<li>Keep the saved atoms constant.</li>
+<li>Use a stronger coefficient solve on a declared evaluation group.</li>
+<li>Compare reconstruction scores and computation time.</li>
+<li>Plan a fixed-dictionary comparison with the same test cases.</li>
+</ol>
+
+<h2>Source files and commands</h2>
+<p><a href="../../adaptive_stft_dictionary.py">Standalone model and training script</a></p>
+<p><a href="../../../../tools/evaluate_adaptive_stft_dictionary.py">Payload encoder, decoder, and quality evaluation</a></p>
+<p><a href="../../../../tools/build_adaptive_stft_report.py">Results report builder</a></p>
+<p><a href="../../../../runs/adaptive_stft_dictionary_librispeech_20261107/completion.json">Training completion record</a></p>
+<p><a href="../../../../runs/adaptive_stft_dictionary_librispeech_20261107/validation.jsonl">Validation records</a></p>
+<p><a href="adaptive_stft_dictionary_design.html">Original model proposal, block descriptions, and eight paper references</a></p>
+<p>The original proposal contains planned alternatives. The source code and recorded settings define this completed run.</p>
+<pre>python tools/build_adaptive_stft_report.py</pre>
+<p>This command rebuilds the report from saved payloads. It does not train the model or repeat model inference.</p>
+<p>The evaluation script also provides a source-free payload decoder.</p>
+<pre>python tools/evaluate_adaptive_stft_dictionary.py --decode FILE.asd --wav OUT.wav</pre>
+<p>Replace the example paths before use.</p>
+
+<h2>Writing reference</h2>
+<p>This document follows <a href="../../../../documentation/REPORTS_README.md">the repository report instructions</a>.</p>
+<p>ASD-STE100 is the writing target. No certified language compliance is claimed.</p>
+</body>
+</html>

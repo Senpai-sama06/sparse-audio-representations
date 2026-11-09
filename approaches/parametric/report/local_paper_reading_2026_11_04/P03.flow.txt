@@ -1,0 +1,1195 @@
+Zhen Liu1,† , Hao Zhu1,† , Qi Zhang2 , Jingde Fu3 , Weibing Deng3 , Zhan Ma1 , Yanwen Guo4 , Xun Cao1
+1
+School of Electronic Science and Engineering, 3 Department of Mathematics,
+4
+Department of Computer Science and Technology, Nanjing University, Nanjing 210023, China
+2
+AI Lab, Tencent Company, Shenzhen 518054, China
+†
+Equal contribution. Corresponding author: caoxun@nju.edu.cn
+
+Implicit Neural Representation (INR), which utilizes a
+neural network to map coordinate inputs to corresponding
+attributes, is causing a revolution in the field of signal processing. However, current INR techniques suffer from a restricted capability to tune their supported frequency set, resulting in imperfect performance when representing complex signals with multiple frequencies. We have identified
+that this frequency-related problem can be greatly alleviated by introducing variable-periodic activation functions,
+for which we propose FINER. By initializing the bias of the
+neural network within different ranges, sub-functions with
+various frequencies in the variable-periodic function are
+selected for activation. Consequently, the supported frequency set of FINER can be flexibly tuned, leading to improved performance in signal representation. We demonstrate the capabilities of FINER in the contexts of 2D image
+fitting, 3D signed distance field representation, and 5D neural radiance fields optimization, and we show that it outperforms existing INRs.
+
+FINER sin( 𝑥𝑥 + 1 𝑥𝑥)
+𝝈𝝈(𝒙𝒙)
+
+SIREN sin(𝑥𝑥)
+
+Abstract
+𝝈𝝈(𝒙𝒙)
+
+arXiv:2312.02434v1 [cs.CV] 5 Dec 2023
+
+FINER: Flexible spectral-bias tuning in Implicit NEural Representation
+by Variable-periodic Activation Functions
+
+𝒙𝒙
+
+𝒙𝒙
+
+(a) Different activation functions for INR 𝒃𝒃 = 𝟎𝟎 𝒃𝒃 = 𝟐𝟐𝝅𝝅
+
+(b) Performance comparisons on 2D image representation
+
+Figure 1. Flexible spectral-bias tuning in implicit neural representation (FINER). We observe that the supported frequency
+set in classical INRs is limited due to the underutilization of activation functions’ definition domain, i.e., they mainly employ the
+central region near the origin point. To overcome this limitation,
+we propose a novel variable-periodic activation function for INR.
+This innovation allows for tuning the supported frequency set by
+adjusting the initialization range of the bias vector in the neural network. (a) visualizes the selected narrow activation functions in classical periodic activation sin(x) alongside our proposed
+variable-periodic one sin((|x| + 1)x) with different bias settings.
+(b) plots the training curves of SIREN and FINER, demonstrating
+the impact of different initializations applied to the bias vector ⃗b
+(see Sec. 5.1.1 for more details).
+
+1. Introduction
+The way a signal is represented is the foundation of all
+the following problems and determines the paradigm for
+solving them. Traditional representations, such as the
+image matrices, point cloud or volumes [35], focus on
+recording the elements individually and have offered significant contributions in history. However, this representation is increasingly inadequate for addressing the numerous inverse problems arising in modern times, such as
+neural rendering [35], inverse imaging [39] and simulations [14]. On the contrary, the implicit neural representation (INR) [32], which characterizes a signal by preserving
+the mapping function from the coordinates to corresponding
+attributes using neural networks, is gaining increasing atten-
+
+tions thanks to the advantages of querying attributes continuously and incorporating differentiable physical process
+seamlessly. As a result, INR has found widespread appli1
+
+cation in solving domain-specific inverse problems [8, 14],
+particularly in cases where large-scale paired datasets are
+unavailable, and only measurements and forward physical
+process are provided.
+However, existing INR techniques suffer the well-known
+spectral-bias [26, 40], i.e., the low-frequency components
+of the signal are more easily to be learned. To address this
+bias, the positional encoding [23, 34] which aims at embedding multiple orthogonal Fourier or Wavelet bases [6] into
+the subsequent network is proposed. However, a significant
+challenge arises from the fact that the frequency distribution of a signal to be inversely solved is often unknown.
+This can potentially lead to a mismatch between the predefined bases’ frequency set and the characteristics of the
+signal itself, resulting in an imperfect representation [38].
+Apart from the pre-defined frequency set, there is a growing focus within the research community on automatic frequency tuning, achieved through the use of periodic [32]
+or non-periodic activation [28, 30] functions. Nevertheless,
+the supported frequency set is still limited and the representational accuracy could be further improved.
+Such a problem is closely related to the underutilization
+of the used activation functions. While activation functions have an infinite domain, practical applications typically make use of only the regions centered around the origin. By ‘interspersing’ narrow activation functions with different frequencies along the full definition domain and then
+selecting the ideal one by controlling the range of input values, the supported frequency set could be significantly expanded, resulting in improved expressive power of current
+INRs. Following this idea, we propose the FINER, where
+variable-periodic functions are applied to activate the neurons within the INR.
+Different from previous explorations [28, 30, 32] which
+focus on optimizing the weight matrix for manipulating
+frequency candidates with better matching degree, FINER
+opens a novel way to achieve frequency tuning by modulating the bias vector, or in other words, the phase of
+the variable-periodic activation functions. We demonstrate
+that both the shift-invariance and eigenvalues distribution
+of FINER’s neural tangent kernel (NTK) can be enhanced
+(see Figs 1, 4) by increasing the standard deviation during
+bias initialization, thus the spectral bias could be flexibly
+tuned and the expressive power are significantly improved.
+To verify the performance, extensive experiments are conducted on 2D image fitting, 3D signed distance field representation and 5D neural radiance field optimization. Specifically, the main contributions of the work include,
+1. We introduce a novel implicit neural representation with
+flexible spectral-bias tuning for representing and optimizing signals.
+2. We propose a novel initialization scheme and prove its
+effectiveness and efficiency from both the perspectives
+
+of geometry and neural tangent kernel.
+3. We substantiate that FINER surpasses prior INRs activated with other functions for 2D image fitting, 3D
+signed distance field representation and 5D neural radiance field optimization.
+
+2. Related Work
+2.1. Implicit Neural Representation
+INRs [32, 34] serve as the foundational building blocks
+for neural scene representations. These representations
+are designed to learn continuous functions using a multilayer perception (MLP) that maps coordinates to visual signals, such as images [5, 19, 38], videos [3, 15], and 3D
+scenes [23, 36]. Neural Radiance Fields or NeRF [23], a
+notable breakthrough in this domain, learns a 5D INR to reconstruct the radiance fields (density and view-dependent
+color) of a scene. With the widespread application of
+NeRF and its variants [2, 24] on realistic view synthesis,
+INRs have rapidly expanded into various fields of vision
+and signal processing, such as cross-model media representation/compression [7, 33], neural camera representations
+[10, 11], microscopy imaging [20, 41] and partial differential equations solver [14, 27]. Despite the interest and success of these implicit representations, current approaches
+often suffer from the well-known spectral-bias problem. As
+a result, the INRs may struggle to capture high-fidelity details of complex signals, leading to suboptimal performance
+in fitting functions and ineffectiveness in various applications.
+
+2.2. Spectral-bias Problem
+The issue of spectral-bias in deep learning [26] refers to
+the innate propensity of these models to selectively learn
+specific patterns or features from input data. In the case
+of INR-based methods, this problem manifests as a preference for learning low-frequency components of a signal more readily than high-frequency components. To address the spectral-bias problem, several innovative strategies have been proposed for INR-based methods. In particular, spatial encoding is applied to the input data, such as
+frequency or polynomial decomposition [25, 31, 34], highpass filtering [6, 37], to emphasize high-frequency components before feeding into the model. [34] use the Fourier
+features mapped from spatial coordinates as the input of
+MLPs to improve the performance of INRs in adequately
+expressing high-frequency information of signals. Additionally, various architectural modifications have been integrated into INRs, including multi-scale or pyramid representations [19, 29, 42], which can aid in capturing both lowfrequency and high-frequency components of a scene. [19]
+implement a multi-scale network architecture with a bandlimited Fourier spectrum to minimize artifacts during the
+2
+
+PSNR (dB)
+
+downsampling or upsampling process. However, the frequency distribution of a signal requiring inverse solving is
+often unknown, making it difficult to design an appropriate
+representation or model for the signal without prior knowledge of its frequency content.
+In addition to the positional encoding with pre-defined
+frequency bases, there has been a growing interest in the research community for automatic frequency tuning through
+the use of nonlinearity activation functions [4, 28, 30,
+32]. [32] propose the Sinusoidal Representation Network
+(SIREN), a method designed to represent complex signals
+and functions using periodic activation functions, especially
+sine functions. SIREN has demonstrated its effectiveness
+in representing intricate details and high-frequency components when compared to traditional activation functions
+like ReLU or sigmoid. However, it is important to note that
+SIREN may necessitate careful initialization and hyperparameter tuning to achieve optimal performance. The periodic nature of sine functions can lead to oscillations and
+slower convergence, posing challenges in the training process. Furthermore, the size of the embedding space is limited, as the frequency distribution bias remains constant for
+different inputs, making it difficult to represent the diversity of frequency distributions. As a result, it is crucial to
+develop an adaptive periodic function for activating nonlinearity and complex frequency distribution.
+
+𝜔𝜔0
+
+Figure 2. Comparisons of SIREN for fitting a 2K image. There is
+a performance gap between the results of “Standard initialization
+multiply ω0 ” and “Initialization with a larger range”.
+
+the functions that could be represented by f (⃗x; θ) should be
+able to be decomposed by a linear combination of certain
+harmonics of ω0 , i.e.,
+
+
+ X
+
+f (⃗x; θ) ∈
+cω′ sin(ω ′ ⃗x + ϕω′ ) | cω′ , ϕω′ ∈ Q
+ ′
+
+ω ∈Fω0
+
+(2)
+where Q is the set of rational number, Fω0 is the supported
+frequency set defined by the ω0 . Because ω0 only plays the
+role of scaling neurons, it could be removed by changing
+the initialization range of network parameters {W l , ⃗bl | l =
+1, ..., L − 1}. As a result, it is unnecessary to introduce the
+parameter ω0 in theory.
+On the other hand, since the sin function is non-convex,
+the network parameters should be initialized carefully to
+guarantee the inputs of sin mainly fall into the range
+of [−π, π] [32], otherwise SIREN will not be converged
+well and does not have a high accuracy for representing signals.
+pFor example, W is often initialized from
+p
+U(− 6/n, 6/n), n is the number of inputs for each neuron [32]. As a result, network parameters {W l , ⃗b l | l =
+1, ..., L − 1} could not be scaled unboundedly considering the convergence. In summary, there is a capacityconvergence gap in SIREN that,
+
+3. FINER: Flexible spectral-bias tuning in Implicit NEural Representation
+This section first provides an overview of SIREN, where the
+capacity-convergence gap is summarized. Then the FINER
+is proposed in detail.
+
+3.1. SIREN and the Capacity-Convergence Gap
+Pipeline of SIREN. Given a signal sequence {⃗xi , ⃗yi }N
+i=1 ,
+where ⃗xi and ⃗yi respectively represent the coordinate and
+the corresponding attributes of the i-th element, N is the
+number of elements in the signal. SIREN focuses on pursuing a neural network f (⃗x; θ) to characterize them as accurate as possible and could be formulated as follows:
+
+Proposition 1 The function set that SIREN could be represented can be enlarged by increasing the initialization
+range of network parameters, which violates the rule of
+guaranteeing the convergence, resulting a performance gap
+between theory and practice.
+
+⃗z 0 = ⃗x
+⃗z l = sin(ω0 (W l ⃗z l−1 + ⃗b l )), l = 1, 2, ..., L − 1,
+f (⃗x; θ) = W L ⃗z L−1 + ⃗b L
+
+A simple example: fitting a high-resolution image. Fig. 2
+compares the performance of SIREN with different initialization strategies. The blue line are the p
+results p
+follows the
+standard form of SIREN, i.e., W ∼ U(− 6/n, 6/n) and
+an additional angular frequency ω0 is applied to multiply the
+W ⃗x + ⃗b.
+On the contrary, the green line refers to the performance
+by removing the angular
+p frequency
+p ω0 in Eqn. 1 and initializing W ∼ U(−ω0 6/n, ω0 6/n). Although they are
+equivalent in the mathematical form, there is a performance
+gap in practice.
+
+(1)
+where ⃗z l denotes the output of layer l, θ = {W l , ⃗b l | l =
+1, 2, ..., L − 1} refers to the network parameters to be optimized, L is the number of layers, ω0 is an experienced
+parameter for controlling the frequency.
+Capacity-Convergence Gap. According to [40], the capacity of the SIREN is limited by the choice of ω0 , i.e.,
+3
+
+3.2. Variable-periodic Activation Functions
+To overcome the capacity-convergence gap, SIREN introduces the parameter ω0 to enlarge the supported frequency
+set. However, ω0 is often set manually which poses challenges for novices and requires additional tuning process
+for inverse problems where the frequency distribution of the
+signal to be solved is unknown. To address this problem, we
+propose the FINER which introduces a variable-periodic activation function sin((|x| + 1)x), and the Eqn. 1 could be
+rewritten as,
+
+𝟏𝟏𝟏𝟏𝝅𝝅 + 𝟏𝟏 − 𝟏𝟏
+𝟐𝟐
+
+𝟒𝟒𝝅𝝅 + 𝟏𝟏 − 𝟏𝟏
+𝟐𝟐
+
+(a) 𝒃𝒃 = 𝟎𝟎
+
+(b) 𝒃𝒃 = 𝟏𝟏𝟏𝟏
+
+Figure 3. Comparisons of used activation function sin((|x| + 1)x)
+under different bias ⃗b. More sub-functions with high-frequency
+are included when b is set with a larger value.
+
+⃗z l = sin(ω0 αl (W l ⃗z l−1 + ⃗b l )), l = 1, 2, ..., L − 1
+. (3)
+αl = |W l ⃗z l−1 + ⃗b l | + 1
+
+global optimum if ⃗b is not initialized well. Traditional initialization strategies, which apply uniform or Gaussian sampling in a narrow region centered at 0, makes the supported
+frequency set of FINER be limited by the frequency of the
+first cycle in variable-periodic function (i.e., the Fig. 3(a)),
+resulting in a waste of other cycles (Fig. 3(b)) in variableperiodic function which have difference frequencies.
+To get rid of the limited supported frequency set using
+traditional initialization methods, we derive a novel initialization scheme for ⃗b for tuning the supported frequency set
+flexibly, meanwhile the initialization for W follows [32].
+We propose to initialize ⃗b following the uniform distribution U(−k, k) with a larger range k than the default one in
+traditional methods,
+
+More utilization of activation function closes the
+capacity-convergence gap. We notice that the periodic activation function sin(x) has an infinite definition domain
+while only the regions centered around the origin point are
+used. This underutilization of definition domain is caused
+by the periodic behavior of sin. As shown in Fig. 1(a), because sin(x) has a period 2π, the behavior after activation
+will not be changed when shifting the used regions to other
+areas, such as orange and purple boxes in Fig. 1(a) where
+⃗b = 0 and 2π, respectively. As a result, it is unnecessary
+to increase the utilization rate of the definition domain in
+SIREN where only the central region [−2π, 2π] is used [32].
+Different from the periodic function sin(x), FINER adopts
+a variable-periodic function sin((|x| + 1)x). Because the
+scale parameter |x| + 1 increases with the increase of input variable, the frequency of the used activation function
+will be changed when the used regions are shifted, i.e., different initialization of network parameters ⃗b. As shown in
+Fig. 1(a), sin((|x| + 1)x) for ⃗b = 2π has higher frequencies
+than itself when ⃗b = 0. Thus the capacity-convergence gap
+could be closed by the proposed variable-periodic activation
+function.
+
+⃗b ∼ U(−k, k), k > 0.
+
+(4)
+
+4.2. Geometrical Perspective
+Supposing the supported frequency set of SIREN and
+FINER are Fω0 and Fω0 ,k , respectively. To analyse their
+relationship, let us start from the simplest case.
+k is close to the origin point. Because the initialization
+for W follows [32], the term W ⃗x has similar distribution
+with the one in SIREN, that |W ⃗x| ≤ π. As a result, the
+term |(|W ⃗x + ⃗b| + 1)(W ⃗x + ⃗b)| drops into the area of
+[−π 2 − π, π 2 + π]. As shown in Fig. 3(a), the activation
+function sin((|W ⃗x +⃗b|+1)(W ⃗x +⃗b)) mainly spans two narrow sub-functions with different frequencies. For √
+the points
+dropped into the first sub-function (i.e., |W ⃗x| ≤ 4π+1−1
+,
+2
+the orange areas in Fig. 3(a)), the supported frequency set
+Fω10 ,k is slightly larger than Fω0 , and could be approximated as
+
+
+2π
+1
+Fω0 ,k ≈ √
+ω | ω ∈ Fω0 ,
+(5)
+4π + 1 − 1
+
+4. Flexible Spectral-bias Initialization
+In this section, we will first give the initialization scheme of
+FINER, then the behaviors of FINER’s supported frequency
+set and training dynamics under different initialization are
+analysed from geometrical and neural tangent kernel perspectives, respectively.
+
+4.1. Initialization scheme
+
+2π
+where the term √4π+1−1
+measures the frequency changes
+from the standard sin function to the first function in
+sin((|x| + 1)x). Considering the fact that the range [−π, π]
+of W ⃗x is continuous, i.e., every value could be produced,
+the Fω0 is also a continuous set, as a result,
+
+As demonstrated in the above section, the supported frequency set of FINER could be manipulated by changing
+the bias ⃗b. However, due to the non-convex nature of the
+variable-periodic activation function, there are many local
+minimums in sin((|x| + 1)x) and gradient-based optimizations (e.g., SGD or Adam) could not guarantee moving ⃗b to
+
+Fω0 ⊂ Fω10 ,k .
+4
+
+(6)
+
+For√the points dropped into√the second sub-function
+12π+1−1
+(i.e., 4π+1−1
+≤ |W ⃗x| ≤
+, the purple ar2
+2
+eas in Fig. 3(a)), the supported frequency set Fω20 ,k differs
+from Fω10 ,k since the base frequency of the used activation
+changes. Compared with the Fω10 ,k in the first sub-function,
+the Fω20 ,k in the second one could be approximated as,
+√
+
+
+4π + 1 − 1
+√
+ω | ω ∈ Fω10 ,k , (7)
+Fω20 ,k ≈ √
+12π + 1 − 4π + 1
+
+⃑
+(a) 𝑏𝑏~𝑈𝑈(−1,1)
+
+⃑
+(b) 𝑏𝑏~𝑈𝑈(−5,5)
+
+⃑
+(c) 𝑏𝑏~𝑈𝑈(−20,20)
+
+(d) Eigenvalues
+
+√
+
+4π+1−1
+√
+where √12π+1−
+characterizes the scale of frequency
+4π+1
+changes from the first sub-function to the second one. As
+a result, the supported frequency set Fω0 ,k for k is close to
+the origin is,
+
+Fω0 ,k = Fω10 ,k ∪ Fω20 ,k .
+
+(8)
+
+k is far away from the origin point. For example, ⃗b is
+initialized as 10. Because the frequencies of each subfunctions are further increased for ⃗b = 10 (in Fig. 3(b),
+the frequency is increased from the orange box to purple
+box), the supported frequency set Fω0 ,k is increased a lot
+compared with the one in Eqn. 8. In summary,
+
+Figure 4. Visualizations of NTKs and the corresponding eigenvalues in FINER. (a)-(c) visualize the NTKs when ⃗b is initialized
+following U(−1, 1), U(−5, 5) and U(−20, 20), respectively. (d)
+plots the corresponding eigenvalues. Because the max eigenvalue
+is much larger than the smallest one, all eigenvalues are processed
+by a log function for visualization.
+
+Proposition 2 The supported frequency set Fω0 ,k of
+FINER increases with the increase of the initialization
+range of ⃗b, and the supported frequency set Fω0 of SIREN
+is a subset of Fω0 ,k .
+
+It is observed that, the scale term is approximately proportional to the absolution of bias bk for all nodes of the kernel,
+however the change rule of sign term for diagonal elements
+differs significantly from non-diagonal elements. Specifically, the sign term is always a positive value for diagonal
+elements while could be either positive or negative for nondiagonal elements.
+As a result, the diagonal elements K(xi , xi ) are increased with the increase of |b|, while the non-diagonal elements K(xi , xj ) can be very small, appearing as a diagonal enhanced kernel. According to [12, 34], NTK with a
+stronger diagonal property provides better shift-invariance,
+i.e., the coordinates in the training set are little coupled with
+each other during the training process, thus the signal could
+be better learned.
+Figs. 4(a)-(c) visualize the NTKs of FINER for learning
+a 1D signal with 1024 coordinates. It is observed that the
+diagonal property of NTK is enhanced with the increase of
+initialization range of b, verifying the analysis mentioned
+above. Fig. 4(d) visualizes the changes of eigenvalue distribution, it is observed that the number of eigenvalues which
+are larger than 100 is significantly increased when larger
+initialization range is applied to bias. As a result, FINER
+provides high capacity for learning high-frequency components.
+
+4.3. Neural Tangent Kernel Perspective
+Neural tangent kernel (NTK) theory [12] views the training
+of neural network as kernel regression, where the convergence of the network on fitting signals could be derived by
+analysing the diagonal property of the NTK or the distribution of NTK’s eigenvalues. Generally speaking, stronger diagonal property results in better shift-invariance and better
+convergence, more larger eigenvalues leads to faster convergence for high-frequency components [1, 34].
+Without loss of generality, we focus on a simple case,
+i.e., the signal to be learned has 1D input and 1D output and
+FINER has 1 hidden layer with
+neurons, such a network
+Pn
+n
+could be written as f (x; θ) = k=1 ck σ(wk x + bk ), where
+σ(x) = sin((|x|+1)x) is the activation function. According
+to the definition, the NTK of FINER could be calculated as1 ,
+K(xi , xj ) = Eθ ⟨∇θ f (xi ; θ), ∇θ f (xj ; θ)⟩
+n
+X
+=(xi xj + 1)Eθ
+c2k (2|gk (xi )| + 1)(2|gk (xj )| + 1)
+{z
+}
+|
+k=1
+Scale term
+
+cos ((|gk (xi )| + 1)gk (xi )) cos ((|gk (xj )| + 1)gk (xj ))
+{z
+}
+|
+
+5. EXPERIMENTS
+
+Sign term
+
+where gk (xi ) = wk xi + bk .
+
+To verify the behaviors and performance of FINER, three
+experiments are conducted, including the 2D image fitting,
+3D signed distance field representation and the 5D neural
+
+(9)
+1 Please refer the supplemental material for details of derivation.
+
+5
+
+GT
+
+⃑
+SIREN 𝑏𝑏~𝑈𝑈(−
+
+1
+
+2
+
+,
+
+1
+
+)
+
+2
+
+⃑
+FINER 𝑏𝑏~𝑈𝑈(−
+
+1
+
+2
+
+,
+
+1
+
+⃑
+FINER 𝑏𝑏~𝑈𝑈(−5,5)
+
+)
+
+2
+
+⃑
+FINER 𝑏𝑏~𝑈𝑈(−10,10)
+
+⃑
+FINER 𝑏𝑏~𝑈𝑈(−20,20)
+
+Figure 5. Comparisons of SIREN and FINER with different initializations applied to bias vector ⃗b. For each image, the right-top box
+visualizes its Fourier spectrum.
+Table 1. Quantitative comparisons on image fitting. We color code
+each cell as best , second best , and third best .
+
+SIREN
+
+FINER
+
+Figure 6. Comparisons of the first layer outputs between SIREN
+and FINER. For each method, the first row demonstrates 4 neurons
+with smallest frequencies of the first layer, and the second row
+refers to 4 neurons with largest frequencies.
+
+PEMLP
+
+Gauss
+
+SIREN
+
+WIRE
+
+FINER
+
+PSNR ↑
+SSIM ↑
+LPIPS ↓
+
+29.60
+0.8484
+1.21e-1
+
+35.39
+0.9455
+1.91e-2
+
+38.52
+0.9724
+5.52e-3
+
+31.31
+0.8738
+6.45e-2
+
+40.76
+0.9790
+2.56e-3
+
+the supported frequency set of FINER increases and more
+high-frequency details are provided from the 3rd column to
+the last one in Fig. 5. Additionally, as analysed by Eqn. 6,
+the supported frequency set of SIREN is a subset of the
+one in FINER, thus FINER provides more clear details than
+SIREN when same initializations are applied, i.e., the 2nd
+column vs the 3rd column in Fig. 5.
+According to [40], the first layer of SIREN or FINER
+plays the role of frequency encoding. We visualize 8 neurons outputs from total 256 neurons in first layer from
+SIREN and FINER for comparison, where 4 neurons in the
+1st row have the smallest frequencies and the last 4 neurons have the largest frequencies (see Fig. 6). It is observed
+that different neurons in SIREN encode similar frequencies,
+resulting in a waste of neurons. On the contrary, different
+neurons in FINER focus on different frequencies, therefore,
+better representational ability is achieved in FINER.
+
+radiance fields optimization, where the ω0 is equal to the
+one in SIREN and k is set as √12 , 1 and √13 , respectively.
+
+5.1. 2D Image Fitting
+For the task of 2D image representation, the INR aims at
+learning a 2D function f : R2 → R3 with 2D pixel location input and 3D RGB color output, the loss function is
+designed as the L2 distance between the network output and
+the ground truth. To evaluate the performance of INR, the
+widely used natural dataset [34] which contains 16 images
+with 512 × 512 resolution is adopted.
+5.1.1
+
+Metrics
+
+FINER behaviors under different initializations
+
+To compare the performance of FINER under different initializations better, the pre-set parameter ω0 is set as 1 here.
+According to the analysis in Sec. 4, the supported frequency
+set of FINER increases with the initialization range of ⃗b.
+Different curves in Fig. 1(b) reflect this behavior. Fig. 5 visualizes the learned images after 5000 training epochs. In
+the 3rd column, because the initialization range of ⃗b follows
+the standard method [32], FINER has a small supported frequency set, as a result, high-frequency components in the
+image are lost. With the increase of the initialization range,
+
+5.1.2
+
+Comparisons with the State-of-the-arts
+
+We compare FINER with four classical INRs, i.e., the
+Fourier feature embedding (PEMLP) [23], INR with periodic activation functions (SIREN) [32], Gaussian activation functions (Gauss) [28] and wavelet activation functions
+(WIRE) [30]. For a fair comparison, all INRs are set with
+a same network configuration (3 hidden layers with 256
+neurons per layer) and trained with the same Adam optimizer [16] and L2 loss function between the network out6
+
+42.27dB
+
+GT
+
+39.78dB
+
+FINER
+
+31.32dB
+
+SIREN
+
+30.90dB
+
+WIRE
+
+35.11dB
+
+PEMLP
+
+Gauss
+
+Figure 7. Qualitative comparisons between the FINER and baselines on fitting images.
+
+GT
+
+FINER
+
+SIREN
+
+WIRE
+
+PEMLP
+
+Gauss
+
+Figure 8. Qualitative comparisons on representing the signed distance field of Armadillo.
+Table 2. Quantitative comparisons on representing signed distance
+field.
+
+put and the ground truth, other parameters are set according to the open-source codes released by authors. Tab. 1
+compares FINER with others quantitatively. FINER outperforms other method in all three metrics. Fig. 7 demonstrates the details of different methods. Among all 5 methods, FINER provides more clear results such as the texts
+‘67’ and ‘SBS’ in the cyan and green boxes, respectively.
+On the contrary, these texts are over-smoothed in the results
+of SIREN and PEMLP. Although WIRE and Gauss could
+also provide clear texts here, unwelcome serious artefacts
+also appear in the smooth backgrounds, such as white and
+red billboards.
+
+Thai Statue BeardedMan
+
+Avg.
+
+Chamfer ↓
+
+Lucy
+
+PEMLP
+Gauss
+SIREN
+WIRE
+FINER
+
+3.559e-6
+1.778e-5
+3.505e-6
+3.346e-6
+3.348e-6
+
+2.081e-6
+7.427e-6
+2.759e-6
+2.101e-6
+2.364e-6
+
+2.224e-6
+5.494e-6
+2.493e-6
+2.238e-6
+2.119e-6
+
+5.284e-6
+1.618e-5
+4.481e-6
+3.979e-6
+3.580e-6
+
+4.058e-6
+1.620e-5
+3.952e-6
+4.597e-6
+4.023e-6
+
+3.441e-6
+1.262e-5
+3.438e-6
+3.252e-6
+3.087e-6
+
+IOU ↑
+
+Methods Armadillo Dragon
+
+PEMLP
+Gauss
+SIREN
+WIRE
+FINER
+
+9.870e-1
+9.768e-1
+9.895e-1
+9.893e-1
+9.899e-1
+
+9.750e-1
+9.679e-1
+9.666e-1
+9.723e-1
+9.725e-1
+
+9.760e-1
+9.601e-1
+9.721e-1
+9.707e-1
+9.756e-1
+
+9.526e-1
+9.481e-1
+9.514e-1
+9.565e-1
+9.625e-1
+
+9.939e-1
+9.932e-1
+9.948e-1
+9.911e-1
+9.943e-1
+
+9.769e-1
+9.692e-1
+9.749e-1
+9.760e-1
+9.790e-1
+
+parison, all methods use a same network configuration, i.e.,
+3 layers with 256 neurons per layer, additionally, the same
+coarse-to-fine loss function is used according to [19]. In the
+training stage, 10k points are randomly sampled in each iteration and is repeated 200k iterations. In the testing stage,
+a 5123 grid is extracted for evaluation and visualization.
+
+5.2. 3D Shape Representation
+Signed distance field (SDF) is one of the most commonly
+used implicit surface representations in the computer graphics [13]. As the name implies, SDF characterizes the distance from the given 3D point to the closest surface using
+a continuous function, and the sign of the distance is used
+to denote whether the point is inside (negative) or outside
+(positive) the surface. Recently, representing the SDF using
+INR is drawing more and more attentions [18]. Given a 3D
+point ⃗x, INR learns a 3D mapping function f : R3 → R1
+to output the signed distance field values s. We apply the
+FINER to this task and compare to four classical INRs
+mentioned above. In the experiment, 5 shapes from public dataset [17, 24] are used for evaluation. For a fair com-
+
+Tab. 2 provides quantitative comparisons between the
+proposed FINER and four baselines. Because FINER provides more freedom for tuning the supported frequency set,
+best results are achieved among all methods. Fig. 8 compares the reconstructed details visually on the Armadillo
+rendered using Marching Cubes [21]. Two representative
+regions, i.e., the low-frequency smooth pectoral and the
+high-frequency rough shank, are zoomed-in for comparisons. SIREN represents the smooth pectoral well but loses
+7
+
+GT
+
+FINER
+
+SIREN
+
+WIRE
+
+PEMLP
+
+Gauss
+
+Figure 9. Qualitative comparisons between the FINER and baselines on NeRF.
+
+C(p) =
+
+N
+X
+
+
+Ti = exp −
+
+i−1
+X
+
+
+
+PEMLP
+Gauss
+SIREN
+WIRE
+FINER
+
+31.32
+32.68
+33.31
+29.31
+33.90
+
+20.18
+23.16
+24.89
+22.22
+24.90
+
+24.49
+26.10
+27.26
+25.91
+28.70
+
+30.59
+32.17
+32.85
+30.11
+33.05
+
+25.90
+28.29
+29.60
+25.76
+30.04
+
+25.16
+26.19
+27.13
+25.05
+27.05
+
+26.38
+33.59
+33.28
+32.35
+33.96
+
+21.46
+22.28
+22.25
+21.15
+22.47
+
+PEMLP
+Gauss
+SIREN
+WIRE
+FINER
+
+0.960
+0.967
+0.971
+0.938
+0.973
+
+0.814
+0.883
+0.912
+0.858
+0.911
+
+0.914
+0.933
+0.947
+0.931
+0.958
+
+0.945
+0.956
+0.960
+0.938
+0.959
+
+0.904
+0.932
+0.948
+0.886
+0.951
+
+0.909
+0.916
+0.932
+0.898
+0.928
+
+0.960
+0.980
+0.979
+0.978
+0.981
+
+0.754
+0.782
+0.788
+0.734
+0.792
+
+PEMLP
+Gauss
+SIREN
+WIRE
+FINER
+
+0.026
+0.019
+0.017
+0.035
+0.015
+
+0.185
+0.082
+0.051
+0.106
+0.052
+
+0.056
+0.055
+0.033
+0.045
+0.024
+
+0.037
+0.032
+0.032
+0.048
+0.033
+
+0.070
+0.040
+0.030
+0.075
+0.025
+
+0.050
+0.037
+0.028
+0.058
+0.032
+
+0.057
+0.013
+0.014
+0.014
+0.010
+
+0.190
+0.136
+0.116
+0.172
+0.108
+
+nents, we follow the experimental setting of WIRE that only
+25 images are used for training instead of commonly used
+100 images, additionally the same ω0 is set in both FINER
+and SIREN. Tab. 3 and Fig. 9 provide quantitative and qualitative comparisons of FINER against different methods on
+the Blender dataset [23]. FINER achieves the best performance in almost all 8 scenes. Fig. 9 demonstrates the
+advantage of FINER for representing high-frequency components visually. For example, the holes (red boxes) and
+the highlights (green boxes) in the frame of the truck are
+over-smoothed in the reconstructions of all baselines, only
+FINER could provide clear details here.
+
+6. Conclusion
+We have proposed and verified the FINER which uses
+variable-periodic functions for activating the INR. We have
+pointed out that current INRs suffer from a limited supported frequency set due to the under-utilization of the definition domain of activation functions. The proposed FINER
+overcomes this problem by introducing variable-periodic
+activation function and initializing the bias vector to different ranges, where different sub-functions with different frequencies along the definition domain will be selected for activation. As a result, the supported frequency set of FINER
+could be flexibly tuned, and the capacity of INR could be
+significantly enlarged. We have demonstrated the advantages of FINER over other INRs in image fitting, 3D shape
+representation and neural rendering.
+
+Ti (1 − exp (−σi δi )) ci
+
+i=1
+
+Ship
+
+PSNR ↑
+
+Novel view synthesis, which aims at rendering realistic images at uncaptured poses from a set of images captured at
+different positions, is one of the key problems in both communities of computer vision and graphics. Recently, representing scenes as neural radiance fields (NeRF) [23] using INR dominates this task due to the advantages of realism and scalability for embedding different rendering processes [35]. Given a 3D point ⃗x and a 2D observed direc⃗ NeRF focuses on learning a 5D mapping function
+tion d,
+⃗ to its 3D color c and 1D opacf : R5 → R4 with 5D (⃗x, d)
+ity σ. For any pixel p in novel view images, its ray function
+in 3D space is firstly calculated using the in/extrinsic matrices of camera [9], then N points are sampled along the
+ray within a predefined depth range, furthermore the direction and position coordinates of these N points are fed into
+the INR for querying the radiance value (c, σ), finally the
+color C(p) of the pixel is calculated using the differentiable
+volume rendering technique [22, 23],
+
+Mic
+
+SSIM ↑
+
+5.3. Neural Radiance Fields Optimization
+
+Methods Chair Drums Ficus Hotdog Lego Materials
+
+LPIPS ↓
+
+Table 3. Quantitative comparisons on novel view synthesis.
+
+the details of the shank, WIRE overcomes the limitation of
+SIREN for representing high-frequency shank at the cost
+of rough pectoral. For PEMLP, because the pre-defined frequency may not match the frequency distribution in the SDF
+of Armadillo, both the smooth pectoral and rough shank
+are not well represented. Guass could not provide stable
+representation for all shapes (Tab. 2) and there are obvious artefacts in the reconstructed SDF such as the noise
+outside the shape in Fig. 8. Compared with these baselines, FINER could provide consistent performance for reconstructing both the low- and high-frequency components.
+
+(10)
+
+σj δ j  ,
+
+j=1
+
+where δi represents the distance between the neighbors in
+the sampled N points.
+We evaluate the FINER for this task and compare to four
+classical methods mentioned above. To better verify the advantages of FINER for representing high-frequency compo8
+
+References
+
+[13] M.W. Jones, J.A. Baerentzen, and M. Sramek. 3d distance fields: a survey of techniques and applications. IEEE
+Transactions on Visualization and Computer Graphics, 12
+(4):581–599, 2006. 7
+[14] George Em Karniadakis, Ioannis G Kevrekidis, Lu Lu, Paris
+Perdikaris, Sifan Wang, and Liu Yang. Physics-informed
+machine learning. Nature Reviews Physics, 3(6):422–440,
+2021. 1, 2
+[15] Yoni Kasten, Dolev Ofri, Oliver Wang, and Tali Dekel. Layered neural atlases for consistent video editing. ACM Transactions on Graphics (TOG), 40(6):1–12, 2021. 2
+[16] Diederik P Kingma and Jimmy Ba. Adam: A method
+for stochastic optimization. In International Conference on
+Learning Representations, 2015. 6
+[17] Stanford
+Computer
+Graphics
+Laboratory.
+The
+stanford
+3d
+scanning
+repository,
+2014.
+http://graphics.stanford.edu/data/3Dscanrep/. 7
+[18] Zhaoshuo Li, Thomas Müller, Alex Evans, Russell H. Taylor, Mathias Unberath, Ming-Yu Liu, and Chen-Hsuan Lin.
+Neuralangelo: High-fidelity neural surface reconstruction. In
+2023 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), pages 8456–8465, 2023. 7
+[19] David B Lindell, Dave Van Veen, Jeong Joon Park, and
+Gordon Wetzstein. Bacon: Band-limited coordinate networks for multiscale scene representation. In Proceedings
+of the IEEE/CVF conference on computer vision and pattern
+recognition, 2021. 2, 7
+[20] Renhao Liu, Yu Sun, Jiabei Zhu, Lei Tian, and Ulugbek S Kamilov. Recovery of continuous 3d refractive index
+maps from discrete intensity-only measurements using neural fields. Nature Machine Intelligence, 4(9):781–791, 2022.
+2
+[21] William E Lorensen and Harvey E Cline. Marching cubes:
+A high resolution 3d surface construction algorithm. In Seminal graphics: pioneering efforts that shaped the field, pages
+347–353. 1998. 7
+[22] Nelson Max. Optical models for direct volume rendering.
+IEEE Transactions on Visualization and Computer Graphics,
+1(2):99–108, 1995. 8
+[23] Ben Mildenhall, Pratul P Srinivasan, Matthew Tancik,
+Jonathan T Barron, Ravi Ramamoorthi, and Ren Ng. Nerf:
+Representing scenes as neural radiance fields for view synthesis. In European conference on computer vision, pages
+405–421. Springer, 2020. 2, 6, 8
+[24] Thomas Müller, Alex Evans, Christoph Schied, and Alexander Keller. Instant neural graphics primitives with a multiresolution hash encoding. ACM Transactions on Graphics
+(ToG), 41(4):1–15, 2022. 2, 7
+[25] Nithin Raghavan, Yan Xiao, Kai-En Lin, Tiancheng Sun, Sai
+Bi, Zexiang Xu, Tzu-Mao Li, and Ravi Ramamoorthi. Neural free-viewpoint relighting for glossy indirect illumination.
+In Computer Graphics Forum, page e14885. Wiley Online
+Library, 2023. 2
+[26] Nasim Rahaman, Aristide Baratin, Devansh Arpit, Felix
+Draxler, Min Lin, Fred Hamprecht, Yoshua Bengio, and
+Aaron Courville. On the spectral bias of neural networks.
+In International Conference on Machine Learning, pages
+5301–5310. PMLR, 2019. 2
+
+[1] Jinshuai Bai, Gui-Rong Liu, Ashish Gupta, Laith Alzubaidi,
+Xi-Qiao Feng, and YuanTong Gu. Physics-informed radial
+basis network (pirbn): A local approximating neural network
+for solving nonlinear partial differential equations. Computer Methods in Applied Mechanics and Engineering, 415:
+116290, 2023. 5
+[2] Jonathan T Barron, Ben Mildenhall, Matthew Tancik, Peter
+Hedman, Ricardo Martin-Brualla, and Pratul P Srinivasan.
+Mip-nerf: A multiscale representation for anti-aliasing neural radiance fields. In Proceedings of the IEEE/CVF International Conference on Computer Vision, pages 5855–5864,
+2021. 2
+[3] Hao Chen, Bo He, Hanyu Wang, Yixuan Ren, Ser Nam Lim,
+and Abhinav Shrivastava. Nerv: Neural representations for
+videos. In Advances in Neural Information Processing Systems, pages 21557–21568, 2021. 2
+[4] Shin-Fang Chng, Sameera Ramasinghe, Jamie Sherrah, and
+Simon Lucey. Gaussian activated neural radiance fields for
+high fidelity reconstruction and pose estimation. In European Conference on Computer Vision, pages 264–280.
+Springer, 2022. 3
+[5] Emilien Dupont, Adam Goliński, Milad Alizadeh, Yee Whye
+Teh, and Arnaud Doucet. Coin: Compression with implicit
+neural representations. arXiv preprint arXiv:2103.03123,
+2021. 2
+[6] Rizal Fathony, Anit Kumar Sahu, Devin Willmott, and J Zico
+Kolter. Multiplicative filter networks. In International Conference on Learning Representations, 2020. 2
+[7] Ruohan Gao, Zilin Si, Yen-Yu Chang, Samuel Clarke, Jeannette Bohg, Li Fei-Fei, Wenzhen Yuan, and Jiajun Wu. Objectfolder 2.0: A multisensory object dataset for sim2real
+transfer. In Proceedings of the IEEE/CVF Conference on
+Computer Vision and Pattern Recognition, pages 10598–
+10608, 2022. 2
+[8] Zhongkai Hao, Songming Liu, Yichi Zhang, Chengyang
+Ying, Yao Feng, Hang Su, and Jun Zhu. Physics-informed
+machine learning: A survey on problems, methods and applications. arXiv preprint arXiv:2211.08064, 2022. 2
+[9] Richard Hartley and Andrew Zisserman. Multiple view geometry in computer vision. Cambridge university press,
+2003. 8
+[10] Xin Huang, Qi Zhang, Ying Feng, Hongdong Li, Xuan
+Wang, and Qing Wang. Hdr-nerf: High dynamic range neural radiance fields. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages
+18398–18408, 2022. 2
+[11] Xin Huang, Qi Zhang, Ying Feng, Hongdong Li, and Qing
+Wang. Inverting the imaging process by learning an implicit
+camera model. In Proceedings of the IEEE/CVF Conference
+on Computer Vision and Pattern Recognition, pages 21456–
+21465, 2023. 2
+[12] Arthur Jacot, Franck Gabriel, and Clément Hongler. Neural tangent kernel: Convergence and generalization in neural
+networks. Advances in neural information processing systems, 31, 2018. 5
+
+9
+
+[39] Yiheng Xie, Towaki Takikawa, Shunsuke Saito, Or Litany,
+Shiqin Yan, Numair Khan, Federico Tombari, James Tompkin, Vincent sitzmann, and Srinath Sridhar. Neural fields in
+visual computing and beyond. Computer Graphics Forum,
+41(2):641–676, 2022. 1
+[40] Gizem Yüce, Guillermo Ortiz-Jiménez, Beril Besbinar, and
+Pascal Frossard. A structured dictionary perspective on
+implicit neural representations. In Proceedings of the
+IEEE/CVF Conference on Computer Vision and Pattern
+Recognition, pages 19228–19238, 2022. 2, 3, 6
+[41] Hao Zhu, Zhen Liu, You Zhou, Zhan Ma, and Xun Cao.
+DNF: Diffractive neural field for lensless microscopic imaging. Optics Express, 30(11):18168–18178, 2022. 2
+[42] Junyu Zhu, Hao Zhu, Qi Zhang, Fang Zhu, Zhan Ma, and
+Xun Cao. Pyramid nerf: Frequency guided fast radiance
+field optimization. International Journal of Computer Vision, pages 1–16, 2023. 2
+
+[27] Maziar Raissi, Paris Perdikaris, and George E Karniadakis.
+Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving
+nonlinear partial differential equations. Journal of Computational physics, 378:686–707, 2019. 2
+[28] Sameera Ramasinghe and Simon Lucey. Beyond periodicity:
+Towards a unifying framework for activations in coordinatemlps. In European Conference on Computer Vision, pages
+142–158. Springer, 2022. 2, 3, 6
+[29] Vishwanath Saragadam, Jasper Tan, Guha Balakrishnan,
+Richard G Baraniuk, and Ashok Veeraraghavan. Miner:
+Multiscale implicit neural representation. In European Conference on Computer Vision, pages 318–333. Springer, 2022.
+2
+[30] Vishwanath Saragadam, Daniel LeJeune, Jasper Tan, Guha
+Balakrishnan, Ashok Veeraraghavan, and Richard G Baraniuk. Wire: Wavelet implicit neural representations. In Proceedings of the IEEE/CVF Conference on Computer Vision
+and Pattern Recognition, pages 18507–18516, 2023. 2, 3, 6
+[31] Rajhans Singh, Ankita Shukla, and Pavan Turaga. Polynomial implicit neural representations for large diverse
+datasets. In Proceedings of the IEEE/CVF Conference
+on Computer Vision and Pattern Recognition, pages 2041–
+2051, 2023. 2
+[32] Vincent Sitzmann, Julien Martel, Alexander Bergman, David
+Lindell, and Gordon Wetzstein. Implicit neural representations with periodic activation functions. Advances in neural
+information processing systems, 33:7462–7473, 2020. 1, 2,
+3, 4, 6
+[33] Yannick Strümpler, Janis Postels, Ren Yang, Luc Van Gool,
+and Federico Tombari. Implicit neural representations for
+image compression. In European Conference on Computer
+Vision, pages 74–91. Springer, 2022. 2
+[34] Matthew Tancik, Pratul Srinivasan, Ben Mildenhall, Sara
+Fridovich-Keil, Nithin Raghavan, Utkarsh Singhal, Ravi Ramamoorthi, Jonathan Barron, and Ren Ng. Fourier features
+let networks learn high frequency functions in low dimensional domains. Advances in Neural Information Processing
+Systems, 33:7537–7547, 2020. 2, 5, 6
+[35] Ayush Tewari, Justus Thies, Ben Mildenhall, Pratul Srinivasan, Edgar Tretschk, W Yifan, Christoph Lassner, Vincent
+Sitzmann, Ricardo Martin-Brualla, Stephen Lombardi, et al.
+Advances in neural rendering. In Computer Graphics Forum,
+pages 703–735. Wiley Online Library, 2022. 1, 8
+[36] Peng Wang, Lingjie Liu, Yuan Liu, Christian Theobalt, Taku
+Komura, and Wenping Wang. Neus: Learning neural implicit surfaces by volume rendering for multi-view reconstruction. Advances in Neural Information Processing Systems, 34:27171–27183, 2021. 2
+[37] Zhijie Wu, Yuhe Jin, and Kwang Moo Yi. Neural fourier
+filter bank. In Proceedings of the IEEE/CVF Conference
+on Computer Vision and Pattern Recognition, pages 14153–
+14163, 2023. 2
+[38] Shaowen Xie, Hao Zhu, Zhen Liu, Qi Zhang, You Zhou, Xun
+Cao, and Zhan Ma. DINER: Disorder-invariant implicit neural representation. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages
+1–10, 2023. 2
+
+10
+
+

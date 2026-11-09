@@ -1,0 +1,126 @@
+{
+  "date": "2026-11-04",
+  "scope": "Saved parametric experiment results; no new training or fitting",
+  "source_files": {
+    "parametric_librispeech_1272_128104_0000/metrics.csv": {
+      "sha256": "abc7e140ed8bb7abd27ae1f3694a91aa0ec34e2a3f7a530e3ed570dbe52a23cf",
+      "bytes": 6937
+    },
+    "parametric_librispeech_1272_128104_0000/settings.json": {
+      "sha256": "ce8b17660f5ab1e0fe5129aa8e9c3345c360e68a44e3fe205aafb2b4115b8b4f",
+      "bytes": 1254
+    },
+    "parametric_librispeech_1272_128104_0000/progress.json": {
+      "sha256": "741c779c59d1a3563202018080f83f55deff3f0275210629e6feae4f773cb906",
+      "bytes": 107
+    },
+    "parametric_ablation_librispeech_1272_v2/metrics.csv": {
+      "sha256": "ad67d6c1424c6ebd03631bff54ca7647ea9c7d4641e10e38d266117f7546c5f2",
+      "bytes": 1006822
+    },
+    "parametric_ablation_librispeech_1272_v2/manifest.json": {
+      "sha256": "98e82ab1dac59bf3986884f62e5e128cc7c48aa454e8c729ed7f9721333750f3",
+      "bytes": 10921
+    },
+    "parametric_isolated_40ms_librispeech/metrics.csv": {
+      "sha256": "6e5283c86a8c2c7f3fd761a5988ec20f4680c560721c98a65dfdb49ddc4101ad",
+      "bytes": 335439
+    },
+    "parametric_isolated_40ms_librispeech/selections.csv": {
+      "sha256": "7b4e3eadc2eafd2f1f35e050952f8ce8d66e5682841290bfd10179aad1ab19c7",
+      "bytes": 16412
+    },
+    "parametric_isolated_40ms_librispeech/manifest.json": {
+      "sha256": "486c7b7d435ef0442d38f142a0fd72eab2e7758b460983c4dbe0198e45cba97e",
+      "bytes": 15652
+    },
+    "parametric_learned_representation_pilot/metrics.csv": {
+      "sha256": "5636113b9fc35d09e15857d1f4488a4eafb17c67399052e84b120be894c3ae78",
+      "bytes": 38490
+    },
+    "parametric_learned_representation_pilot/manifest.json": {
+      "sha256": "cc66776bdcc509079719bf8207d69e0982826a2a425cfc9a9c83fc458cf68262",
+      "bytes": 12378
+    },
+    "parametric_learned_representation_pilot/assets.json": {
+      "sha256": "c5c6ea6f3575c1e5d1d14ddc74f215512f64bcec4a19250e95eccbd6086bb419",
+      "bytes": 1651
+    },
+    "parametric_learned_representation_pilot/data_manifest.json": {
+      "sha256": "35e503c0d578cda9351371ce1eeb7a076572fcef3e228f277df7eac9c54c7195",
+      "bytes": 2124026
+    },
+    "parametric_symbolic_imf_pilot/summary.json": {
+      "sha256": "47f3df3e5c47a50285b870405a06fe494a95b5d019e9951fc10cd4f654a91700",
+      "bytes": 3978
+    },
+    "parametric_symbolic_imf_pilot/manifest.json": {
+      "sha256": "5d46d27f5df4bba9dfea75520549ea87da0087d28ca1a1fc541e729af1517d0f",
+      "bytes": 13495
+    },
+    "parametric_symbolic_imf_pilot/data_manifest.json": {
+      "sha256": "e01bcce1f71682ee590e1335c96760221e10f32fb37ab5d46b79220bed2a3fee",
+      "bytes": 130193
+    },
+    "parametric_symbolic_imf_pilot/synthetic_discovery.json": {
+      "sha256": "ca3d125b2acd3ef5b269d2776828afff0db2bb2b6e5afefa35de4d5d322490ba",
+      "bytes": 9109
+    },
+    "parametric_symbolic_imf_pilot/known_answers.json": {
+      "sha256": "24296464a31a89c880f23f8c8cc85a3e0e2562ec43b68c13e3fd7b8e2f9a49d5",
+      "bytes": 957
+    },
+    "parametric_symbolic_imf_pilot/selected_checkpoint.json": {
+      "sha256": "76a2daff7fc0f905e16b2a504ee6f49413a1551d2481a37d275167ae85f8f0a9",
+      "bytes": 154
+    },
+    "parametric_symbolic_imf_pilot/repair_history.json": {
+      "sha256": "22e0f3bad2a4c7dba3a8230171a41902fe605c28c2cf919b14b65dadf3e8cfa3",
+      "bytes": 25006
+    },
+    "parametric_implementation_audit/audit.json": {
+      "sha256": "a78ec171c185b2e25b1d951d5f0b3df961cbbe7ad8aa5f1ce4324d798e500f23",
+      "bytes": 7973
+    },
+    "parametric_implementation_audit/quantization_check.json": {
+      "sha256": "89356f452ae6480d633e6fed0f14b0bfe38dc5eb6a869d20f1e6f7294d16a796",
+      "bytes": 674
+    },
+    "parametric_reports/experiments.json": {
+      "sha256": "aebb3607e0a58e3fadf0e454dc6e9f5efaa4be1c6cc6b426ff8616b31c7dd2d8",
+      "bytes": 3748
+    },
+    "parametric_ablation_librispeech_1272_v2/progress.json": {
+      "sha256": "b3d3e592401be63f8082137fa67d4ca0af8a98db44480081882361e58a320e3e",
+      "bytes": 1292
+    },
+    "parametric_isolated_40ms_librispeech/progress.json": {
+      "sha256": "40bb24b311c7f75fc190e0759087816d7a1e4d6f5e198915c8678bd2166d8ca2",
+      "bytes": 1135
+    },
+    "parametric_learned_representation_pilot/progress.json": {
+      "sha256": "71cc3dc24d059b32bb64f72d24ac3def2b6cd564bbd5216623a9e9cb8451a5f4",
+      "bytes": 750
+    },
+    "parametric_symbolic_imf_pilot/progress.json": {
+      "sha256": "2210dff76da54db909ae40ebbeb04307aa7bbdad39d20a6f91bbc437ea24e56b",
+      "bytes": 692
+    },
+    "parametric_reports/local_paper_reading_2026_11_04/review_notes.json": {
+      "sha256": "72f2d1b3d03f9004c62dc5d816a1cba8cdb0264aa9bb2e4031b65837a6b5eba1",
+      "bytes": 22870
+    },
+    "parametric_reports/local_paper_reading_2026_11_04/inventory.json": {
+      "sha256": "4af02fc2f2ade607b4f6196a81b4d6972dedaf3e7353e32852f4d43c3a3b0042",
+      "bytes": 8204
+    }
+  },
+  "derived_checks": {
+    "matched_linear_projection_max_nmse_difference": 1.887379141862766e-15,
+    "isolated_csv_rows": 972,
+    "old_sweep_csv_rows": 1778,
+    "shared_test_rows": 30,
+    "symbolic_test_imfs": 64,
+    "symbolic_synthetic_targets": 9
+  }
+}

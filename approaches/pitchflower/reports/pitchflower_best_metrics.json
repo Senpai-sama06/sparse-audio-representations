@@ -1,0 +1,1585 @@
+{
+  "checkpoint_sha256": "5738ac1d85feae151c0b994e49b1754a8c2c64345b44c8041a423ad13c7e6ecf",
+  "checkpoint_step": 91500,
+  "cases": 40,
+  "means": {
+    "stoi": 0.90491319896757,
+    "pesq_wb": 2.1628671258687975,
+    "vocoder_stoi": 0.9715575450955697,
+    "vocoder_pesq_wb": 3.4408994913101196
+  },
+  "cases_data": [
+    {
+      "id": "librispeech:1272-128104-0004",
+      "speaker": "1272",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.9240418243239653,
+      "pesq_wb": 2.099217176437378,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9839398050051937,
+      "vocoder_pesq_wb": 3.233659267425537,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:1462-170138-0004",
+      "speaker": "1462",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.9542136154371168,
+      "pesq_wb": 2.884948968887329,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9879279900060528,
+      "vocoder_pesq_wb": 3.868242025375366,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:1673-143396-0004",
+      "speaker": "1673",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.8780886822634888,
+      "pesq_wb": 2.5371315479278564,
+      "pesq_error": null,
+      "vocoder_stoi": 0.963682220333867,
+      "vocoder_pesq_wb": 4.190627574920654,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:174-168635-0004",
+      "speaker": "174",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.9237481147044434,
+      "pesq_wb": 2.585495710372925,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9799237112144779,
+      "vocoder_pesq_wb": 3.015211582183838,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:1919-142785-0004",
+      "speaker": "1919",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.9335198061919788,
+      "pesq_wb": 1.9595191478729248,
+      "pesq_error": null,
+      "vocoder_stoi": 0.977663827518166,
+      "vocoder_pesq_wb": 3.438455581665039,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:1988-147956-0004",
+      "speaker": "1988",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.7234087138414675,
+      "pesq_wb": 2.0168442726135254,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9124645707405339,
+      "vocoder_pesq_wb": 3.530071973800659,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:1993-147149-0004",
+      "speaker": "1993",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.8383675681016963,
+      "pesq_wb": 2.1478874683380127,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9628026578995681,
+      "vocoder_pesq_wb": 3.2027177810668945,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:2035-147960-0004",
+      "speaker": "2035",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.794933849345813,
+      "pesq_wb": 1.8745964765548706,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9063238707920863,
+      "vocoder_pesq_wb": 3.809128999710083,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:2078-142845-0004",
+      "speaker": "2078",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.8380367380182958,
+      "pesq_wb": 2.1517481803894043,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9431008078132757,
+      "vocoder_pesq_wb": 3.570127010345459,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:2086-149214-0004",
+      "speaker": "2086",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.9506029446559828,
+      "pesq_wb": 2.293588161468506,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9831519760413213,
+      "vocoder_pesq_wb": 3.6473679542541504,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:2277-149874-0004",
+      "speaker": "2277",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.9572742301064465,
+      "pesq_wb": 2.7714574337005615,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9873314433502589,
+      "vocoder_pesq_wb": 2.7631051540374756,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:2412-153947-0004",
+      "speaker": "2412",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.9167531471169963,
+      "pesq_wb": 1.8744442462921143,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9802329209437459,
+      "vocoder_pesq_wb": 3.6663546562194824,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:2428-83699-0004",
+      "speaker": "2428",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.9525918234063246,
+      "pesq_wb": 2.6453604698181152,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9910075816282345,
+      "vocoder_pesq_wb": 3.7460432052612305,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:251-118436-0004",
+      "speaker": "251",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.8933991280848573,
+      "pesq_wb": 1.8146307468414307,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9619266098213008,
+      "vocoder_pesq_wb": 3.2765510082244873,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:2803-154320-0004",
+      "speaker": "2803",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.8911804056614852,
+      "pesq_wb": 2.4817652702331543,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9700774965798883,
+      "vocoder_pesq_wb": 3.3964297771453857,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:2902-9006-0004",
+      "speaker": "2902",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.8985884784894358,
+      "pesq_wb": 2.3672280311584473,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9786324918898982,
+      "vocoder_pesq_wb": 3.765043258666992,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:3000-15664-0004",
+      "speaker": "3000",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.9067940503577532,
+      "pesq_wb": 1.7543889284133911,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9729107580739446,
+      "vocoder_pesq_wb": 2.2303390502929688,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:3081-166546-0004",
+      "speaker": "3081",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.8760211047451755,
+      "pesq_wb": 1.5559797286987305,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9518552020087221,
+      "vocoder_pesq_wb": 2.9504032135009766,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:3170-137482-0004",
+      "speaker": "3170",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.9242725286495301,
+      "pesq_wb": 1.6778275966644287,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9839206023685405,
+      "vocoder_pesq_wb": 3.1804251670837402,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:3536-23268-0004",
+      "speaker": "3536",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.9073502964450072,
+      "pesq_wb": 1.555317997932434,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9600843297393178,
+      "vocoder_pesq_wb": 2.473557949066162,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:3576-138058-0004",
+      "speaker": "3576",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.8912788663860953,
+      "pesq_wb": 1.7213265895843506,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9645346063922885,
+      "vocoder_pesq_wb": 3.380650043487549,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:3752-4943-0004",
+      "speaker": "3752",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.9331233116163224,
+      "pesq_wb": 2.111166477203369,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9792602509815361,
+      "vocoder_pesq_wb": 2.7597570419311523,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:3853-163249-0004",
+      "speaker": "3853",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.8864136411273148,
+      "pesq_wb": 1.4754643440246582,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9538183066229811,
+      "vocoder_pesq_wb": 3.840540647506714,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:422-122949-0004",
+      "speaker": "422",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.8958417097486037,
+      "pesq_wb": 2.0678586959838867,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9639420180267139,
+      "vocoder_pesq_wb": 3.426762580871582,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:5338-24615-0004",
+      "speaker": "5338",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.927262539812858,
+      "pesq_wb": 2.6172919273376465,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9678009099399812,
+      "vocoder_pesq_wb": 4.021399021148682,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:5536-43358-0004",
+      "speaker": "5536",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.854252789057062,
+      "pesq_wb": 2.1564173698425293,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9800100313899233,
+      "vocoder_pesq_wb": 3.6713526248931885,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:5694-64025-0004",
+      "speaker": "5694",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.9208189074057627,
+      "pesq_wb": 2.6074745655059814,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9739702459127957,
+      "vocoder_pesq_wb": 3.5708723068237305,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:5895-34615-0004",
+      "speaker": "5895",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.9048391932926018,
+      "pesq_wb": 2.234649419784546,
+      "pesq_error": null,
+      "vocoder_stoi": 0.981066902823889,
+      "vocoder_pesq_wb": 3.7644667625427246,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:6241-61943-0004",
+      "speaker": "6241",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.9322625157022507,
+      "pesq_wb": 2.3786513805389404,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9875913701313493,
+      "vocoder_pesq_wb": 3.71630859375,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:6295-244435-0004",
+      "speaker": "6295",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.9363621924693,
+      "pesq_wb": 1.8968725204467773,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9868000229271182,
+      "vocoder_pesq_wb": 2.9706990718841553,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:6313-66125-0004",
+      "speaker": "6313",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.9086416852386675,
+      "pesq_wb": 2.3628201484680176,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9811089307621436,
+      "vocoder_pesq_wb": 4.121306896209717,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:6319-275224-0004",
+      "speaker": "6319",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.8989216336625409,
+      "pesq_wb": 2.6729488372802734,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9651622492640745,
+      "vocoder_pesq_wb": 3.7979795932769775,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:6345-64257-0004",
+      "speaker": "6345",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.8880197088018742,
+      "pesq_wb": 2.5152063369750977,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9686033786772733,
+      "vocoder_pesq_wb": 3.6714725494384766,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:652-129742-0004",
+      "speaker": "652",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.9375186160427902,
+      "pesq_wb": 1.527477502822876,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9733148807205414,
+      "vocoder_pesq_wb": 2.543567419052124,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:777-126732-0004",
+      "speaker": "777",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.9292316140731429,
+      "pesq_wb": 2.211989402770996,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9778991052743795,
+      "vocoder_pesq_wb": 3.1760947704315186,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:7850-111771-0004",
+      "speaker": "7850",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.9526478150216637,
+      "pesq_wb": 2.4392311573028564,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9887032597242978,
+      "vocoder_pesq_wb": 3.397235155105591,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:7976-105575-0004",
+      "speaker": "7976",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.922324035461747,
+      "pesq_wb": 2.2621426582336426,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9732447585121441,
+      "vocoder_pesq_wb": 3.7144343852996826,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:8297-275154-0004",
+      "speaker": "8297",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.936627359149404,
+      "pesq_wb": 2.3024847507476807,
+      "pesq_error": null,
+      "vocoder_stoi": 0.98494527964402,
+      "vocoder_pesq_wb": 3.7859151363372803,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:84-121123-0004",
+      "speaker": "84",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.9239477532076813,
+      "pesq_wb": 2.0233449935913086,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9819822348265449,
+      "vocoder_pesq_wb": 3.7122716903686523,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    },
+    {
+      "id": "librispeech:8842-302196-0004",
+      "speaker": "8842",
+      "source_samples": 36096,
+      "output_samples": 36096,
+      "stoi": 0.9330050214778614,
+      "pesq_wb": 1.880488395690918,
+      "pesq_error": null,
+      "vocoder_stoi": 0.9895821875003998,
+      "vocoder_pesq_wb": 3.639031171798706,
+      "latent_frames": 71,
+      "pitch_frames": 142,
+      "content_kbps": 3.3989361702127656,
+      "pitch_kbps": 3.021276595744681,
+      "playback": {
+        "before": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "after": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        },
+        "control": {
+          "wav_bytes": 72236,
+          "duration_seconds": 1.504,
+          "pcm_bits": 577536,
+          "pcm_kbps": 384.0,
+          "wav_file_kbps": 384.2340425531915
+        }
+      }
+    }
+  ],
+  "bitrate": {
+    "status": "estimated fixed-width payload; no serialized codec bitstream",
+    "aggregation": "total payload bits / total source duration",
+    "pcm_kbps": 384.0,
+    "content_kbps": 3.3989361702127674,
+    "pitch_kbps": 3.0212765957446823,
+    "combined_kbps": 6.42021276595745,
+    "raw_mel_kbps": 302.1276595744683,
+    "pcm_to_combined_ratio": 59.81110190555093,
+    "reduction_vs_pcm_percent": 98.32806959219859,
+    "raw_mel_to_combined_ratio": 47.058823529411775,
+    "reduction_vs_raw_mel_percent": 97.875,
+    "pitch_share_percent": 47.05882352941177,
+    "assumptions": {
+      "sample_rate": 24000,
+      "pcm_bits_per_sample": 16,
+      "rvq_codebooks": 8,
+      "entries_per_codebook": 512,
+      "bits_per_index": 9,
+      "bits_per_pitch_value": 32,
+      "mel_bands": 100,
+      "mel_hop_samples": 256,
+      "bits_per_raw_mel_value": 32,
+      "raw_mel_baseline": "hypothetical uncompressed float32 source mel; not a tested mel codec",
+      "excluded": [
+        "headers and packetization",
+        "byte padding",
+        "gain and other metadata",
+        "shared model weights and codebooks"
+      ]
+    }
+  },
+  "playback": {
+    "before": {
+      "total_wav_bytes": 2889440,
+      "duration_seconds": 60.15999999999997,
+      "pcm_kbps": 384.00000000000017,
+      "wav_file_kbps": 384.2340425531917
+    },
+    "after": {
+      "total_wav_bytes": 2889440,
+      "duration_seconds": 60.15999999999997,
+      "pcm_kbps": 384.00000000000017,
+      "wav_file_kbps": 384.2340425531917
+    },
+    "control": {
+      "total_wav_bytes": 2889440,
+      "duration_seconds": 60.15999999999997,
+      "pcm_kbps": 384.00000000000017,
+      "wav_file_kbps": 384.2340425531917
+    }
+  }
+}

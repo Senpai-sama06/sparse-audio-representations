@@ -1,0 +1,173 @@
+[
+  {
+    "id": "P01",
+    "source": "D:\\lrac2\\documentation\\literature\\1-s2.0-S088832702300821X-main.pdf",
+    "filename": "1-s2.0-S088832702300821X-main.pdf",
+    "sha256": "30eeb54786bad772fea442d8ca747bdaec10ddd3743ad06fb28ffd88b57b52bc",
+    "pages": 21,
+    "characters": 75426,
+    "text": "D:\\lrac2\\runs\\parametric_reports\\local_paper_reading_2026_11_04\\01.txt"
+  },
+  {
+    "id": "P02",
+    "source": "D:\\lrac2\\documentation\\literature\\18664-AAAI26.PanP-KRR.pdf",
+    "filename": "18664-AAAI26.PanP-KRR.pdf",
+    "sha256": "c718f84ce73f66a77eb732c18f0e1584cb21ee3bd8ea71845286fe6c1e38d640",
+    "pages": 8,
+    "characters": 62992,
+    "text": "D:\\lrac2\\runs\\parametric_reports\\local_paper_reading_2026_11_04\\02.txt"
+  },
+  {
+    "id": "P03",
+    "source": "D:\\lrac2\\documentation\\literature\\2312.02434v1.pdf",
+    "filename": "2312.02434v1.pdf",
+    "sha256": "4b18d15b3a1d64add85c5017d3d22c968905ee76940349a48963fae2b6e73032",
+    "pages": 10,
+    "characters": 65681,
+    "text": "D:\\lrac2\\runs\\parametric_reports\\local_paper_reading_2026_11_04\\03.txt"
+  },
+  {
+    "id": "P04",
+    "source": "D:\\lrac2\\documentation\\literature\\3735634.pdf",
+    "filename": "3735634.pdf",
+    "sha256": "f91080294a2233437d2934dfb7bc9d37043944dec121918139a44339b4e4337c",
+    "pages": 37,
+    "characters": 158439,
+    "text": "D:\\lrac2\\runs\\parametric_reports\\local_paper_reading_2026_11_04\\04.txt"
+  },
+  {
+    "id": "P05",
+    "source": "D:\\lrac2\\documentation\\literature\\Density-Based_Adaptive_Mode_Decomposition.pdf",
+    "filename": "Density-Based_Adaptive_Mode_Decomposition.pdf",
+    "sha256": "f47e0dd2280f7402246ebf4a0452281962fa51a61c6eb4204e57009a5e948b0c",
+    "pages": 15,
+    "characters": 103318,
+    "text": "D:\\lrac2\\runs\\parametric_reports\\local_paper_reading_2026_11_04\\05.txt"
+  },
+  {
+    "id": "P06",
+    "source": "D:\\lrac2\\documentation\\literature\\FINER_Building_a_Family_of_Variable-periodic_Functions_for_Activating_Implicit_Neural_Representation.pdf",
+    "filename": "FINER_Building_a_Family_of_Variable-periodic_Functions_for_Activating_Implicit_Neural_Representation.pdf",
+    "sha256": "6e3770542f600d7cb88874eeeff0afbb57e35aedfedad27a3922348c15bc4d80",
+    "pages": 16,
+    "characters": 153465,
+    "text": "D:\\lrac2\\runs\\parametric_reports\\local_paper_reading_2026_11_04\\06.txt"
+  },
+  {
+    "id": "P07",
+    "source": "D:\\lrac2\\documentation\\literature\\ICLR-2025-kan-kolmogorovarnold-networks-Paper-Conference.pdf",
+    "filename": "ICLR-2025-kan-kolmogorovarnold-networks-Paper-Conference.pdf",
+    "sha256": "baa1ac628aa3ad0ee780f541a06fabf8a7c66a6760cde24691d2e3515b0e2273",
+    "pages": 47,
+    "characters": 211423,
+    "text": "D:\\lrac2\\runs\\parametric_reports\\local_paper_reading_2026_11_04\\07.txt"
+  },
+  {
+    "id": "P08",
+    "source": "D:\\lrac2\\documentation\\literature\\ICLR-2025-rag-sr-retrieval-augmented-generation-for-neural-symbolic-regression-Paper-Conference.pdf",
+    "filename": "ICLR-2025-rag-sr-retrieval-augmented-generation-for-neural-symbolic-regression-Paper-Conference.pdf",
+    "sha256": "4bd0e87003d4b3734b0cadda71a08f9ea8c5810cee7dbcedc0d14ae84b7c9850",
+    "pages": 33,
+    "characters": 200295,
+    "text": "D:\\lrac2\\runs\\parametric_reports\\local_paper_reading_2026_11_04\\08.txt"
+  },
+  {
+    "id": "P09",
+    "source": "D:\\lrac2\\documentation\\literature\\ICLR-2025-symbolic-regression-via-mdlformer-guided-search-from-minimizing-prediction-error-to-minimizing-description-length-Paper-Conference.pdf",
+    "filename": "ICLR-2025-symbolic-regression-via-mdlformer-guided-search-from-minimizing-prediction-error-to-minimizing-description-length-Paper-Conference.pdf",
+    "sha256": "426b14820e533b373914e3df56e1df03d84776a0f8ca03670256f0ba13bb0880",
+    "pages": 28,
+    "characters": 145398,
+    "text": "D:\\lrac2\\runs\\parametric_reports\\local_paper_reading_2026_11_04\\09.txt"
+  },
+  {
+    "id": "P10",
+    "source": "D:\\lrac2\\documentation\\literature\\ICLR-2026-mapss-manifold-based-assessment-of-perceptual-source-separation-Paper-Conference.pdf",
+    "filename": "ICLR-2026-mapss-manifold-based-assessment-of-perceptual-source-separation-Paper-Conference.pdf",
+    "sha256": "48d62f276246aedb9ea9650efa7fcaea3c50d86624bdd460ed388af45d89052e",
+    "pages": 44,
+    "characters": 214833,
+    "text": "D:\\lrac2\\runs\\parametric_reports\\local_paper_reading_2026_11_04\\10.txt"
+  },
+  {
+    "id": "P11",
+    "source": "D:\\lrac2\\documentation\\literature\\jover2201.pdf",
+    "filename": "jover2201.pdf",
+    "sha256": "ff2a5d3f9488df3917f566a4d34019fdae4da2e3ec8bf2bb2709dd6ec295a753",
+    "pages": 12,
+    "characters": 86014,
+    "text": "D:\\lrac2\\runs\\parametric_reports\\local_paper_reading_2026_11_04\\11.txt"
+  },
+  {
+    "id": "P12",
+    "source": "D:\\lrac2\\documentation\\literature\\learnable emperical mode decomposition based on mathematical morphology.pdf",
+    "filename": "learnable emperical mode decomposition based on mathematical morphology.pdf",
+    "sha256": "e34030b67e675f07f72bbae779d876f0e3b87e210e969c8e9cc24f0d0fc627bb",
+    "pages": 23,
+    "characters": 79930,
+    "text": "D:\\lrac2\\runs\\parametric_reports\\local_paper_reading_2026_11_04\\12.txt"
+  },
+  {
+    "id": "P13",
+    "source": "D:\\lrac2\\documentation\\literature\\NeurIPS-2020-neural-networks-fail-to-learn-periodic-functions-and-how-to-fix-it-Paper.pdf",
+    "filename": "NeurIPS-2020-neural-networks-fail-to-learn-periodic-functions-and-how-to-fix-it-Paper.pdf",
+    "sha256": "35015282ead39c007e914cb4dd3ffa328c30ac4f276d577f6f3b57cd21a7e0bf",
+    "pages": 12,
+    "characters": 49152,
+    "text": "D:\\lrac2\\runs\\parametric_reports\\local_paper_reading_2026_11_04\\13.txt"
+  },
+  {
+    "id": "P14",
+    "source": "D:\\lrac2\\documentation\\literature\\plugnplay_emd.pdf",
+    "filename": "plugnplay_emd.pdf",
+    "sha256": "b16aec01a57fd9d7b98421c62806374419fd22bd1c66bd1ada4b50d60f4d122c",
+    "pages": 7,
+    "characters": 60008,
+    "text": "D:\\lrac2\\runs\\parametric_reports\\local_paper_reading_2026_11_04\\14.txt"
+  },
+  {
+    "id": "P15",
+    "source": "D:\\lrac2\\documentation\\literature\\rsta.2024.0584.pdf",
+    "filename": "rsta.2024.0584.pdf",
+    "sha256": "c470eebf2fe8220e9ff821072fb1cc468926552356c2b9484433033e2d381a30",
+    "pages": 15,
+    "characters": 89385,
+    "text": "D:\\lrac2\\runs\\parametric_reports\\local_paper_reading_2026_11_04\\15.txt"
+  },
+  {
+    "id": "P16",
+    "source": "D:\\lrac2\\documentation\\literature\\Saragadam_WIRE_Wavelet_Implicit_Neural_Representations_CVPR_2023_paper.pdf",
+    "filename": "Saragadam_WIRE_Wavelet_Implicit_Neural_Representations_CVPR_2023_paper.pdf",
+    "sha256": "513645a9a81cb7b5b2526eced6e856a0c40b6a41c1781b347acd077bfd476151",
+    "pages": 10,
+    "characters": 53455,
+    "text": "D:\\lrac2\\runs\\parametric_reports\\local_paper_reading_2026_11_04\\16.txt"
+  },
+  {
+    "id": "P17",
+    "source": "D:\\lrac2\\documentation\\literature\\short_time_vmd.pdf",
+    "filename": "short_time_vmd.pdf",
+    "sha256": "232dcb9c1ffaef205292b67ea13af03df9f9024ac8b9990890416c0f9e0e9bc0",
+    "pages": 13,
+    "characters": 102087,
+    "text": "D:\\lrac2\\runs\\parametric_reports\\local_paper_reading_2026_11_04\\17.txt"
+  },
+  {
+    "id": "P18",
+    "source": "D:\\lrac2\\documentation\\literature\\Sinusoidal_Frequency_Estimation_by_Gradient_Descent.pdf",
+    "filename": "Sinusoidal_Frequency_Estimation_by_Gradient_Descent.pdf",
+    "sha256": "b346c8078a2305ca1b3c6d30937d0fa21f53b7382fe3c0ab61dfdf367f14e9e1",
+    "pages": 5,
+    "characters": 52015,
+    "text": "D:\\lrac2\\runs\\parametric_reports\\local_paper_reading_2026_11_04\\18.txt"
+  },
+  {
+    "id": "P19",
+    "source": "D:\\lrac2\\documentation\\literature\\yu24b_interspeech.pdf",
+    "filename": "yu24b_interspeech.pdf",
+    "sha256": "5902e83f0f1d5bb60f0682873a771ce43880222e70efc638d88d6576bbea482e",
+    "pages": 5,
+    "characters": 41587,
+    "text": "D:\\lrac2\\runs\\parametric_reports\\local_paper_reading_2026_11_04\\19.txt"
+  }
+]

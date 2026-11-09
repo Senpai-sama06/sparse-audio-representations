@@ -64,7 +64,7 @@ def analyze(args):
         raise ValueError("Decoder contains nonlinear activations")
     manifest = cfg.manifest(cfg.data.test_manifests[args.split])
     dataset = AudioDataset(manifest, cfg.data.sample_rate, limit=args.limit)
-    frozen_path = Path("documentation/sparse_autoencoder_test_runs.json")
+    frozen_path = Path("approaches/representations/reports/sparse_autoencoder/sparse_autoencoder_test_runs.json")
     if frozen_path.exists():
         for record in json.loads(frozen_path.read_text())["runs"]:
             if record["run_name"] == Path(args.run).name:
@@ -77,7 +77,7 @@ def analyze(args):
     local = Path(args.run) / "analysis" / f"channels_{args.split}_0.1"
     if args.limit:
         local = local / f"limit_{args.limit}"
-        if output == Path("documentation"):
+        if output == Path("approaches/interpretation/reports"):
             output = local / "report"
             output.mkdir(parents=True, exist_ok=True)
     local.mkdir(parents=True, exist_ok=True)
@@ -242,7 +242,7 @@ def analyze(args):
         examples=list(examples),channels=statistics)
     save_results(output,local,summary,examples,frequencies,spectral_power,impulses,impulse_f,impulse_power)
     write_json(local/"progress.json",dict(phase="complete",completed=len(dataset),examples=len(dataset),channels=channels))
-    report = Path(__file__).resolve().parents[1]/"README.md" if output.resolve() == Path(__file__).resolve().parents[1]/"documentation" else output/"saf_channel_analysis.md"
+    report = output/"saf_channel_analysis.md"
     print(f"CHANNEL_REPORT={report}",flush=True)
 
 
@@ -376,10 +376,7 @@ def write_report(output,summary):
     if "decomposition_max_absolute_error" in summary:
         lines += ["", f"Bias + ten isolated channels + the remaining channels also matches full decoding: "
                   f"maximum absolute discrepancy {summary['decomposition_max_absolute_error']:.3g} on the displayed recordings."]
-    # Committed explanations live in the single README. Custom/run output
-    # directories can still receive their automatically generated local report.
-    if output.resolve() != Path(__file__).resolve().parents[1]/"documentation":
-        (output/"saf_channel_analysis.md").write_text("\n".join(lines)+"\n",encoding="utf-8")
+    (output/"saf_channel_analysis.md").write_text("\n".join(lines)+"\n",encoding="utf-8")
 
 
 if __name__=="__main__":
@@ -389,7 +386,7 @@ if __name__=="__main__":
     parser.add_argument("--workers",type=int,default=8)
     parser.add_argument("--device",default="auto")
     parser.add_argument("--limit",type=int)
-    parser.add_argument("--output",default="documentation")
+    parser.add_argument("--output",default="approaches/interpretation/reports")
     args=parser.parse_args()
     if args.workers < 1 or (args.limit is not None and args.limit < 1):
         parser.error("--workers and any --limit must be positive")

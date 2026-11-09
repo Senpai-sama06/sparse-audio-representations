@@ -1,6 +1,14 @@
 # Report instructions
 
 Use these instructions for future runs in this repository.
+See the [method report map](README.md) for current document and report locations.
+
+Keep method-specific documentation and published reports under
+`approaches/<method>/docs/` and `approaches/<method>/reports/`. Put the saved
+metric records and verification results beside the report. Use the method's
+README as its index. Parametric studies use a singular `report/` folder within
+each study subfolder, with their combined overview under `approaches/parametric/report/`.
+This document contains shared report-writing instructions.
 
 ## Quick guide
 
@@ -213,15 +221,16 @@ Give the file size and test scope when you deliver it.
 
 ## Repository reference
 
-- Reference report: [PitchFlower test cases](reports/pitchflower_best_testcases.html).
-- Metric records: [PitchFlower metrics](reports/pitchflower_best_metrics.json).
-- Report builder: [build_pitchflower_report.py](../tools/build_pitchflower_report.py).
+- Method documentation and report commands: [PitchFlower](../approaches/pitchflower/README.md).
+- Reference report: [PitchFlower test cases](../approaches/pitchflower/reports/pitchflower_best_testcases.html).
+- Metric records: [PitchFlower metrics](../approaches/pitchflower/reports/pitchflower_best_metrics.json).
+- Verification record: [PitchFlower verification](../approaches/pitchflower/reports/pitchflower_best_verification.json).
+- Report builder: [reporting.py](../approaches/pitchflower/reporting.py).
 
-The reference report covers 40 short dev-clean crops.
-It does not cover all dev-clean files.
-The builder has fixed paths and settings for that run.
-Check and change them before a new run.
-Use a new output path. Keep prior reports available.
+The reference report covers 40 short dev-clean crops. Its method README explains
+scope, quality and bitrate results, exclusions, portability checks, and refresh
+commands. Share the HTML file itself; the saved JSON records support audits and
+are not required to view it.
 
 The portable-report checker in `tools/check_portable_report.py` checks one embedded-audio format.
 It does not replace all verification steps above.

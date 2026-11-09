@@ -1,0 +1,6 @@
+experiment,status,completed,minutes,scope
+Sampled EMD/VMD baseline,complete,8/8 decomposition cases,4.419513388331203,One 5.855-second LibriSpeech utterance; sampled modes
+Multi-window parametric pilot,stopped_by_user,452/744,184.24877902269364,"Full utterance, overlapping windows, quantized coefficients"
+Isolated 40-ms curve fitting,complete,972/972,78.90089654525121,"Three blocks, five decomposers plus direct, 53 candidates each"
+Shared representation pilot (different scope),complete,57224/57224,12.872953538099924,4096 train / 256 validation / 256 test blocks
+Explicit per-IMF expression discovery,complete,1782/1782,9.574963370958963,120 eligible train / 32 validation / 64 test IMFs

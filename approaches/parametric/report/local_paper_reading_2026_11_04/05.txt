@@ -1,0 +1,1033 @@
+1368                                                                                          IEEE TRANSACTIONS ON SIGNAL PROCESSING, VOL. 74, 2026
+
+
+
+
+         Density-Based Adaptive Mode Decomposition
+          Hao Jia , Chunyu Yang , Cesar F. Caiafa , Zhe Sun , Feng Duan , and Jordi Solé-Casals
+
+
+   Abstract—Variational Mode Decomposition (VMD) requires                                                I. INTRODUCTION
+manual specification of mode numbers and center frequencies,
+limiting its practical applicability for non-stationary signals.
+This paper introduces Density-based Adaptive Mode Decomposi-
+tion (DAMD), which addresses these limitations through three
+                                                                                 T     IME-FREQUENCY analysis is fundamental for under-
+                                                                                       standing non-stationary signals across diverse domains
+                                                                                 including biomedical engineering, telecommunications and so
+key innovations. First, we establish mathematical equivalence                    on. While traditional Fourier analysis excels at stationary signal
+between VMD optimization and density-based clustering, en-
+abling automatic mode detection through meanshift clustering                     analysis [1], it fails to capture the dynamic characteristics of
+with adaptive bandwidth estimation. Second, we develop Direct                    real-world signals where frequency content evolves over time.
+Mode Extraction that replaces iterative optimization with effi-                  This limitation has driven significant developments in adaptive
+cient clustering, and Hybrid Variational Refinement for selec-                   signal processing, with mode decomposition emerging as a
+tive precision enhancement. Third, we extend the framework                       powerful framework for analyzing non-stationary phenomena.
+to diverse time-frequency representations including wavelets
+and synchrosqueezed transforms. Experimental validation across                      The challenge of non-stationary signal analysis lies in auto-
+biomedical signals, gravitational waves, mechanical faults, and                  matically identifying and extracting meaningful mode functions
+speech data demonstrates significant computational improve-                      while adapting to temporal variations in signal complexity. Tra-
+ments while maintaining perfect reconstruction. DAMD elimi-                      ditional approaches often require manual parameter tuning, lim-
+nates manual parameter tuning and enables automated adaptive                     iting their practical utility in automated systems. For instance, in
+signal decomposition for complex non-stationary signals.
+                                                                                 real-time health monitoring systems, signal characteristics can
+   Index Terms—Signal processing, mode decomposition, time-                      change rapidly with patient conditions, requiring continuous
+frequency analysis, adaptive clustering, non-stationary signals.
+                                                                                 adaptation of processing parameters that cannot be achieved
+                                                                                 through manual tuning.
+                                                                                    Mode decomposition methods have evolved significantly
+                                                                                 since the introduction of Empirical Mode Decomposition
+                                                                                 (EMD) [2]. While EMD pioneered adaptive signal decompo-
+                                                                                 sition through intrinsic mode functions (IMFs), its empirical
+   Received 8 July 2025; revised 1 January 2026; accepted 15 March 2026.         nature leads to mode mixing and lacks theoretical foundations.
+Date of publication 18 March 2026; date of current version 13 April 2026. This
+work was supported in part by the National Key Research and Development          Variational Mode Decomposition (VMD) [3] and its multi-
+Program of China under Grant 2025YFE0213700 and in part by Tianjin               channel version Multivariate VMD (MVMD) [4] addressed
+Municipal Science and Technology Program under Grant 25JCQNJC01270.              these limitations by reformulating mode extraction as a vari-
+The work of Jordi Solé-Casals was supported by the Ministerio de Ciencia
+e Innovación (MCIN), Agencia Estatal de Investigación (AEI), Spain, under        ational optimization problem. However, VMD’s requirement
+Grant PID2023-1477870B-I00. The associate editor coordinating the review         for pre-specified mode numbers and manual parameter tuning
+of this article and approving it for publication was Wei Yi. (Corresponding      remains a significant constraint in practical applications.
+authors: Feng Duan; Jordi Solé-Casals.)
+   Hao Jia is with the School of Medicine, Nankai University, Tianjin 300350,       Recent methodological developments have addressed VMD
+China, and also with Tianjin Key Laboratory of Interventional Brain-Computer     limitations through three principal research directions, each
+Interface and Intelligent Rehabilitation, Nankai University, Tianjin 300350,     assuming predetermined mode numbers while contributing the-
+China.
+   Chunyu Yang is with the Department of Mechanical Engineering, Univer-         oretical innovations to decomposition quality. Spectrum-based
+sitat Politècnica de Catalunya-BarcelonaTech, 08222 Terrassa, Spain.             enhancement methods improve spectral analysis capabilities
+   Cesar F. Caiafa is with the Instituto Argentino de Radioastronomía (CCT-      through mathematical reformulations, with Liu et al. [5] de-
+CONICET La Plata/CIC-PBA/UNLP), Villa Elisa 1894, Argentina, and also
+with the Tensor Learning Team, RIKEN Center for Advanced Intelligence            veloping generalized demodulation algorithms for overlapped
+Project, Tokyo 103-0027, Japan.                                                  mode components. Parameter optimization strategies advance
+   Zhe Sun is with the Computational, Bioengineering Laboratory, Faculty of      systematic frameworks for balancing and convergence param-
+Health Data Science, Juntendo University, Tokyo 279-0013, Japan.
+   Feng Duan is with Tianjin Key Laboratory of Interventional Brain-             eters, as demonstrated by Chen et al. [6] through improved
+Computer Interface and Intelligent Rehabilitation, Nankai University, Tianjin    whale optimization algorithms for penalty factor selection and
+300350, China, and also with the College of Artificial Intelligence, Nankai      Yu et al. [7] via sample entropy-based adaptive parameter tun-
+University, Tianjin 300350, China (e-mail: duanf@nankai.edu.cn).
+   Jordi Solé-Casals is with the Data and Signal Processing Research Group,      ing. Theoretical framework extensions expand mathematical
+University of Vic-Central University of Catalonia, 08500 Vic, Spain (e-mail:     foundations through advanced variational formulations, includ-
+jordi.sole@uvic.cat).                                                            ing Wang et al.’s [8] variational generalized nonlinear mode
+   Code Available at https://github.com/plustar/Density-based-Adaptive-
+Mode-Decomposition.                                                              decomposition for chirp and dispersive components and Jian
+   Digital Object Identifier 10.1109/TSP.2026.3675233                            et al.’s [9] de-mixing formulations to reduce mode mixing
+
+
+   © 2026 The Authors. This work is licensed under a Creative Commons AttributionNonCommercialNoDerivatives 4.0 License. For more information,
+                                                see https://creativecommons.org/licenses/by-nc-nd/4.0/
+JIA et al.: DENSITY-BASED ADAPTIVE MODE DECOMPOSITION                                                                               1369
+
+
+
+artifacts. While these advances demonstrate significant progress        To address these challenges, we present Density-based Adap-
+in decomposition accuracy, noise robustness, and mathematical        tive Mode Decomposition (DAMD), which advances the state-
+rigor, they fundamentally rely on prior knowledge of mode            of-the-art through three key innovations. First, we establish a
+numbers, creating a critical bottleneck for practical applications   theoretical connection between VMD and density-based clus-
+where signal complexity is unknown.                                  tering [21], enabling automatic, data-driven determination of
+   To address this fundamental limitation, automatic mode num-       optimal mode numbers and initial frequencies through Mean-
+ber determination methods have emerged as a critical research        shift clustering with bandwidth estimation, eliminating the need
+frontier, employing diverse strategies to eliminate the need for     for manual mode number specification. Second, we introduce
+prior mode specification. Successive decomposition approaches        complementary mode extraction approaches: Direct Mode Ex-
+extract modes iteratively without predefined limits, with Nazari     traction (DME) that replaces VMD’s computationally inten-
+and Sakhaei [10] introducing successive VMD that adds spec-          sive iterative optimization with efficient data-driven Meanshift
+tral overlap criteria to extract modes sequentially, and Liu and     clustering, achieving significant speed improvements, and Hy-
+Yu [11] extending this to multivariate signals through succes-       brid Variational Refinement (HVR) for cases requiring precise
+sive multivariate VMD. Information-theoretic and statistical         separation. Third, we extend VMD beyond traditional Fourier-
+metrics provide quantitative criteria for optimal mode detection,    based spectrograms to support various time-frequency represen-
+including Lian et al.’s [12] mode characteristic-based adaptive      tations [22], broadening applicability to diverse signal process-
+VMD, Gao et al.’s [13] impulse diversity entropy approach            ing scenarios.
+using sparrow search algorithm, and Xu et al.’s [14] hybrid             This paper is organized as follows: Section II presents the the-
+entropy combining envelope fuzzy and dispersion character-           oretical foundations and its implementation; Section III demon-
+istics. Clustering-based approaches leverage signal frequency        strates experimental results on synthetic and real-world signals;
+distribution patterns, with Gu et al. [15] employing improved        Section IV discusses findings and comparisons with existing
+density peak clustering on time-frequency information to deter-      methods; Section V concludes with key insights.
+mine mode numbers automatically. Meta-heuristic optimization
+frameworks systematically search optimal parameter combi-                                II. PROPOSED METHOD
+nations, with Wang et al. [16] employing Archimedes opti-
+mization algorithm with correlation waveform index and Yan              This section introduces the DAMD framework, a compre-
+et al. [17] developing improved particle swarm optimization          hensive methodology that addresses fundamental limitations in
+for dynamic parameter determination. However, these auto-            traditional mode decomposition approaches through theoretical
+matic approaches face persistent challenges in computational         innovation and practical algorithmic development. The frame-
+complexity and convergence stability. A critical limitation of       work integrates three key methodological foundations: (1) a the-
+all aforementioned methods, including successive VMD and             oretical equivalence between VMD optimization and density-
+clustering-based algorithms, is that they only address the K         based clustering that enables direct frequency domain partition-
+selection problem while retaining the VMD iterative process,         ing, (2) Meanshift clustering for automatic mode number deter-
+resulting in substantial computational time consumption.             mination and center frequency detection, and (3) generalized
+   The computational efficiency challenge becomes even more          time-frequency representations that extend beyond traditional
+critical when considering recent time-localized VMD variants.        Fourier analysis for non-stationary signal analysis.
+Short-time variational mode decomposition, as proposed by
+Zheng et al. [18] and Jia et al. [19], performs VMD operations at
+                                                                     A. Variational Mode Decomposition
+each time sampling point within sliding windows, dramatically
+escalating computational burden. Jia et al.’s work distinguishes         Variational Mode Decomposition (VMD) is a novel adaptive
+between non-dynamic STVMD, where mode center frequencies             signal decomposition method that simultaneously extracts var-
+remain constant across windows, and dynamic STVMD, which             ious modes by optimizing their bandwidth through variational
+allows mode center frequencies to adapt across different time        principles. Unlike Empirical Mode Decomposition (EMD),
+windows for enhanced adaptability to non-stationary signals.         VMD demonstrates greater robustness to noise and sampling
+Similarly, recursive windowed VMD methods [20] apply VMD             errors while providing a theoretical foundation rooted in Wiener
+decomposition at every temporal location, resulting in com-          filtering and constrained optimization theory.
+putational complexity that scales multiplicatively with signal           1) Mode Function: In VMD, each mode function uk (t) is
+length.                                                              assumed to be an amplitude-modulated-frequency-modulated
+   These limitations create acute challenges for dynamic             (AM-FM) signal, which can be expressed as:
+STVMD applications, which must perform VMD optimization
+at thousands of temporal locations while adaptively selecting K                         uk (t) = Ak (t) cos(φk (t))                (1a)
+values that vary across time windows in non-stationary signals.      where Ak (t) represents the instantaneous amplitude and φk (t)
+This dual challenge necessitates novel methods that simulta-         denotes the instantaneous phase. The instantaneous frequency
+neously achieve computational efficiency and real-time adap-         ωk (t) is defined as:
+tive selection of the number of mode functions, representing a
+fundamental shift from existing approaches that address these                                           dφk (t)
+                                                                                             ωk (t) =                              (1b)
+issues separately.                                                                                        dt
+1370                                                                                    IEEE TRANSACTIONS ON SIGNAL PROCESSING, VOL. 74, 2026
+
+
+
+Each mode is compact around a central frequency, making it                 B. Equivalence Between VMD and K-Means
+bandwidth-limited in the spectral domain. The analytic signal                 Traditional VMD requires manual specification of mode
+associated with each mode is obtained through the Hilbert                  numbers, limiting its applicability to non-stationary signals
+transform u+   k (t) = uk (t) + jH{uk (t)}, where H{·} denotes             where these parameters should adapt dynamically. We address
+the Hilbert transform operator.                                            this limitation by establishing a mathematical equivalence be-
+   2) Mode Decomposition: The VMD algorithm decomposes
+                                                                           tween VMD optimization and K-means clustering in the fre-
+a real-valued input signal f (t) into an ensemble of K discrete
+                                                                           quency domain, enabling automatic parameter determination
+mode functions {uk (t)}K    k=1 . The decomposition process is for-        through data-driven clustering approaches.
+mulated as a constrained variational problem:
+                                                                              1) The Concept of K-means: K-means is a centroid-based
+               K                                     2
+                                   j                                    clustering algorithm that partitions data points into K clusters
+    min               ∂t δ(t) +         ∗ uk (t) e −jωk t 
+                                                               (2a)
+  {uk },{ωk }                      πt                                    by minimizing the within-cluster sum of squared distances. The
+              k=1                                            2             algorithm operates through iterative optimization, alternating
+subject to the reconstruction constraint:                                  between cluster assignment and centroid update steps until
+                                                                           convergence.
+                        
+                        K
+                                                                              Given a set of data points {xi }ni=1 and a predetermined
+                              uk (t) = f (t)                        (2b)
+                                                                           number of clusters K, K-means seeks to find cluster cen-
+                        k=1
+                                                                           ters {μk }K    k=1 and cluster assignments {ci }i=1 where ci ∈
+                                                                                                                             n
+The objective function seeks to minimize the sum of estimated              {1, 2, . . . , K} denotes the cluster assignment for data point xi .
+bandwidths of each mode around its respective central fre-                 The objective function to be minimized is:
+quency ωk . This is achieved by computing the L2 norm of the
+gradient of the demodulated analytic signal for each mode.                                        n 
+                                                                                                   K
+
+   3) Alternating Direction Method of Multipliers: The con-                                  J=             wik xi − μk 2                (8)
+strained optimization problem in equations (2) is solved using                                    i=1 k=1
+
+the Alternating Direction Method of Multipliers (ADMM). The                where wik = 1 if point xi is assigned to cluster k and wik = 0
+augmented Lagrangian formulation introduces a penalty param-               otherwise.
+eter α > 0 and Lagrange multiplier λ(t):                                      The algorithm proceeds through two alternating steps. The
+                                  
+                                  K
+                                                                         first step assigns each data point to the nearest cluster center:
+        L({uk }, {ωk }, λ) = α      ∂t u+ (t)e−jωk t 2
+                                               k                2
+                                  k=1                                                          ci = arg min xi − μk 2                    (9)
+                                                2                                                     k
+                                        
+                                         K       
+                                                
+                              + f (t) −   uk (t)                            The update step recomputes cluster centers as the centroids
+                                                                         of assigned points:
+                                           k=1             2
+                                                     
+                                                     K                                                
+                              +     λ(t), f (t) −          uk (t)    (3)                                 i:ci =k xi
+                                                                                                μk =                                 (10)
+                                                     k=1                                             |{i : ci = k}|
+ The ADMM alternates between three update steps. First, the                   For spectral clustering applications in our framework, K-
+mode functions are updated in the frequency domain:                        means operates in the frequency domain where data points rep-
+                                    (n)      (n)                          resent frequency components {ωi }ni=1 with associated spectral
+         (n+1)       fˆ(ω) − i=k ûi (ω) + λ̂ 2(ω)                        weights {wi }ni=1 representing the spectral energy |X(ωi )|2 . In
+       ûk     (ω) =                     (n)
+                                                        (4)
+                            1 + 2α(ω − ωk )2                               this context, the weighted K-means formulation becomes:
+  Second, the center frequencies are updated according to:                                           K 
+                                                                                                     
+                         ∞      (n+1)                                                 Jspectral =              |ω − μk |2 |X(ω)|2        (11)
+                (n+1)       ω|ûk      (ω)|2 dω
+              ωk      = 0 ∞ (n+1)                         (5)                                       k=1 ω∈Ck
+                             |ûk    (ω)|2 dω
+                          0                                                where Ck = {ωi : ci = k} represents the set of frequency com-
+  Third, the Lagrange multiplier is updated with step size τ :             ponents assigned to the k-th cluster and μk denotes the cluster
+                                                                         center frequency.
+                                       K
+                                              (n+1)
+   λ̂(n+1) (ω) = λ̂(n) (ω) + τ fˆ(ω) −     û       (ω)    (6)                2) Theoretical Foundation: The mathematical foundation
+                                                     k
+                                               k=1                         for the VMD-clustering equivalence rests on two keys that
+                                                                           connect signal reconstruction with clustering optimization.
+  The iterations continue until convergence, typically defined
+                                                                              Theorem II.1 (Signal Reconstruction in Frequency Bands):
+by the criterion:
+                                                                           Let x(t) ∈ L2 (R) be a signal with Fourier transform X(ω).
+                        (n+1)
+                    k ûk
+                                    (n)
+                                − ûk 22                                  Given a partition {Bi }M
+                                                                                                  i=1 of the frequency domain satisfying:
+                                         <                 (7)               1) Bi ∩ Bj = ∅ for i = j (disjoint)
+                               (n) 2
+                          k ûk 2
+                                                                                 M
+                                                                              2) i=1 Bi = supp(X(ω)) (complete)
+where    is a predefined tolerance, commonly set to 10−9 .                    3) Each Bi is measurable
+JIA et al.: DENSITY-BASED ADAPTIVE MODE DECOMPOSITION                                                                                    1371
+
+
+
+Then:                                                                           4) By the partition properties, the reconstruction constraint
+                           
+                           M                                                 is satisfied:
+                x(t) =               F −1 {X(ω)1Bi (ω)}               (12)             
+                                                                                       K                 
+                                                                                                         K
+                           i=1                                                               ûk (ω) =         X(ω) · 1Bk (ω) = X(ω)    (22)
+where 1Bi is the indicator function of set Bi .                                        k=1               k=1
+     Proof: The proof follows from the properties of L2 spaces                 5) This yields the equivalent clustering objective:
+and Plancherel’s theorem:                                                                       
+  1) First, define band-limited components:                                                min min |ω − ωk |2 |X(ω)|2 dω                (23)
+                                                                                             {ωk }   R   k
+                     XBi (ω) = X(ω)1Bi (ω)                            (13)     6) The optimal centers satisfy:
+  2) By the partition properties:                                                                    
+                                                                                                          ω|X(ω)|2 dω
+                                                                                               ωk = Bk                                 (24)
+                                         
+                                         M
+                                                                                                        Bk
+                                                                                                           |X(ω)|2 dω
+                        X(ω) =                 XBi (ω)                (14)
+                                         i=1                                 where perfect reconstruction is guaranteed by Theorem II.1.
+  3) By linearity of the inverse Fourier transform:                             This theoretical foundation establishes that VMD optimiza-
+                                                                             tion can be reformulated as a frequency domain clustering
+                                               
+                                               M
+                                                                             problem, where the spectral energy |X(ω)|2 provides natural
+                     −1
+          x(t) = F         {X(ω)} =                  F −1 {XBi (ω)}   (15)
+                                                                             weighting for the clustering process.
+                                               i=1
+
+  4) The reconstruction error (t) is:
+                                                                           C. From K-Means to Adaptive Clustering via Meanshift
+                        M             
+                             −1                                               While the equivalence between VMD and K-means clus-
+      (t)L2 = x(t) −      F {XBi (ω)} = 0                         (16)
+                                        2                                  tering provides valuable theoretical insights, it still requires
+                                 i=1                         L
+                                                                             pre-specifying the number of clusters (modes). To overcome
+by Plancherel’s theorem and the partition properties.
+                                                                             this fundamental limitation, we extend our framework to in-
+   The critical insight connecting signal reconstruction to VMD
+                                                                             corporate Meanshift, a density-based clustering approach that
+lies in recognizing that K-means clustering naturally creates the
+                                                                             automatically determines the number of clusters based on the
+disjoint frequency partitions required by Theorem II.1. When
+                                                                             underlying data distribution.
+K-means partitions the frequency domain into regions {Bk }
+                                                                                1) The Concept of Meanshift: Meanshift is a non-parametric
+based on proximity to center frequencies {ωk }, these partitions
+                                                                             clustering algorithm that identifies modes of an underlying
+automatically satisfy the completeness and disjointness condi-
+                                                                             probability density function through iterative mode-seeking
+tions, enabling direct application of the reconstruction theorem.
+                                                                             procedures. Given a set of frequency points {ωi }ni=1 with
+   Theorem II.2 (VMD-Clustering Equivalence): The VMD
+                                                                             associated spectral weights {wi }ni=1 representing the spec-
+optimization problem:
+                                                                             tral energy |X(ωi )|2 , the weighted kernel density estimator is
+                K 
+                                                  2
+                                                                           defined as:
+       min         ∂t δ(t) + j ∗ uk (t) e−jωk t            (17)
+    {uk },{ωk }                 πt                                                                    1 
+                                                                                                           n
+             k=1                                         2
+                                                                                             fˆ(ω) =          Kh (ω − ωi )wi             (25)
+          K                                                                                           nh i=1
+subject to k=1 uk = f is equivalent to the weighted density-
+based clustering problem:                                                    where Kh (·) is the Gaussian kernel:
+                                                                                                                              
+                       min |ω − ωk |2 |X(ω)|2 dω                                                               1     (ω − ωi )2
+               min                                     (18)                           Kh (ω − ωi ) = √      exp −                 (26)
+             {ωk }K
+                  k=1      R     k
+                                                                                                       2πh2             2h2
+where X(ω) is the Fourier transform of the input signal.                       The meanshift vector guides the iterative mode-seeking
+     Proof: The proof proceeds in several steps:                             process:
+  1) In the frequency domain, the VMD objective becomes:                                           n
+                                                                                                        ωi Kh (ω − ωi )wi
+                      K                                                               mh (ω) = i=1                      −ω      (27)
+                                                                                                     n
+                                                                                                      i=1 Kh (ω − ωi )wi
+               min          |ω − ωk |2 |ûk (ω)|2 dω     (19)
+            {ûk },{ωk }             R                                         The iterative update follows:
+                           k=1
+
+  2) K-means clustering partitions the frequency domain into                                    ω (k+1) = ω (k) + mh (ω (k) )           (28)
+non-overlapping regions {Bk }Kk=1 where:
+                                                                             until convergence where mh (ω ∗ ) < .
+              Bk = {ω : k = arg min |ω − ωi |2 }                      (20)     The number of unique modes emerges naturally through
+                                           i
+                                                                             convergence analysis:
+  3) For each partition Bk , construct the mode function:
+                                                                                  K ∗ = |{ωj∗ : ωj∗ = lim ωj , j = 1, 2, . . . , n}|
+                                                                                                                   (k)
+                                                                                                                                        (29)
+                            X(ω) if ω ∈ Bk                                                               k→∞
+               ûk (ω) =                                  (21)
+                            0       otherwise                                where modes are equivalent if |ωi∗ − ωj∗ | < δ.
+1372                                                                           IEEE TRANSACTIONS ON SIGNAL PROCESSING, VOL. 74, 2026
+
+
+
+  The basin of attraction for each mode forms a complete              For weighted spectral data, we replace σ with the weighted
+partition:                                                         standard deviation:
+                                                                                   1/5                 
+            Bk = {ω : lim ω (m) (ω0 = ω) = ωk∗ }           (30)                      4
+                                                                                                              n
+                                                                                                                 (ωi − μω )2 wi
+                        m→∞                                                                                   i=1
+               ∗
+                                                                    hSilverman =             σω , σω =             n
+             
+             K                                                                      3n                             i=1 wi
+                   Bk = Ω,       Bi ∩ Bj = ∅               (31)                                                              (40)
+            k=1                                                                 n
+                                                                                     ω w
+   2) Relationship between K-means and Meanshift: K-means          where μω = i=1  n
+                                                                                        i i
+                                                                                             is the weighted mean frequency.
+                                                                                    i=1 wi
+and Meanshift share fundamental connections through their use           b) Adaptive Bandwidth via Local MISE: For non-uniform
+of spectral energy weighting |X(ω)|2 . K-means minimizes the       densities, the optimal bandwidth varies spatially. We minimize
+spectral objective (Equation 11) through hard assignment, while    the local MISE contribution:
+Meanshift maximizes density:                                                                     4                          
+                                                                                                  h            1
+                                                                     hadaptive (ω) = arg min        [f (ω)]2 +    f (ω)R(K)
+                JM eanshif t = arg max    fˆ(ωk∗ )         (32)                            h       4            nh
+                                     ∗}
+                                   {ωk       k                                                                               (41)
+   Both create hard partitions: K-means through Voronoi cells,       Taking the derivative and solving yields:
+Meanshift through attraction basins. The bandwidth-cluster re-
+lationship provides the mathematical bridge:                                                                         1/5
+                                                                                                       R(K)f (ω)
+                                                                                 hadaptive (ω) =                               (42)
+  K ∗ (h) ≈ KK−means when h = hoptimal (KK−means ) (33)                                                n[f  (ω)]2
+
+   3) Bandwidth Estimation Methods: The bandwidth parame-            In practice, we estimate f  (ω) using the spectral curvature
+ter h fundamentally governs the resolution of density estimation   and employ the pilot bandwidth h0 :
+in the frequency domain through its direct impact on the bias-                                       
+                                                                                                             α
+variance trade-off in kernel density estimation.                                 hadaptive (ω) = h0                            (43)
+   We establish a rigorous mathematical framework based on                                             |∇ ρ(ω)| +
+                                                                                                          2
+
+Mean Integrated Squared Error (MISE) minimization. For the         where:
+weighted kernel density estimator:
+                                                                                   w(ω + Δω) − 2w(ω) + w(ω − Δω)
+                             1      
+                                    n                                  ∇2 ρ(ω) =                                               (44)
+            fˆh (ω) = n                  Kh (ω − ωi )wi   (34)                                 Δω 2
+                           j=1 wj i=1
+                                                                   approximates the second derivative f  (ω), and α, provide
+where wi = |X(ωi )|2 represents spectral weights, the MISE         numerical stability.
+admits the classical bias-variance decomposition:                        c) Percentile-Based Estimation: For heavy-tailed or con-
+                                                                 taminated distributions, classical MISE-based methods may
+   MISE(h) = Bias2 [fˆh (ω)]dω + Var[fˆh (ω)]dω        (35)        fail. We employ a robust estimator based on the Median Ab-
+                                                                   solute Deviation (MAD) principle:
+  For a Gaussian kernel K(u) = (2π)−1/2 exp(−u2 /2), the
+asymptotic bias and variance are:                                               hpercentile = Q10 ({|Δωi |}) · crobust         (45)
+
+                         h2                                      where Q10 denotes the 10th percentile of inter-frequency spac-
+         Bias[fˆh (ω)] =    f (ω)μ2 (K) + O(h4 )        (36)
+                         2                                         ings Δωi = ωi+1 − ωi , and crobust is a consistency factor en-
+                          1                                        suring asymptotic equivalence to the MISE-optimal bandwidth
+          Var[fˆh (ω)] =    f (ω)R(K) + O(n−1 h−1 )     (37)
+                         nh                                        under Gaussian conditions.
+                                                                   All methods are subject to stability constraints ensuring
+where μ2 (K) = u2 K(u)du = 1 and R(K) = K 2 (u)du =
+(4π)−1/2 .                                                         convergence:
+     a) Silverman’s Rule via MISE Optimization: Substituting
+the asymptotic expressions into MISE and minimizing with                      hf inal = max{hestimated , hmin } · γscale       (46)
+respect to h:                                                                  hmin = c · min |ωi − ωj |                       (47)
+                                                                                           i=j
+                             
+   ∂                                       R(K)
+      MISE(h) = h μ2 (K) [f  (ω)]2 dω −
+                    3 2
+                                                 = 0 (38)          where c ∈ (0, 1) prevents over-resolution and γscale provides
+   ∂h                                       nh2
+                                                                   method-specific calibration.
+                                                             2
+   For the Gaussian reference
+                 2
+                            √ distribution
+                                5 −1
+                                           f (ω) = φ(ω; μ, σ ),      The theoretical foundation ensures that Silverman’s rule
+we have [f (ω)] dω = (8 πσ ) and f (ω)dω = 1. This                 achieves asymptotic MISE optimality under the Gaussian as-
+yields the optimal bandwidth:                                      sumptions, adaptive bandwidth provides the local MISE min-
+                           √     1/5  1/5                      imization for varying spectral densities, and percentile-based
+                   R(K) 8 πσ 5                4                    estimation offers robust performance when MISE assumptions
+          hopt =                        =            σ      (39)
+                   μ22 (K) n                 3n                    are violated.
+JIA et al.: DENSITY-BASED ADAPTIVE MODE DECOMPOSITION                                                                                           1373
+
+
+
+D. Generalized Time-Frequency Analysis                                           Tt (ω) = T {x(t)}(t, ω) for any time-frequency representation
+   The clustering-based VMD framework naturally extends be-                      T , enabling unified treatment of diverse transforms through the
+yond traditional Fourier analysis to encompass diverse time-                     clustering paradigm.
+                                                                                    The Short-Time Fourier Transform provides uniform time-
+frequency representations. This extension is motivated by the
+computational challenges inherent in time-localized variational                  frequency resolution through:
+                                                                                                           ∞
+approaches and addresses the need for efficient adaptive signal                             TtSTFT (ω) =       x(τ )w(τ − t)e−jωτ dτ         (51)
+decomposition in non-stationary environments.                                                                −∞
+   1) Dynamic STVMD with Time-Varying Central                                    where clustering operates directly on the magnitude spectrum
+Frequencies: Short-Time Variational Mode Decomposition                           |TtSTFT (ω)|2 . This representation proves suitable for signals
+(STVMD) extends VMD by incorporating time-localized                              with consistent spectral characteristics across time.
+analysis through windowed variational optimization. Given a                         The Continuous Wavelet Transform offers logarithmic fre-
+multivariate signal x(t) ∈ RC×1 with C channels, STVMD                           quency resolution through:
+applies windowing operations to create a windowed signal                                                    ∞
+                                                                                                       1
+matrix Xw (t) = [xw1 (t), xw2 (t), . . . , xwT (t)] ∈ RC×T , where                     TtCWT (ω) =              x(τ )ψ ∗ (ω(τ − t)) dτ     (52)
+xwτ (t) = x(t) w(t − τ ) represents the element-wise product                                            |ω| −∞
+with the window function w(t − τ ) centered at time τ .                          where the scale-frequency relationship ω = 2πf0 /a relates the
+   The dynamic STVMD optimization problem seeks to decom-                        scale parameter a to frequency ω through the mother wavelet’s
+pose Xw (t) into K mode functions {Uk (t)}K         k=1 where each               central frequency f0 . This representation excels in analyzing
+mode exhibits time-varying
+                           central
+                                      frequencies   ωk,τ .                      signals with exponential frequency variations or chirp-like be-
+   Let Dω [·] = ∂t δ(t) + πt
+                           j
+                                ∗ (·) e−jωt denote the demod-                    havior due to its adaptive resolution characteristics.
+ulation operator. The optimization problem becomes:                                 Synchrosqueezed transforms enhance frequency localization
+                            
+                            K 
+                              C 
+                                T
+                                                                2              through reassignment operations:
+                                  Dω                                                              
+               min                                    [uk,cτ (t)]2       (48)
+                                                                                       TtSST (ω) = T {x(t)}(t, η)δ(ω − ωx (t, η))dη
+                                                k,τ
+         {uk,cτ },{ωk,τ }                                                                                                                   (53)
+                            k=1 c=1 τ =1
+          K                                                                                         η
+subject to k=1 uk,cτ (t) = xwcτ (t) for all c, τ .                               where coefficients are redistributed based on instantaneous fre-
+  The corresponding augmented Lagrangian formulation is:                         quency estimates ωx (t, η). This concentration of spectral en-
+ L({uk,cτ },{ωk,τ }, λ)                                                          ergy facilitates more precise mode boundary detection and re-
+                         T 
+                                                                                 duces bandwidth requirements for effective clustering.
+                      C 
+                     K                          2
+                                         −jωk,τ t                                 The clustering bandwidth adapts automatically to each trans-
+               =α          ∂t u+
+                                k,cτ (t)e          
+                                                                      2          form’s inherent resolution characteristics. For STFT, the band-
+                     k=1 c=1 τ =1
+                       
+                     T 
+                                              2                                 width scales with window standard deviation:
+                   
+                   C              
+                                   K          
+                                             
+                 +     xwcτ (t) −   uk,cτ (t)                                                          hSTFT (t) = βSTFT · σw                (54)
+                                             
+                     c=1 τ =1                  k=1                2
+                                                                                 where βSTFT > 0 is a transform-specific scaling constant and
+                     C 
+                      T                                   
+                                                           K
+                                                                                 σw denotes the window function’s standard deviation. CWT
+                 +                 λcτ (t), xwcτ (t) −           uk,cτ (t)
+                                                                                 bandwidth follows the frequency-dependent relationship:
+                     c=1 τ =1                              k=1
+                                                                          (49)                                            ω
+                                                                                                    hCWT (t, ω) = βCWT ·                  (55)
+                                                                                                                         ω0
+  The alternating optimization procedure yields mode up-
+                                          (n)
+                                                       (n)
+                                                     λ̂cτ (ω)                    where βCWT > 0 is the CWT scaling constant and ω0 represents
+       (n+1)          x̂wcτ (ω)−    i=k ûi,cτ (ω)+     2
+dates ûk,cτ (ω) =                            (n) 2             and the crit-    the mother wavelet’s central frequency, matching the trans-
+                                 1+2α(ω−ωk,τ )
+ical time-varying center frequency updates:                                      form’s logarithmic resolution. Synchrosqueezed transforms em-
+                      C  ∞        (n+1)    2
+                                                                                 ploy refined bandwidth:
+              (n+1)      c=1 0 ω|ûk,cτ (ω)| dω                                                                           hbase (t)
+            ωk,τ = C  ∞ (n+1)                                           (50)                     hSST (t) = βSST ·                            (56)
+                          c=1 0 |ûk,cτ (ω)| dω
+                                            2
+                                                                                                                        γconcentration
+   Unlike traditional VMD where ωk remains constant, dy-                         where βSST > 0 is the SST scaling constant, hbase (t) represents
+namic STVMD produces a frequency matrix Ω ∈ RK×T where                           the baseline bandwidth from the underlying transform, and
+Ωk,τ = ωk,τ captures the temporal evolution of each mode’s                       γconcentration ≥ 1 quantifies the degree of frequency concentration
+central frequency. This time-varying characteristic enables                      achieved by synchrosqueezing.
+tracking of non-stationary frequency components but intro-                           For any time-frequency representation T satisfying en-
+duces significant computational complexity.                                      ergy conservation and admissibility conditions, the clustering-
+   2) Extension to Diverse Time-Frequency Representations:                       based decomposition yields perfect reconstruction when ap-
+The clustering framework extends naturally beyond STFT to                        plied to frequency slices Tt (ω). This follows from the linear-
+encompass various time-frequency representations, each of-                       ity of inverse transforms and the completeness of clustering-
+fering distinct analytical advantages for different signal char-                 induced partitions: clustering creates disjoint frequency par-
+acteristics. We define a generalized time-frequency slice as                     titions {Bk,t } at each time t, enabling mode construction
+1374                                                                            IEEE TRANSACTIONS ON SIGNAL PROCESSING, VOL. 74, 2026
+
+
+
+                                                 Kt
+Tk,t (ω) = Tt (ω) · 1Bk,t (ω) such that Tt (ω) = k=1    Tk,t (ω),   Algorithm 1: Direct Mode Extraction (DME).
+and reconstruction
+       Kt           follows from transform  linearity as x(t) =    Require: Time-frequency representation T {x(t)}
+T −1 { k=1   Tk,t (ω)}.                                             Ensure: Time-varying modes {uk,t (ω)}, center frequencies
+                                                                        {ωk,t }
+                                                                     1: for t = 1 to T do
+E. Implementation Approaches
+                                                                     2:   Extract frequency slice Tt (ω) and compute spectral
+   This subsection presents practical implementation strategies           weights wi = |Tt (ωi )|2
+for the DAMD framework. Building upon the theoretical equiv-         3:   Estimate adaptive bandwidth h(t)
+alence established in Theorem II.2 and the meanshift clustering      4:   Initialize meanshift seeds from all frequency integers
+principles developed previously, we formulate two complemen-              {ωi }Ni=1
+tary approaches that optimize the balance between computa-           5:   Apply weighted meanshift iteration (Equation (28)) until
+tional efficiency and decomposition accuracy.                             convergence mh (ω ∗ ) <
+   1) Algorithmic Framework Design: The implementation               6:   Identify converged modes {ωk∗ (t)}K    k=1 using Equa-
+                                                                                                                  t
+
+leverages three fundamental principles derived from our theo-             tion (29)
+retical analysis. First, the VMD-clustering equivalence (Theo-       7:   Generate frequency partitions {Bk,t } based on attraction
+rem II.2) enables direct frequency domain partitioning without            basins (Equation (30))
+iterative variational optimization. Second, meanshift’s density-     8:   for k = 1 to Kt do
+based mode detection automatically determines the number of          9:      Extract mode using indicator function: uk,t (ω) =
+modes K ∗ through Equation (29), eliminating manual parame-                  Tt (ω) · 1ω∈Bk,t
+ter specification. Third, the basin of attraction property (Equa-   10:      Compute weighted center frequency using Equa-
+tions (30)–(31)) ensures complete frequency domain coverage                  tion (24):
+with disjoint partitions.                                                                         
+                                                                                                    ω∈B    ω|Tt (ω)|2
+   For time-frequency analysis, we adopt the generalized frame-                           ωk,t =  k,t
+work where any admissible transform T satisfying energy con-                                         ω∈Bk,t |Tt (ω)|
+                                                                                                                     2
+
+servation conditions can be processed through frequency slices
+                                                                    11:   end for
+Tt (ω).
+                                                                    12: end for
+   2) Direct Mode Extraction (DME): The DME approach                                                                 K t
+                                                                    13: Verify perfect    reconstruction: Tt (ω) =      k=1 uk,t (ω)
+implements pure clustering-based decomposition, maximizing
+                                                                        (Theorem II.1)
+computational efficiency while maintaining perfect reconstruc-
+tion guarantees from Theorem II.1. The computational com-
+plexity analysis is provided in Section II-F.
+   3) Quality Assessment Criteria: Before presenting the re-        Algorithm 2: Hybrid Variational Refinement (HVR).
+finement approach, we establish a quality assessment criterion      Require: Time-frequency representation T {x(t)}
+that determines when DME results require VMD refinement.            Ensure: Refined modes {uk,t (ω)}
+The clustering-based decomposition may encounter challeng-           1: for t = 1 to T do
+ing conditions where variational optimization provides superior      2:   Apply DME (Algorithm 1) to obtain initial modes
+                                                                              (0)                      (0)
+mode separation. We define a metric based on the spectral                 {uk,t (ω)} and centers {ωk,t }
+characteristics of the decomposed modes:                             3:   Evaluate quality criteria for refinement condition using
+   Frequency Separation Quality: The minimum separation                   Equation (57)
+between adjacent mode centers evaluates mode interference:           4:   if any mode satisfies the refinement condition then
+   Small frequency separation relative to the clustering band-       5:      Initialize standard VMD with:
+width suggests that modes benefit from variational refinement.          •        Number of modes: Kt
+                                                                                                               (0)
+                                                                        •        Initial center frequencies: {ωk,t }K t
+                                                                                                                    k=1
+               Δωsep (k, t) = min |ωk,t − ωj,t |            (57)        •        Standard penalty parameter: αbase
+                               j=k
+                                                                     6:      Apply standard ADMM iterations (Equations (4)–(6))
+   4) Hybrid Variational Refinement (HVR): The HVR method                    until convergence (Equation (7))
+applies standard VMD with DME-based initialization, refining         7:      Update          all      modes:                   k=1 ←
+                                                                                                                     {uk,t (ω)}K t
+
+modes that fail the quality assessment criteria while preserv-                   ref ined
+                                                                             {uk,t            Kt
+                                                                                          (ω)}k=1
+ing computational efficiency for well-separated modes. Algo-         8:   else
+rithm 2 details the complete procedure.                                                                                   (0)
+                                                                     9:      Retain DME results: {uk,t (ω)}K   k=1 ← {uk,t (ω)}k=1
+                                                                                                                 t                Kt
+
+                                                                    10:   end if
+                                                                    11: end for
+F. Computational Complexity Analysis
+   This subsection analyzes the computational complexity of the
+three core algorithms: VMD, K-means, and Meanshift.                 requiring FFT computations at each iteration. Each itera-
+   1) Variational Mode Decomposition Complexity: VMD                tion involves K mode updates via equation (4) with com-
+complexity is dominated by iterative ADMM operations                plexity O(N log N ) per mode, and frequency updates via
+JIA et al.: DENSITY-BASED ADAPTIVE MODE DECOMPOSITION                                                                             1375
+
+
+
+equation (5) with complexity O(N ) per mode. The total             contains N = 1024 samples at fs = 512 Hz (2-second du-
+complexity is:                                                     ration). This signal provides a known target frequency for
+                                                                   validating mode detection accuracy while maintaining broad-
+             CV M D = O(K × Niter × N log N )              (58)
+                                                                   band noise characteristics for testing bandwidth estimation
+with memory requirements O(K · N + N ).                            robustness.
+   2) K-means Clustering Complexity: K-means requires ini-            2) Simulated Signal: The simulated signal is designed to
+tial FFT preprocessing O(N log N ) followed by iterative as-       evaluate DAMD performance under controlled conditions with
+signment O(K · N ) and centroid updates O(N ). The total com-      known spectral structures, time-varying frequencies, and inter-
+plexity is:                                                        mittent components. This signal is defined as:
+
+          CK-means = O(N log N + K × Niter × N )           (59)                 x(t) = x1 (t) + x2 (t) + x3 (t) + η(t)           (62)
+with memory requirements O(N + K).                                             x1 (t) = sin(2πω(t) · t)                          (63)
+   3) Meanshift Clustering Complexity: Meanshift employs                       x2 (t) = 0.75 sin(2π · 1.75ω(t) · t)              (64)
+Ball Tree optimization for efficient neighborhood searches,                    x3 (t) = 1.25 sin(2π · 2.5ω(t) · t) · m(t)        (65)
+transforming naive O(Niter × N 2 ) to optimized complexity.
+Including initial FFT preprocessing:                               where ω(t) = seq[t] + 13 represents a time-varying fre-
+                                                                   quency function with seq being a random permutation of in-
+   CM eanshif t = O(N log N + S × Niter × N log N )        (60)    tegers {0, 1, 2, . . . , 7}, η(t) ∼ N (0, 0.04) denotes white Gaus-
+where S ≤ N represents the number of seeds, with memory            sian noise, and m(t) is a binary mask defined as:
+requirements O(N + S).                                                                      
+   The analysis demonstrates that K-means achieves optimal                                    1 if t ∈ [1.5, 3.5] ∪ [5.5, 7.5]
+                                                                               m(t) =                                             (66)
+computational efficiency by eliminating iterative FFT opera-                                  0 otherwise
+tions, requiring only initial frequency domain transformation.
+                                                                   The signal comprises N = 1024 samples at fs = 128 Hz (8-
+Meanshift provides moderate efficiency gains through Ball Tree
+                                                                   second duration), incorporating time-varying frequencies, har-
+optimization and reduced seed count (S ≤ N ). Both cluster-
+                                                                   monic relationships, intermittent components, and additive
+ing approaches offer significant computational advantages over
+                                                                   noise to evaluate DAMD’s adaptive capabilities.
+VMD while preserving theoretical reconstruction guarantees
+through the established mathematical equivalence. For win-
+dowed analysis, complexity scales multiplicatively by the num-     B. Result Visualization
+ber of time windows, further amplifying the computational
+                                                                      To demonstrate the DAMD decomposition mechanism, we
+benefits of clustering-based decomposition.
+                                                                   applied the proposed method to the noisy sinusoid defined in
+                                                                   Subsection III-A. The noisy sinusoid serves as a validation
+                         III. RESULTS                              signal with a known target frequency (50 Hz) embedded in
+   This section presents comprehensive experimental validation     broadband noise. The detected modes include the target fre-
+of the DAMD framework across synthetic and real-world sig-         quency component, which DAMD successfully identifies as a
+nal datasets. We evaluate both DME and HVR approaches,             stable mode across all time instances, as well as frequency
+demonstrating automatic mode detection capabilities, compu-        partitions of the noise floor ensuring complete coverage and
+tational efficiency improvements, and decomposition accuracy       perfect reconstruction. The noise-derived partitions should not
+across diverse signal characteristics. Throughout this analysis,   be interpreted as physical oscillatory modes, but rather as the
+the hop length is consistently set to 1 to ensure perfect recon-   algorithm’s complete frequency-domain coverage required for
+struction with minimal RMSE after forward and inverse STFT         perfect reconstruction. The visualization in Fig. 1 illustrates the
+transforms.                                                        complete decomposition process from spectral analysis through
+                                                                   mode detection to final extraction, confirming successful fre-
+                                                                   quency domain partitioning with adaptive mode detection vary-
+A. Test Signal Definitions
+                                                                   ing across time instances based on local spectral energy.
+   To evaluate DAMD performance across different spectral
+characteristics, we employ two standardized signals with dis-
+tinct properties: a noisy sinusoid combining a known target fre-   C. Parameter Analysis
+quency with broadband noise, and a simulated signal designed          This subsection examines the key factors influencing DAMD
+to evaluate performance under varying temporal dynamics.           performance through systematic analysis of three critical pa-
+   1) Noisy Sinusoid: The noisy sinusoid signal is defined as:     rameters: time-frequency map resolution, bandwidth estimation
+                                                                   methods, and time-frequency representation types. Understand-
+              x(t) = As sin(2πf0 t) + σn · w(t)            (61)
+                                                                   ing these dependencies is essential for optimal method config-
+where As = 0.2 is the sinusoid amplitude, f0 = 50 Hz is the        uration across diverse signal characteristics. We employ both
+target frequency, σn = 0.5 is the noise standard deviation, and    test signals defined in Subsection III-A to evaluate performance
+w(t) ∼ N (0, 1) represents white Gaussian noise. The signal        under different spectral conditions.
+1376                                                                                          IEEE TRANSACTIONS ON SIGNAL PROCESSING, VOL. 74, 2026
+
+
+
+
+Fig. 1. DAMD decomposition process on noisy sinusoid (50 Hz target              Fig. 2. Impact of STFT window length on DAMD performance using noisy
+frequency with additive Gaussian noise) using percentile-based bandwidth        sinusoid signal. Upper panels: Analysis with window length 512 samples
+estimation. Upper left: STFT spectrogram showing the 50 Hz component            showing STFT spectrogram (left) and detected mode centers (right). Lower
+amid broadband noise. Upper right: Detected mode centers (red dots) with        panels: Analysis with window length 256 samples demonstrating reduced
+L2-norm as radius; the continuous detection at 50 Hz confirms successful        frequency resolution effects on mode detection accuracy.
+identification of the target frequency. Lower left: Frequency distribution at
+t = 1s with target frequency marked (dashed line). Lower right: Extracted
+mode functions arranged by center frequency.
+
+
+
+   1) Time-Frequency Resolution Effects: The resolution of the
+time-frequency representation directly impacts mode detection
+accuracy and computational efficiency. We evaluated DAMD
+performance across varying STFT window lengths using the
+simulated signal with known mode characteristics. The STFT
+resolution is controlled by the window length parameter, which
+determines the trade-off between frequency discrimination and
+temporal localization.
+   Fig. 2 demonstrates the window length effects on mode de-
+tection performance. Longer window lengths provide enhanced
+frequency discrimination capabilities but reduce temporal res-
+olution, while shorter window lengths improve temporal lo-
+calization and computational efficiency but sacrifice frequency
+resolution. The results indicate that optimal window length
+selection depends on the balance between required frequency
+                                                                                Fig. 3. Comparison of bandwidth estimation methods for the noisy sinusoid.
+precision and temporal tracking capability.                                     Upper left: STFT spectrogram showing the 50 Hz target component with
+   2) Bandwidth Estimation Method Comparison: We com-                           broadband noise. Upper right: Percentile-based estimation results. Lower
+pared the three bandwidth estimation approaches presented                       left: Silverman’s rule estimation results. Lower right: Adaptive bandwidth
+                                                                                estimation results.
+in Section II: Silverman’s rule, adaptive bandwidth, and
+percentile-based estimation. Each method was applied to both
+test signals to evaluate their effectiveness under different spec-
+tral density characteristics.                                                   concentrations around the fundamental and harmonic frequen-
+   Fig. 3 shows bandwidth estimation influence on the noisy                     cies. Under these conditions, percentile-based estimation main-
+sinusoid. The spectrogram reveals the 50 Hz target component                    tains robust performance with consistent tracking of the main
+amid uniform spectral energy distribution from the broadband                    frequency components. Silverman’s rule produces clean mode
+noise. Percentile-based estimation provides stable mode detec-                  identification with minimal spurious detections, capturing the
+tion with consistent coverage across the frequency range. Sil-                  dominant spectral structures. Adaptive bandwidth generates the
+verman’s rule produces conservative mode identification, avoid-                 highest mode density, detecting fine variations in the frequency
+ing over-segmentation. Adaptive bandwidth shows the most de-                    content.
+tailed mode resolution, responding to local spectral variations.                   The comparative analysis reveals that Silverman’s rule
+   Fig. 4 presents results for the simulated signal with distinct               performs optimally for Gaussian-like distributions, adaptive
+harmonic components. The spectrogram shows clear energy                         bandwidth excels in non-uniform spectral environments, and
+JIA et al.: DENSITY-BASED ADAPTIVE MODE DECOMPOSITION                                                                                                  1377
+
+
+
+                                                                                                             TABLE I
+                                                                                           COMPUTATIONAL PERFORMANCE COMPARISON ACROSS
+                                                                                                  TIME-FREQUENCY REPRESENTATIONS
+
+                                                                                                       Noisy Sinusoid                Simulated Signal
+                                                                                   Transform
+                                                                                                 Time(s)    Rate(samples/s)     Time(s)   Rate(samples/s)
+                                                                                   STFT           7.23          141.61            0.78        1320.70
+                                                                                   SSQ-STFT        5.93         172.68            0.75        1357.79
+                                                                                   CWT            46.09          22.21           47.91         21.37
+                                                                                   SSQ-CWT        13.87          73.80           16.40         62.44
+
+
+
+                                                                                                           TABLE II
+                                                                                     COMPUTATIONAL PERFORMANCE COMPARISON FOR 1024-SAMPLE
+                                                                                                     SIGNAL DECOMPOSITION
+
+                                                                                  Method       DME Phase    VMD Phase         Total Time   Detected Modes
+                                                                                  DME            2.4 s         N/A               2.4 s         Variable
+                                                                                  HVR            2.4 s        18.3 s            20.7 s         Variable
+                                                                                  VMD            N/A          14.0 s            14.0 s        10 (fixed)
+
+Fig. 4. Comparison of bandwidth estimation methods for simulated signal.
+Upper left: STFT spectrogram showing distinct harmonic components. Upper
+right: Percentile-based estimation results. Lower left: Silverman’s rule esti-   excels for frequency-modulated components despite higher
+mation results. Lower right: Adaptive bandwidth estimation results.
+                                                                                 computational cost, while SSQ-CWT provides the best balance
+                                                                                 between adaptive resolution and computational feasibility.
+
+percentile-based estimation demonstrates superior robustness
+across diverse signal types.                                                     D. Mode Refinement With HVR
+   3) Time-Frequency Representation Analysis: The choice                            To demonstrate the refinement capabilities of the HVR ap-
+of time-frequency representation significantly influences clus-                  proach, we evaluate its performance in enhancing mode separa-
+tering effectiveness and mode separation quality. We evalu-                      tion quality beyond the initial clustering-based decomposition.
+ated DAMD performance using Short-Time Fourier Transform                         In the following experiments, we disable the refine criterion of
+(STFT), Continuous Wavelet Transform (CWT), and their syn-                       HVR to ensure VMD is used after the DME.
+chrosqueezed variants (SSQ-STFT, SSQ-CWT) on both test                              Fig. 7 illustrates the progressive refinement process using the
+signals to assess performance under different temporal-spectral                  noisy sinusoid. DME demonstrates automatic mode detection
+characteristics.                                                                 without manual parameter specification, HVR produces more
+   Fig. 5 presents comparative decomposition results for the                     coherent mode patterns with improved frequency localization,
+noisy sinusoid signal. STFT provides uniform time-frequency                      while traditional VMD shows the limitations of fixed-parameter
+resolution, SSQ-STFT demonstrates enhanced frequency lo-                         approaches.
+calization, CWT offers logarithmic frequency resolution with                        Table II presents computational performance metrics ob-
+enhanced low-frequency detail, and SSQ-CWT achieves the                          tained on a laptop with Intel Core Ultra 7 258V processor
+sharpest frequency localization.                                                 at 2.20 GHz. DME achieves processing in 2.4 s with 426.67
+   Fig. 6 shows performance for the simulated signal. STFT                       samples/s throughput, demonstrating efficient clustering-based
+maintains stable mode detection with uniform distribution,                       decomposition with automatic mode detection. HVR consists
+SSQ-STFT shows more sparse mode detection due to concen-                         of two sequential phases: an initial DME phase (2.4 s) fol-
+tration effects, CWT reveals scale-dependent characteristics,                    lowed by a VMD refinement phase (18.3 s), resulting in total
+and SSQ-CWT produces the most concentrated mode patterns.                        processing time of 20.7 s. The HVR refinement converges in
+   Table I reveals significant computational differences across                  19 iterations, achieving convergence criteria of mode differ-
+transforms and signal types. For the noisy sinusoid, SSQ-STFT                    ence 4.14 × 10−5 , frequency difference 9.78 × 10−4 , and en-
+shows 21.9% improvement over STFT due to energy concen-                          ergy difference 1.70 × 10−2 , with a maximum of 25 modes
+tration effects. CWT exhibits the highest computational cost,                    detected across all time windows. Traditional VMD requires
+requiring 537% more time than STFT. For the simulated signal,                    14.0 s with 30 iterations, achieving convergence with mode
+both STFT variants show dramatically improved performance,                       difference 6.43 × 10−4 , frequency difference 2.70 × 10−3 , and
+indicating that structured spectral content facilitates faster clus-             energy difference 6.77 × 10−2 for the predefined 10 modes.
+tering convergence.                                                                 The computational analysis reveals that HVR achieves su-
+   The experimental analysis reveals that optimal time-                          perior convergence efficiency despite higher total processing
+frequency representation selection depends on signal-specific                    time. HVR converges in 19 iterations compared to VMD’s 30
+characteristics, computational constraints, and application                      iterations, representing a 36.7% reduction in iterative steps.
+requirements. STFT provides consistent performance for                           This demonstrates that clustering-based initialization provides
+general-purpose analysis, SSQ-STFT offers enhanced                               excellent starting points for variational optimization. Notably,
+precision with minimal computational overhead, CWT                               HVR automatically adapts to signal complexity with up to 25
+1378                                                                                        IEEE TRANSACTIONS ON SIGNAL PROCESSING, VOL. 74, 2026
+
+
+
+
+Fig. 5. Time-frequency representation comparison for the noisy sinusoid. Upper row: STFT analysis (left: spectrogram, right: mode detection) and SSQ-
+STFT analysis (left: synchrosqueezed spectrogram, right: mode detection). Lower row: CWT analysis (left: scalogram, right: mode detection) and SSQ-CWT
+analysis (left: synchrosqueezed scalogram, right: mode detection).
+
+
+
+
+               Fig. 6.   Time-frequency representation comparison for the simulated signal. The same layout is used as the one in Fig. 5.
+
+
+
+modes detected in the most complex time windows, compared                     energy-stratified coloring, where mode energy is computed as
+to VMD’s fixed 10 modes, indicating enhanced adaptability                     the mean squared amplitude of each extracted mode function;
+to varying spectral characteristics. While HVR requires 47.9%                 this enables users to distinguish high-energy components from
+more total time than VMD, it provides both automatic mode                     low-energy partitions that may represent noise artifacts.
+detection and superior convergence characteristics, making it                    1) Biomedical Signal Processing: SSVEP Analysis: We
+valuable for complex signal analysis where the number of                      applied DAMD to SSVEP signals from the TRCA-SSVEP
+modes is unknown a priori and varies across time windows.                     benchmark dataset [23]. Using SSQ-CWT, the detected mode
+                                                                              centers concentrate near expected stimulation frequencies and
+                                                                              harmonics (Fig. 8).
+E. Real-World Application Validation                                             2) Astrophysical Signal Processing: Gravitational Wave
+   We evaluated DAMD across four diverse real-world appli-                    Detection: We analyzed simulated gravitational wave data from
+cations: SSVEP analysis, gravitational wave detection, bear-                  the G2Net dataset [24]. Using SSQ-STFT, the progressive in-
+ing fault diagnosis, and speech processing. A consistent con-                 crease in detected mode center frequencies tracks the chirp
+figuration using synchrosqueezed time-frequency representa-                   evolution (Fig. 9).
+tions and percentile-based bandwidth estimation was applied.                     3) Mechanical Fault Diagnosis: Bearing Vibration Analy-
+To facilitate interpretation, we visualize detected modes with                sis: We applied DAMD to bearing vibration signals from the
+JIA et al.: DENSITY-BASED ADAPTIVE MODE DECOMPOSITION                                                                             1379
+
+
+
+                                                                     modes exhibit predominantly sinusoidal characteristics that are
+                                                                     inherently well-represented in the frequency domain; second,
+                                                                     comprehensive mode characterization through time location
+                                                                     and center frequency information captures essential proper-
+                                                                     ties without requiring time-domain conversion. This approach
+                                                                     proves advantageous for applications where spectral charac-
+                                                                     teristics and temporal evolution are more critical than exact
+                                                                     time-domain waveforms. Furthermore, with proper bandwidth
+                                                                     estimation and appropriate time-frequency representations, the
+                                                                     DME approach often provides sufficiently accurate mode char-
+                                                                     acterization, making HVR refinement unnecessary for most
+                                                                     applications unless very high precision is specifically required.
+                                                                     From a signal interpretation perspective, DAMD should there-
+                                                                     fore be viewed as a principled frequency-domain partitioning
+                                                                     framework, whose physical interpretability depends on the un-
+                                                                     derlying signal structure and the chosen time–frequency repre-
+                                                                     sentation, rather than as a generative model of intrinsic time-
+      Fig. 7.   Mode refinement comparison for the noisy sinusoid.
+                                                                     domain oscillatory modes.
+                                                                        Traditional multi-channel variational mode decomposition
+Paderborn University dataset [25]. Using SSQ-STFT, detected          methods, such as Multivariate VMD (MVMD), decompose
+modes near expected BPFO and harmonics indicate successful           all channels simultaneously under shared constraints including
+capture of fault-related components (Fig. 10).                       common mode numbers and synchronized frequency charac-
+   4) Acoustic Signal Processing: Speech Analysis: We ana-           teristics. While ensuring cross-channel consistency, this ap-
+lyzed speech from the TIMIT corpus [26]. Using SSQ-STFT,             proach may obscure channel-specific spectral features and im-
+the time-varying mode center patterns reflect dynamic formant        pose unnecessary computational burden. DAMD enables in-
+transitions during speech articulation (Fig. 11).                    dependent decomposition of each channel, allowing channel-
+   Across all four domains, DAMD successfully partitioned            specific adaptation with optimal mode numbers and unique
+time-frequency representations into meaningful frequency             frequency characteristics. This flexibility proves particularly
+bands without manual parameter tuning. The detected mode             valuable in multi-electrode EEG analysis where different brain
+centers aligned with expected signal characteristics: stimulation    regions exhibit distinct spectral signatures, and in multi-sensor
+frequencies and harmonics for SSVEP, chirp evolution for             vibration monitoring where sensors capture varying fault sig-
+gravitational waves, BPFO and harmonics for bearing faults,          natures. The ability to apply different time-frequency represen-
+and formant transitions for speech.                                  tations or bandwidth estimation methods to different channels
+                                                                     further enhances adaptability while enabling efficient parallel
+                                                                     processing. However, multichannel applications often benefit
+                          IV. DISCUSSION
+                                                                     from domain-specific spatial optimization techniques that ex-
+   This work presents the DAMD framework for non-stationary          ploit cross-channel correlations, such as proper orthogonal de-
+signal analysis, establishing a novel theoretical foundation that    composition in computational fluid dynamics, task-related com-
+bridges variational mode decomposition with density-based            ponent analysis in SSVEP-based brain-computer interfaces, and
+clustering. The framework introduces fundamental innovations         common spatial pattern in motor imagery classification. Inte-
+that address critical limitations in traditional mode decomposi-     grating DAMD’s temporal-spectral decomposition with these
+tion approaches. Three key aspects warrant detailed discussion       spatial methods represents a promising future direction.
+regarding the practical implications and theoretical contribu-          DAMD fundamentally shifts the parameter dependency
+tions of this work.                                                  paradigm from opaque algorithmic tuning to interpretable
+   A distinctive characteristic of DAMD lies in its frequency        signal-related characteristics. Unlike traditional VMD meth-
+domain decomposition approach without explicit time domain           ods that require manual specification of penalty factors and
+reconstruction during the decomposition process. Traditional         predefined mode numbers (parameters with limited physical
+VMD methods perform iterative ADMM optimization in the               interpretation), DAMD eliminates these algorithmic parame-
+frequency domain and ultimately require inverse transforms to        ters while introducing more intuitive dependencies that directly
+obtain time-domain mode functions. In contrast, our clustering-      relate to signal characteristics. The framework’s performance
+based approach directly partitions the frequency domain with-        is primarily influenced by three key factors analyzed in Sec-
+out iterative refinement, and the resulting mode characteri-         tion III: time-frequency representation type (STFT, CWT, SSQ-
+zation remains entirely in the frequency domain representa-          STFT, SSQ-CWT), time-frequency resolution controlled by
+tion. This design choice significantly reduces computational         window length, and bandwidth estimation method determining
+overhead, particularly when dealing with the adaptive number         clustering sensitivity. The experimental analysis demonstrates
+of modes that can vary substantially across time windows.            that these parameter choices produce predictable effects on
+This efficiency is justified by two observations: first, DAMD’s      decomposition performance, enabling users to make informed
+1380                                                                                           IEEE TRANSACTIONS ON SIGNAL PROCESSING, VOL. 74, 2026
+
+
+
+
+Fig. 8. SSVEP EEG analysis using SSQ-CWT. The signal was recorded from the Oz electrode at 250 Hz with visual stimulation at 10 Hz (0–5 s) and 13
+Hz (5–10 s). Left: SSQ-CWT spectrogram. Center: all detected time–frequency modes. Right: energy-stratified modes highlighting dominant components at
+the stimulation frequencies and their harmonics.
+
+
+
+
+Fig. 9. Gravitational wave chirp analysis using SSQ-STFT. Binary black hole merger signal sampled at 220 Hz (3 s duration). Left: SSQ-STFT spectrogram.
+Center: all detected time–frequency modes. Right: energy-stratified modes highlighting the characteristic chirp evolution from near-DC to approximately 20 Hz.
+
+
+
+
+Fig. 10. Bearing fault analysis using SSQ-STFT. Type 6203 bearing with outer race fault (KA04) at 900 rpm, downsampled to 250 Hz (4 s duration).
+Left: SSQ-STFT spectrogram. Center: all detected time–frequency modes. Right: energy-stratified modes highlighting fault-related components at BPFO
+(approximately 45.75 Hz) and its second harmonic (91.5 Hz).
+
+
+
+
+Fig. 11. Speech analysis using SSQ-STFT. TIMIT corpus signal downsampled to 500 Hz (2 s duration). Left: SSQ-STFT spectrogram. Center: all detected
+time–frequency modes. Right: energy-stratified modes highlighting formant transitions in the F1 range (200–500 Hz).
+
+
+selections based on application requirements rather than requir-                usability, transforming parameter choices from algorithmic ar-
+ing extensive parameter sweeps. This shift toward interpretable                 tifacts into meaningful signal processing decisions with clear
+parameters represents a significant advancement in practical                    physical and mathematical interpretations.
+JIA et al.: DENSITY-BASED ADAPTIVE MODE DECOMPOSITION                                                                                         1381
+
+
+
+   It is important to clarify DAMD’s role within the signal         efficiency and HVR for enhanced precision. Validation across
+processing pipeline. DAMD is a post-processing tool that per-       biomedical, gravitational wave, mechanical, and speech signals
+forms frequency domain partitioning on pre-computed time-           demonstrates significant computational improvements while
+frequency representations; it does not perform denoising or         maintaining perfect reconstruction. By eliminating manual pa-
+signal-noise separation. Noise robustness is therefore inherited    rameter specification and extending to diverse time-frequency
+from the chosen time–frequency representation. The quality          representations, DAMD represents a significant advancement
+of DAMD’s output is fundamentally bounded by the quality            toward fully automated adaptive signal decomposition for com-
+of the input time-frequency map. If the underlying transform        plex non-stationary signals.
+cannot resolve signal components due to insufficient SNR,
+spectral leakage, or inappropriate parameter selection, DAMD
+will partition whatever spectral content is present, including                                     REFERENCES
+noise artifacts. However, the framework naturally provides           [1] A. V. Oppenheim, R. W. Schafer, and J. R. Buck, Discrete-Time Signal
+mode-level energy quantification through the mean squared                Processing. Upper Saddle River, NJ, USA: Prentice Hall, 1999.
+                                                                     [2] N. E. Huang et al., “The empirical mode decomposition and the Hilbert
+amplitude of extracted mode functions, enabling principled               spectrum for nonlinear and non-stationary time series analysis,” Proc.
+post-hoc filtering. High-energy modes typically correspond to            Roy. Soc. London A, vol. 454, no. 1971, pp. 903–995, 1998.
+physically meaningful signal components, while low-energy            [3] K. Dragomiretskiy and D. Zosso, “Variational mode decomposition,”
+                                                                         IEEE Trans. Signal Process., vol. 62, no. 3, pp. 531–544, Nov. 2014.
+modes often represent noise-dominated frequency partitions           [4] N. U. Rehman and H. Aftab, “Multivariate variational mode decompo-
+required for complete coverage. This energy-based stratifica-            sition,” IEEE Trans. Signal Process., vol. 67, no. 23, pp. 6039–6052,
+tion offers practical value: users can apply domain-specific             Nov. 2019.
+                                                                     [5] J.-L. Liu, F.-L. Qiu, Z.-P. Lin, Y.-Z. Li, and F.-Y. Liao, “A generalized
+thresholds to retain only modes exceeding certain energy per-            adaptive variational mode decomposition method for nonstationary sig-
+centiles, or weight downstream analyses by mode energy to                nals with mode overlapped components,” Smart Structures Syst., vol. 30,
+emphasize dominant components. Such energy-aware process-                no. 88, pp. 1–75, Jul. 2022.
+                                                                     [6] M. Chen et al., “Optimized variational mode decomposition algorithm
+ing bridges DAMD’s exhaustive frequency partitioning with                based on adaptive thresholding method and improved whale optimization
+application-specific requirements for mode significance assess-          algorithm for denoising magnetocardiography signal,” Biomed. Signal
+ment. Additionally, selecting time-frequency transforms with             Process. Control, vol. 88, Feb. 2024, Art. no. 105681.
+                                                                     [7] N. Yu, X. Yang, R. Feng, and Y. Wu, “Strain signal denoising based on
+better energy concentration (e.g., synchrosqueezed variants)             adaptive variation mode decomposition (VMD) algorithm,” J. Low Freq.
+can improve the quality of the input representation before               Noise, Vib. Act. Control, vol. 42, no. 4, pp. 1854–1865, Dec. 2023.
+applying DAMD.                                                       [8] H. Wang, S. Chen, and W. Zhai, “Variational generalized nonlinear mode
+                                                                         decomposition: Algorithm and applications,” Mech. Syst. Sig. Process.,
+   The theoretical foundation established through the VMD-               vol. 206, Jan. 2024, Art. no. 110913.
+clustering equivalence represents a significant advancement          [9] J. Jian, Z.-R. Lu, J. Liu, and L. Wang, “De-mixing variational mode
+in signal processing theory, providing mathematical rigor for            decomposition and its application on operational modal analysis in the
+                                                                         presence of closely spaced modes,” Measurement, vol. 242, Jan. 2025,
+density-based approaches to mode decomposition. The proven               Art. no. 116057.
+connection between variational optimization and clustering          [10] M. Nazari and S. M. Sakhaei, “Successive variational mode decompo-
+algorithms opens new avenues for algorithm development                   sition,” Signal Process., vol. 174, Sep. 2020, Art. no. 107610.
+                                                                    [11] S. Liu and K. Yu, “Successive multivariate variational mode decomposi-
+and theoretical analysis in adaptive signal processing. Fu-              tion,” Multidimension. Syst. Signal Process., vol. 33, no. 3, pp. 917–943,
+ture research directions include optimization of the selec-              Sep. 2022.
+tion criteria between DME and HVR approaches for spe-               [12] J. Lian, Z. Liu, H. Wang, and X. Dong, “Adaptive variational mode de-
+                                                                         composition method for signal processing based on mode characteristic,”
+cific signal characteristics, extension to other clustering algo-        Mech. Syst. Sig. Process., vol. 107, pp. 53–77, Jul. 2018.
+rithms beyond Meanshift, systematic investigation of multi-         [13] S. Gao, N. Zhao, X. Chen, Z. Pei, and Y. Zhang, “A new approach to
+channel integration strategies combining DAMD with domain-               adaptive VMD based on SSA for rolling bearing fault feature extraction,”
+                                                                         Meas. Sci. Technol., vol. 35, no. 3, Mar. 2024, Art. no. 036102.
+specific spatial optimization techniques, and exploration of ap-    [14] C. Xu, J. Yang, T. Zhang, K. Li, and K. Zhang, “Adaptive parameter se-
+plications in emerging domains such as time series analysis              lection variational mode decomposition based on a novel hybrid entropy
+for large language models. The potential for unified, distin-            and its applications in locomotive bearing diagnosis,” Measurement, vol.
+                                                                         217, Aug. 2023, Art. no. 113110.
+guished, and recoverable embedding representations, analo-          [15] Z. Gu, Z. Wang, Y. Shen, C. Huang, Y. Jiang, and P. Li, “Time-frequency
+gous to developments in image processing and natural lan-                information-based variational mode decomposition and its application in
+guage processing, presents exciting opportunities for advancing          prediction models,” Meas. Sci. Technol., vol. 36, no. 3, Mar. 2025, Art.
+                                                                         no. 036122.
+the field of time series analysis through the clustering-based      [16] J. Wang, C. Zhan, S. Li, Q. Zhao, J. Liu, and Z. Xie, “Adaptive
+decomposition.                                                           variational mode decomposition based on Archimedes optimization
+                                                                         algorithm and its application to bearing fault diagnosis,” Measurement,
+                                                                         vol. 191, Mar. 2022, Art. no. 110798.
+                       V. CONCLUSION                                [17] M. Yan, Lu Chen, W. Hu, Y. Chen, and X. Zhou, “An adaptive
+                                                                         variational mode decomposition algorithm based on improved particle
+   This paper presents DAMD, which transforms mode de-                   swarm optimization,” in Proc. IEEE 6th Int. Conf. Power, Intell. Comput.
+                                                                         Syst. (ICPICS), Shenyang, China. Piscataway, NJ, USA: IEEE Press, Jul.
+composition from manual parameter tuning to automated,                   2024, pp. 670–675.
+data-driven clustering. We establish mathematical equivalence       [18] Q. Zheng, T. Chen, L. Xie, and H. Su, “Short-time variational mode
+between VMD and density-based clustering, enabling au-                   decomposition: Algorithms, extensions and properties,” SSRN Electron.
+                                                                         J., Apr. 2022.
+tomatic mode detection through meanshift algorithms. The            [19] H. Jia et al., “Short-time variational mode decomposition,” Signal
+framework provides two approaches: DME for computational                 Process., vol. 44. Jul. 2025, Art. no. 110203.
+1382                                                                                         IEEE TRANSACTIONS ON SIGNAL PROCESSING, VOL. 74, 2026
+
+
+
+[20] Z. Zhou, B. W.-K. Ling, and N. Xu, “Recursive windowed variational             task-related component analysis,” IEEE Trans. Biomed. Eng., vol. 65,
+     mode decomposition,” Circuits, Syst., Signal Process., vol. 44, no. 1,         no. 1, pp. 104–112, Apr. 2018.
+     pp. 616–651, Jan. 2025.                                                   [24] European Gravitational Observatory, “G2Net gravitational wave de-
+[21] D. Comaniciu and P. Meer, “Mean shift: A robust approach toward                tection,” Kaggle Competition, 2021. [Online]. Available: https://www.
+     feature space analysis,” IEEE Trans. Pattern Anal. Mach. Intell., vol.         kaggle.com/c/g2net-gravitational-wave-detection
+     24, no. 5, pp. 603–619, Aug. 2002.                                        [25] C. Lessmeier, J. K. Kimotho, D. Zimmer, and W. Sextro, “Condition
+[22] I. Daubechies, J. Lu, and H.-T. Wu, “Synchrosqueezed wavelet                   monitoring of bearing damage in electromechanical drive systems by
+     transforms:    An    empirical   mode     decomposition-like     tool,”        using motor current signals of electric motors: A benchmark data set for
+     Appl. Comput. Harmon. Anal., vol. 30, no. 2, pp. 243–261,                      data-driven classification,” Proc. Eur. Conf. Prognostics Health Manage.
+     2011.                                                                          Soc., vol. 3, no. 1, pp. 1–17, Jul. 2016.
+[23] M. Nakanishi, Y. Wang, X. Chen, Y.-T. Wang, X. Gao, and T.-P. Jung,       [26] J. S. Garofolo et al., “TIMIT acoustic-phonetic continuous speech
+     “Enhancing detection of SSVEPs for a high-speed brain speller using            corpus,” 1993, LDC93S1.
+

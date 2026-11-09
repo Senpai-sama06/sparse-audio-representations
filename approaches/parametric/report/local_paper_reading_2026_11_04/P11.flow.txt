@@ -1,0 +1,1552 @@
+IEEE TRANSACTIONS ON IMAGE PROCESSING, VOL. 31, 2022
+
+4707
+
+Coupled Splines for Sparse Curve Fitting
+Icíar Lloréns Jover , Thomas Debarre , Shayan Aziznejad , and Michael Unser , Fellow, IEEE
+Abstract— We formulate as an inverse problem the construction of sparse parametric continuous curve models that fit a
+sequence of contour points. Our prior is incorporated as a
+regularization term that encourages rotation invariance and
+sparsity. We prove that an optimal solution to the inverse
+problem is a closed curve with spline components. We then
+show how to efficiently solve the task using B-splines as basis
+functions. We extend our problem formulation to curves made
+of two distinct components with complementary smoothness
+properties and solve it using hybrid splines. We illustrate the
+performance of our model on contours of different smoothness.
+Our experimental results show that we can faithfully reconstruct
+any general contour using few parameters, even in the presence
+of imprecisions in the measurements.
+Index Terms— Inverse problems, total variation, sparsity.
+
+I. I NTRODUCTION
+
+C
+
+ONTOUR tracing is a common yet rich subject in
+the image-processing and computer-graphics community.
+It has numerous applications, such as component labeling [1],
+[2] or topological structure analysis [3]. The objective is to
+produce a contour that accurately separates two regions of
+a given image. This task is, however, not without difficulties.
+Firstly, the edges suffer from discretization effects and intrinsic
+image noise. Secondly, the smoothness of the contour may
+need to be nonuniform, since contours are often made of
+smooth parts joined by sharp discontinuities. Our goal is
+to extract a continuous stylized sparse parametric curve that
+explains a given set of ordered edge points given by possibly
+inaccurate two-dimensional coordinates, which is particularly
+relevant for raster-to-vector conversion, i.e. vectorization [4].
+Vectorization consists in converting raster data (e.g. pixel
+images) into a set of continuous functions representing the
+contours. This is the principle on which fonts or vector formats
+like pdf or svg, which allow for zooming into the objects
+without losing resolution, rely on. It is therefore a problem
+of great importance for the computer graphics community.
+Our search for sparsity intimately follows Occam’s razor
+principle of simplicity. Indeed, it heightens our probability of
+approaching the true curve, as many real-world signals are
+sparse. This is the principle on which compressed sensing
+hinges [5], [6].
+
+Manuscript received 31 August 2021; revised 31 March 2022 and 3 June
+2022; accepted 6 June 2022. Date of publication 6 July 2022; date of current
+version 12 July 2022. This work was supported in part by the European
+Research Council (ERC) GlobalBioIm under Grant 692726 and in part by
+the Swiss National Science Foundation under Grant 200020_184646/1. The
+associate editor coordinating the review of this manuscript and approving it for
+publication was Prof. Hitoshi Kiya. (Corresponding author: Michael Unser.)
+The authors are with the Biomedical Imaging Group, École
+polytechnique fédérale de Lausanne, 1015 Lausanne, Switzerland (e-mail:
+iciar.llorensjover@epfl.ch;
+thomas.debarre@epfl.ch;
+shayan.aziznejad@
+epfl.ch; michael.unser@epfl.ch).
+Digital Object Identifier 10.1109/TIP.2022.3187286
+
+Two main approaches come to mind when thinking of
+contour tracing. The first one consists in joint edge detection
+and curve fitting. Parametric active contours are popular examples of this approach as these methods provide efficient tools
+for the extraction of a contour from an image, for example
+for point-cloud segmentation [7]. The contour consists in
+continuous curves that evolve through the optimization of
+an energy functional and iteratively approximate an image
+edge [8], [9]. A plethora of parametric snake models can
+be found in the literature, mostly with model-based energy
+functionals [10]–[14], or more recently with learning-based
+approaches [15], [16]. Of particular relevance to this paper is
+a snake model implementation that uses basis functions and
+that allows for tangent control, a useful property when the
+smoothness of the contours is nonuniform [17].
+The second approach to contour tracing is discrete contour
+extraction and subsequent curve fitting. In the first approach,
+the entire image was used to iteratively update the contour, whereas the second approach interpolates a continuous
+parametric curve from a list of coordinates. This can be
+achieved using spline curves, which is the method of choice
+in computer graphics [18]–[21]. Another popular way to
+tackle this is through a regularized minimization problem,
+the regularization enforcing prior knowledge about the curve
+[22], [23]. The method presented in this work follows the latter
+paradigm by enforcing a sparsity prior. Other more classical
+spline-based methods enforce sparsity by simply removing
+knots from an initially nonsparse curve [24]–[29]. We also
+mention other contour-tracing algorithms based on very different techniques [30], [31], as well as recent deep-learning
+based ones that are applicable to 3D contour tracing [32], [33];
+see [34] for a survey.
+To attain our goal, we solve a bipartite optimization problem. On one hand, we want that the candidate curve fits the
+existing contour points exactly. This is achieved through a
+data-fidelity term. On the other hand, as an infinity of curves
+could satisfy this fit, we have to enforce prior knowledge
+into our model. This prior knowledge is introduced as a
+regularization cost coupled with a regularization operator, the
+result aiming at the enforcement of desired properties. First,
+it is likely that the true curve has few variations, which implies
+that the curve has a sparse representation. Second, it is frequent
+that variations happen over both the horizontal and the vertical
+axes simultaneously. Moreover, the recovered curve should be
+possibly denoised. Finally, the optimization cost should not
+depend on a rotation of the system of coordinates. We show
+in this paper that these specifications lead us to a regularization
+cost that consists of a mixed (TV-2 ) norm.
+In order to sparsify given data, modern regularizers include
+structured sparsity [35], [36], namely [37], low rank regularization [38], or deep prior [39]. However, these regularizers
+
+1941-0042 © 2022 IEEE. Personal use is permitted, but republication/redistribution requires IEEE permission.
+See https://www.ieee.org/publications/rights/index.html for more information.
+
+Authorized licensed use limited to: EPFL LAUSANNE. Downloaded on July 14,2022 at 09:13:04 UTC from IEEE Xplore. Restrictions apply.
+
+4708
+
+IEEE TRANSACTIONS ON IMAGE PROCESSING, VOL. 31, 2022
+
+assume a discrete setting and thus do not yield a continuous
+curve as a solution. In addition, the deep prior regularizer does
+not provide an interpretable model. In this paper, we explore
+the continuous setting, as we aim at the recovery of a continuous 2D curve. Similarly to [40], we explore generalized totalvariation (TV) regularization for continuous-domain signal
+reconstruction using B-splines as basis functions for an exact
+discretization. Finally, we choose to represent the curve with
+hybrid splines, which give us the tools to represent curves
+with nonuniform smoothness. While [41] addressed signal
+reconstruction using hybrid splines, this manuscript extends
+the setting for the handling of curves in 2D, which calls for a
+new regularizer.
+Our main contribution is threefold. Firstly, we introduce a
+continuous rotation-invariant TV (RI-TV) norm as a regularization for the recovery of curves. It effectively reconstructs
+sparse parametric curves from given contour points while
+being robust to noise. Secondly, we prove a representer theorem according to which there exists a curve with spline components that is a global minimizer of our optimization problem.
+Building upon this, we propose a curve construction using
+B-splines, which allows us to discretize the continuous-domain
+problem exactly with numerical efficiency. Finally, we present
+the combination of such RI-TV norm with a hybrid framework to generate stylized curves with nonuniform smoothness
+properties.
+The remainder of this paper is organized as follows: In
+Section II, we present the continuous-domain framework of the
+optimization problem and introduce our representer theorem.
+We then show the precise implementation and resolution of
+this task through the introduction of B-splines in Section III.
+In Section IV, we extend the framework to hybrid splines.
+Finally, we experimentally verify properties of our contributions and show applications in Section V.
+II. C ONTINUOUS -D OMAIN F ORMULATION
+Our goal is to recover a 2D parametric curve r(t) =
+(x(t), y(t)) that best fits a given ordered list of points p[m] =
+(px [m], p y [m]), m = 0, . . . , M − 1. Contours being closed
+curves, we consider the coordinate functions x(t) and y(t) to
+be periodic in t. Since we have M data locations, it is convenient to deal with M-periodic functions. We consequently set
+t ∈ T M = [0, M].
+Concurrently, we want to control the sparsity of the fitted
+curve. This can be achieved by limiting the number of the
+singularities in the higher-order derivatives of its components.
+This effectively means that r(t) admits a sparse representation.
+To that end, we introduce two new elements: a differential
+operator L and the RI-TV regularization functional.
+The mathematical foundation on which this paper is built is
+based on Schwartz’ theory of distributions [42]. Henceforth,
+let us denote the Schwartz’ space of M-periodic smooth
+functions by S(T M ). Its topological dual, S  (T M ) is the space
+of tempered distributions over the torus.
+A. Derivative Operators and L-Splines
+The first element we introduce in our problem formulation
+is L = Dα+1 , the derivative operator whose order (α +1), with
+
+α ∈ N \ {0}, determines the smoothness of the components of
+the constructed curve.
+Next, we define the periodic L-splines with respect to the
+operator L. A periodic L-spline is a function s : T M → R that
+verifies that
+K
+−1
+
+L{s}(t) =
+a[k]IIIM (t − tk ),
+(1)
+k=0
+
+
+where III M (t) = k∈Z δ(t − Mk) ∈ S  (T M ) is the M-periodic
+Dirac comb, K ∈ N \ {0} is the number of knots, a[k] ∈ R
+is the amplitude of the kth jump, and tk ∈ R are distinct knot
+locations.
+B. RI-TV Regularization
+The second element is R, a sparsity-promoting regularization functional with key characteristics. Firstly, for 2D curves,
+the minimization of R(L{r}), where L{r} = (L{x}, L{y}),
+should enforce sparsity jointly for the two components of r.
+Indeed, we want r to have few variations, and they often should
+occur along both components simultaneously. Secondly, if the
+points p[m] are rotated by an angle θ , the fitted curve
+r(t) should be rotated by the same angle θ . To achieve
+this, our regularizer R should be invariant to a rotation
+of the system of coordinates, meaning that R(Rθ L{r}) =
+R(L{r}), where Rθ is a rotation matrix. Similarly, R should
+be equivariant to isotropic scaling, meaning that there exists
+a function A such that R(L{ar}) = A(a) R(L{r}) for any
+a = 0. We now introduce the RI-TV norm, which consists in a mixed continuous (TV-2 ) norm and satisfies our
+specifications.
+
+
+Definition 1: Let p ∈ [1, +∞]. The TV- p norm of
+any vector-valued tempered distribution w = w1 w2 ∈
+S  (T M )2 is defined as
+
+
+wTV− p =
+
+sup
+ϕ=(ϕ1 ,ϕ2 )∈S (T M )2
+ϕq,∞ =1
+
+(w1 , ϕ1 + w2 , ϕ2 ) , (2)
+
+where q ∈ [1, ∞] is the Hölder conjugate of p with 1p + q1 =
+1 and  · q,∞ is the (q − L ∞ ) mixed norm, defined for any
+ϕ ∈ S(T M )2 as
+
+
+ϕq,∞ = sup ϕ(t)q .
+t ∈T M
+
+(3)
+
+A mixed norm similar to (2) was previously introduced
+in [43] in the context of the recovery
+of Dirac distributions.
+
+In Theorem 1, we compute the TV- p norm for two general
+classes of functions or distributions.
+Theorem 1: 1) For any curve f = ( f 1 , f 2 ) with
+absolutely integrable components f i ∈ L 1 (T M ), i =
+1, 2, we have that
+ M
+f(t) p dt.
+(4)
+[ f1 f 2 ]TV− p =
+0
+
+2) Let w = (w1 , 
+w2 ) be a vector-valued distribution of
+K
+the form w = k=1
+a[k]III M (· − tk ) with a[k] ∈ R2 ,
+k = 0, . . . , K − 1. Then, we have that
+K
+−1
+
+a[k] p .
+(5)
+[w1 w2 ]TV− p =
+k=0
+
+Authorized licensed use limited to: EPFL LAUSANNE. Downloaded on July 14,2022 at 09:13:04 UTC from IEEE Xplore. Restrictions apply.
+
+LLORÉNS JOVER et al.: COUPLED SPLINES FOR SPARSE CURVE FITTING
+
+4709
+
+The proof of Theorem 1 can be found in Appendix A.
+The outer TV norm promotes sparsity, as it is the continuous
+counterpart of the 1 norm [40]. The inner  p norm in Item 1
+induces a coupling of the f 1 and f 2 components. Indeed, it first
+aggregates the f 1 and f 2 curve components, which the outer
+TV norm then jointly sparsifies. This is true of any  p norm
+for p = 1. For p = 1, the components are no longer coupled
+due to the separability of the norm. For p = 2 and any curve
+f = ( f 1 , f 2 ), we set
+R(f) = [ f 1 f 2 ]TV−2 .
+
+(6)
+
+Proposition 1: The (TV-2 ) norm, notated R, is invariant
+to rotation, in the sense that R(Rθ f) = R(f), where Rθ is
+ matrix. Furthermore, the (TV-2 ) norm is the only
+a rotation
+TV- p norm that is rotation invariant.
+We provide in Appendix B the proof of Proposition 1.
+Finally, R being a norm, it is scale equivariant (homogeneity
+property).
+C. Continuous-Domain Optimization Problem
+The setting we described in this section is typical of a
+minimization problem with two terms. The first term—the
+data-fidelity term—ensures that the candidate curve r(t) is
+close to the points p[m]. The second term, called regularization, introduces our a priori desiderata for the reconstructed
+curve. The importance of these two terms is weighted by a
+parameter λ > 0. The solution set of the minimization problem
+is
+M−1
+
+ r(t)|t =m − p[m]22 + λR(L{r}) , (7)
+V = arg min
+r∈XL (T M )
+
+m=0
+
+where the search space XL is defined as
+XL (T M ) = { r ∈ S  (T M )2 : R(L{r}) < +∞}.
+
+(8)
+
+The data-fidelity term in (7) penalizes the Euclidean distance between the sample r(t)|t =m of the curve and the
+point p[m] for every m = 0, . . . , M − 1. The fact that r
+is sampled uniformly along the parameter axis encourages
+the reconstructed curve to be parametrized by its curvilinear
+abcissa, promoting the arc length of r(t) to be a linear function
+of the parameter t. The underlying assumption behind this
+statement is that the points p[m] are spread approximately
+uniformly along the curve. This is an important assumption,
+since the regularization term in (7) involves the derivatives of
+r(t) and thus heavily depends on the choice of parametrization.
+In that respect, the curvilinear abcissa is a desirable choice.
+In practice, it often results in rough curves being penalized
+heavily by our regularization, which other parametrizations
+may fail to achieve [11].
+Our representer theorem (Theorem 2) specifies the form of
+the solution of (7). The proof of this theorem is provided in
+Appendix C.
+Theorem 2: The global minimizer of (7) can be achieved
+by a periodic L-spline curve r∗ with at most K ≤ 2M knots.
+Indeed, we have that
+K
+−1
+
+L{r∗ } =
+ak III M (· − tk )
+(9)
+k=0
+
+Fig. 1.
+
+Symmetric polynomial B-splines of degree α = 0, . . . , 3.
+
+for some distinct knot locations tk ∈ T M and amplitude vectors
+a k ∈ R2 .
+Theorem 2 states that the solution set (7) contains periodic
+L-splines. Even though our work uses a mixed (TV-2 ) norm
+as regularization, this result is reminiscent of [44]–[46], which
+proves that inverse problems with TV regularization have
+spline solutions also for the recovery of signals that are
+periodic, with a period of integer length.
+III. E XACT D ISCRETIZATION
+A. Polynomial B-Splines
+Theorem 2 motivates our discretization of the continuousdomain problem in (7) over the space of periodic cardinal
+L-splines, i.e. with integer knot spacing (tk+1 − tk ) = 1 in (1).
+In the case where L is the multiple-order derivative operator Dα+1 , L-splines are piecewise polynomials of degree α.
+Following [47], [48], we consider symmetric (α + 1)-order
+B-splines β α . B-splines are the shortest functions within the
+space of cardinal periodic L-splines, with a support included in
+α+1
+[− α+1
+2 , 2 ] [49], [50]. This property is particularly advantageous for numerical efficiency. We show in Figure 1 symmetric
+polynomial B-splines for the first α degrees.
+For cardinal splines, we use grid points tk = k − α+1
+2 for
+k ∈ Z. For an odd α, we then have an integer grid, while
+an even α gives a half-integer grid. Additionally, the jump
+amplitudes a[k] in (1) for s = β α are denoted by dα [k],
+a FIR digital filter corresponding to the finite difference of
+order (α + 1) with knot locations at tk for k ∈ [0 . . . α + 1].
+We provide in Table I a summary of the relevant characteristics
+of B-splines for small values of α.
+B. Discrete Formulation
+As suggested by Theorem 2, we take the stance of recasting
+the continuous-domain problem in (7) as a finite-dimensional
+optimization problem by restricting the search space to periodic L-splines with knots on a uniform grid. This allows
+us to effectively reduce the complexity of our algorithmic
+resolution. To do so, we describe our closed curves r(t) as
+linear combinations of N shifts of the M-periodized basis
+
+Authorized licensed use limited to: EPFL LAUSANNE. Downloaded on July 14,2022 at 09:13:04 UTC from IEEE Xplore. Restrictions apply.
+
+4710
+
+IEEE TRANSACTIONS ON IMAGE PROCESSING, VOL. 31, 2022
+
+Fig. 2. Solutions as a function of the rotation angle θ for RI-TV regularization and (TV-1 ) regularization for a same contour. M = 488, grid stepsize
+h = 1.9062, ϕ = β 1 .
+
+
+t −Mk
+M
+function ϕ M (t) =
+k∈Z ϕ( h ), where h = N is the
+grid stepsize. Following Section III-A, we choose ϕ M to be
+the M-periodization and h-dilation of the B-spline generator
+ϕ = β α . These basis functions are weighted by two vectors
+N−1
+N−1
+and c y = (c y [n])n=0
+. Finally,
+of coefficients cx = (cx [n])n=0
+the weighted functions are shifted by multiples of the grid size
+h in order to describe
+ N−1
+cx [n] ϕ M (t − nh)
+x(t)
+r(t) =
+= n=0
+.
+(10)
+N−1
+y(t)
+n=0 c y [n] ϕ M (t − nh)
+
+TABLE I
+C HARACTERISTICS OF α TH -D EGREE B-S PLINES
+
+C. Discrete Implementation
+Our choice (10) of curve parametrization allows us to
+optimize solely on the coefficients cx , c y ∈ R N of two
+curve components. We implement a system matrix that
+interpolates the coefficients using ϕ M and samples them
+at the measurement locations. We introduce H ∈ R M×N
+with
+[H]m,n = ϕ M (m−nh) .
+
+(11)
+
+The regularization operator L becomes a circulant regularization matrix L ∈ R N×N composed of shifted versions of the
+αth-order derivative operator coefficients dα (see Table I). The
+regularization matrix L is therefore constructed as
+1
+(12)
+[L]m,n = α dα [(m − n) mod N ].
+h
+
+Authorized licensed use limited to: EPFL LAUSANNE. Downloaded on July 14,2022 at 09:13:04 UTC from IEEE Xplore. Restrictions apply.
+
+LLORÉNS JOVER et al.: COUPLED SPLINES FOR SPARSE CURVE FITTING
+
+4711
+
+using splines as basis functions. However, not all curves can be
+faithfully represented with a single type of spline. We propose
+to cater to this by modeling our closed function as a sum of two
+components r(t) = r1 (t) + r2 (t). Similarly to the non-hybrid
+setting, we have M points p[m] = (px [m], p y [m]), m =
+0, . . . , M − 1. Hence, we again have that r is M-periodic
+with t ∈ T M . Following the formulation for one-dimensional
+signals in [41] and extending it to two dimensions, we consider
+continuous problems of the form
+Vhyb = arg min
+
+M−1
+
+
+ri ∈XLi (T M ) m=0
+r1 (0)=0
+
+ r1 (t)|t =m + r2 (t)|t =m − p[m]22
+
++ λ1 L1 {r1 }TV−2 + λ2 L2 {r2 }TV−2 ,
+
+Fig. 3. Solutions for our framework and NURBS-Python (geomdl) for a
+same contour and with the same number of knots. M = 488, ϕ = β 1 .
+
+Our mixed-norm regularization involves, in the discrete
+setting, an 1 − 2 norm given by
+N−1
+ 
+
+[f1 f2 ]1 −2 =
+
+(f1 [n])2 + (f2 [n])2 ,
+
+(13)
+
+(16)
+
+where λ1 , λ2 > 0 are the two regularization parameters
+weighting of two regularization terms, and L1 and L2 are
+derivative operators of independent order. We now prove a
+representer theorem that suggests a parametric form for the
+optimal solution of Problem 16. Its proof can be found in
+Appendix D.
+Theorem 3: There exists a global minimizer r∗ of (16) that
+can be decomposed as r∗ = r1∗ + r2∗ , where ri∗ are periodic
+Li -splines (see (1)) with K i knots, with i = 1, 2. Moreover,
+we have the bound K 1 + K 2 ≤ 2M for the total number of
+knots of r∗ .
+The constraint r1 (0) = 0 is necessary to handle the
+ill-posedness of the problem. Indeed, without this constraint,
+for any solution (r1 (t), r2 (t)) of Problem (16), the pair
+(r1 + v, r2 − v), where v is an arbitrary constant vector, would
+clearly also be a solution. This implies that the solution set
+would be unbounded, which can be problematic for numerical
+implementations. The constraint r1 (0) = 0 resolves this issue
+without any restriction on the reconstructed curve, since any
+constant offset can be included in the r2 component. See [41]
+for more details concerning this question.
+
+n=0
+
+for f1 , f2 ∈ R N . Indeed, we have that (see Theorem 1 in
+Appendix A):
+
+
+[L{x} L{y}]TV−2 = L cx c y 1 −2 .
+(14)
+Our discrete optimization problem therefore aims at finding
+cx and c y such that
+2
+
+ H 0
+
+
+px 
+cx
+ + λL cx c y  − .
+
+arg min 
+−
+1
+2
+
+p
+c
+0
+H
+y
+y
+2
+c ,c ∈R N
+x
+
+y
+
+(15)
+D. Algorithmic Resolution
+To solve Problem (15), we use the alternating-direction
+method of multipliers (ADMM) solver [51] as implemented in
+the GlobalBioIm Matlab library [52] dedicated to the solution
+of inverse problems.
+IV. E XTENSION TO H YBRID B-S PLINE C ONTOURS
+A. Motivation and Continuous Model
+In Section II, we have presented a model and its implementation that were allowing the creation of a sparse curve
+
+B. Discretization and Implementation
+As in Section III, we derive a discrete setting by using two
+sets of B-spline basis functions matched to their corresponding
+regularization operators. Given a grid of stepsize h, we consider closed M-periodic curves r(t) = r1 (t) + r2 (t) such that,
+for i = 1, 2, we have
+
+
+N−1 i
+cx [n] ϕ iM (t − nh)
+x i (t)
+n=0
+=  N−1 i
+. (17)
+ri (t) =
+i
+yi (t)
+n=0 c y [n] ϕ M (t − nh)
+The two regularization operators are set to Li = Dαi +1 , with
+α
+D i +1 the derivative operator of order αi + 1 for i = 1, 2.
+As in Section III, these operators lead to spline solutions [41].
+We hence set ϕ iM to B-splines of degrees αi for i = 1, 2 and
+with α1 < α2 .
+This choice of curve allows us to optimize over the coeffiN−1
+N−1
+N−1
+, c1y = (c1y [n])n=0
+, c2x = (c2x [n])n=0
+,
+cients c1x = (c1x [n])n=0
+N−1
+and c2y = (c2y [n])n=0 . As in Section II, we can define Hi
+the system matrices producing and sampling the continuous curves ri , as well as their corresponding regularization
+matrices Li . We construct Hi and Li as in (11) and (12),
+respectively. Finally, we cater to the constraint r1 (0) = 0 by
+
+Authorized licensed use limited to: EPFL LAUSANNE. Downloaded on July 14,2022 at 09:13:04 UTC from IEEE Xplore. Restrictions apply.
+
+4712
+
+IEEE TRANSACTIONS ON IMAGE PROCESSING, VOL. 31, 2022
+
+Fig. 4.
+
+Resilience to noise for RI-TV regularization and (TV-1 ) regularization.
+
+enforcing that (c1x ∗ bα1 )[0] = 0 and (c1y ∗ bα1 )[0] = 0, where
+bα1 [k] = ϕ 1M (kh) and ∗ denotes a cyclic discrete convolution.
+Our discrete hybrid-optimization problem takes the form
+
+2
+⎡ 1⎤
+
+
+cx
+
+
+ H1 0 H2 0 ⎢ c1y ⎥
+
+⎢ ⎥ − px 
+arg min 
+2
+
+⎣
+⎦
+py 
+cx
+ 0 H1 0 H2
+
+c1x ,c1y ,
+2
+
+
+cy
+c2x ,c2y ∈R N
+2
+
+
+
+
+1 1
+2 2
++ λ1 L1 cx c y 1 −2 + λ2 L2 cx c y 1 −2 , (18)
+
+For computational reasons, we chose the lowest resolution,
+i.e. the largest grid size h, that allowed us to solve the
+problem in a satisfactory way, thus effectively making h a
+hyperparameter. In this work, the number of knots N was
+chosen so that it matched the order of magnitude of the number
+of data points. It is important to note that increasing N, thus
+splitting the grid, can only improve the solution in terms of
+cost.
+
+subject to
+
+To verify that our regularization norm is truly rotationinvariant, we apply a planar rotation of angle θ to our
+data before we reconstruct the curve with the regularization
+operator L = D2 . We have added to the data a Gaussian
+perturbation with a signal-to-noise ratio (SNR) of 47.28 dB.
+We compare the curves reconstructed with our regularization
+to the curves resulting from the (TV-1 ) regularization of
+Definition 1. Indeed, 1 regularization is widely used in the
+signal-processing community as a sparsifying prior. To do so,
+we choose λ in the non-rotated (TV-1 ) regularized curve
+(Figure 2c) so that the QFE matches the QFE from the nonrotated RI-TV regularized curve (Figure 2a). When rotating
+the measurements, we adjust λ again so that the QFE of the
+(TV-1 )-regularized curve on the rotated points matches the
+one of the curve constructed with RI-TV regularization with
+rotated points. We see in Figure 2 that the RI-TV-regularized
+problem provides the same solution regardless of θ . Indeed,
+the knot locations do not differ between Figures 2a and 2b, nor
+does the number K of knots. This is not the case for the purely
+
+(c1x ∗ bα1 )[0] = 0,
+(c1y ∗ bα1 )[0] = 0.
+
+(19)
+
+As in Section III, we use the ADMM solver [51] to find a
+solution to Problem (18) and GlobalBioIm [52] to implement
+our algorithms.
+V. E XPERIMENTS
+We evaluate the distance between the constructed curves and
+the contour points through the quadratic fitting error (QFE)
+defines as
+M−1
+1 
+ r(t)|t =m − p[m]22 .
+(20)
+QFE =
+M
+m=0
+
+It is noteworthy that the QFE can be used at the same time
+in the single-spline setting and in the hybrid setting. Indeed,
+by replacing the hybrid curve r = r1 + r2 in (20), we obtain
+a QFE that is consistent with the data-fidelity term in (16).
+
+A. Rotation Invariance
+
+Authorized licensed use limited to: EPFL LAUSANNE. Downloaded on July 14,2022 at 09:13:04 UTC from IEEE Xplore. Restrictions apply.
+
+LLORÉNS JOVER et al.: COUPLED SPLINES FOR SPARSE CURVE FITTING
+
+4713
+
+(TV-1 )-regularized problem. Not only are the knot locations
+different when a rotation is applied to the measurements, but
+the number K of knots varies with θ as well as the QFE
+of the curve. Additionally, one needs to adapt λ to obtain the
+same QFE between the constructed curves on rotated and nonrotated measurements.
+B. Sparsity
+We compared the results obtained using our framework to
+a widespread technique for curve approximation, which is
+knot-removal algorithms for B-spline curves. As a reference,
+we chose the method implemented in the NURBS-Python
+(geomdl) library [28], which allows the user to input data
+points and the number of knots desired and outputs a B-spline
+curve. The data fed to both approaches has additive Gaussian
+noise with a signal-to-noise ratio (SNR) of 47.28 dB. For a
+fair comparison, we equalized the number of knots in both
+solutions. The results are shown in Figure 3. We observe that
+the curve obtained with our solution is very close to the data
+points, and that the knots are placed at relevant locations where
+the underlying signal’s singularities are expected. The solution
+provided by NURBS-Python (geomdl) when the number of
+knots is set to the same as our solution, albeit being rotationinvariant, is far from the data points. The knot locations do not
+seem to follow the underlying signal’s expected singularities.
+This is confirmed by the difference in QFE. Indeed, the curve
+obtained with the RI-TV-regularized problem has a QFE of
+QFE = 12.09 relative to the data points, versus a QFE of
+QFE = 153.47 for the NURBS-Python curve. This result
+shows that our framework is able to maximize the sparsity
+of the constructed curve while remaining faithful to the data.
+C. Resilience to Contour Imprecisions
+A beneficial feature derived from the enforcement of joint
+sparsity in the two curve components is resilience of our
+reconstructions to imprecisions in the contour points. Indeed,
+when we expect our data to be imprecise, we can choose
+to increase the regularization parameter λ at the cost of
+data fidelity, as the curve cannot rely as much on the data.
+Particularly, when the regularizer is TV-based, an increase
+in λ tends to smoothen sharp variations. This is visible in
+Figure 4, where several curves have been reconstructed using
+linear B-splines β 1 . Figures 4a, 4b, and 4c are reconstructions of increasingly inaccurate measurements using RI-TV.
+Figures 4e, 4d, and 4e depict reconstructions resulting from
+a sparsifying regularization without coupling (TV-1 ), using
+a λ tuned so that the QFE matches the QFE of the curves
+regularized by RI-TV. When TV regularization is used, and
+as the contour becomes more inaccurate, the number K of
+knots drastically increases and the angles are deformed. On the
+contrary, for the reconstructions in Figures 4a, 4b, even as
+the noise and λ increase, the number K of knots remains
+unchanged and the angles are fairly well preserved.
+D. Hybrid Setting Applications
+The single-component framework described in Sections II and III only allows for the use of one kind of B-spline
+per curve. However, when the contour under consideration
+
+Fig. 5.
+Noiseless curve reconstruction with a single spline, a hybrid
+setting, and RI-TV regularization. All three reconstructions have a constant
+QFE = 8.88.
+
+is composed of smooth sections and kinks, no single type
+of B-spline can provide a faithful and sparse reconstruction.
+An example of curve fitting that depicts this problem is given
+
+Authorized licensed use limited to: EPFL LAUSANNE. Downloaded on July 14,2022 at 09:13:04 UTC from IEEE Xplore. Restrictions apply.
+
+4714
+
+IEEE TRANSACTIONS ON IMAGE PROCESSING, VOL. 31, 2022
+
+Fig. 6. Effect of λ1 and λ2 on the reconstructed hybrid curve for M = 2714 under RI-TV regularization. The reconstructed curve is represented by the solid
+line. The round markers and the triangular markers indicate the location of the linear and cubic knots, respectively. The diamond-shaped markers indicate the
+superimposition of a linear knot and a cubic knot. The data are extracted from the official Daft Punk logo1 .
+
+in Figure 5. We reconstructed the contour using first β 1 and
+β 3 as basis functions, giving piecewise-linear and piecewisecubic curves in Figures 5a and 5b, respectively. Figure 5c
+contains a reconstruction under the hybrid setting L1 = D2 and
+L2 = D4 , thus producing a curve that has both a linear
+and a cubic component. While all three reconstructions yield
+the same QFE with respect to the data, the hybrid curve
+has by far the smallest number of knots. Moreover, upon
+visual inspection, the hybrid curve in Figure 5c portrays
+the most faithful reconstruction, as it does round neither the
+angles nor the straight lines, nor does it straighten the smooth
+sections.
+We can observe the effect of the parameters λ1 and λ2 on
+the constructed curve when the hybrid reconstruction setting
+is applied to real contour points for a constant ratio of knots
+K1
+K 2 = 0.86. In Figure 6, as λ1 and λ2 increase, the total
+number K of knots decreases and the curve becomes more
+stylized. In addition, for all values of λ1 and λ2 , our algorithm
+1 https://en.wikipedia.org/wiki/Daft_Punk
+
+preserves the kinks of the contour while mimicking its smooth
+segments.
+VI. C ONCLUSION
+We have introduced a framework to reconstruct sparse
+continuous curves from a list of possibly inaccurate contour
+points using an RI-TV regularization norm. We have proved
+that an optimal solution to our minimization problem is
+a curve that uses splines as basis functions, and we have
+leveraged this result to provide an exact discretization of the
+continuous-domain framework using B-splines. Furthermore,
+we have extended our formulation to reconstruct curves with
+components of distinct smoothness properties using hybrid
+splines. We have experimental confirmation of the rotation
+invariance of our regularizer. In addition, our experimental
+results demonstrate that our formulation yields sparse reconstructions that are close to the data points even when their
+noise increases, unlike other regularization methods. Finally,
+our hybrid-curve experiments demonstrate that we are able
+
+Authorized licensed use limited to: EPFL LAUSANNE. Downloaded on July 14,2022 at 09:13:04 UTC from IEEE Xplore. Restrictions apply.
+
+LLORÉNS JOVER et al.: COUPLED SPLINES FOR SPARSE CURVE FITTING
+
+to faithfully reconstruct any contour with a low number of
+knots.
+A PPENDIX A
+P ROOF OF T HEOREM 1
+Proof: Item 1: Let ϕ = (ϕ1 , ϕ2 ) ∈ S(T M )2 be an arbitrary
+smooth curve with ϕq,∞ = 1. On the one hand, the Hölder
+inequality for vectors implies that, for any t ∈ T M ,
+| f 1 (t)ϕ1 (t) + f 2 (t)ϕ2 (t)| ≤ f(t) p ϕ(t)q ≤ f(t) p , (21)
+where the last inequality is due to ϕq,∞ = 1. On the other
+hand, the inclusion f i ∈ L 1 (T M ) allows us to express the
+duality product  fi , ϕi as a simple integral of the form
+ M
+f i (t)ϕi (t)dt, i = 1, 2.
+(22)
+ f i , ϕi =
+0
+
+Combining (22) with (21), we obtain that
+ M
+ f 1 , ϕ1 +  f 2 , ϕ2 =
+( f 1 (t)ϕ1 (t) + f2 (t)ϕ2 (t)) dt
+0
+ M
+≤
+f(t) p dt.
+(23)
+
+4715
+
+ M
+| f i (t)| · |gi, (t) − ϕi, (t)|dt
+−
+0
+ M
+(28)
+≥
+f i (t)gi (t)dt − , i = 1, 2,
+2
+0
+where the last inequality follows the combination of (26)
+and (27). Finally, we use (25) to conclude that
+ f 1 , ϕ1, +  f2 , ϕ2,
+[ f1 f 2 ]TV− p ≥
+(ϕ1, , ϕ2, )q,∞
+M
+f(t) p dt −
+.
+(29)
+≥ 0
+1 + O( )
+We complete the proof by letting → 0.
+Item 2: Similarly to the previous part, for any smooth curve
+ϕ = (ϕ1 , ϕ2 ) ∈ S(T M )2 with ϕq,∞ = 1, we have that
+w1 , ϕ1 + w2 , ϕ2 =
+≤
+
+gi : T M → R : t → ½f(t )=0
+
+sgn( f i (t))| f i (t)|( p−1)
+
+, (24)
+( p−1)
+f(t) p
+where ½ A denotes the indicator function of the set A. We note
+that gi , i = 1, 2 are Borel-measurable with gi  L ∞ ≤ 1 for
+i = 1, 2. Further, one readily verifies that
+ M
+ M
+f(t) p dt. (25)
+( f 1 (t)g1 (t) + f 2 (t)g2 (t)) dt =
+0
+
+k=0
+K
+−1
+
+
+(a1 [k]ϕ1 (tk ) + a2 [k]ϕ2 (tk )) (30)
+a[k] p ϕ(tk )q ≤
+
+k=0
+
+0
+
+Taking the supremum over all ϕ ∈ S(T M )2 with ϕq,∞ = 1
+M
+then yields that [ f 1 f 2 ]TV− p ≤ 0 f(t) p dt. To prove
+the equality, we first define the functions
+
+K
+−1
+
+
+K
+−1
+
+
+a[k] p .
+
+k=0
+
+(31)
+Taking the supremum over ϕ = (ϕ1 , ϕ2 ) with ϕq,∞ =
+ K −1
+1 then yields that wTV− p ≤ k=0
+a[k] p . To prove the
+equality, we first define a set of vectors ϕ k ∈ R2 such that
+ϕ k ∞ = 1 and a[k]T ϕ k = a[k] p for k = 0, . . . , K −
+1. We then consider a smooth curve ϕ ∗ ∈ S(T M )2 with
+ϕ ∗ q,∞ = 1 such that ϕ ∗ (tk ) = ϕ k . Using this, we then
+verify that
+
+wTV− p ≥ w1 , ϕ1∗ + w2 , ϕ2∗ =
+a[k] p .
+k∈Z
+
+
+
+0
+
+By invoking a variant of Lusin’s theorem (see
+[53, Theorem 7.10]) on the space C(T M ) of M-periodic
+continuous functions, we then consider the -approximations
+gi, ∈ C(T M ) of gi such that gi,  L ∞ ≤ gi  L ∞ ≤ 1, and
+E | f i (t)|dt ≤ /8, i = 1, 2, where E = {t ∈ T M : gi, (t)  =
+gi (t)}. This in effect implies that
+ M
+
+
+| fi (t)| · gi, (t) − gi (t) dt
+0
+
+
+
+=
+| f i (t)| · gi, (t) − gi (t) dt
+E
+
+≤ ½ E f i  L 1 gi, − gi  L ∞ ≤
+
+.
+(26)
+4
+We then invoke the denseness of S(T M ) in C(T M ) to deduce
+the existence of ϕi, ∈ S(T M ) with gi, − ϕi,  L ∞ ≤ 4 fi  L .
+1
+This gives us the upper-bound
+ M
+
+
+| f i (t)| · ϕi, (t) − gi, (t) dt
+0
+
+≤  fi  L 1 ϕi, − gi,  L ∞ ≤
+
+.
+
+Proof: By substitution of Rθ f in (2), we have that
+(cos(θ ) f 1 − sin(θ ) f 2 , ϕ1
+R(Rθ f) = sup
++
+sin(θ ) f 1 + cos(θ ) f 2 , ϕ2 )
+2
+ϕ∈S (T )
+M
+
+ϕ2,∞ =1
+
+=
+
+( f1 , cos(θ )ϕ1 + sin(θ )ϕ2
+.
++
+ f 2 , − sin(θ )ϕ1 + cos(θ )ϕ2 )
+ϕ∈S (T )2
+sup
+
+M
+
+ϕ2,∞ =1
+
+(32)
+We perform the change of variable ψ = R−θ ϕ. We readily
+conclude that, since R−θ is bijective over S(T M )2 , for any ϕ ∈
+S(T M )2 , we have that ψ = R−θ ϕ ∈ S(T M )2 . Additionally,
+and in accordance with (3), we have that
+ψ2,∞ = sup ψ(t)2 = sup R−θ ϕ(t)2
+t ∈T M
+
+(27)
+
+4
+Next, we use the triangle inequality to obtain the lowerbound
+ M
+ fi , ϕi, ≥
+f i (t)gi (t)dt
+0
+ M
+| f i (t)| · |gi (t) − gi, (t)|dt
+−
+0
+
+A PPENDIX B
+P ROOF OF P ROPOSITION 1
+
+= sup ϕ(t)2 ,
+
+t ∈T M
+
+t ∈T M
+
+(33)
+
+as R−θ is an isometry. Hence, it does not change the 2 norm
+of a vector. Consequently, we have that
+R(Rθ f) =
+
+sup
+ψ∈S (T M )2
+ψ2,∞ =1
+
+( f1 , ψ1 +  f 2 , ψ2 )
+
+= R(f).
+
+Authorized licensed use limited to: EPFL LAUSANNE. Downloaded on July 14,2022 at 09:13:04 UTC from IEEE Xplore. Restrictions apply.
+
+(34)
+
+4716
+
+IEEE TRANSACTIONS ON IMAGE PROCESSING, VOL. 31, 2022
+
+Moreover, according to Item 1 of Theorem 1, for any
+curve f = ( f 1 , f 2 ) with absolutely integrable components
+f i ∈ L 1 (T M ), i = 1, 2, the TV −  p norm is
+ M
+1
+(| f 1 (t)| p + | f 2 (t)| p ) p dt.
+(35)
+fTV− p =
+
+Proposition 2: The search space XL (T M ) can be expressed
+as
+XL (T M ) = ML (T M ) × ML (T M ).
+Moreover, the mapping
+
+0
+
+We take f 1 (t) = 1, f 2 (t) = 0, and θ = π4 . This gives us
+ M
+1
+fTV− p =
+(|1| p + |0| p ) p dt = M.
+(36)
+0
+
+When applying the planar rotation Rθ to the curve f,
+we have that
+ M
+(| f 1 (t) cos (θ ) − f 2 (t) sin (θ )| p
+Rθ fTV− p =
+0
+
+0
+
+=
+
+ M
+0
+
+ √ p
+ 2
+
+
+2
+
+ 2 
+
+1
+p
+
+1
+
+dt = 2 p
+
+− 12
+
+M.
+
+(37)
+
+A PPENDIX C
+R EPRESENTER T HEOREM
+
+A. Search Space
+The space of periodic finite Radon measures is denoted by
+M(T M ). It is a Banach space equipped with the total-variation
+norm
+sup w, ϕ .
+
+ϕ∈S (T M )
+ϕ∞ =1
+
+(41)
+
+is an isomorphism between XL (T M ) and M0 (T M )2 ×
+
+R2 whose inverse is
+
+TL−1 : M0 (T M )2 × R2 → ML (T M )
+
+
+TL−1 (w, a) = L† {w1 } + a1 , L† {w2 } + a2 .
+Proof: Let r = (r1 , r2 ) ∈ XL (T M ). We have that
+sup
+ϕ∈S (T M )2
+ϕ2,∞ =1
+
+(42)
+
+(L{r1 }, ϕ1 + L{r2 }, ϕ2 )
+
+sup
+
+ϕ1 ∈ S ( T M )
+(ϕ1 ,0)2,∞ =1
+
+L{r1 }, ϕ1 =
+
+sup
+
+ϕ1 ∈ S ( T M )
+ϕ1 ∞ =1
+
+L{r1 }, ϕ1
+
+= L{r1 }TV ,
+
+(43)
+
+from which we deduce that r1 ∈ ML (T M ). Similarly,
+we get that r2 ∈ ML (T M ) and, hence, we have that
+XL (T M ) ⊆ (ML (T M ))2 . For the reverse inclusion, let r1 , r2 ∈
+ML (T M ). Using the inequalities ϕ2,∞ ≥ ϕi ∞ for i =
+1, 2, we deduce that
+|L{ri }, ϕi | ≤ L{ri }TV ϕi ∞ ≤ L{ri }TV ϕ2,∞ . (44)
+
+We start by providing the necessary tools before going
+into the proof of Theorem 2 (see [46] for more details).
+Specifically, we first describe the topological structure of the
+search space XL (T M ). We then identify the set of extreme
+points of the RI-TV unit ball. Finally, we provide a full
+characterization of the solution set V, from which we conclude
+Theorem 2.
+
+
+
+TL (r) = (L{r1 }, L{r2 }, r1 , 1 , r2 , 1 )
+
+≥
+
+We conclude that fTV− p = Rθ fTV− p if and only if
+p = 2, which proves that the TV −  p norm is not rotation
+invariant for p = 2.
+
+
+wTV =
+
+TL : XL (T M ) → M0 (T M )2 × R2
+
+R (L{r}) =
+
+1
+
++ | f 1 (t) sin (θ ) + f 2 (t) cos (θ )| p ) p dt
+ M
+1
+(| cos (θ )| p + | sin (θ )| p ) p dt
+=
+
+(40)
+
+Hence, we have that
+L{r1 }, ϕ1 + L{r2 }, ϕ2
+≤ (L{r1 }TV + L{r2 }TV ) ϕ2,∞ ,
+
+(45)
+
+which implies that
+R (L{r}) ≤ L{r1 }TV + L{r2 }TV < +∞.
+
+(46)
+
+Hence, we have the inclusion r ∈ XL (T M ).
+Following (46) and (43), we deduce that the norm topology
+of XL (T M ) is equivalent to the product topology induced
+from ML (T M ) × ML (T M ). This, together with the fact that
+ML (T M ) is isometrically isomorphic to M0 (T M )×R, implies
+that TL is an isomorphism. Its inverse is readily deduced
+from (39).
+
+
+(38)
+
+Subsequently, the native space associated to the pair
+(L, M(T M )) is defined as ML (T M ) = { f ∈ S  (T M ) :
+L{ f }TV < +∞}. It has been shown that ML (T M ) is
+isometrically isomorphic to M0 (T M ) × R, where M0 (T M ) =
+{w ∈ M(T M ) : w, 1 = 0} is the space of Radon measures
+with zero mean. The explicit form of such an isometry between
+spaces (and its inverse) is given by
+ML (T M ) → M0 (T M ) × R : f → (L{ f },  f, 1 ) ,
+M0 (T M ) × R → ML (T M ) : (w, a) → L† {w} + a, (39)
+where L† is the pseudoinverse of L. Finally, we note that the
+Green’s function of L = D(α+1), defined as gL = L† III M , is a
+continuous periodic function for all integers α ≥ 1 [46].
+We are now ready to characterize the topological structure
+of the search space XL (T M ) defined in (8).
+
+B. Extreme Points of the RI-TV Unit Ball
+Our strategy to characterize the solution set V defined in (7)
+consists of invoking the main result of Boyer
+textit et al. [54], which requires the knowledge of the form of
+extreme points of the unit ball of the regularization functional.
+To that end, we prove that the extreme points of the RI-TV
+unit ball are vector-valued Dirac combs.
+Proposition 3: An element w∗ ∈ M(T M )2 is an extreme
+point of the RI-TV unit ball B = {w ∈ M(T M )2 : R(w) = 1}
+if and only if it is a vector-valued Dirac comb of the form
+w∗ = aIII M (· − t0 ) for some t0 ∈ T M and a ∈ R2 with
+a2 = 1.
+Proof: Assume by contradiction that there exists an
+extreme point w∗ of B that is not a Dirac comb. This
+implies that there exists an interval I ⊆ T M such that
+w1 = w∗ ½ I and w2 = w∗ ½ I c are both nonzero Radon
+
+Authorized licensed use limited to: EPFL LAUSANNE. Downloaded on July 14,2022 at 09:13:04 UTC from IEEE Xplore. Restrictions apply.
+
+LLORÉNS JOVER et al.: COUPLED SPLINES FOR SPARSE CURVE FITTING
+
+measures that satisfy w∗ = w1 + w2 . Due to their disjoint
+support, we have that R(w∗ ) = R(w1 ) + R(w2 ). Let us
+now define the measures w+ = (1 + )w1 + (1 − δ)w2 and
+w− = (1− )w1 +(1+δ)w2, where , δ > 0 are small constants
+such that R(w1 ) = δR(w2 ). By observing that R(w+ ) =
+−
+, we conclude that w∗ is not
+R(w− ) = 1 and w∗ = w+ +w
+2
+an extreme point of B, which yields a contradiction. Hence,
+the extreme points of B can only be vector-valued Dirac
+combs.
+To prove the reverse inclusion, let w∗ = aIII M (· − t0 ) with
+a2 = 1. We now prove that w∗ is an extreme point of B.
+Assume that there exist w1 , w2 ∈ B such that w∗ = 12 (w1 +
+w2 ). Let us define the measure w0 = w1 ½t =t0 ∈ M(T M )2 so
+that w1 = w0 + a1 III M (· − t0 ) for some a1 ∈ R2 . We then
+must have w2 = (−w0 ) + a2 III M (· − t0 ) with a = 12 (a1 + a2 ).
+The construction implies that
+1 = R(wi ) = R(w0 ) + ai 2 ≥ ai 2 , i = 1, 2.
+
+(47)
+
+This, together with the triangle inequality, yields
+2 = 2a2 ≤ a1 2 + a2 2 ≤ 1 + 1 = 2.
+
+(48)
+
+Hence, all inequalities must be saturated. In particular,
+we must have that w0 = 0 and a2 = 12 (a1 2 + a2 2 ).
+Finally, we invoke the strict convexity of the 2 norm to
+conclude that a = a1 = a2 and, thus, that w1 = w2 , which in
+
+turn implies that w∗ is an extreme point of B.
+C. Representer Theorem
+We now provide a complete characterization of the solution
+set V in (7) from which we readily deduce Theorem 2 as a
+corollary.
+Theorem 4: The solution set (7) is nonempty, convex, and
+weak*-compact. Moreover, any extreme point r∗ of V is a
+periodic L-spline that satisfies (9).
+Proof: Let us define the cost functional E : M(T M )2 ×
+2
+R → R ∪ {+∞} as
+E(w, a) =
+
+M−1
+
+
+ν m (w) + a − p[m]22 +
+
+m=0
+
+2
+
+
+4717
+
+The final step is observe that the isomorphism TL defined
+in Proposition 2 allows us to state that
+E(TL (r)) =
+
+M−1
+
+
+ r(t)|t =m − p[m]22
+
+(52)
+
+m=0
+
+for any r ∈ XL (T M ), from which we conclude that Ṽ =
+TL (V). Hence, the solution set V = TL−1 (Ṽ) is nonempty,
+convex, and weak*-compact, and any extreme point r∗ of V
+induces an extreme point (w∗ , a∗ ) = TL (r∗ ) of Ṽ . In particular, we have that
+K
+−1
+
+L{r∗ } = w∗ =
+ak III M (· − tk ), K ≤ 2M.
+(53)
+k=0
+
+
+A PPENDIX D
+P ROOF OF T HEOREM 3
+Proof: By invoking Proposition 2, we deduce that there
+is a bijection between Vhyb and the solution set
+Ṽhyb =
+
+arg min
+w1 ,w2 ∈M0 (T M )2
+a1 ,a2 ∈R2
+
+E (w1 , a1 , w2 , a2 ) + λ1 R(w1 )
+
++ λ2 R(w2 ),
+
+(54)
+2
+
+2
+2
+→ R≥0
+where the data fidelity cost E : M(T M ) × R
+satisfies
+M−1
+
+E(TL1 (r1 ), TL2 (r2 )) =
+ r1 (t)|t =m + r2 (t)|t =m − p[m]22 .
+m=0
+
+(55)
+This implies that there is a bijection between Vhyb and Ṽhyb.
+The last step is to note that for any extreme point (w1∗ , w2∗ ) of
+the unit ball {(w1 , w2 ) ∈ M(T M )4 : λ1 R(w1 ) + λ2 R(w2 ) ≤
+1}, we have that w1∗ = 0 or w2∗ = 0. This together with
+[55, Theorem 3 ] concludes the proof.
+
+ACKNOWLEDGMENT
+
+χwi ,1 =0 , (49)
+
+i=1
+
+where χ A denotes the characteristic function of the set A, and
+ν m = (νm,1 , νm,2 ) with
+
+
+νm,i (w) = L† {wi }(t) 
+= L† {wi }, III M (· − m)
+t =m
+
+= wi , L†∗ {III M (· − m)} = wi , gL (m − ·) (50)
+for i = 1, 2. We note that ν m is weak*-continuous
+in the topology of ML (T M ) due to the inclusion
+gL ∈ C(T M ).
+Then, we formulate a minimization problem that admits the
+solution set
+Ṽ = arg min (J (w, a) = E(w, a) + λR(w)) .
+
+(51)
+
+w∈M(T M )2
+a∈R2
+
+Following the general representer theorem of Unser and
+Aziznejad for the minimization of seminorms [55, Theorem 3],
+we deduce that the solution set Ṽ is nonempty, convex, and
+weak*-compact. Moreover, any extreme
+ K −1 point of Ṽ can be
+ak III M (· − tk ) with
+written as (w∗ , a∗ ), where w∗ = k=0
+K ≤ 2M for some ak ∈ R2 and tk ∈ T M .
+
+The authors would like to thank Julien Fageot for his useful
+comments on the manuscript as well as the fruitful discussions
+deriving from them.
+R EFERENCES
+[1] F. Chang and C.-J. Chen, “A component-labeling algorithm using
+contour tracing technique,” in Proc. 7th Int. Conf. Document Anal.
+Recognit., vol. 3, 2003, p. 741.
+[2] F. Chang, C.-J. Chen, and C.-J. Lu, “A linear-time component-labeling
+algorithm using contour tracing technique,” Comput. Vis. Image Understand., vol. 93, no. 2, pp. 206–220, 2004.
+[3] S. Suzuki and K. Be, “Topological structural analysis of digitized binary
+images by border following,” Comput. Vis., Graph., Image Process.,
+vol. 30, no. 1, pp. 32–46, Apr. 1985.
+[4] O. Hori and S. Tanigawa, “Raster-to-vector conversion by line fitting
+based on contours and skeletons,” in Proc. 2nd Int. Conf. Document
+Anal. Recognit. (ICDAR), Tsukuba, Japan, Oct. 1993, pp. 353–358.
+[5] D. L. Donoho, “Compressed sensing,” IEEE Trans. Inf. Theory, vol. 52,
+no. 4, pp. 1289–1306, Apr. 2006.
+[6] Y. C. Eldar and G. Kutyniok, Compressed Sensing: Theory and Applications. Cambridge, U.K.: Cambridge Univ. Press, 2012.
+[7] M. Awadallah, L. Abbott, and S. Ghannam, “Segmentation of sparse
+noisy point clouds using active contour models,” in Proc. IEEE Int.
+Conf. Image Process. (ICIP), Oct. 2014, pp. 6061–6065.
+[8] M. Kass, A. Witkin, and D. Terzopoulos, “Snakes: Active contour
+models,” Int. J. Comput. Vis., vol. 1, no. 4, pp. 321–331, 1988.
+
+Authorized licensed use limited to: EPFL LAUSANNE. Downloaded on July 14,2022 at 09:13:04 UTC from IEEE Xplore. Restrictions apply.
+
+4718
+
+IEEE TRANSACTIONS ON IMAGE PROCESSING, VOL. 31, 2022
+
+[9] R. Delgado-Gonzalo, V. Uhlmann, D. Schmitter, and M. Unser, “Snakes
+on a plane: A perfect snap for bioimage analysis,” IEEE Signal Process.
+Mag., vol. 32, no. 1, pp. 41–48, Jan. 2015.
+[10] A. Jain, Y. Zhong, and M. Dubuisson-Jolly, “Deformable template
+models: A review,” Signal Process., vol. 71, no. 2, pp. 109–129, 1998.
+[11] M. Jacob, T. Blu, and M. Unser, “Efficient energies and algorithms
+for parametric snakes,” IEEE Trans. Image Process., vol. 13, no. 9,
+pp. 1231–1244, Sep. 2004.
+[12] V. Uhlmann, R. Delgado-Gonzalo, C. Conti, L. Romani, and M. Unser,
+“Exponential Hermite splines for the analysis of biomedical images,”
+in Proc. IEEE Int. Conf. Acoust., Speech Signal Process. (ICASSP),
+Firenze, Italy, May 2014, pp. 1650–1653.
+[13] R. Delgado-Gonzalo and M. Unser, “Spline-based framework for interactive segmentation in biomedical imaging,” IRBM, vol. 34, no. 3,
+pp. 235–243, Jun. 2013.
+[14] P. Thevenaz and M. Unser, “Snakuscules,” IEEE Trans. Image Process.,
+vol. 17, no. 4, pp. 585–593, Apr. 2008.
+[15] X. Chen, B. M. Williams, S. R. Vallabhaneni, G. Czanner, R. Williams,
+and Y. Zheng, “Learning active contour models for medical image
+segmentation,” in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit.
+(CVPR), Jun. 2019, pp. 11632–11640.
+[16] M. Zhang, B. Dong, and Q. Li, “Deep active contour network for medical
+image segmentation,” in Proc. Int. Conf. Med. Image Comput. Comput.Assist. Intervent. Cham, Switzerland: Springer, 2020, pp. 321–331.
+[17] V. Uhlmann, J. Fageot, and M. Unser, “Hermite snakes with control of
+tangents,” IEEE Trans. Image Process., vol. 25, no. 6, pp. 2803–2816,
+Apr. 2016.
+[18] T. Pavlidis, “Curve fitting with conic splines,” ACM Trans. Graph.,
+vol. 2, no. 1, pp. 1–31, Jan. 1983.
+[19] H. Pottmann, S. Leopoldseder, and M. Hofer, “Approximation with
+active B-spline curves and surfaces,” in Proc. 10th Pacific Conf. Comput.
+Graph. Appl., 2002, pp. 8–25.
+[20] W. Wang, H. Pottmann, and Y. Liu, “Fitting B-spline curves to point
+clouds by curvature-based squared distance minimization,” ACM Trans.
+Graph., vol. 25, no. 2, pp. 214–238, 2006.
+[21] W. Zheng, P. Bo, Y. Liu, and W. Wang, “Fast B-spline curve fitting by
+L-BFGS,” Comput. Aided Geometric Des., vol. 29, no. 7, pp. 448–462,
+Oct. 2012.
+[22] M. Grossman, “Parametric curve fitting,” Comput. J., vol. 14, no. 2,
+pp. 169–172, Feb. 1971.
+[23] M. Plass and M. Stone, “Curve-fitting with piecewise parametric cubics,”
+in Proc. 10th Annu. Conf. Comput. Graph. Interact. Techn. (SIGGRAPH), Detroit, MI, USA, 1983, pp. 229–239.
+[24] T. Lyche and K. Mørken, “Knot removal for parametric B-spline
+curves and surfaces,” Comput. Aided Geometric Des., vol. 4, no. 3,
+pp. 217–230, Nov. 1987.
+[25] T. Lyche and K. Mørken, A Discrete Approach to Knot Removal and
+Degree Reduction Algorithms for Splines. Oxford, U.K.: Clarendon
+Press, 1987, p. 67–82.
+[26] T. Lyche and K. Mørken, “A data-reduction strategy for splines with
+applications to the approximation of functions and data,” IMA J. Numer.
+Anal., vol. 8, no. 2, pp. 185–208, 1988.
+[27] M. Eck and J. Hadenfeld, “Knot removal for B-spline curves,” Comput.
+Aided Geometric Des., vol. 12, no. 3, pp. 259–282, May 1995.
+[28] O. R. Bingol and A. Krishnamurthy, “NURBS-Python: An open-source
+object-oriented NURBS modeling framework in Python,” SoftwareX,
+vol. 9, pp. 85–94, Jan. 2019.
+[29] L. Piegl and W. Tiller, “Fundamental geometric algorithms,” in The
+NURBS Book. Berlin, Germany: Springer, 1995, pp. 141–228.
+[30] A. A. Goshtasby, “Grouping and parameterizing irregularly spaced
+points for curve fitting,” ACM Trans. Graph., vol. 19, no. 3, pp. 185–203,
+Jul. 2000.
+[31] J. Seo, S. Chae, J. Shim, D. Kim, C. Cheong, and T.-D. Han, “Fast
+contour-tracing algorithm based on a pixel-following method for image
+sensors,” Sensors, vol. 16, no. 3, p. 353, Mar. 2016.
+
+[32] X. Wang et al., “PIE-NET: Parametric inference of point cloud
+edges,” in Proc. Adv. Neural Inf. Process. Syst., vol. 33, 2020,
+pp. 20167–20178.
+[33] F. Scholz and B. Jüttler, “Parameterization for polynomial curve approximation via residual deep neural networks,” Comput. Aided Geometric
+Des., vol. 85, Feb. 2021, Art. no. 101977.
+[34] Y. Guo, H. Wang, Q. Hu, H. Liu, L. Liu, and M. Bennamoun, “Deep
+learning for 3D point clouds: A survey,” IEEE Trans. Pattern Anal.
+Mach. Intell., vol. 43, no. 12, pp. 4338–4364, Dec. 2020.
+[35] F. Bach, R. Jenatton, J. Mairal, and G. Obozinski, “Structured sparsity
+through convex optimization,” Statist. Sci., vol. 27, no. 4, pp. 450–468,
+2012.
+[36] X. Liu, G. Zhao, J. Yao, and C. Qi, “Background subtraction based
+on low-rank and structured sparse decomposition,” IEEE Trans. Image
+Process., vol. 24, no. 8, pp. 2502–2514, Aug. 2015.
+[37] Y. Hu and M. Jacob, “Higher degree total variation (HDTV) regularization for image recovery,” IEEE Trans. Image Process., vol. 21, no. 5,
+pp. 2559–2571, May 2012.
+[38] W. Dong, G. Shi, X. Li, Y. Ma, and F. Huang, “Compressive sensing via
+nonlocal low-rank regularization,” IEEE Trans. Image Process., vol. 23,
+no. 8, pp. 3618–3632, Aug. 2014.
+[39] V. Lempitsky, A. Vedaldi, and D. Ulyanov, “Deep image prior,” in
+Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit., Jun. 2018,
+pp. 9446–9454.
+[40] T. Debarre, J. Fageot, H. Gupta, and M. Unser, “B-spline-based exact
+discretization of continuous-domain inverse problems with generalized TV regularization,” IEEE Trans. Inf. Theory, vol. 65, no. 7,
+pp. 4457–4470, Jul. 2019.
+[41] T. Debarre, S. Aziznejad, and M. Unser, “Hybrid-spline dictionaries
+for continuous-domain inverse problems,” IEEE Trans. Signal Process.,
+vol. 67, no. 22, pp. 5824–5836, Nov. 2019.
+[42] L. Schwartz, Théorie Des Distributions, vol. 2. Paris, France: Hermann
+Paris, 1957.
+[43] C. Fernandez-Granda, “Super-resolution of point sources via convex
+programming,” in Proc. IEEE 6th Int. Workshop Comput. Adv. MultiSensor Adapt. Process. (CAMSAP), Dec. 2015, pp. 41–44.
+[44] S. Fisher and J. Jerome, “Spline solutions to L 1 extremal problems in
+one and several variables,” J. Approximation Theory, vol. 13, no. 1,
+pp. 73–83, 1975.
+[45] M. Unser, J. Fageot, and J. P. Ward, “Splines are universal solutions of
+linear inverse problems with generalized TV regularization,” SIAM Rev.,
+vol. 59, no. 4, pp. 769–793, 2017.
+[46] J. Fageot and M. Simeoni, “TV-based reconstruction of periodic functions,” Inverse Problems, vol. 36, no. 11, Nov. 2020,
+Art. no. 115015.
+[47] M. Unser, “Splines: A perfect fit for signal and image processing,” IEEE
+Signal Process. Mag., vol. 16, no. 6, pp. 22–38, Nov. 1999.
+[48] C. De Boor, A Practical Guide to Splines, vol. 27. New York, NY, USA:
+Springer-Verlag, 1978.
+[49] C. D. Boor, “On calculating with B-splines,” J. Approximation Theory,
+vol. 6, no. 1, pp. 50–62, Jul. 1972.
+[50] A. Ron, “Factorization theorems for univariate splines on regular grids,”
+Isr. J. Math., vol. 70, no. 1, pp. 48–68, Feb. 1990.
+[51] S. Boyd, “Distributed optimization and statistical learning via the alternating direction method of multipliers,” Found. Trends Mach. Learn.,
+vol. 3, no. 1, pp. 1–122, 2010.
+[52] E. Soubies et al., “Pocket guide to solve inverse problems with GlobalBioIm,” Inverse Problems, vol. 35, no. 10, pp. 1–20, 2019.
+[53] G. B. Folland, Real Analysis: Modern Techniques and Their Applications, vol. 40. Hoboken, NJ, USA: Wiley, 1999.
+[54] C. Boyer, A. Chambolle, Y. D. Castro, V. Duval, F. de Gournay, and
+P. Weiss, “On representer theorems and convex regularization,” SIAM
+J. Optim., vol. 29, no. 2, pp. 1260–1281, Jan. 2019.
+[55] M. Unser and S. Aziznejad, “Convex optimization in sums of Banach
+spaces,” Appl. Comput. Harmon. Anal., vol. 56, pp. 1–25, Jan. 2022.
+
+Authorized licensed use limited to: EPFL LAUSANNE. Downloaded on July 14,2022 at 09:13:04 UTC from IEEE Xplore. Restrictions apply.
+
+

@@ -1,0 +1,6650 @@
+[
+  {
+    "id": "case0_emd_40ms",
+    "kind": "decomposition",
+    "case": 0,
+    "window": 40,
+    "method": "emd"
+  },
+  {
+    "id": "case0_emd_40ms_polynomial_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "emd",
+    "family": "polynomial",
+    "budget": 500
+  },
+  {
+    "id": "case0_emd_40ms_polynomial_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "emd",
+    "family": "polynomial",
+    "budget": 1000
+  },
+  {
+    "id": "case0_emd_40ms_polynomial_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "emd",
+    "family": "polynomial",
+    "budget": 2000
+  },
+  {
+    "id": "case0_emd_40ms_polynomial_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "emd",
+    "family": "polynomial",
+    "budget": 4000
+  },
+  {
+    "id": "case0_emd_40ms_polynomial_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "emd",
+    "family": "polynomial",
+    "budget": 8000
+  },
+  {
+    "id": "case0_emd_40ms_spline_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "emd",
+    "family": "spline",
+    "budget": 500
+  },
+  {
+    "id": "case0_emd_40ms_spline_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "emd",
+    "family": "spline",
+    "budget": 1000
+  },
+  {
+    "id": "case0_emd_40ms_spline_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "emd",
+    "family": "spline",
+    "budget": 2000
+  },
+  {
+    "id": "case0_emd_40ms_spline_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "emd",
+    "family": "spline",
+    "budget": 4000
+  },
+  {
+    "id": "case0_emd_40ms_spline_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "emd",
+    "family": "spline",
+    "budget": 8000
+  },
+  {
+    "id": "case0_emd_40ms_sinusoid_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "emd",
+    "family": "sinusoid",
+    "budget": 500
+  },
+  {
+    "id": "case0_emd_40ms_sinusoid_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "emd",
+    "family": "sinusoid",
+    "budget": 1000
+  },
+  {
+    "id": "case0_emd_40ms_sinusoid_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "emd",
+    "family": "sinusoid",
+    "budget": 2000
+  },
+  {
+    "id": "case0_emd_40ms_sinusoid_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "emd",
+    "family": "sinusoid",
+    "budget": 4000
+  },
+  {
+    "id": "case0_emd_40ms_sinusoid_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "emd",
+    "family": "sinusoid",
+    "budget": 8000
+  },
+  {
+    "id": "case0_emd_40ms_amfm_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "emd",
+    "family": "amfm",
+    "budget": 500
+  },
+  {
+    "id": "case0_emd_40ms_amfm_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "emd",
+    "family": "amfm",
+    "budget": 1000
+  },
+  {
+    "id": "case0_emd_40ms_amfm_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "emd",
+    "family": "amfm",
+    "budget": 2000
+  },
+  {
+    "id": "case0_emd_40ms_amfm_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "emd",
+    "family": "amfm",
+    "budget": 4000
+  },
+  {
+    "id": "case0_emd_40ms_amfm_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "emd",
+    "family": "amfm",
+    "budget": 8000
+  },
+  {
+    "id": "case0_emd_40ms_sine_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "emd",
+    "family": "sine_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_emd_40ms_sine_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "emd",
+    "family": "sine_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_emd_40ms_sine_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "emd",
+    "family": "sine_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_emd_40ms_sine_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "emd",
+    "family": "sine_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_emd_40ms_sine_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "emd",
+    "family": "sine_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_emd_40ms_snakebeta_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "emd",
+    "family": "snakebeta_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_emd_40ms_snakebeta_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "emd",
+    "family": "snakebeta_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_emd_40ms_snakebeta_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "emd",
+    "family": "snakebeta_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_emd_40ms_snakebeta_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "emd",
+    "family": "snakebeta_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_emd_40ms_snakebeta_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "emd",
+    "family": "snakebeta_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_vmd_40ms",
+    "kind": "decomposition",
+    "case": 0,
+    "window": 40,
+    "method": "vmd"
+  },
+  {
+    "id": "case0_vmd_40ms_polynomial_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "vmd",
+    "family": "polynomial",
+    "budget": 500
+  },
+  {
+    "id": "case0_vmd_40ms_polynomial_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "vmd",
+    "family": "polynomial",
+    "budget": 1000
+  },
+  {
+    "id": "case0_vmd_40ms_polynomial_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "vmd",
+    "family": "polynomial",
+    "budget": 2000
+  },
+  {
+    "id": "case0_vmd_40ms_polynomial_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "vmd",
+    "family": "polynomial",
+    "budget": 4000
+  },
+  {
+    "id": "case0_vmd_40ms_polynomial_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "vmd",
+    "family": "polynomial",
+    "budget": 8000
+  },
+  {
+    "id": "case0_vmd_40ms_spline_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "vmd",
+    "family": "spline",
+    "budget": 500
+  },
+  {
+    "id": "case0_vmd_40ms_spline_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "vmd",
+    "family": "spline",
+    "budget": 1000
+  },
+  {
+    "id": "case0_vmd_40ms_spline_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "vmd",
+    "family": "spline",
+    "budget": 2000
+  },
+  {
+    "id": "case0_vmd_40ms_spline_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "vmd",
+    "family": "spline",
+    "budget": 4000
+  },
+  {
+    "id": "case0_vmd_40ms_spline_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "vmd",
+    "family": "spline",
+    "budget": 8000
+  },
+  {
+    "id": "case0_vmd_40ms_sinusoid_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "vmd",
+    "family": "sinusoid",
+    "budget": 500
+  },
+  {
+    "id": "case0_vmd_40ms_sinusoid_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "vmd",
+    "family": "sinusoid",
+    "budget": 1000
+  },
+  {
+    "id": "case0_vmd_40ms_sinusoid_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "vmd",
+    "family": "sinusoid",
+    "budget": 2000
+  },
+  {
+    "id": "case0_vmd_40ms_sinusoid_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "vmd",
+    "family": "sinusoid",
+    "budget": 4000
+  },
+  {
+    "id": "case0_vmd_40ms_sinusoid_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "vmd",
+    "family": "sinusoid",
+    "budget": 8000
+  },
+  {
+    "id": "case0_vmd_40ms_amfm_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "vmd",
+    "family": "amfm",
+    "budget": 500
+  },
+  {
+    "id": "case0_vmd_40ms_amfm_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "vmd",
+    "family": "amfm",
+    "budget": 1000
+  },
+  {
+    "id": "case0_vmd_40ms_amfm_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "vmd",
+    "family": "amfm",
+    "budget": 2000
+  },
+  {
+    "id": "case0_vmd_40ms_amfm_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "vmd",
+    "family": "amfm",
+    "budget": 4000
+  },
+  {
+    "id": "case0_vmd_40ms_amfm_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "vmd",
+    "family": "amfm",
+    "budget": 8000
+  },
+  {
+    "id": "case0_vmd_40ms_sine_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "vmd",
+    "family": "sine_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_vmd_40ms_sine_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "vmd",
+    "family": "sine_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_vmd_40ms_sine_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "vmd",
+    "family": "sine_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_vmd_40ms_sine_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "vmd",
+    "family": "sine_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_vmd_40ms_sine_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "vmd",
+    "family": "sine_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_vmd_40ms_snakebeta_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "vmd",
+    "family": "snakebeta_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_vmd_40ms_snakebeta_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "vmd",
+    "family": "snakebeta_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_vmd_40ms_snakebeta_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "vmd",
+    "family": "snakebeta_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_vmd_40ms_snakebeta_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "vmd",
+    "family": "snakebeta_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_vmd_40ms_snakebeta_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "vmd",
+    "family": "snakebeta_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_eemd_40ms",
+    "kind": "decomposition",
+    "case": 0,
+    "window": 40,
+    "method": "eemd"
+  },
+  {
+    "id": "case0_eemd_40ms_polynomial_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "eemd",
+    "family": "polynomial",
+    "budget": 500
+  },
+  {
+    "id": "case0_eemd_40ms_polynomial_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "eemd",
+    "family": "polynomial",
+    "budget": 1000
+  },
+  {
+    "id": "case0_eemd_40ms_polynomial_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "eemd",
+    "family": "polynomial",
+    "budget": 2000
+  },
+  {
+    "id": "case0_eemd_40ms_polynomial_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "eemd",
+    "family": "polynomial",
+    "budget": 4000
+  },
+  {
+    "id": "case0_eemd_40ms_polynomial_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "eemd",
+    "family": "polynomial",
+    "budget": 8000
+  },
+  {
+    "id": "case0_eemd_40ms_spline_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "eemd",
+    "family": "spline",
+    "budget": 500
+  },
+  {
+    "id": "case0_eemd_40ms_spline_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "eemd",
+    "family": "spline",
+    "budget": 1000
+  },
+  {
+    "id": "case0_eemd_40ms_spline_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "eemd",
+    "family": "spline",
+    "budget": 2000
+  },
+  {
+    "id": "case0_eemd_40ms_spline_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "eemd",
+    "family": "spline",
+    "budget": 4000
+  },
+  {
+    "id": "case0_eemd_40ms_spline_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "eemd",
+    "family": "spline",
+    "budget": 8000
+  },
+  {
+    "id": "case0_eemd_40ms_sinusoid_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "eemd",
+    "family": "sinusoid",
+    "budget": 500
+  },
+  {
+    "id": "case0_eemd_40ms_sinusoid_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "eemd",
+    "family": "sinusoid",
+    "budget": 1000
+  },
+  {
+    "id": "case0_eemd_40ms_sinusoid_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "eemd",
+    "family": "sinusoid",
+    "budget": 2000
+  },
+  {
+    "id": "case0_eemd_40ms_sinusoid_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "eemd",
+    "family": "sinusoid",
+    "budget": 4000
+  },
+  {
+    "id": "case0_eemd_40ms_sinusoid_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "eemd",
+    "family": "sinusoid",
+    "budget": 8000
+  },
+  {
+    "id": "case0_eemd_40ms_amfm_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "eemd",
+    "family": "amfm",
+    "budget": 500
+  },
+  {
+    "id": "case0_eemd_40ms_amfm_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "eemd",
+    "family": "amfm",
+    "budget": 1000
+  },
+  {
+    "id": "case0_eemd_40ms_amfm_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "eemd",
+    "family": "amfm",
+    "budget": 2000
+  },
+  {
+    "id": "case0_eemd_40ms_amfm_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "eemd",
+    "family": "amfm",
+    "budget": 4000
+  },
+  {
+    "id": "case0_eemd_40ms_amfm_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "eemd",
+    "family": "amfm",
+    "budget": 8000
+  },
+  {
+    "id": "case0_eemd_40ms_sine_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "eemd",
+    "family": "sine_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_eemd_40ms_sine_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "eemd",
+    "family": "sine_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_eemd_40ms_sine_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "eemd",
+    "family": "sine_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_eemd_40ms_sine_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "eemd",
+    "family": "sine_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_eemd_40ms_sine_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "eemd",
+    "family": "sine_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_eemd_40ms_snakebeta_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "eemd",
+    "family": "snakebeta_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_eemd_40ms_snakebeta_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "eemd",
+    "family": "snakebeta_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_eemd_40ms_snakebeta_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "eemd",
+    "family": "snakebeta_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_eemd_40ms_snakebeta_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "eemd",
+    "family": "snakebeta_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_eemd_40ms_snakebeta_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "eemd",
+    "family": "snakebeta_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_ceemdan_40ms",
+    "kind": "decomposition",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan"
+  },
+  {
+    "id": "case0_ceemdan_40ms_polynomial_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan",
+    "family": "polynomial",
+    "budget": 500
+  },
+  {
+    "id": "case0_ceemdan_40ms_polynomial_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan",
+    "family": "polynomial",
+    "budget": 1000
+  },
+  {
+    "id": "case0_ceemdan_40ms_polynomial_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan",
+    "family": "polynomial",
+    "budget": 2000
+  },
+  {
+    "id": "case0_ceemdan_40ms_polynomial_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan",
+    "family": "polynomial",
+    "budget": 4000
+  },
+  {
+    "id": "case0_ceemdan_40ms_polynomial_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan",
+    "family": "polynomial",
+    "budget": 8000
+  },
+  {
+    "id": "case0_ceemdan_40ms_spline_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan",
+    "family": "spline",
+    "budget": 500
+  },
+  {
+    "id": "case0_ceemdan_40ms_spline_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan",
+    "family": "spline",
+    "budget": 1000
+  },
+  {
+    "id": "case0_ceemdan_40ms_spline_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan",
+    "family": "spline",
+    "budget": 2000
+  },
+  {
+    "id": "case0_ceemdan_40ms_spline_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan",
+    "family": "spline",
+    "budget": 4000
+  },
+  {
+    "id": "case0_ceemdan_40ms_spline_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan",
+    "family": "spline",
+    "budget": 8000
+  },
+  {
+    "id": "case0_ceemdan_40ms_sinusoid_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan",
+    "family": "sinusoid",
+    "budget": 500
+  },
+  {
+    "id": "case0_ceemdan_40ms_sinusoid_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan",
+    "family": "sinusoid",
+    "budget": 1000
+  },
+  {
+    "id": "case0_ceemdan_40ms_sinusoid_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan",
+    "family": "sinusoid",
+    "budget": 2000
+  },
+  {
+    "id": "case0_ceemdan_40ms_sinusoid_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan",
+    "family": "sinusoid",
+    "budget": 4000
+  },
+  {
+    "id": "case0_ceemdan_40ms_sinusoid_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan",
+    "family": "sinusoid",
+    "budget": 8000
+  },
+  {
+    "id": "case0_ceemdan_40ms_amfm_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan",
+    "family": "amfm",
+    "budget": 500
+  },
+  {
+    "id": "case0_ceemdan_40ms_amfm_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan",
+    "family": "amfm",
+    "budget": 1000
+  },
+  {
+    "id": "case0_ceemdan_40ms_amfm_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan",
+    "family": "amfm",
+    "budget": 2000
+  },
+  {
+    "id": "case0_ceemdan_40ms_amfm_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan",
+    "family": "amfm",
+    "budget": 4000
+  },
+  {
+    "id": "case0_ceemdan_40ms_amfm_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan",
+    "family": "amfm",
+    "budget": 8000
+  },
+  {
+    "id": "case0_ceemdan_40ms_sine_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan",
+    "family": "sine_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_ceemdan_40ms_sine_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan",
+    "family": "sine_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_ceemdan_40ms_sine_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan",
+    "family": "sine_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_ceemdan_40ms_sine_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan",
+    "family": "sine_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_ceemdan_40ms_sine_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan",
+    "family": "sine_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_ceemdan_40ms_snakebeta_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan",
+    "family": "snakebeta_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_ceemdan_40ms_snakebeta_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan",
+    "family": "snakebeta_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_ceemdan_40ms_snakebeta_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan",
+    "family": "snakebeta_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_ceemdan_40ms_snakebeta_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan",
+    "family": "snakebeta_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_ceemdan_40ms_snakebeta_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "ceemdan",
+    "family": "snakebeta_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_svmd_40ms",
+    "kind": "decomposition",
+    "case": 0,
+    "window": 40,
+    "method": "svmd"
+  },
+  {
+    "id": "case0_svmd_40ms_polynomial_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "svmd",
+    "family": "polynomial",
+    "budget": 500
+  },
+  {
+    "id": "case0_svmd_40ms_polynomial_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "svmd",
+    "family": "polynomial",
+    "budget": 1000
+  },
+  {
+    "id": "case0_svmd_40ms_polynomial_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "svmd",
+    "family": "polynomial",
+    "budget": 2000
+  },
+  {
+    "id": "case0_svmd_40ms_polynomial_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "svmd",
+    "family": "polynomial",
+    "budget": 4000
+  },
+  {
+    "id": "case0_svmd_40ms_polynomial_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "svmd",
+    "family": "polynomial",
+    "budget": 8000
+  },
+  {
+    "id": "case0_svmd_40ms_spline_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "svmd",
+    "family": "spline",
+    "budget": 500
+  },
+  {
+    "id": "case0_svmd_40ms_spline_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "svmd",
+    "family": "spline",
+    "budget": 1000
+  },
+  {
+    "id": "case0_svmd_40ms_spline_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "svmd",
+    "family": "spline",
+    "budget": 2000
+  },
+  {
+    "id": "case0_svmd_40ms_spline_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "svmd",
+    "family": "spline",
+    "budget": 4000
+  },
+  {
+    "id": "case0_svmd_40ms_spline_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "svmd",
+    "family": "spline",
+    "budget": 8000
+  },
+  {
+    "id": "case0_svmd_40ms_sinusoid_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "svmd",
+    "family": "sinusoid",
+    "budget": 500
+  },
+  {
+    "id": "case0_svmd_40ms_sinusoid_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "svmd",
+    "family": "sinusoid",
+    "budget": 1000
+  },
+  {
+    "id": "case0_svmd_40ms_sinusoid_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "svmd",
+    "family": "sinusoid",
+    "budget": 2000
+  },
+  {
+    "id": "case0_svmd_40ms_sinusoid_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "svmd",
+    "family": "sinusoid",
+    "budget": 4000
+  },
+  {
+    "id": "case0_svmd_40ms_sinusoid_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "svmd",
+    "family": "sinusoid",
+    "budget": 8000
+  },
+  {
+    "id": "case0_svmd_40ms_amfm_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "svmd",
+    "family": "amfm",
+    "budget": 500
+  },
+  {
+    "id": "case0_svmd_40ms_amfm_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "svmd",
+    "family": "amfm",
+    "budget": 1000
+  },
+  {
+    "id": "case0_svmd_40ms_amfm_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "svmd",
+    "family": "amfm",
+    "budget": 2000
+  },
+  {
+    "id": "case0_svmd_40ms_amfm_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "svmd",
+    "family": "amfm",
+    "budget": 4000
+  },
+  {
+    "id": "case0_svmd_40ms_amfm_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "svmd",
+    "family": "amfm",
+    "budget": 8000
+  },
+  {
+    "id": "case0_svmd_40ms_sine_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "svmd",
+    "family": "sine_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_svmd_40ms_sine_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "svmd",
+    "family": "sine_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_svmd_40ms_sine_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "svmd",
+    "family": "sine_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_svmd_40ms_sine_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "svmd",
+    "family": "sine_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_svmd_40ms_sine_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "svmd",
+    "family": "sine_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_svmd_40ms_snakebeta_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "svmd",
+    "family": "snakebeta_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_svmd_40ms_snakebeta_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "svmd",
+    "family": "snakebeta_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_svmd_40ms_snakebeta_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "svmd",
+    "family": "snakebeta_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_svmd_40ms_snakebeta_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "svmd",
+    "family": "snakebeta_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_svmd_40ms_snakebeta_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "svmd",
+    "family": "snakebeta_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_direct_40ms",
+    "kind": "decomposition",
+    "case": 0,
+    "window": 40,
+    "method": "direct"
+  },
+  {
+    "id": "case0_direct_40ms_polynomial_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "direct",
+    "family": "polynomial",
+    "budget": 500
+  },
+  {
+    "id": "case0_direct_40ms_polynomial_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "direct",
+    "family": "polynomial",
+    "budget": 1000
+  },
+  {
+    "id": "case0_direct_40ms_polynomial_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "direct",
+    "family": "polynomial",
+    "budget": 2000
+  },
+  {
+    "id": "case0_direct_40ms_polynomial_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "direct",
+    "family": "polynomial",
+    "budget": 4000
+  },
+  {
+    "id": "case0_direct_40ms_polynomial_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "direct",
+    "family": "polynomial",
+    "budget": 8000
+  },
+  {
+    "id": "case0_direct_40ms_spline_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "direct",
+    "family": "spline",
+    "budget": 500
+  },
+  {
+    "id": "case0_direct_40ms_spline_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "direct",
+    "family": "spline",
+    "budget": 1000
+  },
+  {
+    "id": "case0_direct_40ms_spline_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "direct",
+    "family": "spline",
+    "budget": 2000
+  },
+  {
+    "id": "case0_direct_40ms_spline_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "direct",
+    "family": "spline",
+    "budget": 4000
+  },
+  {
+    "id": "case0_direct_40ms_spline_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "direct",
+    "family": "spline",
+    "budget": 8000
+  },
+  {
+    "id": "case0_direct_40ms_sinusoid_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "direct",
+    "family": "sinusoid",
+    "budget": 500
+  },
+  {
+    "id": "case0_direct_40ms_sinusoid_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "direct",
+    "family": "sinusoid",
+    "budget": 1000
+  },
+  {
+    "id": "case0_direct_40ms_sinusoid_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "direct",
+    "family": "sinusoid",
+    "budget": 2000
+  },
+  {
+    "id": "case0_direct_40ms_sinusoid_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "direct",
+    "family": "sinusoid",
+    "budget": 4000
+  },
+  {
+    "id": "case0_direct_40ms_sinusoid_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "direct",
+    "family": "sinusoid",
+    "budget": 8000
+  },
+  {
+    "id": "case0_direct_40ms_amfm_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "direct",
+    "family": "amfm",
+    "budget": 500
+  },
+  {
+    "id": "case0_direct_40ms_amfm_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "direct",
+    "family": "amfm",
+    "budget": 1000
+  },
+  {
+    "id": "case0_direct_40ms_amfm_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "direct",
+    "family": "amfm",
+    "budget": 2000
+  },
+  {
+    "id": "case0_direct_40ms_amfm_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "direct",
+    "family": "amfm",
+    "budget": 4000
+  },
+  {
+    "id": "case0_direct_40ms_amfm_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "direct",
+    "family": "amfm",
+    "budget": 8000
+  },
+  {
+    "id": "case0_direct_40ms_sine_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "direct",
+    "family": "sine_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_direct_40ms_sine_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "direct",
+    "family": "sine_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_direct_40ms_sine_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "direct",
+    "family": "sine_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_direct_40ms_sine_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "direct",
+    "family": "sine_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_direct_40ms_sine_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "direct",
+    "family": "sine_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_direct_40ms_snakebeta_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "direct",
+    "family": "snakebeta_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_direct_40ms_snakebeta_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "direct",
+    "family": "snakebeta_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_direct_40ms_snakebeta_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "direct",
+    "family": "snakebeta_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_direct_40ms_snakebeta_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "direct",
+    "family": "snakebeta_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_direct_40ms_snakebeta_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 40,
+    "method": "direct",
+    "family": "snakebeta_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_emd_20ms",
+    "kind": "decomposition",
+    "case": 0,
+    "window": 20,
+    "method": "emd"
+  },
+  {
+    "id": "case0_emd_20ms_polynomial_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "emd",
+    "family": "polynomial",
+    "budget": 500
+  },
+  {
+    "id": "case0_emd_20ms_polynomial_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "emd",
+    "family": "polynomial",
+    "budget": 1000
+  },
+  {
+    "id": "case0_emd_20ms_polynomial_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "emd",
+    "family": "polynomial",
+    "budget": 2000
+  },
+  {
+    "id": "case0_emd_20ms_polynomial_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "emd",
+    "family": "polynomial",
+    "budget": 4000
+  },
+  {
+    "id": "case0_emd_20ms_polynomial_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "emd",
+    "family": "polynomial",
+    "budget": 8000
+  },
+  {
+    "id": "case0_emd_20ms_spline_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "emd",
+    "family": "spline",
+    "budget": 500
+  },
+  {
+    "id": "case0_emd_20ms_spline_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "emd",
+    "family": "spline",
+    "budget": 1000
+  },
+  {
+    "id": "case0_emd_20ms_spline_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "emd",
+    "family": "spline",
+    "budget": 2000
+  },
+  {
+    "id": "case0_emd_20ms_spline_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "emd",
+    "family": "spline",
+    "budget": 4000
+  },
+  {
+    "id": "case0_emd_20ms_spline_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "emd",
+    "family": "spline",
+    "budget": 8000
+  },
+  {
+    "id": "case0_emd_20ms_sinusoid_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "emd",
+    "family": "sinusoid",
+    "budget": 500
+  },
+  {
+    "id": "case0_emd_20ms_sinusoid_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "emd",
+    "family": "sinusoid",
+    "budget": 1000
+  },
+  {
+    "id": "case0_emd_20ms_sinusoid_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "emd",
+    "family": "sinusoid",
+    "budget": 2000
+  },
+  {
+    "id": "case0_emd_20ms_sinusoid_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "emd",
+    "family": "sinusoid",
+    "budget": 4000
+  },
+  {
+    "id": "case0_emd_20ms_sinusoid_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "emd",
+    "family": "sinusoid",
+    "budget": 8000
+  },
+  {
+    "id": "case0_emd_20ms_amfm_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "emd",
+    "family": "amfm",
+    "budget": 500
+  },
+  {
+    "id": "case0_emd_20ms_amfm_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "emd",
+    "family": "amfm",
+    "budget": 1000
+  },
+  {
+    "id": "case0_emd_20ms_amfm_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "emd",
+    "family": "amfm",
+    "budget": 2000
+  },
+  {
+    "id": "case0_emd_20ms_amfm_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "emd",
+    "family": "amfm",
+    "budget": 4000
+  },
+  {
+    "id": "case0_emd_20ms_amfm_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "emd",
+    "family": "amfm",
+    "budget": 8000
+  },
+  {
+    "id": "case0_emd_20ms_sine_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "emd",
+    "family": "sine_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_emd_20ms_sine_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "emd",
+    "family": "sine_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_emd_20ms_sine_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "emd",
+    "family": "sine_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_emd_20ms_sine_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "emd",
+    "family": "sine_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_emd_20ms_sine_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "emd",
+    "family": "sine_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_emd_20ms_snakebeta_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "emd",
+    "family": "snakebeta_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_emd_20ms_snakebeta_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "emd",
+    "family": "snakebeta_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_emd_20ms_snakebeta_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "emd",
+    "family": "snakebeta_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_emd_20ms_snakebeta_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "emd",
+    "family": "snakebeta_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_emd_20ms_snakebeta_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "emd",
+    "family": "snakebeta_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_vmd_20ms",
+    "kind": "decomposition",
+    "case": 0,
+    "window": 20,
+    "method": "vmd"
+  },
+  {
+    "id": "case0_vmd_20ms_polynomial_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "vmd",
+    "family": "polynomial",
+    "budget": 500
+  },
+  {
+    "id": "case0_vmd_20ms_polynomial_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "vmd",
+    "family": "polynomial",
+    "budget": 1000
+  },
+  {
+    "id": "case0_vmd_20ms_polynomial_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "vmd",
+    "family": "polynomial",
+    "budget": 2000
+  },
+  {
+    "id": "case0_vmd_20ms_polynomial_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "vmd",
+    "family": "polynomial",
+    "budget": 4000
+  },
+  {
+    "id": "case0_vmd_20ms_polynomial_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "vmd",
+    "family": "polynomial",
+    "budget": 8000
+  },
+  {
+    "id": "case0_vmd_20ms_spline_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "vmd",
+    "family": "spline",
+    "budget": 500
+  },
+  {
+    "id": "case0_vmd_20ms_spline_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "vmd",
+    "family": "spline",
+    "budget": 1000
+  },
+  {
+    "id": "case0_vmd_20ms_spline_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "vmd",
+    "family": "spline",
+    "budget": 2000
+  },
+  {
+    "id": "case0_vmd_20ms_spline_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "vmd",
+    "family": "spline",
+    "budget": 4000
+  },
+  {
+    "id": "case0_vmd_20ms_spline_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "vmd",
+    "family": "spline",
+    "budget": 8000
+  },
+  {
+    "id": "case0_vmd_20ms_sinusoid_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "vmd",
+    "family": "sinusoid",
+    "budget": 500
+  },
+  {
+    "id": "case0_vmd_20ms_sinusoid_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "vmd",
+    "family": "sinusoid",
+    "budget": 1000
+  },
+  {
+    "id": "case0_vmd_20ms_sinusoid_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "vmd",
+    "family": "sinusoid",
+    "budget": 2000
+  },
+  {
+    "id": "case0_vmd_20ms_sinusoid_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "vmd",
+    "family": "sinusoid",
+    "budget": 4000
+  },
+  {
+    "id": "case0_vmd_20ms_sinusoid_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "vmd",
+    "family": "sinusoid",
+    "budget": 8000
+  },
+  {
+    "id": "case0_vmd_20ms_amfm_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "vmd",
+    "family": "amfm",
+    "budget": 500
+  },
+  {
+    "id": "case0_vmd_20ms_amfm_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "vmd",
+    "family": "amfm",
+    "budget": 1000
+  },
+  {
+    "id": "case0_vmd_20ms_amfm_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "vmd",
+    "family": "amfm",
+    "budget": 2000
+  },
+  {
+    "id": "case0_vmd_20ms_amfm_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "vmd",
+    "family": "amfm",
+    "budget": 4000
+  },
+  {
+    "id": "case0_vmd_20ms_amfm_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "vmd",
+    "family": "amfm",
+    "budget": 8000
+  },
+  {
+    "id": "case0_vmd_20ms_sine_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "vmd",
+    "family": "sine_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_vmd_20ms_sine_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "vmd",
+    "family": "sine_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_vmd_20ms_sine_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "vmd",
+    "family": "sine_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_vmd_20ms_sine_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "vmd",
+    "family": "sine_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_vmd_20ms_sine_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "vmd",
+    "family": "sine_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_vmd_20ms_snakebeta_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "vmd",
+    "family": "snakebeta_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_vmd_20ms_snakebeta_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "vmd",
+    "family": "snakebeta_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_vmd_20ms_snakebeta_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "vmd",
+    "family": "snakebeta_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_vmd_20ms_snakebeta_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "vmd",
+    "family": "snakebeta_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_vmd_20ms_snakebeta_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "vmd",
+    "family": "snakebeta_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_eemd_20ms",
+    "kind": "decomposition",
+    "case": 0,
+    "window": 20,
+    "method": "eemd"
+  },
+  {
+    "id": "case0_eemd_20ms_polynomial_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "eemd",
+    "family": "polynomial",
+    "budget": 500
+  },
+  {
+    "id": "case0_eemd_20ms_polynomial_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "eemd",
+    "family": "polynomial",
+    "budget": 1000
+  },
+  {
+    "id": "case0_eemd_20ms_polynomial_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "eemd",
+    "family": "polynomial",
+    "budget": 2000
+  },
+  {
+    "id": "case0_eemd_20ms_polynomial_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "eemd",
+    "family": "polynomial",
+    "budget": 4000
+  },
+  {
+    "id": "case0_eemd_20ms_polynomial_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "eemd",
+    "family": "polynomial",
+    "budget": 8000
+  },
+  {
+    "id": "case0_eemd_20ms_spline_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "eemd",
+    "family": "spline",
+    "budget": 500
+  },
+  {
+    "id": "case0_eemd_20ms_spline_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "eemd",
+    "family": "spline",
+    "budget": 1000
+  },
+  {
+    "id": "case0_eemd_20ms_spline_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "eemd",
+    "family": "spline",
+    "budget": 2000
+  },
+  {
+    "id": "case0_eemd_20ms_spline_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "eemd",
+    "family": "spline",
+    "budget": 4000
+  },
+  {
+    "id": "case0_eemd_20ms_spline_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "eemd",
+    "family": "spline",
+    "budget": 8000
+  },
+  {
+    "id": "case0_eemd_20ms_sinusoid_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "eemd",
+    "family": "sinusoid",
+    "budget": 500
+  },
+  {
+    "id": "case0_eemd_20ms_sinusoid_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "eemd",
+    "family": "sinusoid",
+    "budget": 1000
+  },
+  {
+    "id": "case0_eemd_20ms_sinusoid_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "eemd",
+    "family": "sinusoid",
+    "budget": 2000
+  },
+  {
+    "id": "case0_eemd_20ms_sinusoid_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "eemd",
+    "family": "sinusoid",
+    "budget": 4000
+  },
+  {
+    "id": "case0_eemd_20ms_sinusoid_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "eemd",
+    "family": "sinusoid",
+    "budget": 8000
+  },
+  {
+    "id": "case0_eemd_20ms_amfm_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "eemd",
+    "family": "amfm",
+    "budget": 500
+  },
+  {
+    "id": "case0_eemd_20ms_amfm_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "eemd",
+    "family": "amfm",
+    "budget": 1000
+  },
+  {
+    "id": "case0_eemd_20ms_amfm_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "eemd",
+    "family": "amfm",
+    "budget": 2000
+  },
+  {
+    "id": "case0_eemd_20ms_amfm_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "eemd",
+    "family": "amfm",
+    "budget": 4000
+  },
+  {
+    "id": "case0_eemd_20ms_amfm_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "eemd",
+    "family": "amfm",
+    "budget": 8000
+  },
+  {
+    "id": "case0_eemd_20ms_sine_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "eemd",
+    "family": "sine_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_eemd_20ms_sine_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "eemd",
+    "family": "sine_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_eemd_20ms_sine_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "eemd",
+    "family": "sine_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_eemd_20ms_sine_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "eemd",
+    "family": "sine_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_eemd_20ms_sine_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "eemd",
+    "family": "sine_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_eemd_20ms_snakebeta_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "eemd",
+    "family": "snakebeta_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_eemd_20ms_snakebeta_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "eemd",
+    "family": "snakebeta_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_eemd_20ms_snakebeta_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "eemd",
+    "family": "snakebeta_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_eemd_20ms_snakebeta_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "eemd",
+    "family": "snakebeta_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_eemd_20ms_snakebeta_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "eemd",
+    "family": "snakebeta_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_ceemdan_20ms",
+    "kind": "decomposition",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan"
+  },
+  {
+    "id": "case0_ceemdan_20ms_polynomial_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan",
+    "family": "polynomial",
+    "budget": 500
+  },
+  {
+    "id": "case0_ceemdan_20ms_polynomial_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan",
+    "family": "polynomial",
+    "budget": 1000
+  },
+  {
+    "id": "case0_ceemdan_20ms_polynomial_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan",
+    "family": "polynomial",
+    "budget": 2000
+  },
+  {
+    "id": "case0_ceemdan_20ms_polynomial_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan",
+    "family": "polynomial",
+    "budget": 4000
+  },
+  {
+    "id": "case0_ceemdan_20ms_polynomial_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan",
+    "family": "polynomial",
+    "budget": 8000
+  },
+  {
+    "id": "case0_ceemdan_20ms_spline_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan",
+    "family": "spline",
+    "budget": 500
+  },
+  {
+    "id": "case0_ceemdan_20ms_spline_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan",
+    "family": "spline",
+    "budget": 1000
+  },
+  {
+    "id": "case0_ceemdan_20ms_spline_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan",
+    "family": "spline",
+    "budget": 2000
+  },
+  {
+    "id": "case0_ceemdan_20ms_spline_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan",
+    "family": "spline",
+    "budget": 4000
+  },
+  {
+    "id": "case0_ceemdan_20ms_spline_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan",
+    "family": "spline",
+    "budget": 8000
+  },
+  {
+    "id": "case0_ceemdan_20ms_sinusoid_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan",
+    "family": "sinusoid",
+    "budget": 500
+  },
+  {
+    "id": "case0_ceemdan_20ms_sinusoid_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan",
+    "family": "sinusoid",
+    "budget": 1000
+  },
+  {
+    "id": "case0_ceemdan_20ms_sinusoid_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan",
+    "family": "sinusoid",
+    "budget": 2000
+  },
+  {
+    "id": "case0_ceemdan_20ms_sinusoid_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan",
+    "family": "sinusoid",
+    "budget": 4000
+  },
+  {
+    "id": "case0_ceemdan_20ms_sinusoid_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan",
+    "family": "sinusoid",
+    "budget": 8000
+  },
+  {
+    "id": "case0_ceemdan_20ms_amfm_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan",
+    "family": "amfm",
+    "budget": 500
+  },
+  {
+    "id": "case0_ceemdan_20ms_amfm_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan",
+    "family": "amfm",
+    "budget": 1000
+  },
+  {
+    "id": "case0_ceemdan_20ms_amfm_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan",
+    "family": "amfm",
+    "budget": 2000
+  },
+  {
+    "id": "case0_ceemdan_20ms_amfm_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan",
+    "family": "amfm",
+    "budget": 4000
+  },
+  {
+    "id": "case0_ceemdan_20ms_amfm_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan",
+    "family": "amfm",
+    "budget": 8000
+  },
+  {
+    "id": "case0_ceemdan_20ms_sine_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan",
+    "family": "sine_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_ceemdan_20ms_sine_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan",
+    "family": "sine_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_ceemdan_20ms_sine_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan",
+    "family": "sine_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_ceemdan_20ms_sine_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan",
+    "family": "sine_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_ceemdan_20ms_sine_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan",
+    "family": "sine_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_ceemdan_20ms_snakebeta_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan",
+    "family": "snakebeta_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_ceemdan_20ms_snakebeta_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan",
+    "family": "snakebeta_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_ceemdan_20ms_snakebeta_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan",
+    "family": "snakebeta_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_ceemdan_20ms_snakebeta_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan",
+    "family": "snakebeta_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_ceemdan_20ms_snakebeta_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "ceemdan",
+    "family": "snakebeta_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_svmd_20ms",
+    "kind": "decomposition",
+    "case": 0,
+    "window": 20,
+    "method": "svmd"
+  },
+  {
+    "id": "case0_svmd_20ms_polynomial_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "svmd",
+    "family": "polynomial",
+    "budget": 500
+  },
+  {
+    "id": "case0_svmd_20ms_polynomial_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "svmd",
+    "family": "polynomial",
+    "budget": 1000
+  },
+  {
+    "id": "case0_svmd_20ms_polynomial_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "svmd",
+    "family": "polynomial",
+    "budget": 2000
+  },
+  {
+    "id": "case0_svmd_20ms_polynomial_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "svmd",
+    "family": "polynomial",
+    "budget": 4000
+  },
+  {
+    "id": "case0_svmd_20ms_polynomial_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "svmd",
+    "family": "polynomial",
+    "budget": 8000
+  },
+  {
+    "id": "case0_svmd_20ms_spline_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "svmd",
+    "family": "spline",
+    "budget": 500
+  },
+  {
+    "id": "case0_svmd_20ms_spline_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "svmd",
+    "family": "spline",
+    "budget": 1000
+  },
+  {
+    "id": "case0_svmd_20ms_spline_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "svmd",
+    "family": "spline",
+    "budget": 2000
+  },
+  {
+    "id": "case0_svmd_20ms_spline_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "svmd",
+    "family": "spline",
+    "budget": 4000
+  },
+  {
+    "id": "case0_svmd_20ms_spline_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "svmd",
+    "family": "spline",
+    "budget": 8000
+  },
+  {
+    "id": "case0_svmd_20ms_sinusoid_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "svmd",
+    "family": "sinusoid",
+    "budget": 500
+  },
+  {
+    "id": "case0_svmd_20ms_sinusoid_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "svmd",
+    "family": "sinusoid",
+    "budget": 1000
+  },
+  {
+    "id": "case0_svmd_20ms_sinusoid_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "svmd",
+    "family": "sinusoid",
+    "budget": 2000
+  },
+  {
+    "id": "case0_svmd_20ms_sinusoid_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "svmd",
+    "family": "sinusoid",
+    "budget": 4000
+  },
+  {
+    "id": "case0_svmd_20ms_sinusoid_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "svmd",
+    "family": "sinusoid",
+    "budget": 8000
+  },
+  {
+    "id": "case0_svmd_20ms_amfm_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "svmd",
+    "family": "amfm",
+    "budget": 500
+  },
+  {
+    "id": "case0_svmd_20ms_amfm_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "svmd",
+    "family": "amfm",
+    "budget": 1000
+  },
+  {
+    "id": "case0_svmd_20ms_amfm_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "svmd",
+    "family": "amfm",
+    "budget": 2000
+  },
+  {
+    "id": "case0_svmd_20ms_amfm_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "svmd",
+    "family": "amfm",
+    "budget": 4000
+  },
+  {
+    "id": "case0_svmd_20ms_amfm_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "svmd",
+    "family": "amfm",
+    "budget": 8000
+  },
+  {
+    "id": "case0_svmd_20ms_sine_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "svmd",
+    "family": "sine_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_svmd_20ms_sine_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "svmd",
+    "family": "sine_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_svmd_20ms_sine_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "svmd",
+    "family": "sine_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_svmd_20ms_sine_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "svmd",
+    "family": "sine_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_svmd_20ms_sine_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "svmd",
+    "family": "sine_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_svmd_20ms_snakebeta_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "svmd",
+    "family": "snakebeta_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_svmd_20ms_snakebeta_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "svmd",
+    "family": "snakebeta_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_svmd_20ms_snakebeta_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "svmd",
+    "family": "snakebeta_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_svmd_20ms_snakebeta_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "svmd",
+    "family": "snakebeta_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_svmd_20ms_snakebeta_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "svmd",
+    "family": "snakebeta_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_direct_20ms",
+    "kind": "decomposition",
+    "case": 0,
+    "window": 20,
+    "method": "direct"
+  },
+  {
+    "id": "case0_direct_20ms_polynomial_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "direct",
+    "family": "polynomial",
+    "budget": 500
+  },
+  {
+    "id": "case0_direct_20ms_polynomial_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "direct",
+    "family": "polynomial",
+    "budget": 1000
+  },
+  {
+    "id": "case0_direct_20ms_polynomial_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "direct",
+    "family": "polynomial",
+    "budget": 2000
+  },
+  {
+    "id": "case0_direct_20ms_polynomial_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "direct",
+    "family": "polynomial",
+    "budget": 4000
+  },
+  {
+    "id": "case0_direct_20ms_polynomial_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "direct",
+    "family": "polynomial",
+    "budget": 8000
+  },
+  {
+    "id": "case0_direct_20ms_spline_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "direct",
+    "family": "spline",
+    "budget": 500
+  },
+  {
+    "id": "case0_direct_20ms_spline_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "direct",
+    "family": "spline",
+    "budget": 1000
+  },
+  {
+    "id": "case0_direct_20ms_spline_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "direct",
+    "family": "spline",
+    "budget": 2000
+  },
+  {
+    "id": "case0_direct_20ms_spline_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "direct",
+    "family": "spline",
+    "budget": 4000
+  },
+  {
+    "id": "case0_direct_20ms_spline_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "direct",
+    "family": "spline",
+    "budget": 8000
+  },
+  {
+    "id": "case0_direct_20ms_sinusoid_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "direct",
+    "family": "sinusoid",
+    "budget": 500
+  },
+  {
+    "id": "case0_direct_20ms_sinusoid_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "direct",
+    "family": "sinusoid",
+    "budget": 1000
+  },
+  {
+    "id": "case0_direct_20ms_sinusoid_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "direct",
+    "family": "sinusoid",
+    "budget": 2000
+  },
+  {
+    "id": "case0_direct_20ms_sinusoid_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "direct",
+    "family": "sinusoid",
+    "budget": 4000
+  },
+  {
+    "id": "case0_direct_20ms_sinusoid_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "direct",
+    "family": "sinusoid",
+    "budget": 8000
+  },
+  {
+    "id": "case0_direct_20ms_amfm_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "direct",
+    "family": "amfm",
+    "budget": 500
+  },
+  {
+    "id": "case0_direct_20ms_amfm_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "direct",
+    "family": "amfm",
+    "budget": 1000
+  },
+  {
+    "id": "case0_direct_20ms_amfm_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "direct",
+    "family": "amfm",
+    "budget": 2000
+  },
+  {
+    "id": "case0_direct_20ms_amfm_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "direct",
+    "family": "amfm",
+    "budget": 4000
+  },
+  {
+    "id": "case0_direct_20ms_amfm_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "direct",
+    "family": "amfm",
+    "budget": 8000
+  },
+  {
+    "id": "case0_direct_20ms_sine_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "direct",
+    "family": "sine_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_direct_20ms_sine_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "direct",
+    "family": "sine_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_direct_20ms_sine_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "direct",
+    "family": "sine_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_direct_20ms_sine_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "direct",
+    "family": "sine_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_direct_20ms_sine_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "direct",
+    "family": "sine_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_direct_20ms_snakebeta_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "direct",
+    "family": "snakebeta_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_direct_20ms_snakebeta_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "direct",
+    "family": "snakebeta_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_direct_20ms_snakebeta_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "direct",
+    "family": "snakebeta_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_direct_20ms_snakebeta_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "direct",
+    "family": "snakebeta_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_direct_20ms_snakebeta_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 20,
+    "method": "direct",
+    "family": "snakebeta_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_emd_80ms",
+    "kind": "decomposition",
+    "case": 0,
+    "window": 80,
+    "method": "emd"
+  },
+  {
+    "id": "case0_emd_80ms_polynomial_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "emd",
+    "family": "polynomial",
+    "budget": 500
+  },
+  {
+    "id": "case0_emd_80ms_polynomial_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "emd",
+    "family": "polynomial",
+    "budget": 1000
+  },
+  {
+    "id": "case0_emd_80ms_polynomial_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "emd",
+    "family": "polynomial",
+    "budget": 2000
+  },
+  {
+    "id": "case0_emd_80ms_polynomial_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "emd",
+    "family": "polynomial",
+    "budget": 4000
+  },
+  {
+    "id": "case0_emd_80ms_polynomial_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "emd",
+    "family": "polynomial",
+    "budget": 8000
+  },
+  {
+    "id": "case0_emd_80ms_spline_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "emd",
+    "family": "spline",
+    "budget": 500
+  },
+  {
+    "id": "case0_emd_80ms_spline_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "emd",
+    "family": "spline",
+    "budget": 1000
+  },
+  {
+    "id": "case0_emd_80ms_spline_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "emd",
+    "family": "spline",
+    "budget": 2000
+  },
+  {
+    "id": "case0_emd_80ms_spline_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "emd",
+    "family": "spline",
+    "budget": 4000
+  },
+  {
+    "id": "case0_emd_80ms_spline_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "emd",
+    "family": "spline",
+    "budget": 8000
+  },
+  {
+    "id": "case0_emd_80ms_sinusoid_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "emd",
+    "family": "sinusoid",
+    "budget": 500
+  },
+  {
+    "id": "case0_emd_80ms_sinusoid_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "emd",
+    "family": "sinusoid",
+    "budget": 1000
+  },
+  {
+    "id": "case0_emd_80ms_sinusoid_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "emd",
+    "family": "sinusoid",
+    "budget": 2000
+  },
+  {
+    "id": "case0_emd_80ms_sinusoid_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "emd",
+    "family": "sinusoid",
+    "budget": 4000
+  },
+  {
+    "id": "case0_emd_80ms_sinusoid_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "emd",
+    "family": "sinusoid",
+    "budget": 8000
+  },
+  {
+    "id": "case0_emd_80ms_amfm_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "emd",
+    "family": "amfm",
+    "budget": 500
+  },
+  {
+    "id": "case0_emd_80ms_amfm_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "emd",
+    "family": "amfm",
+    "budget": 1000
+  },
+  {
+    "id": "case0_emd_80ms_amfm_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "emd",
+    "family": "amfm",
+    "budget": 2000
+  },
+  {
+    "id": "case0_emd_80ms_amfm_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "emd",
+    "family": "amfm",
+    "budget": 4000
+  },
+  {
+    "id": "case0_emd_80ms_amfm_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "emd",
+    "family": "amfm",
+    "budget": 8000
+  },
+  {
+    "id": "case0_emd_80ms_sine_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "emd",
+    "family": "sine_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_emd_80ms_sine_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "emd",
+    "family": "sine_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_emd_80ms_sine_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "emd",
+    "family": "sine_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_emd_80ms_sine_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "emd",
+    "family": "sine_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_emd_80ms_sine_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "emd",
+    "family": "sine_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_emd_80ms_snakebeta_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "emd",
+    "family": "snakebeta_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_emd_80ms_snakebeta_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "emd",
+    "family": "snakebeta_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_emd_80ms_snakebeta_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "emd",
+    "family": "snakebeta_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_emd_80ms_snakebeta_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "emd",
+    "family": "snakebeta_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_emd_80ms_snakebeta_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "emd",
+    "family": "snakebeta_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_vmd_80ms",
+    "kind": "decomposition",
+    "case": 0,
+    "window": 80,
+    "method": "vmd"
+  },
+  {
+    "id": "case0_vmd_80ms_polynomial_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "vmd",
+    "family": "polynomial",
+    "budget": 500
+  },
+  {
+    "id": "case0_vmd_80ms_polynomial_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "vmd",
+    "family": "polynomial",
+    "budget": 1000
+  },
+  {
+    "id": "case0_vmd_80ms_polynomial_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "vmd",
+    "family": "polynomial",
+    "budget": 2000
+  },
+  {
+    "id": "case0_vmd_80ms_polynomial_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "vmd",
+    "family": "polynomial",
+    "budget": 4000
+  },
+  {
+    "id": "case0_vmd_80ms_polynomial_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "vmd",
+    "family": "polynomial",
+    "budget": 8000
+  },
+  {
+    "id": "case0_vmd_80ms_spline_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "vmd",
+    "family": "spline",
+    "budget": 500
+  },
+  {
+    "id": "case0_vmd_80ms_spline_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "vmd",
+    "family": "spline",
+    "budget": 1000
+  },
+  {
+    "id": "case0_vmd_80ms_spline_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "vmd",
+    "family": "spline",
+    "budget": 2000
+  },
+  {
+    "id": "case0_vmd_80ms_spline_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "vmd",
+    "family": "spline",
+    "budget": 4000
+  },
+  {
+    "id": "case0_vmd_80ms_spline_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "vmd",
+    "family": "spline",
+    "budget": 8000
+  },
+  {
+    "id": "case0_vmd_80ms_sinusoid_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "vmd",
+    "family": "sinusoid",
+    "budget": 500
+  },
+  {
+    "id": "case0_vmd_80ms_sinusoid_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "vmd",
+    "family": "sinusoid",
+    "budget": 1000
+  },
+  {
+    "id": "case0_vmd_80ms_sinusoid_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "vmd",
+    "family": "sinusoid",
+    "budget": 2000
+  },
+  {
+    "id": "case0_vmd_80ms_sinusoid_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "vmd",
+    "family": "sinusoid",
+    "budget": 4000
+  },
+  {
+    "id": "case0_vmd_80ms_sinusoid_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "vmd",
+    "family": "sinusoid",
+    "budget": 8000
+  },
+  {
+    "id": "case0_vmd_80ms_amfm_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "vmd",
+    "family": "amfm",
+    "budget": 500
+  },
+  {
+    "id": "case0_vmd_80ms_amfm_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "vmd",
+    "family": "amfm",
+    "budget": 1000
+  },
+  {
+    "id": "case0_vmd_80ms_amfm_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "vmd",
+    "family": "amfm",
+    "budget": 2000
+  },
+  {
+    "id": "case0_vmd_80ms_amfm_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "vmd",
+    "family": "amfm",
+    "budget": 4000
+  },
+  {
+    "id": "case0_vmd_80ms_amfm_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "vmd",
+    "family": "amfm",
+    "budget": 8000
+  },
+  {
+    "id": "case0_vmd_80ms_sine_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "vmd",
+    "family": "sine_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_vmd_80ms_sine_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "vmd",
+    "family": "sine_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_vmd_80ms_sine_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "vmd",
+    "family": "sine_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_vmd_80ms_sine_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "vmd",
+    "family": "sine_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_vmd_80ms_sine_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "vmd",
+    "family": "sine_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_vmd_80ms_snakebeta_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "vmd",
+    "family": "snakebeta_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_vmd_80ms_snakebeta_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "vmd",
+    "family": "snakebeta_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_vmd_80ms_snakebeta_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "vmd",
+    "family": "snakebeta_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_vmd_80ms_snakebeta_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "vmd",
+    "family": "snakebeta_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_vmd_80ms_snakebeta_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "vmd",
+    "family": "snakebeta_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_eemd_80ms",
+    "kind": "decomposition",
+    "case": 0,
+    "window": 80,
+    "method": "eemd"
+  },
+  {
+    "id": "case0_eemd_80ms_polynomial_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "eemd",
+    "family": "polynomial",
+    "budget": 500
+  },
+  {
+    "id": "case0_eemd_80ms_polynomial_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "eemd",
+    "family": "polynomial",
+    "budget": 1000
+  },
+  {
+    "id": "case0_eemd_80ms_polynomial_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "eemd",
+    "family": "polynomial",
+    "budget": 2000
+  },
+  {
+    "id": "case0_eemd_80ms_polynomial_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "eemd",
+    "family": "polynomial",
+    "budget": 4000
+  },
+  {
+    "id": "case0_eemd_80ms_polynomial_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "eemd",
+    "family": "polynomial",
+    "budget": 8000
+  },
+  {
+    "id": "case0_eemd_80ms_spline_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "eemd",
+    "family": "spline",
+    "budget": 500
+  },
+  {
+    "id": "case0_eemd_80ms_spline_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "eemd",
+    "family": "spline",
+    "budget": 1000
+  },
+  {
+    "id": "case0_eemd_80ms_spline_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "eemd",
+    "family": "spline",
+    "budget": 2000
+  },
+  {
+    "id": "case0_eemd_80ms_spline_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "eemd",
+    "family": "spline",
+    "budget": 4000
+  },
+  {
+    "id": "case0_eemd_80ms_spline_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "eemd",
+    "family": "spline",
+    "budget": 8000
+  },
+  {
+    "id": "case0_eemd_80ms_sinusoid_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "eemd",
+    "family": "sinusoid",
+    "budget": 500
+  },
+  {
+    "id": "case0_eemd_80ms_sinusoid_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "eemd",
+    "family": "sinusoid",
+    "budget": 1000
+  },
+  {
+    "id": "case0_eemd_80ms_sinusoid_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "eemd",
+    "family": "sinusoid",
+    "budget": 2000
+  },
+  {
+    "id": "case0_eemd_80ms_sinusoid_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "eemd",
+    "family": "sinusoid",
+    "budget": 4000
+  },
+  {
+    "id": "case0_eemd_80ms_sinusoid_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "eemd",
+    "family": "sinusoid",
+    "budget": 8000
+  },
+  {
+    "id": "case0_eemd_80ms_amfm_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "eemd",
+    "family": "amfm",
+    "budget": 500
+  },
+  {
+    "id": "case0_eemd_80ms_amfm_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "eemd",
+    "family": "amfm",
+    "budget": 1000
+  },
+  {
+    "id": "case0_eemd_80ms_amfm_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "eemd",
+    "family": "amfm",
+    "budget": 2000
+  },
+  {
+    "id": "case0_eemd_80ms_amfm_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "eemd",
+    "family": "amfm",
+    "budget": 4000
+  },
+  {
+    "id": "case0_eemd_80ms_amfm_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "eemd",
+    "family": "amfm",
+    "budget": 8000
+  },
+  {
+    "id": "case0_eemd_80ms_sine_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "eemd",
+    "family": "sine_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_eemd_80ms_sine_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "eemd",
+    "family": "sine_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_eemd_80ms_sine_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "eemd",
+    "family": "sine_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_eemd_80ms_sine_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "eemd",
+    "family": "sine_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_eemd_80ms_sine_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "eemd",
+    "family": "sine_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_eemd_80ms_snakebeta_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "eemd",
+    "family": "snakebeta_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_eemd_80ms_snakebeta_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "eemd",
+    "family": "snakebeta_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_eemd_80ms_snakebeta_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "eemd",
+    "family": "snakebeta_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_eemd_80ms_snakebeta_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "eemd",
+    "family": "snakebeta_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_eemd_80ms_snakebeta_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "eemd",
+    "family": "snakebeta_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_ceemdan_80ms",
+    "kind": "decomposition",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan"
+  },
+  {
+    "id": "case0_ceemdan_80ms_polynomial_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan",
+    "family": "polynomial",
+    "budget": 500
+  },
+  {
+    "id": "case0_ceemdan_80ms_polynomial_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan",
+    "family": "polynomial",
+    "budget": 1000
+  },
+  {
+    "id": "case0_ceemdan_80ms_polynomial_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan",
+    "family": "polynomial",
+    "budget": 2000
+  },
+  {
+    "id": "case0_ceemdan_80ms_polynomial_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan",
+    "family": "polynomial",
+    "budget": 4000
+  },
+  {
+    "id": "case0_ceemdan_80ms_polynomial_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan",
+    "family": "polynomial",
+    "budget": 8000
+  },
+  {
+    "id": "case0_ceemdan_80ms_spline_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan",
+    "family": "spline",
+    "budget": 500
+  },
+  {
+    "id": "case0_ceemdan_80ms_spline_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan",
+    "family": "spline",
+    "budget": 1000
+  },
+  {
+    "id": "case0_ceemdan_80ms_spline_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan",
+    "family": "spline",
+    "budget": 2000
+  },
+  {
+    "id": "case0_ceemdan_80ms_spline_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan",
+    "family": "spline",
+    "budget": 4000
+  },
+  {
+    "id": "case0_ceemdan_80ms_spline_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan",
+    "family": "spline",
+    "budget": 8000
+  },
+  {
+    "id": "case0_ceemdan_80ms_sinusoid_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan",
+    "family": "sinusoid",
+    "budget": 500
+  },
+  {
+    "id": "case0_ceemdan_80ms_sinusoid_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan",
+    "family": "sinusoid",
+    "budget": 1000
+  },
+  {
+    "id": "case0_ceemdan_80ms_sinusoid_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan",
+    "family": "sinusoid",
+    "budget": 2000
+  },
+  {
+    "id": "case0_ceemdan_80ms_sinusoid_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan",
+    "family": "sinusoid",
+    "budget": 4000
+  },
+  {
+    "id": "case0_ceemdan_80ms_sinusoid_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan",
+    "family": "sinusoid",
+    "budget": 8000
+  },
+  {
+    "id": "case0_ceemdan_80ms_amfm_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan",
+    "family": "amfm",
+    "budget": 500
+  },
+  {
+    "id": "case0_ceemdan_80ms_amfm_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan",
+    "family": "amfm",
+    "budget": 1000
+  },
+  {
+    "id": "case0_ceemdan_80ms_amfm_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan",
+    "family": "amfm",
+    "budget": 2000
+  },
+  {
+    "id": "case0_ceemdan_80ms_amfm_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan",
+    "family": "amfm",
+    "budget": 4000
+  },
+  {
+    "id": "case0_ceemdan_80ms_amfm_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan",
+    "family": "amfm",
+    "budget": 8000
+  },
+  {
+    "id": "case0_ceemdan_80ms_sine_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan",
+    "family": "sine_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_ceemdan_80ms_sine_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan",
+    "family": "sine_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_ceemdan_80ms_sine_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan",
+    "family": "sine_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_ceemdan_80ms_sine_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan",
+    "family": "sine_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_ceemdan_80ms_sine_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan",
+    "family": "sine_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_ceemdan_80ms_snakebeta_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan",
+    "family": "snakebeta_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_ceemdan_80ms_snakebeta_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan",
+    "family": "snakebeta_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_ceemdan_80ms_snakebeta_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan",
+    "family": "snakebeta_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_ceemdan_80ms_snakebeta_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan",
+    "family": "snakebeta_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_ceemdan_80ms_snakebeta_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "ceemdan",
+    "family": "snakebeta_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_svmd_80ms",
+    "kind": "decomposition",
+    "case": 0,
+    "window": 80,
+    "method": "svmd"
+  },
+  {
+    "id": "case0_svmd_80ms_polynomial_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "svmd",
+    "family": "polynomial",
+    "budget": 500
+  },
+  {
+    "id": "case0_svmd_80ms_polynomial_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "svmd",
+    "family": "polynomial",
+    "budget": 1000
+  },
+  {
+    "id": "case0_svmd_80ms_polynomial_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "svmd",
+    "family": "polynomial",
+    "budget": 2000
+  },
+  {
+    "id": "case0_svmd_80ms_polynomial_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "svmd",
+    "family": "polynomial",
+    "budget": 4000
+  },
+  {
+    "id": "case0_svmd_80ms_polynomial_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "svmd",
+    "family": "polynomial",
+    "budget": 8000
+  },
+  {
+    "id": "case0_svmd_80ms_spline_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "svmd",
+    "family": "spline",
+    "budget": 500
+  },
+  {
+    "id": "case0_svmd_80ms_spline_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "svmd",
+    "family": "spline",
+    "budget": 1000
+  },
+  {
+    "id": "case0_svmd_80ms_spline_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "svmd",
+    "family": "spline",
+    "budget": 2000
+  },
+  {
+    "id": "case0_svmd_80ms_spline_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "svmd",
+    "family": "spline",
+    "budget": 4000
+  },
+  {
+    "id": "case0_svmd_80ms_spline_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "svmd",
+    "family": "spline",
+    "budget": 8000
+  },
+  {
+    "id": "case0_svmd_80ms_sinusoid_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "svmd",
+    "family": "sinusoid",
+    "budget": 500
+  },
+  {
+    "id": "case0_svmd_80ms_sinusoid_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "svmd",
+    "family": "sinusoid",
+    "budget": 1000
+  },
+  {
+    "id": "case0_svmd_80ms_sinusoid_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "svmd",
+    "family": "sinusoid",
+    "budget": 2000
+  },
+  {
+    "id": "case0_svmd_80ms_sinusoid_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "svmd",
+    "family": "sinusoid",
+    "budget": 4000
+  },
+  {
+    "id": "case0_svmd_80ms_sinusoid_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "svmd",
+    "family": "sinusoid",
+    "budget": 8000
+  },
+  {
+    "id": "case0_svmd_80ms_amfm_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "svmd",
+    "family": "amfm",
+    "budget": 500
+  },
+  {
+    "id": "case0_svmd_80ms_amfm_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "svmd",
+    "family": "amfm",
+    "budget": 1000
+  },
+  {
+    "id": "case0_svmd_80ms_amfm_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "svmd",
+    "family": "amfm",
+    "budget": 2000
+  },
+  {
+    "id": "case0_svmd_80ms_amfm_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "svmd",
+    "family": "amfm",
+    "budget": 4000
+  },
+  {
+    "id": "case0_svmd_80ms_amfm_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "svmd",
+    "family": "amfm",
+    "budget": 8000
+  },
+  {
+    "id": "case0_svmd_80ms_sine_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "svmd",
+    "family": "sine_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_svmd_80ms_sine_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "svmd",
+    "family": "sine_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_svmd_80ms_sine_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "svmd",
+    "family": "sine_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_svmd_80ms_sine_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "svmd",
+    "family": "sine_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_svmd_80ms_sine_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "svmd",
+    "family": "sine_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_svmd_80ms_snakebeta_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "svmd",
+    "family": "snakebeta_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_svmd_80ms_snakebeta_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "svmd",
+    "family": "snakebeta_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_svmd_80ms_snakebeta_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "svmd",
+    "family": "snakebeta_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_svmd_80ms_snakebeta_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "svmd",
+    "family": "snakebeta_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_svmd_80ms_snakebeta_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "svmd",
+    "family": "snakebeta_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_direct_80ms",
+    "kind": "decomposition",
+    "case": 0,
+    "window": 80,
+    "method": "direct"
+  },
+  {
+    "id": "case0_direct_80ms_polynomial_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "direct",
+    "family": "polynomial",
+    "budget": 500
+  },
+  {
+    "id": "case0_direct_80ms_polynomial_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "direct",
+    "family": "polynomial",
+    "budget": 1000
+  },
+  {
+    "id": "case0_direct_80ms_polynomial_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "direct",
+    "family": "polynomial",
+    "budget": 2000
+  },
+  {
+    "id": "case0_direct_80ms_polynomial_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "direct",
+    "family": "polynomial",
+    "budget": 4000
+  },
+  {
+    "id": "case0_direct_80ms_polynomial_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "direct",
+    "family": "polynomial",
+    "budget": 8000
+  },
+  {
+    "id": "case0_direct_80ms_spline_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "direct",
+    "family": "spline",
+    "budget": 500
+  },
+  {
+    "id": "case0_direct_80ms_spline_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "direct",
+    "family": "spline",
+    "budget": 1000
+  },
+  {
+    "id": "case0_direct_80ms_spline_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "direct",
+    "family": "spline",
+    "budget": 2000
+  },
+  {
+    "id": "case0_direct_80ms_spline_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "direct",
+    "family": "spline",
+    "budget": 4000
+  },
+  {
+    "id": "case0_direct_80ms_spline_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "direct",
+    "family": "spline",
+    "budget": 8000
+  },
+  {
+    "id": "case0_direct_80ms_sinusoid_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "direct",
+    "family": "sinusoid",
+    "budget": 500
+  },
+  {
+    "id": "case0_direct_80ms_sinusoid_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "direct",
+    "family": "sinusoid",
+    "budget": 1000
+  },
+  {
+    "id": "case0_direct_80ms_sinusoid_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "direct",
+    "family": "sinusoid",
+    "budget": 2000
+  },
+  {
+    "id": "case0_direct_80ms_sinusoid_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "direct",
+    "family": "sinusoid",
+    "budget": 4000
+  },
+  {
+    "id": "case0_direct_80ms_sinusoid_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "direct",
+    "family": "sinusoid",
+    "budget": 8000
+  },
+  {
+    "id": "case0_direct_80ms_amfm_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "direct",
+    "family": "amfm",
+    "budget": 500
+  },
+  {
+    "id": "case0_direct_80ms_amfm_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "direct",
+    "family": "amfm",
+    "budget": 1000
+  },
+  {
+    "id": "case0_direct_80ms_amfm_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "direct",
+    "family": "amfm",
+    "budget": 2000
+  },
+  {
+    "id": "case0_direct_80ms_amfm_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "direct",
+    "family": "amfm",
+    "budget": 4000
+  },
+  {
+    "id": "case0_direct_80ms_amfm_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "direct",
+    "family": "amfm",
+    "budget": 8000
+  },
+  {
+    "id": "case0_direct_80ms_sine_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "direct",
+    "family": "sine_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_direct_80ms_sine_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "direct",
+    "family": "sine_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_direct_80ms_sine_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "direct",
+    "family": "sine_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_direct_80ms_sine_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "direct",
+    "family": "sine_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_direct_80ms_sine_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "direct",
+    "family": "sine_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_direct_80ms_snakebeta_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "direct",
+    "family": "snakebeta_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_direct_80ms_snakebeta_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "direct",
+    "family": "snakebeta_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_direct_80ms_snakebeta_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "direct",
+    "family": "snakebeta_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_direct_80ms_snakebeta_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "direct",
+    "family": "snakebeta_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_direct_80ms_snakebeta_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 80,
+    "method": "direct",
+    "family": "snakebeta_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_emd_160ms",
+    "kind": "decomposition",
+    "case": 0,
+    "window": 160,
+    "method": "emd"
+  },
+  {
+    "id": "case0_emd_160ms_polynomial_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "emd",
+    "family": "polynomial",
+    "budget": 500
+  },
+  {
+    "id": "case0_emd_160ms_polynomial_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "emd",
+    "family": "polynomial",
+    "budget": 1000
+  },
+  {
+    "id": "case0_emd_160ms_polynomial_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "emd",
+    "family": "polynomial",
+    "budget": 2000
+  },
+  {
+    "id": "case0_emd_160ms_polynomial_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "emd",
+    "family": "polynomial",
+    "budget": 4000
+  },
+  {
+    "id": "case0_emd_160ms_polynomial_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "emd",
+    "family": "polynomial",
+    "budget": 8000
+  },
+  {
+    "id": "case0_emd_160ms_spline_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "emd",
+    "family": "spline",
+    "budget": 500
+  },
+  {
+    "id": "case0_emd_160ms_spline_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "emd",
+    "family": "spline",
+    "budget": 1000
+  },
+  {
+    "id": "case0_emd_160ms_spline_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "emd",
+    "family": "spline",
+    "budget": 2000
+  },
+  {
+    "id": "case0_emd_160ms_spline_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "emd",
+    "family": "spline",
+    "budget": 4000
+  },
+  {
+    "id": "case0_emd_160ms_spline_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "emd",
+    "family": "spline",
+    "budget": 8000
+  },
+  {
+    "id": "case0_emd_160ms_sinusoid_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "emd",
+    "family": "sinusoid",
+    "budget": 500
+  },
+  {
+    "id": "case0_emd_160ms_sinusoid_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "emd",
+    "family": "sinusoid",
+    "budget": 1000
+  },
+  {
+    "id": "case0_emd_160ms_sinusoid_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "emd",
+    "family": "sinusoid",
+    "budget": 2000
+  },
+  {
+    "id": "case0_emd_160ms_sinusoid_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "emd",
+    "family": "sinusoid",
+    "budget": 4000
+  },
+  {
+    "id": "case0_emd_160ms_sinusoid_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "emd",
+    "family": "sinusoid",
+    "budget": 8000
+  },
+  {
+    "id": "case0_emd_160ms_amfm_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "emd",
+    "family": "amfm",
+    "budget": 500
+  },
+  {
+    "id": "case0_emd_160ms_amfm_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "emd",
+    "family": "amfm",
+    "budget": 1000
+  },
+  {
+    "id": "case0_emd_160ms_amfm_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "emd",
+    "family": "amfm",
+    "budget": 2000
+  },
+  {
+    "id": "case0_emd_160ms_amfm_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "emd",
+    "family": "amfm",
+    "budget": 4000
+  },
+  {
+    "id": "case0_emd_160ms_amfm_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "emd",
+    "family": "amfm",
+    "budget": 8000
+  },
+  {
+    "id": "case0_emd_160ms_sine_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "emd",
+    "family": "sine_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_emd_160ms_sine_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "emd",
+    "family": "sine_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_emd_160ms_sine_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "emd",
+    "family": "sine_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_emd_160ms_sine_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "emd",
+    "family": "sine_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_emd_160ms_sine_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "emd",
+    "family": "sine_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_emd_160ms_snakebeta_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "emd",
+    "family": "snakebeta_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_emd_160ms_snakebeta_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "emd",
+    "family": "snakebeta_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_emd_160ms_snakebeta_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "emd",
+    "family": "snakebeta_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_emd_160ms_snakebeta_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "emd",
+    "family": "snakebeta_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_emd_160ms_snakebeta_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "emd",
+    "family": "snakebeta_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_vmd_160ms",
+    "kind": "decomposition",
+    "case": 0,
+    "window": 160,
+    "method": "vmd"
+  },
+  {
+    "id": "case0_vmd_160ms_polynomial_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "vmd",
+    "family": "polynomial",
+    "budget": 500
+  },
+  {
+    "id": "case0_vmd_160ms_polynomial_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "vmd",
+    "family": "polynomial",
+    "budget": 1000
+  },
+  {
+    "id": "case0_vmd_160ms_polynomial_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "vmd",
+    "family": "polynomial",
+    "budget": 2000
+  },
+  {
+    "id": "case0_vmd_160ms_polynomial_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "vmd",
+    "family": "polynomial",
+    "budget": 4000
+  },
+  {
+    "id": "case0_vmd_160ms_polynomial_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "vmd",
+    "family": "polynomial",
+    "budget": 8000
+  },
+  {
+    "id": "case0_vmd_160ms_spline_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "vmd",
+    "family": "spline",
+    "budget": 500
+  },
+  {
+    "id": "case0_vmd_160ms_spline_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "vmd",
+    "family": "spline",
+    "budget": 1000
+  },
+  {
+    "id": "case0_vmd_160ms_spline_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "vmd",
+    "family": "spline",
+    "budget": 2000
+  },
+  {
+    "id": "case0_vmd_160ms_spline_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "vmd",
+    "family": "spline",
+    "budget": 4000
+  },
+  {
+    "id": "case0_vmd_160ms_spline_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "vmd",
+    "family": "spline",
+    "budget": 8000
+  },
+  {
+    "id": "case0_vmd_160ms_sinusoid_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "vmd",
+    "family": "sinusoid",
+    "budget": 500
+  },
+  {
+    "id": "case0_vmd_160ms_sinusoid_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "vmd",
+    "family": "sinusoid",
+    "budget": 1000
+  },
+  {
+    "id": "case0_vmd_160ms_sinusoid_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "vmd",
+    "family": "sinusoid",
+    "budget": 2000
+  },
+  {
+    "id": "case0_vmd_160ms_sinusoid_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "vmd",
+    "family": "sinusoid",
+    "budget": 4000
+  },
+  {
+    "id": "case0_vmd_160ms_sinusoid_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "vmd",
+    "family": "sinusoid",
+    "budget": 8000
+  },
+  {
+    "id": "case0_vmd_160ms_amfm_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "vmd",
+    "family": "amfm",
+    "budget": 500
+  },
+  {
+    "id": "case0_vmd_160ms_amfm_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "vmd",
+    "family": "amfm",
+    "budget": 1000
+  },
+  {
+    "id": "case0_vmd_160ms_amfm_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "vmd",
+    "family": "amfm",
+    "budget": 2000
+  },
+  {
+    "id": "case0_vmd_160ms_amfm_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "vmd",
+    "family": "amfm",
+    "budget": 4000
+  },
+  {
+    "id": "case0_vmd_160ms_amfm_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "vmd",
+    "family": "amfm",
+    "budget": 8000
+  },
+  {
+    "id": "case0_vmd_160ms_sine_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "vmd",
+    "family": "sine_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_vmd_160ms_sine_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "vmd",
+    "family": "sine_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_vmd_160ms_sine_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "vmd",
+    "family": "sine_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_vmd_160ms_sine_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "vmd",
+    "family": "sine_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_vmd_160ms_sine_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "vmd",
+    "family": "sine_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_vmd_160ms_snakebeta_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "vmd",
+    "family": "snakebeta_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_vmd_160ms_snakebeta_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "vmd",
+    "family": "snakebeta_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_vmd_160ms_snakebeta_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "vmd",
+    "family": "snakebeta_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_vmd_160ms_snakebeta_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "vmd",
+    "family": "snakebeta_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_vmd_160ms_snakebeta_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "vmd",
+    "family": "snakebeta_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_eemd_160ms",
+    "kind": "decomposition",
+    "case": 0,
+    "window": 160,
+    "method": "eemd"
+  },
+  {
+    "id": "case0_eemd_160ms_polynomial_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "eemd",
+    "family": "polynomial",
+    "budget": 500
+  },
+  {
+    "id": "case0_eemd_160ms_polynomial_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "eemd",
+    "family": "polynomial",
+    "budget": 1000
+  },
+  {
+    "id": "case0_eemd_160ms_polynomial_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "eemd",
+    "family": "polynomial",
+    "budget": 2000
+  },
+  {
+    "id": "case0_eemd_160ms_polynomial_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "eemd",
+    "family": "polynomial",
+    "budget": 4000
+  },
+  {
+    "id": "case0_eemd_160ms_polynomial_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "eemd",
+    "family": "polynomial",
+    "budget": 8000
+  },
+  {
+    "id": "case0_eemd_160ms_spline_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "eemd",
+    "family": "spline",
+    "budget": 500
+  },
+  {
+    "id": "case0_eemd_160ms_spline_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "eemd",
+    "family": "spline",
+    "budget": 1000
+  },
+  {
+    "id": "case0_eemd_160ms_spline_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "eemd",
+    "family": "spline",
+    "budget": 2000
+  },
+  {
+    "id": "case0_eemd_160ms_spline_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "eemd",
+    "family": "spline",
+    "budget": 4000
+  },
+  {
+    "id": "case0_eemd_160ms_spline_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "eemd",
+    "family": "spline",
+    "budget": 8000
+  },
+  {
+    "id": "case0_eemd_160ms_sinusoid_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "eemd",
+    "family": "sinusoid",
+    "budget": 500
+  },
+  {
+    "id": "case0_eemd_160ms_sinusoid_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "eemd",
+    "family": "sinusoid",
+    "budget": 1000
+  },
+  {
+    "id": "case0_eemd_160ms_sinusoid_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "eemd",
+    "family": "sinusoid",
+    "budget": 2000
+  },
+  {
+    "id": "case0_eemd_160ms_sinusoid_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "eemd",
+    "family": "sinusoid",
+    "budget": 4000
+  },
+  {
+    "id": "case0_eemd_160ms_sinusoid_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "eemd",
+    "family": "sinusoid",
+    "budget": 8000
+  },
+  {
+    "id": "case0_eemd_160ms_amfm_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "eemd",
+    "family": "amfm",
+    "budget": 500
+  },
+  {
+    "id": "case0_eemd_160ms_amfm_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "eemd",
+    "family": "amfm",
+    "budget": 1000
+  },
+  {
+    "id": "case0_eemd_160ms_amfm_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "eemd",
+    "family": "amfm",
+    "budget": 2000
+  },
+  {
+    "id": "case0_eemd_160ms_amfm_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "eemd",
+    "family": "amfm",
+    "budget": 4000
+  },
+  {
+    "id": "case0_eemd_160ms_amfm_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "eemd",
+    "family": "amfm",
+    "budget": 8000
+  },
+  {
+    "id": "case0_eemd_160ms_sine_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "eemd",
+    "family": "sine_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_eemd_160ms_sine_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "eemd",
+    "family": "sine_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_eemd_160ms_sine_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "eemd",
+    "family": "sine_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_eemd_160ms_sine_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "eemd",
+    "family": "sine_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_eemd_160ms_sine_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "eemd",
+    "family": "sine_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_eemd_160ms_snakebeta_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "eemd",
+    "family": "snakebeta_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_eemd_160ms_snakebeta_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "eemd",
+    "family": "snakebeta_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_eemd_160ms_snakebeta_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "eemd",
+    "family": "snakebeta_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_eemd_160ms_snakebeta_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "eemd",
+    "family": "snakebeta_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_eemd_160ms_snakebeta_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "eemd",
+    "family": "snakebeta_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_ceemdan_160ms",
+    "kind": "decomposition",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan"
+  },
+  {
+    "id": "case0_ceemdan_160ms_polynomial_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan",
+    "family": "polynomial",
+    "budget": 500
+  },
+  {
+    "id": "case0_ceemdan_160ms_polynomial_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan",
+    "family": "polynomial",
+    "budget": 1000
+  },
+  {
+    "id": "case0_ceemdan_160ms_polynomial_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan",
+    "family": "polynomial",
+    "budget": 2000
+  },
+  {
+    "id": "case0_ceemdan_160ms_polynomial_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan",
+    "family": "polynomial",
+    "budget": 4000
+  },
+  {
+    "id": "case0_ceemdan_160ms_polynomial_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan",
+    "family": "polynomial",
+    "budget": 8000
+  },
+  {
+    "id": "case0_ceemdan_160ms_spline_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan",
+    "family": "spline",
+    "budget": 500
+  },
+  {
+    "id": "case0_ceemdan_160ms_spline_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan",
+    "family": "spline",
+    "budget": 1000
+  },
+  {
+    "id": "case0_ceemdan_160ms_spline_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan",
+    "family": "spline",
+    "budget": 2000
+  },
+  {
+    "id": "case0_ceemdan_160ms_spline_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan",
+    "family": "spline",
+    "budget": 4000
+  },
+  {
+    "id": "case0_ceemdan_160ms_spline_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan",
+    "family": "spline",
+    "budget": 8000
+  },
+  {
+    "id": "case0_ceemdan_160ms_sinusoid_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan",
+    "family": "sinusoid",
+    "budget": 500
+  },
+  {
+    "id": "case0_ceemdan_160ms_sinusoid_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan",
+    "family": "sinusoid",
+    "budget": 1000
+  },
+  {
+    "id": "case0_ceemdan_160ms_sinusoid_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan",
+    "family": "sinusoid",
+    "budget": 2000
+  },
+  {
+    "id": "case0_ceemdan_160ms_sinusoid_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan",
+    "family": "sinusoid",
+    "budget": 4000
+  },
+  {
+    "id": "case0_ceemdan_160ms_sinusoid_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan",
+    "family": "sinusoid",
+    "budget": 8000
+  },
+  {
+    "id": "case0_ceemdan_160ms_amfm_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan",
+    "family": "amfm",
+    "budget": 500
+  },
+  {
+    "id": "case0_ceemdan_160ms_amfm_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan",
+    "family": "amfm",
+    "budget": 1000
+  },
+  {
+    "id": "case0_ceemdan_160ms_amfm_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan",
+    "family": "amfm",
+    "budget": 2000
+  },
+  {
+    "id": "case0_ceemdan_160ms_amfm_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan",
+    "family": "amfm",
+    "budget": 4000
+  },
+  {
+    "id": "case0_ceemdan_160ms_amfm_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan",
+    "family": "amfm",
+    "budget": 8000
+  },
+  {
+    "id": "case0_ceemdan_160ms_sine_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan",
+    "family": "sine_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_ceemdan_160ms_sine_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan",
+    "family": "sine_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_ceemdan_160ms_sine_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan",
+    "family": "sine_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_ceemdan_160ms_sine_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan",
+    "family": "sine_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_ceemdan_160ms_sine_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan",
+    "family": "sine_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_ceemdan_160ms_snakebeta_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan",
+    "family": "snakebeta_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_ceemdan_160ms_snakebeta_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan",
+    "family": "snakebeta_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_ceemdan_160ms_snakebeta_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan",
+    "family": "snakebeta_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_ceemdan_160ms_snakebeta_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan",
+    "family": "snakebeta_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_ceemdan_160ms_snakebeta_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "ceemdan",
+    "family": "snakebeta_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_svmd_160ms",
+    "kind": "decomposition",
+    "case": 0,
+    "window": 160,
+    "method": "svmd"
+  },
+  {
+    "id": "case0_svmd_160ms_polynomial_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "svmd",
+    "family": "polynomial",
+    "budget": 500
+  },
+  {
+    "id": "case0_svmd_160ms_polynomial_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "svmd",
+    "family": "polynomial",
+    "budget": 1000
+  },
+  {
+    "id": "case0_svmd_160ms_polynomial_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "svmd",
+    "family": "polynomial",
+    "budget": 2000
+  },
+  {
+    "id": "case0_svmd_160ms_polynomial_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "svmd",
+    "family": "polynomial",
+    "budget": 4000
+  },
+  {
+    "id": "case0_svmd_160ms_polynomial_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "svmd",
+    "family": "polynomial",
+    "budget": 8000
+  },
+  {
+    "id": "case0_svmd_160ms_spline_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "svmd",
+    "family": "spline",
+    "budget": 500
+  },
+  {
+    "id": "case0_svmd_160ms_spline_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "svmd",
+    "family": "spline",
+    "budget": 1000
+  },
+  {
+    "id": "case0_svmd_160ms_spline_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "svmd",
+    "family": "spline",
+    "budget": 2000
+  },
+  {
+    "id": "case0_svmd_160ms_spline_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "svmd",
+    "family": "spline",
+    "budget": 4000
+  },
+  {
+    "id": "case0_svmd_160ms_spline_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "svmd",
+    "family": "spline",
+    "budget": 8000
+  },
+  {
+    "id": "case0_svmd_160ms_sinusoid_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "svmd",
+    "family": "sinusoid",
+    "budget": 500
+  },
+  {
+    "id": "case0_svmd_160ms_sinusoid_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "svmd",
+    "family": "sinusoid",
+    "budget": 1000
+  },
+  {
+    "id": "case0_svmd_160ms_sinusoid_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "svmd",
+    "family": "sinusoid",
+    "budget": 2000
+  },
+  {
+    "id": "case0_svmd_160ms_sinusoid_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "svmd",
+    "family": "sinusoid",
+    "budget": 4000
+  },
+  {
+    "id": "case0_svmd_160ms_sinusoid_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "svmd",
+    "family": "sinusoid",
+    "budget": 8000
+  },
+  {
+    "id": "case0_svmd_160ms_amfm_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "svmd",
+    "family": "amfm",
+    "budget": 500
+  },
+  {
+    "id": "case0_svmd_160ms_amfm_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "svmd",
+    "family": "amfm",
+    "budget": 1000
+  },
+  {
+    "id": "case0_svmd_160ms_amfm_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "svmd",
+    "family": "amfm",
+    "budget": 2000
+  },
+  {
+    "id": "case0_svmd_160ms_amfm_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "svmd",
+    "family": "amfm",
+    "budget": 4000
+  },
+  {
+    "id": "case0_svmd_160ms_amfm_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "svmd",
+    "family": "amfm",
+    "budget": 8000
+  },
+  {
+    "id": "case0_svmd_160ms_sine_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "svmd",
+    "family": "sine_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_svmd_160ms_sine_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "svmd",
+    "family": "sine_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_svmd_160ms_sine_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "svmd",
+    "family": "sine_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_svmd_160ms_sine_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "svmd",
+    "family": "sine_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_svmd_160ms_sine_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "svmd",
+    "family": "sine_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_svmd_160ms_snakebeta_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "svmd",
+    "family": "snakebeta_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_svmd_160ms_snakebeta_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "svmd",
+    "family": "snakebeta_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_svmd_160ms_snakebeta_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "svmd",
+    "family": "snakebeta_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_svmd_160ms_snakebeta_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "svmd",
+    "family": "snakebeta_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_svmd_160ms_snakebeta_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "svmd",
+    "family": "snakebeta_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_direct_160ms",
+    "kind": "decomposition",
+    "case": 0,
+    "window": 160,
+    "method": "direct"
+  },
+  {
+    "id": "case0_direct_160ms_polynomial_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "direct",
+    "family": "polynomial",
+    "budget": 500
+  },
+  {
+    "id": "case0_direct_160ms_polynomial_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "direct",
+    "family": "polynomial",
+    "budget": 1000
+  },
+  {
+    "id": "case0_direct_160ms_polynomial_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "direct",
+    "family": "polynomial",
+    "budget": 2000
+  },
+  {
+    "id": "case0_direct_160ms_polynomial_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "direct",
+    "family": "polynomial",
+    "budget": 4000
+  },
+  {
+    "id": "case0_direct_160ms_polynomial_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "direct",
+    "family": "polynomial",
+    "budget": 8000
+  },
+  {
+    "id": "case0_direct_160ms_spline_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "direct",
+    "family": "spline",
+    "budget": 500
+  },
+  {
+    "id": "case0_direct_160ms_spline_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "direct",
+    "family": "spline",
+    "budget": 1000
+  },
+  {
+    "id": "case0_direct_160ms_spline_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "direct",
+    "family": "spline",
+    "budget": 2000
+  },
+  {
+    "id": "case0_direct_160ms_spline_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "direct",
+    "family": "spline",
+    "budget": 4000
+  },
+  {
+    "id": "case0_direct_160ms_spline_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "direct",
+    "family": "spline",
+    "budget": 8000
+  },
+  {
+    "id": "case0_direct_160ms_sinusoid_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "direct",
+    "family": "sinusoid",
+    "budget": 500
+  },
+  {
+    "id": "case0_direct_160ms_sinusoid_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "direct",
+    "family": "sinusoid",
+    "budget": 1000
+  },
+  {
+    "id": "case0_direct_160ms_sinusoid_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "direct",
+    "family": "sinusoid",
+    "budget": 2000
+  },
+  {
+    "id": "case0_direct_160ms_sinusoid_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "direct",
+    "family": "sinusoid",
+    "budget": 4000
+  },
+  {
+    "id": "case0_direct_160ms_sinusoid_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "direct",
+    "family": "sinusoid",
+    "budget": 8000
+  },
+  {
+    "id": "case0_direct_160ms_amfm_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "direct",
+    "family": "amfm",
+    "budget": 500
+  },
+  {
+    "id": "case0_direct_160ms_amfm_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "direct",
+    "family": "amfm",
+    "budget": 1000
+  },
+  {
+    "id": "case0_direct_160ms_amfm_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "direct",
+    "family": "amfm",
+    "budget": 2000
+  },
+  {
+    "id": "case0_direct_160ms_amfm_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "direct",
+    "family": "amfm",
+    "budget": 4000
+  },
+  {
+    "id": "case0_direct_160ms_amfm_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "direct",
+    "family": "amfm",
+    "budget": 8000
+  },
+  {
+    "id": "case0_direct_160ms_sine_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "direct",
+    "family": "sine_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_direct_160ms_sine_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "direct",
+    "family": "sine_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_direct_160ms_sine_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "direct",
+    "family": "sine_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_direct_160ms_sine_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "direct",
+    "family": "sine_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_direct_160ms_sine_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "direct",
+    "family": "sine_network",
+    "budget": 8000
+  },
+  {
+    "id": "case0_direct_160ms_snakebeta_network_500",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "direct",
+    "family": "snakebeta_network",
+    "budget": 500
+  },
+  {
+    "id": "case0_direct_160ms_snakebeta_network_1000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "direct",
+    "family": "snakebeta_network",
+    "budget": 1000
+  },
+  {
+    "id": "case0_direct_160ms_snakebeta_network_2000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "direct",
+    "family": "snakebeta_network",
+    "budget": 2000
+  },
+  {
+    "id": "case0_direct_160ms_snakebeta_network_4000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "direct",
+    "family": "snakebeta_network",
+    "budget": 4000
+  },
+  {
+    "id": "case0_direct_160ms_snakebeta_network_8000",
+    "kind": "fit",
+    "case": 0,
+    "window": 160,
+    "method": "direct",
+    "family": "snakebeta_network",
+    "budget": 8000
+  }
+]

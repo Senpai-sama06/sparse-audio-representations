@@ -1,17 +1,97 @@
 # Sparse audio representations
 
+Report index: [Method documentation and reports](documentation/README.md).
 Report instructions: [Documentation and results reports](documentation/REPORTS_README.md).
 
-## Shared learned-function pilot (experiment 1)
+Parametric report index: [experiment reports and reading reviews](approaches/parametric/README.md).
 
-`approaches/parametric/learned.py` starts the learned-representation arm of
-experiment 1. It compares an uncentered PCA/SVD basis against shared conditional
+## Per-IMF mathematical expression discovery (experiment 1)
+
+The intended question is: for a VMD IMF from an isolated 40 ms chunk, can a
+model generate an explicit mathematical function that fits accurately using a
+small description? `approaches/parametric/symbolic/` implements this experiment.
+The generator constructs variable-length expressions from elementary operations;
+it does not classify signals into a predefined list of complete function families.
+The initial grammar is `t`, adjustable constants, `+`, `-`, `*`, `sin`, `cos`,
+`tanh`, and square. Composition is learned; the grammar and finite tree/search
+limits are declared restrictions. This pilot uses expression trees, not reusable
+subexpression graphs. A future grammar expansion is a separate ablation.
+
+An IMF-conditioned MLP/GRU generates prefix expressions. Synthetic random
+compositions provide supervised pretraining, followed by reward-weighted updates
+and replay using actual fitted training IMFs. The network predicts structure;
+constants are optimized separately using float64 bounded least squares with
+analytic derivatives, multiple starts, and stronger refinement of frontier fits.
+FFT frequencies only initialize numerical fitting, never choose the expression.
+Coefficient bounds are +/-2048 on normalized time [-1,1]. RMS normalizes the
+fitting objective; a separate output gain is fitted, stored and counted.
+Termination, first-order optimality, evaluation
+counts and restart counts remain in every candidate record. Local convergence
+is not proof of an optimal curve.
+
+The default pilot reuses the frozen VMD caches from the previous run: hash-select
+16 training, 4 validation, and 8 test chunks, and fit all eight IMFs from each.
+The residual is excluded. Modes with mean-square energy <=1e-20 are explicitly
+listed as ineligible. There is no selection by fitting quality. Sources, selected
+offsets, cache hashes, speaker disjointness and exclusions are recorded. The
+default model receives 1500 synthetic updates followed by 80 adaptation updates.
+Each adaptation update searches 8 expressions for each of two training IMFs.
+Validation selects a checkpoint using at most 8 frozen validation IMFs every
+20 updates. Three frozen arms (random grammar, pretrained, adapted) then receive
+48 proposals per held-out IMF, cycling node budgets 7/15/31, two fitting starts
+and 96 evaluations per start. Two observed frontier expressions receive three
+starts and 384 evaluations. Duplicate proposals consume the same budget as new
+ones; unique proposal counts and wall time are reported.
+
+```powershell
+./tools/train_symbolic_imf.ps1
+# Or define run(source=..., output=..., ...) settings in main.py.
+python -m approaches.parametric.symbolic.experiment --help
+```
+
+Live progress is at http://127.0.0.1:8770/ and `/progress.json`. The run retains
+checkpoints and optimizer/RNG state, replay discoveries, per-IMF job JSON, all
+candidate metrics, settings/source hashes, plots and native-amplitude IMF audio.
+An identical command resumes; changed source/settings require a fresh output.
+`symbolic_imf_shareable.html` embeds plots, audio, formulas and linked data for
+sharing without companion files. Reports refresh at training checkpoints and
+after each held-out IMF search. Elapsed time is global; ETA is provisional
+because an optimization update and an expression-search job have different costs.
+
+Primary results are error versus fitted numerical values and error versus the
+complete expression description. Every constant and the output gain is counted.
+Reference description size is 16 header bits + 4 bits per tree token + 64 bits
+per numerical value; this is not an entropy-coded compression claim. Separate
+Pareto flags retain both definitions, with threshold success/coverage in summary
+tables. Source-free evaluation needs only the expression JSON, with no generator
+or neural waveform decoder:
+
+```powershell
+python -m approaches.parametric.symbolic.payload EXPRESSION.json reconstructed.wav
+python tools/check_portable_report.py runs/parametric_symbolic_imf_pilot/symbolic_imf_shareable.html
+```
+
+The known chirp and analytic derivative audit must pass before training. A
+separate synthetic benchmark tests actual discovery of quadratic, sinusoidal
+and chirped AM-FM functions without exposing their structures to search. These
+checks must not be conflated: a good fitter can still have a poor structure
+generator. No unrestricted global optimum, perceptual quality, learned VMD,
+RVQ or whole-clip reconstruction is claimed by this per-IMF pilot.
+
+## Archived shared representation pilot (different scope)
+
+The completed `approaches/parametric/learned.py` pilot addressed a different
+question from explicit IMF function discovery. It compares an uncentered PCA/SVD basis against shared conditional
 sine and SnakeBeta decoders. Both neural candidates have the same trainable
 Fourier features and FiLM conditioning; the activation differs. A small encoder
 maps a normalized component to a code. The shared decoder receives only the code
 and coordinates; its weights are stored once. Every component's mean and RMS
 gain are two additional transmitted scalars. This is not yet symbolic expression
 discovery, a learned selector, learned VMD, quantization or RVQ.
+
+It is preserved without overwriting its results. The frozen standalone report is
+[the shared-representation report](approaches/parametric/shared_representation/report/shared_representation_pilot_complete.html), with hashes
+and settings/metrics snapshots under `records/learned_representation_pilot/`.
 
 The pilot has two separate data/model domains: direct 640-sample waveforms, and
 fixed eight-mode VMD plus its encoded residual. VMD receives only each isolated
@@ -47,15 +127,16 @@ asset+code decoding and HTML generation. Model tests also check masking, gain/
 mean inversion, decoder identity hashes and exact scalar accounting.
 
 The launcher returns a live dashboard (default http://127.0.0.1:8768/), a standalone
-audio/plot report and an archive index (http://127.0.0.1:8769/index.html). Data
+audio/plot report and an archive index (http://127.0.0.1:8769/report/index.html). Data
 preparation is followed by actual training. Progress units combine prepared blocks,
 optimizer steps and final model evaluations; ETA is provisional. Reports refresh
 at validation checkpoints. Metrics name validation/test explicitly. Raw files,
 logs, caches and checkpoint assets remain under the chosen output directory.
 
-The previous two experiments have frozen progress/settings/metrics snapshots in
-`runs/parametric_reports/records/`, report checksums in `experiments.json`, and
-self-contained reports linked from `index.html`. Rebuild this archive with
+The experiments have frozen progress/settings/metrics snapshots beside their
+study-specific `approaches/parametric/<study>/report/` publications. Report
+checksums and the [archive index](approaches/parametric/report/index.html) live
+in `approaches/parametric/report/`. Rebuild this archive with
 `python tools/register_parametric_runs.py`. The multi-window pilot is stopped at
 452/744; the isolated study completed 972/972. No raw results were deleted.
 
@@ -69,7 +150,7 @@ python -m approaches.parametric.learned_payload decoder_best.pt CODE.json decode
 
 The multi-window pilot was stopped after its implementation audit. Its completed
 jobs remain in the run directory. The frozen standalone listening report is
-`runs/parametric_reports/preliminary_multi_window_sweep_stopped_after_audit.html`.
+[the stopped multi-window report](approaches/parametric/multi_window/report/preliminary_multi_window_sweep_stopped_after_audit.html).
 It labels the pilot's empty low-budget models, inadequate nonlinear convergence,
 quantization/metadata costs and unvalidated PESQ outliers. It is not evidence of
 the best achievable performance of each representation family.
@@ -205,8 +286,7 @@ Minimum support, minimum L1 norm and minimum encoded bitrate are different goals
   waveform one-sparse, but describing that basis can carry the waveform itself.
   Existence therefore does not establish useful compression or an efficient search.
   Full proofs are available in the LaTeX source at
-  [documentation/sparsest_representation.tex](documentation/sparsest_representation.tex),
-  alongside the original problem source at `documentation/init/init.tex`.
+  [sparsest-representation theory](approaches/sparse_search/docs/sparsest_representation.tex).
 - **Learned baselines:** sparse nonlinear (S-NL), dense-trained nonlinear (D-NL)
   and sparse affine (S-AF) autoencoders were trained; S-AF performed best among
   those three. Targets are the input waveforms themselves (self-supervised).
@@ -214,9 +294,8 @@ Minimum support, minimum L1 norm and minimum encoded bitrate are different goals
   latent projection, global magnitude top-k, and affine convolutional synthesis.
   Training used normalized waveform MSE, 20,000 steps and sampled support budgets.
   A two-second input passes through 16,000 values before its 32,000-slot latent
-  projection; full support is not a lossless reference. See the
-  Model mathematics are in the LaTeX source at
-  `documentation/sparse_autoencoder_models.tex`.
+  projection; full support is not a lossless reference. The
+  model mathematics are in the [LaTeX source](approaches/representations/docs/sparse_autoencoder/sparse_autoencoder_models.tex).
 - **Interpretation:** channels specialize in frequency bands and associate with
   voiced speech. Controlled pitch shifts support fixed-frequency filter behavior;
   they do not establish pitch/timbre slots. Channel 53 illustrates that retention
@@ -320,108 +399,15 @@ for authoritative completion; a reboot requires the resume command.
 
 ## PitchFlower RVQ / Gaussian-splatting training
 
-Prepared from the [official PitchFlower implementation](https://github.com/diegotg2000/PitchFlower)
-and [GS-Codec](https://github.com/ronaluf/gs-codec), pinned in
-`tools/setup_pitchflower.py`. One foreground command starts or resumes the
-hardware-tuned weekly campaign:
+PitchFlower code, method documentation, published reports, metric records, and
+verification results are grouped under [approaches/pitchflower](approaches/pitchflower/README.md).
+See the [training recipe](approaches/pitchflower/docs/training.md) for the campaign
+setup and the [standalone RVQ report](approaches/pitchflower/reports/pitchflower_best_testcases.html)
+for the 40-case quality and bitrate comparison.
 
 ```powershell
 .\tools\run_pitchflower.ps1
 ```
-
-The launcher now selects `configs/study_pitchflower_hardware.yaml`: batch 64,
-125k updates per codec (the same 8M crops as batch 32 x 250k), peak learning rate
-1.4142e-4 and 1,000-update linear warm-up. Validation/checkpoint intervals are
-halved in updates to retain their crop-based cadence. Predictor settings and
-72/72/12-hour caps are inherited unchanged. These are tuning choices, not a
-guarantee of equal convergence. Batch 64 matched batch 128's measured compute
-throughput while using about 7.9 rather than 14.6 GiB of allocated VRAM.
-The profile uses four data-loader workers and mapped NPY reads. Cold-corpus
-checks still show HDD waits; their throughput is substantially below resident-GPU
-throughput. Raw comparisons are recorded in
-the hardware tuning record; these are short samples during
-ongoing cache preparation, not full-run ETAs.
-The corrected upstream pitch KEEP-mask semantics are covered by a regression
-test: training drops pitch 10%, validation retains it, and the unconditional
-guidance branch drops it. This objective correction uses a fresh run under
-`runs/pitchflower_hardware`; older checkpoints remain preserved. Use
-`-Config configs/study_pitchflower_week.yaml` to select the older weekly schedule.
-
-It prepares a shared offline WORLD flat/shift cache and lossless memory-mapped
-copies, then trains RVQ and GS sequentially
-on the full cached train-clean-360 (104,014 files / 921 speakers / 363.6 hours),
-then trains the GS predictor and calibrates 6-bit scalar centroids. Original
-LibriSpeech is resampled from 16 to 24 kHz; dev-clean speakers are separate.
-Crops use the released peak normalization convention, unlike the earlier
-amplitude-preserving baseline; waveform gains would need separate codec accounting.
-Both codecs use PitchFlower's ConvNeXt/attention/flow backbone, CFM plus commitment,
-AdamW 1e-4 and effective batch 32 in the baseline configuration. The baseline
-`configs/study_pitchflower_week.yaml` caps each codec at 250k total optimizer
-updates or 72 active hours, whichever comes first. The GS predictor is capped at
-100k steps or 12 hours, with effective batch 16. These caps total 156 active
-hours, leaving 12 hours within a week for setup and outputs under continuous
-operation. Interruptions/downtime and an unusually long batch can extend calendar
-time. This is a shorter exploratory baseline, not paper-level convergence.
-The original 1M-step settings remain in `configs/study_pitchflower_librispeech.yaml`.
-Weekly outputs are separate in `runs/pitchflower_week`. Both codecs start fresh
-because corrected pitch keep-mask semantics differ from the earlier RVQ run.
-The old checkpoint is preserved for provenance; it does not seed this comparison.
-On this machine that output directory is a junction to NVMe storage, keeping
-checkpoint/log writes off the dataset HDD; local `storage.json` records its target.
-
-RVQ uses 8 x 512 entries, dimension 256. GS uses the paper's C=32, shared widths,
-fixed uniform centers, 100 inner Adam steps at LR 0.4 and STE outer gradients.
-Its density 80/225 becomes 25 Gaussians over 71 latent frames here; this is a
-PitchFlower adaptation, not a reproduction of GS-Codec's SEANet/GAN backbone.
-Commitment weights are respectively 0.25 and 20. CFG dropout is implemented
-as 10% per condition, respecting the reference pitch keep-mask and adding content
-dropout. Neither RVQ dropout nor training-time GS quantization is used.
-The GS predictor uses the released implementation (four dilated blocks, positional
-encodings and one attention decoder); scalar PTQ comes
-after training. No measured bitrate or quality results are claimed yet.
-
-Terminal bars show preprocessing and optimizer-step/loss progress. Outputs are in
-`runs/pitchflower_hardware/{rvq,gs,predictor}/` for the launcher's default profile
-(`runs/pitchflower_week` for the baseline): checkpoints, TensorBoard logs,
-progress JSON and final Vocos waveform examples at -6/0/+6 semitones. The root
-`progress.json` mirrors the current phase. Rerun the same command after Ctrl+C
-to resume; model/optimizer state is restored, but data-order/crop replay is not
-guaranteed identical. Cached utterances are reused. `-Phase prepare|rvq|gs|predictor|calibrate`
-selects one phase. This launcher does not stop or resize the ongoing L0 search.
-Preprocessing may require substantial
-time and roughly 250 GB before compression. Paper WER/SIM/UTMOS benchmarks remain
-a later evaluation, not metrics computed by this training recipe.
-Each stage's `time_budget.json` records cumulative active seconds across resumes.
-`complete.json` reports actual updates and whether the step cap or time cap ended
-training; compare actual update counts when a stage exhausts its time allowance.
-Budget accounting is flushed every 30 seconds and at normal stop/interruption.
-
-Execution uses SDPA attention with unchanged checkpoint keys, CUDA foreach Adam,
-cuDNN autotuning and above-normal Windows training-process priority. RVQ still
-updates its codebooks in groups of four, preserving the original EMA cadence.
-The mapped-cache RVQ benchmark measured 0.35 s/optimizer step and 4.63 GiB
-allocated GPU memory on a warm 832-utterance subset (24 measured steps, real
-loader, random corpus sampling, Lightning autocast settings). This is a warm-cache
-throughput check, not a full-corpus speed or completion-time guarantee.
-Outer optimizers disable fused mode because the installed Lightning AMP plugin
-rejects it with gradient clipping. Disposable Lightning tests verify BF16,
-norm clipping and checkpoint resume for RVQ, GS and predictor training.
-Exact measurements and conditions are in
-the runtime benchmark record.
-`tools/benchmark_pitchflower.py --priority --loader --apply` benchmarks disposable
-models and explicitly migrates the stopped campaign's execution settings/source
-hashes, retaining history in `execution_history/`. It never starts production
-training. Dataset/objective changes and effective-batch changes are rejected;
-ordinary resume continues to reject unexplained settings/source changes.
-
-The processed corpus is on the HDD. Compressed NPZ inputs require decompressing
-whole utterances to obtain 1.504-second crops; mapped NPY copies interleave both
-waveforms and read just the crop's pages. Tests verify identical arrays, crops,
-normalization and F0. Original NPZ files remain intact. The normal preparation
-phase builds these copies once, resumes partial conversion, and skips completed
-files. Allow roughly 239 GiB extra disk space and about two hours at the sampled
-conversion rate. Training can read either format, so `-Phase rvq` can bypass
-conversion if needed; use the normal command to prepare the faster layout first.
 
 ## Parametric: bare EMD/VMD window experiment
 
@@ -544,9 +530,13 @@ helpers without adding a framework for one experiment. **Comment new code with
 useful docstrings and explanations of mathematics, units and non-obvious
 choices.**
 
-Maintain this README as the only explanatory Markdown guide. Generated run reports
-and numerical result artifacts stay outside Git. Preserve LaTeX source files and
-keep paper titles/authors in
+Keep this README as the repository overview. Put each method's explanatory
+documentation, report builder, and published reports under `approaches/<method>/`,
+with a method README linking its documentation and report folders. Parametric
+studies use a singular `report/` folder within each study subfolder. Keep report metrics and
+verification records beside the corresponding HTML. Large training outputs,
+checkpoints, caches, and intermediate run artifacts remain in ignored `runs/`
+directories. Preserve LaTeX source files and keep paper titles/authors in
 [bibliography.md](bibliography.md); that ledger includes screened and partially
 reviewed work, not a claim that every proof was audited. Git history retains the
 superseded Markdown discussions.

@@ -1,0 +1,33 @@
+{
+  "status": "complete",
+  "pid": 13044,
+  "jobs_total": 972,
+  "jobs_completed": 972,
+  "current_job": "case2_direct_snakebeta_network_8",
+  "stage": "fit:snakebeta_network",
+  "frames_completed": 1,
+  "frames_total": 1,
+  "failures": 0,
+  "error": null,
+  "elapsed_seconds": 4734.053792715073,
+  "heartbeat_unix": 1793739837.335544,
+  "percent": 100.0,
+  "seconds_per_job_by_stage": {
+    "decomposition:emd": 0.6826915481220931,
+    "fit:polynomial": 0.33169354747700674,
+    "fit:spline": 0.1666425969201346,
+    "fit:dct": 0.2678049630578849,
+    "fit:sinusoid": 2.148401817128133,
+    "fit:amfm": 0.4374963944994597,
+    "fit:sine_network": 3.4285009443083254,
+    "fit:snakebeta_network": 3.2879896684813907,
+    "decomposition:vmd": 0.45993089600466197,
+    "decomposition:eemd": 0.5144792800024152,
+    "decomposition:ceemdan": 0.6906909880135208,
+    "decomposition:svmd": 0.338100171983242,
+    "decomposition:direct": 0.22309112404473125
+  },
+  "eta_note": "Provisional: job cost varies by decomposition, family and window; excludes pauses.",
+  "eta_seconds": 0,
+  "eta_calibrated": false
+}

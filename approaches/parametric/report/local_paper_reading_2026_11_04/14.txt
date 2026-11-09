@@ -1,0 +1,532 @@
+                                                                        Applied Acoustics 226 (2024) 110210
+
+
+                                                                     Contents lists available at ScienceDirect
+
+
+                                                                            Applied Acoustics
+                                                         journal homepage: www.elsevier.com/locate/apacoust
+
+
+
+
+Plug-and-play learnable EMD module for time-domain speech separation
+Xiaokang Yang, Wenjun Ke, Jianguo Wei ∗
+Tianjin University, 92 Weijin RoadNankai District, Tianjin, 300072, China
+
+
+
+
+A R T I C L E             I N F O                          A B S T R A C T
+
+Keywords:                                                  This paper presents a learnable empirical mode decomposition (EMD) module tailored for single channel speech
+Empirical mode decomposition                               separation. The proposed EMD module exhibits a ﬂexible plug-and-play characteristic, enabling its integration
+Single channel                                             into various speech separation networks. Conventionally, non-learnable EMD algorithms, as a nonlinear time-
+Speech separation
+                                                           domain adaptive techniques, aimed at decomposing speech signals into a set of oscillatory intrinsic mode
+Neural network
+                                                           functions (IMFs) and a residual component. However, the inherent non-diﬀerentiability of the interpolation
+                                                           operation in these algorithms restricts their integration into neural networks, thus the EMD algorithm only exists
+                                                           in the preprocessing step and cannot be integrated into the neural network to form an end-to-end trainable speech
+                                                           separation network. In order to mitigate this issue, we use the max pooling layer and the deconvolution network
+                                                           to replace the envelope solving algorithm in the EMD method and build a trainable EMD neural network module.
+                                                           Multiple sets of experiments have shown that the integrating of EMD module brings the improvement to diﬀerent
+                                                           separation systems.
+
+
+
+
+1. Introduction                                                                             of a graph convolutional network is extended to speech separation task
+                                                                                            [37]. Notwithstanding, prevailing speech separation networks exhibit a
+    Speech separation and speech enhancement are both basic tasks for                       notable oversight by disregarding the intrinsic attributes of the temporal
+speech transcription and teleconferencing system, hearing aid, etc. In                      domain signal, speciﬁcally the envelope feature.
+recent times, signiﬁcant advancements have been made in the realm of                            In the realms of physics and engineering, the envelope of an oscilla-
+speech separation and enhancement, primarily through the utilization                        tory signal assumes a pivotal role, manifesting as a discernibly smooth
+of deep learning techniques [36,44]. In particular, deep learning-based                     curve that delineates the signal’s extremities [12]. Fundamentally, the
+time-domain speech separation has emerged as a topic of active research                     envelope functions to expand and enhance the traditional concept of a
+[22,23,20,21,42,7,19,6,18,37,40,25].                                                        constant amplitude by bestowing upon it the property of instantaneous
+    For single-channel multi-speaker speech separation task, the Conv-                      amplitude. This nuanced conceptualization broadens the understanding
+TasNet network [23] has shown successful application potential. It uti-                     of signal dynamics, particularly within the context of oscillatory phe-
+lizes a 1-D convolutional layer in lieu of the Short-Time Fourier Trans-                    nomena. And a burgeoning body of research has shown the slowly vary-
+form (STFT) operation as a speech encoder for producing a learned                           ing temporal component of speech (“envelope”) is essential for speech
+latent feature representation, thus mitigating the challenges associated                    understanding [28,2,17,26,3].
+with phase reconstruction. The dual-path RNN (DPRNN) comprises two                              In fact, within the evolution of signal processing technology over
+types of recurrent neural networks: an intra-chunk RNN and an inter-                        recent decades, envelope analysis methodologies have consistently fea-
+chunk RNN [21]. Together, these networks repeatedly analyze sequen-                         tured prominently in both the realm of speech and non-speech signals.
+tial features at both the local and global levels. The dual-path Trans-                     The well-known method is the Empirical Mode Decomposition (EMD)
+former network (DPTNet) [6] introduces an improved Transformer [34]                         [11] and it constitutes a sophisticated technique employed for the anal-
+into DPRNN for modeling the speech sequences with direct context-                           ysis of non-linear and non-stationary signals. The noteworthy attribute
+awareness. The top-down attention network (TDANet) emulates the top-                        of EMD is its eﬃcacy in decomposing time-series data into distinct com-
+down attention mechanism observed in the human brain during speech                          ponents denoted as Intrinsic Mode Functions (IMFs). This attribute has
+separation tasks, demonstrating promising prospects. In order to capture                    garnered widespread accept across diverse disciplines, notably within
+nuanced structural information within speech samples, the utilization                       the domain of speech processing. And EMD is esteemed for its aptitude
+
+
+ * Corresponding author.
+   E-mail addresses: yangxiaokang@tju.edu.cn (X. Yang), wenjunke@tju.edu.cn (W. Ke), jianguo@tju.edu.cn (J. Wei).
+
+https://doi.org/10.1016/j.apacoust.2024.110210
+Received 19 April 2024; Received in revised form 2 July 2024; Accepted 31 July 2024
+Available online 8 August 2024
+0003-682X/© 2024 Elsevier Ltd. All rights are reserved, including those for text and data mining, AI training, and similar technologies.
+X. Yang, W. Ke and J. Wei                                                                                                           Applied Acoustics 226 (2024) 110210
+
+
+in disentangling intricate temporal structures inherent in data, thereby                 wherein real signals, denoted as 𝑓 (𝑥), undergo a decomposition into el-
+providing valuable insights and applications in various scientiﬁc and                    emental signals commonly referred to as modes. The EMD is obtained
+engineering domains.                                                                     following the iterative process:
+    Combined with some frequency domain analysis methods, such as
+Fourier transform and Hilbert transform, the EMD method can be di-                        1. Find all the local extreme of the 1-D signal 𝑓 (𝑥).
+rectly used for signal feature analysis and classiﬁcation and denois-                     2. Interpolate all local maxima 𝑓𝑚𝑎𝑥 yielding the upper envelope 𝑓̂(𝑥),
+ing [13,5,16,38,43], etc. With the advancement of deep learning, the                         and all local minima 𝑓𝑚𝑖𝑛 yielding the lower envelope 𝑓̌(𝑥).
+EMD method has become increasingly signiﬁcant. However, its ap-                           3. Determine the local mean by taking the average of both envelope
+plication remains predominantly conﬁned to the preprocessing stage                           function 𝑓̂(𝑥) and 𝑓̌(𝑥). The resulting function is referred to as the
+[39,29,14,30]. Even though EMD can be applied to neural networks, its                        intrinsic mode function:
+inherent shortcomings, especially mode mixing, error mode detection,                                          1( ̂           )
+and ﬁnal eﬀects [9], have also been introduced into neural networks.                         𝐼𝑀𝐹 (𝑥) =          𝑓 (𝑥) + 𝑓̌(𝑥) .                                    (4)
+                                                                                                              2
+    To the best of our knowledge, there are no relevant works discussing
+                                                                                          4. Repeat this procedure with the residual, i.e.,
+the improvement of learnable EMD in time-domain speech separation.
+And the diﬃculty in building a learnable EMD module is that the in-                          𝑟(𝑥) = 𝑓 (𝑥) − 𝐼𝑀𝐹 (𝑥),                                               (5)
+terpolation method is not diﬀerentiable. The noteworthy contributions
+of Han and Forero [10,35] merit acknowledgment, as they have ad-                             until a predeﬁned tolerance level is met.
+vanced the ﬁeld by establishing the feasibility of implementing the
+quasi-interpolant through the utilization of deep neural networks. In                    Thus, the original signal is decomposed as
+contrast to the above approach, our methodology entails the utilization                            𝐼
+                                                                                                   ∑
+of both the maximum pooling layer and the deconvolution network to                       𝑓 (𝑥) =         𝐼𝑀𝐹𝑖 (𝑥) + 𝑟(𝑥),                                          (6)
+supplant the conventional envelope solving algorithm within the EMD                                𝑖=1
+framework. Consequently, we construct a trainable EMD neural net-
+                                                                                         where 𝐼𝑀𝐹𝑖 is the 𝑖-th intrinsic mode function and 𝑟 is the last resid-
+work module, thereby introducing a novel paradigm in the treatment
+                                                                                         ual. Nevertheless, the choice of interpolation method in the second step
+of speech separation challenges.                                                         oﬀers a multitude of options, diverging from the initial approach that
+    The paper is structured as follows. Section 2 introduces the related                 employed cubic splines [24]. The non-diﬀerentiability of interpolation
+work. Section 3 provides a detailed description of the proposed EMD                      method limits its application in neural networks. For convenience, we
+module and how to embed the EMD module into a separation system.                         will omit the variables 𝑥 and 𝑡 below.
+The experimental setup is evaluated in Section 4, and the obtained re-
+sults and ablation study are analyzed in Section 5. Finally, we conclude
+                                                                                         3. Methodology
+this work in Section 6.
+                                                                                            We propose a learnable plug-and-play EMD module that can be in-
+2. Related work                                                                          corporated into any speech separation system, as illustrated in Fig. 1.
+                                                                                         This enhancement module facilitates the replacement of localized ex-
+2.1. Time-domain speech separation                                                       treme and overarching envelope processing through the integration of
+                                                                                         a max-pooling layer and a deconvolution layer, serving to optimize the
+   The issue pertaining to single-channel speech separation can be con-                  overall computational architecture.
+ceptualized within the framework of estimating 𝐶 sources 𝑠1 (𝑡), ..., 𝑠𝐶 (𝑡)
+∈ ℝ1×𝑇 . The discrete mixture speech waveform can be written as                          3.1. Empirical mode decomposition neural network module
+         𝐶
+         ∑                                                                                  The ﬁrst step of the EMD algorithm requires ﬁnding the extreme
+𝑦(𝑡) =         𝑠𝑐 (𝑡) + 𝐯,                                                    (1)
+         𝑐=1
+                                                                                         points of the signal. However, this is a very diﬃcult mathematical prob-
+                                                                                         lem, and many deep learning tools do not provide corresponding inter-
+where 𝐯 is the noise. In the realm of time-domain speech separation,
+                                                                                         faces. For simplicity, we replace this process with a max-pooling layer.
+our objective is to directly estimate 𝑠̂𝑐 (𝑡), 𝑐 = 1, ..., 𝐶 , from 𝑦(𝑡) using the
+                                                                                         Let 𝑓 = 𝑦, then the local maxima 𝑓𝑚𝑎𝑥 and local minima 𝑓𝑚𝑖𝑛 can be
+function 𝑃 (⋅) learned by a DNN system.
+                                                                                         expressed as
+                                                                                                          (        )
+𝑠̂ = 𝑃 (𝑦),                                                                   (2)        𝑓𝑚𝑎𝑥 = 𝑀𝑎𝑥_𝑝𝑜𝑜𝑙1𝑑 𝑓 , 𝐿, 𝑆 ,                                              (7)
+where 𝑠̂ is the reconstruction of 𝑠 and 𝑃 (⋅) denotes a series of operating                        (            (           ))
+steps in the DNN network.                                                                𝑓𝑚𝑖𝑛 = 𝐼𝑛𝑣 𝑀𝑎𝑥_𝑝𝑜𝑜𝑙1𝑑 𝐼𝑛𝑣(𝑓 ), 𝐿, 𝑆 ,                                     (8)
+    In the classic encoder-deconder speech separation framework [23],
+                                                                                         where Max_pool1d is a one-dimensional max pooling layer with win-
+the input mixture signal is decoded by a speech encoder, ultimately
+                                                                                         dow size 𝐿 and stride 𝑆 in PyTorch. The operation 𝐼𝑛𝑣 is the module
+generating a sequence Y composed of speech embeddings exhibiting
+                                                                                         Inversion as shown in Fig. 1 which represents a 180-degree phase shift
+spectral characteristics. The encoder usually consists of a 1-D convo-
+                                                                                         of the input.
+lution network layer with channel size 𝑁 , window size 𝐿 and stride
+                                                                                             After ﬁnding the extreme values, the EMD algorithm necessitates the
+𝐿∕2, followed by an activation PReLU:
+                                                                                         use of an interpolation algorithm, such as cubic spline [24], to expand
+                                                                                         the extreme points so that they can match the length of the original
+𝐘 = 𝑃 𝑅𝑒𝐿𝑈 (𝐶𝑜𝑛𝑣1𝐷 (𝑦, 𝑁, 𝐿, 𝐿∕2)) .                                          (3)
+                                                                                         data 𝑓 . We abandon this cumbersome process and instead implement
+                                                                                         a deconvolution network to generate feature vectors that maintain the
+2.2. Empirical mode decomposition                                                        same length as the original data. Therefore, the upper envelope 𝑓̂ and
+                                                                                         the lower envelope 𝑓̌ can be expressed as
+    The EMD algorithm serves as a methodological framework for the                                             (           )
+examination of both linear and non-stationary time series. And it decon-                 𝑓̂ = 𝐶𝑜𝑛𝑣_𝑇 𝑟𝑎𝑛𝑠𝑝𝑜𝑠𝑒1𝑑 𝑓𝑚𝑎𝑥 , 𝐿, 𝑆 ,                                      (9)
+structs a given signal and extracts the instantaneous frequency informa-                                       (           )
+tion. The initial EMD represents an iterative procedural methodology                     𝑓̌ = 𝐶𝑜𝑛𝑣_𝑇 𝑟𝑎𝑛𝑠𝑝𝑜𝑠𝑒1𝑑 𝑓𝑚𝑖𝑛 , 𝐿, 𝑆 .                                    (10)
+
+                                                                                     2
+X. Yang, W. Ke and J. Wei                                                                                                                Applied Acoustics 226 (2024) 110210
+
+
+
+
+                            Fig. 1. The diagram of a learnable EMD Neural Network Module. The symbol ⊖ represents the subtraction operation.
+
+
+
+
+                                        Fig. 2. The diagram of a typical time-domain speech separation system with EMD Module.
+
+
+It should be noted that the above 𝑓̂ and 𝑓̌ are diﬀerent from the envelope                           Table 1
+in the original EMD method.                                                                          Encoder conﬁguration in diﬀerent baseline models.
+    Then the intrinsic mode function and residual can be expressed as                                   Model            N         L     𝐿    𝑆     I     C
+         1 ( ̂ ̌)
+𝐼𝑀𝐹 =       𝑓 +𝑓 ,                                                          (11)                        DPRNN            256       2     3    2     1     2
+         2                                                                                              TDANet           32        64    3    2     1     2
+𝑟 = 𝑦 − 𝐼𝑀𝐹 .                                                               (12)                        FaSNet-TAC       64        576   3    2     1     2
+
+We implement the equation (11) and (12) using the subsequent process
+of Mean module in Fig. 1. If it is assumed that the number of iterations
+of the EMD method is 𝐼 , then we can get the 𝑖-th 𝐼𝑀𝐹 and 𝑟, denoted                      • WHAM!: The WHAM! are mixed with noise recorded in scenes such
+by 𝐼𝑀𝐹𝑖 and 𝑟𝑖 respectively.                                                                as cafes, restaurants and bars. The SNR is uniformly sampled be-
+                                                                                            tween -6 dB and 3 dB. Each mixture audio contains two diﬀerent
+𝑟𝑖 = 𝑟𝑖−1 − 𝐼𝑀𝐹𝑖 ,                                                          (13)            speakers.
+                                                                                          • Libri2Mix-R: Libri2Mix-R is created by [20]. The original
+where 𝑟0 = 𝑓 .
+                                                                                            Libri2Mix-R dataset is for multi-channel two-speaker noisy speech
+                                                                                            separation task. And six microphone arrays with a ﬁxed circular ge-
+3.2. Embedding EMD module into separation system
+                                                                                            ometry generate reverberation speech signal. Here we take the ﬁrst
+                                                                                            channel for the evaluation of this study.
+    The EMD module can output diﬀerent levels of 𝐼𝑀𝐹𝑖 and 𝑟𝑖 , which
+all can be embedded into the speech separation system as feature se-
+                                                                                       4.2. Model conﬁgurations
+quences. Here we provide an eﬀective method, which is as
+           (      (              ))
+𝐘r = 𝑃 𝑅𝑒𝐿𝑈 𝐶𝑜𝑛𝑣1𝐷 𝑟𝑖 , 𝑁, 𝐿, 𝐿∕2 .                                         (14)          The DPRNN [21] is a classic and popular neural architecture for
+                                                                                       time-domain speech separation. And the TADNet [18] is a bio-inspired
+In this method, the residual 𝑟𝑖 is used as an auxiliary feature input to
+                                                                                       eﬃcient and new encoder-decoder architecture by mimicking the brain’s
+the encoder which is the same as shown in Equation (3). Hence, a new
+                                                                                       top-down attention. We therefore re-implement them with the proposed
+input feature vector into speech separation system is denoted as
+                                                                                       EMD module. The FaSNet-TAC is a network used for multi-channel
+             (     )                                                                   speech separation. In order to conduct ablation experiments, we also
+𝐘new = 𝐶𝑜𝑛𝑐𝑎𝑡 𝐘, 𝐘r .                                                       (15)
+                                                                                       use it a as an experimental object to validate the eﬀectiveness of EMD
+The Concat module concatenates the input in the channel dimension.                     module. The encoder conﬁguration of all above networks is shown in
+The proposed speech separation system combined with EMD module is                      the Table 1.
+shown in Fig. 2.
+                                                                                       4.3. Training
+4. Experimental procedures
+
+4.1. Dataset                                                                               The training objective utilizes utterance-level permutation invariant
+                                                                                       training (uPIT) [15] to optimize scale-invariant SNR (SI-SNR). SI-SNR is
+    We report the experiments on four datasets with diﬀerent two speak-                deﬁned as:
+ers, namely LRS2-2Mix [18], Libri2Mix [8], WHAM! [41], Libri2Mix-R                     ⎧               ̂
+                                                                                                    ⟨𝑠,𝑠⟩𝑠
+[20].                                                                                  ⎪ 𝑠target = ‖𝑠‖2
+                                                                                       ⎪ 𝑒noise = 𝑠̂ − 𝒔target
+                                                                                       ⎨                                       ,                                      (16)
+   • LRS2-2Mix: The LRS2 dataset [1] contains thousands of video                                                ‖        ‖2
+                                                                                       ⎪                        ‖𝑠target ‖
+                                                                                                                ‖        ‖
+     clips acquired through BBC. LRS2-2Mix is a new speech separa-                     ⎪ SI-SNR   ∶=   10𝑙𝑜𝑔 10 ‖𝑒noise ‖2
+                                                                                       ⎩                        ‖       ‖
+     tion dataset created by [18]. The two diﬀerent speaker audios from
+     diﬀerent scenes are randomly selected from the LRS2 corpus and                    where 𝑠 and 𝑠̂ are the target and the estimated source respectively. The
+     mixed with SNR between -5 dB and 5 dB.                                            operation ⟨∙⟩ represents vector cross product.
+   • Libri2Mix: In this dataset, the target speech in each mixture audio                  All networks are trained according to their default conﬁguration.
+     was randomly selected from a subset of LibriSpeech’s train-100 and                For example, the batch size of TDANet is set to 1 and early stopping is
+     mixed with uniformly sampled SNR between -25 dB and -33 dB.                       implemented if the target loss fails to improve for 30 consecutive epochs.
+     Each mixture audio contains two diﬀerent speakers.                                For all experiments, we use RTX 3090ti for training and testing.
+
+                                                                                   3
+X. Yang, W. Ke and J. Wei                                                                                                                           Applied Acoustics 226 (2024) 110210
+
+
+                            Table 2
+                            Quantitative comparison between diﬀerent existing models on four datasets. Most of the results were reported in [18].
+                            Method names preﬁxed with EMD indicate the use of the EMD module. Method names preﬁxed with ENC indicate
+                            only the use of the encoder network to replace EMD module in system.
+
+                             Model                         Params (M)         LRS2-2Mix            Libri2Mix          WHAM!              Libri2Mix-R
+                                                                              SI-SNRi     SDRi     SI-SNRi     SDRi   SI-SNRi    SDRi    SI-SNRi      SDRi
+
+                             BLSTM-TasNet [22]             23.6               6.1         6.8      7.9         8.7    9.8        -       5.1          5.5
+                             Conv-TasNet [23]              5.6                10.6        11.0     12.2        12.7   12.7       -       7.6          8.0
+                             SuDoRM-RF1.0x [33]            2.7                11.0        11.4     13.5        14.0   12.9       13.3    8.5          9.1
+                             DPTNet [6]                    2.7                13.3        13.6     16.7        17.1   14.9       15.3    9.1          9.3
+                             Sepformer [31]                26.0               13.5        13.8     16.5        17.0   14.4       15.0    9.1          9.4
+                             FaSNet-TAC [20]               2.7                6.7         7.0      7.6         8.0    7.0        7.3     8.7          9.0
+                             DPRNN [21]                    2.7                12.7        13.0     16.1        16.6   13.7       14.1    5.7          6.1
+                             TDANet [18]                   2.3                13.2        13.5     16.9        17.4   14.8       15.0    9.6          10.0
+                             TDANet Large [18]             2.3                14.2        14.5     17.4        17.9   15.2       15.4    10.2         10.6
+
+                             ENC-FaSNet-TAC                2.7                6.1         6.6      7.0         7.6    7.7        8.1     8.2          8.5
+                             ENC-DPRNN                     2.7                12.2        12.5     16.0        16.1   13.4       13.6    5.6          6.1
+                             ENC-TDANet                    2.4                12.9        13.4     16.7        17.2   14.0       14.5    9.6          9.9
+                             ENC-TDANet-Large              2.4                13.6        13.9     17.0        17.5   14.7       15.0    10.2         10.5
+
+                             EMD-FaSNet-TAC (Ours)         2.7                7.1         7.5      8.0         8.4    8.7        9.0     9.2          9.5
+                             EMD-DPRNN (Ours)              2.7                13.2        13.5     16.7        17.1   14.3       14.6    6.6          7.1
+                             EMD-TDANet (Ours)             2.4                13.8        14.1     17.8        18.2   15.2       15.5    10.6         10.9
+                             EMD-TDANet-Large (Ours)       2.4                14.6        14.9     18.2        18.5   15.7       16.0    11.1         11.5
+
+
+
+                               Table 3
+                               Quantitative comparison of PESQ and STOI between diﬀerent existing models on four datasets.
+
+                                 Model                           Params (M)      LRS2-2Mix          Libri2Mix         WHAM!             Libri2Mix-R
+                                                                                 PESQ      STOI     PESQ       STOI   PESQ      STOI    PESQ    STOI
+
+                                 BLSTM-TasNet [22]               23.6            1.3       62.1     1.4        63.0   1.5       69.3    1.3        60.5
+                                 Conv-TasNet [23]                5.6             1.6       71.0     1.8        72.7   1.7       72.8    1.4        66.1
+                                 SuDoRM-RF1.0x [33]              2.7             1.7       71.4     1.8        72.0   1.7       73.3    1.4        66.5
+                                 DPTNet [6]                      2.7             1.8       73.6     1.9        76.7   1.7       73.3    1.5        67.8
+                                 Sepformer [31]                  26.0            1.8       73.8     1.9        77.0   1.6       74.0    1.5        67.4
+                                 FaSNet-TAC [20]                 2.7             1.2       57.0     1.3        61.0   1.2       58.3    1.4        66.0
+                                 DPRNN [21]                      2.7             1.7       73.0     2.0        76.8   1.6       73.1    1.2        61.0
+                                 TDANet [18]                     2.3             1.8       73.3     2.1        77.8   1.7       75.0    1.5        67.8
+                                 TDANet Large [18]               2.3             2.0       74.5     2.3        79.9   1.8       75.4    1.5        68.1
+
+                                 EMD-FaSNet-TAC (Ours)           2.7             1.3       59.5     1.4        63.0   1.4       66.4    1.5        68.1
+                                 EMD-DPRNN (Ours)                2.7             1.7       73.5     2.1        77.2   1.7       74.6    1.3        62.1
+                                 EMD-TDANet (Ours)               2.4             1.9       74.1     2.4        80.2   1.8       75.5    1.5        68.9
+                                 EMD-TDANet-Large (Ours)         2.4             2.1       74.9     2.5        80.6   1.8       76.0    1.6        69.5
+
+
+
+5. Results and discussions                                                                        module. The most obvious improvement is the result of TDANet on
+                                                                                                  Libri2Mix-R, which is improved by 1 dB. It indicates that EMD-TDANet
+    We assess the performance of speech separation through the SI-SNR                             is more suitable for far-ﬁeld speech separation compared to other mod-
+improvement (SI-SNRi), alongside the conventional source-to-distortion                            els.
+ratio improvement (SDRi) [15], serving as metrics to quantify the qual-
+                                                                                                  Diﬀerent metrics: To conduct a thorough and comprehensive evalu-
+ity of the reconstructed signal.
+                                                                                                  ation of the EMD module’s performance, various objective evaluation
+                                                                                                  metrics related to speech signals were utilized for the analysis of the
+5.1. Separation performance with and without EMD module
+                                                                                                  test dataset. These include PESQ [27], STOI [32], SNR and cepstral dis-
+                                                                                                  tance criterion (CD) [4] are applied to the test dataset evaluation. As
+    We conduct comprehensive experiments employing three baseline                                 evident from the data presented in Table 3 and Table 4, the integra-
+networks enhanced by EMD module to rigorously evaluate the quanti-
+                                                                                                  tion of the EMD module into the model led to enhanced performance
+tative eﬃcacy of speech separation. This evaluation involved a compar-
+                                                                                                  outcomes.
+ative analysis against established speech separation models across four
+distinct datasets. The results are shown in Table 2. Method names pre-                            Complexity study: We also provide the model size, the number of mul-
+ﬁxed with EMD indicate the use of the EMD module. The Libri2Mix-R                                 tiply accumulate operations (MACs) per second, and real-time factor
+dataset introduced in this study represents a new multi-channel speech                            (RTF), as shown in Table 5. Because EMD module is directly embedded
+separation dataset, wherein only a single channel is selected, incorpo-                           into the existing model, it can be found that the EMD module has de-
+rating reverberation eﬀects. Here we analyze the advantages and disad-                            creased in the RTF and MACs performance, which also guides our next
+vantages of EMD module from three aspects:                                                        work on how to better combine the EMD module.
+Separation performance: By comparing the results of DPRNN, FaSNet-                                    However, by comparing the results of the same model on diﬀerent
+TAC, and TDANet pre- and post-integration of the EMD module on four                               dataset, as shown in Table 2, it can be found that almost all models
+datasets, it can be found that discernible enhancements in SI-SNRi are                            perform poorly on Libri2Mix-R. The limitation in extant speech separa-
+evident. The experimental results reveal an increase of 0.4 dB at least                           tion models may be attributed to their inherent capacity to exclusively
+in SI-SNRi for all models subsequent to the incorporation of the EMD                              scrutinize near-ﬁeld speech separation, thus presenting a deﬁciency in
+
+                                                                                             4
+X. Yang, W. Ke and J. Wei                                                                                                                                     Applied Acoustics 226 (2024) 110210
+
+
+                            Table 4
+                            Quantitative comparison of SNR (dB) and CD (dB) between diﬀerent existing models on four datasets.
+
+                              Model                      Params (M)         LRS2-2Mix           Libri2Mix             WHAM!                 Libri2Mix-R
+                                                                            SNR      CD         SNR     CD            SNR     CD            SNR          CD
+
+                              Conv-TasNet                5.6                10.0     -7.1       11.8    -7.7          12.1    -8.0          6.9          -6.1
+                              FaSNet-TAC                 2.7                6.2      -5.9       6.6     -6.0          6.2     -5.6          8.1          -6.5
+                              DPRNN                      2.7                12.1     -8.1       15.4    -9.9          13.2    -8.8          5.2          -4.9
+                              TDANet                     2.3                12.6     -8.5       16.3    -10.1         14.5    -9.1          9.1          -6.8
+                              TDANet Large               2.3                13.6     -8.9       17.0    -10.4         14.6    -9.5          9.9          -7.4
+
+                              EMD-FaSNet-TAC (Ours)      2.7                6.8      -6.1       7.9     -6.5          8.1     -6.6          8.8          -7.0
+                              EMD-DPRNN (Ours)           2.7                12.8     -8.5       16.2    -10.3         14.0    -8.9          6.1          -6.0
+                              EMD-TDANet (Ours)          2.4                13.2     -8.6       17.2    -10.6         14.8    -9.5          10.2         -7.5
+                              EMD-TDANet-Large (Ours)    2.4                14.3     -9.4       18.0    -10.7         15.3    -10.0         10.7         -7.6
+
+
+
+                                 Table 5
+                                 Comparison of inference time and MACs on the LRS2-2Mix test set. The test environment for
+                                 feedforward RTF (F GPU RTF) and backward RTF (B GPU RTF) is RTX 3090Ti, while the test
+                                 environment for CPU RTF is Intel(R) Xeon(R) Gold 6240R CPU @ 2.40 GHz, single-threaded.
+
+                                   Model                          F GPU RTF (ms)         B GPU RTF (ms)         CPU RTF (s)          MACs (G/s)
+
+                                   TDANet                         9.5                    59.1                   0.5                  4.71
+                                   TDANet Large                   18.2                   71.6                   1.7                  9.12
+
+                                   EMD-TDANet (Ours)              9.5                    59.6                   0.6                  4.72
+                                   EMD-TDANet-Large (Ours)        18.2                   72.0                   1.8                  9.13
+
+
+
+                               Table 6
+                               Quantitative comparison between diﬀerent window size 𝐿 in EMD module with stride 𝑆 = ⌊𝐿∕2⌋
+                               on four datasets.
+
+                                 Model            𝐿     LRS2-2Mix             Libri2Mix                WHAM!                   Libri2Mix-R
+                                                        SI-SNRi      SDRi     SI-SNRi       SDRi       SI-SNRi        SDRi     SI-SNRi            SDRi
+
+                                 EMD-TDANet       2     12.8         13.1     16.5          17.2       14.7           15.2     9.1                9.9
+                                 EMD-TDANet       3     13.8         14.1     17.8          18.2       15.2           15.5     10.6               10.9
+                                 EMD-TDANet       8     12.2         12.7     15.9          16.5       14.1           14.5     9.3                9.7
+                                 EMD-TDANet       16    12.8         12.9     16.8          17.3       14.2           14.6     9.6                10.2
+                                 EMD-TDANet       32    12.1         12.4     16.1          16.5       13.9           14.2     9.2                9.5
+                                 EMD-TDANet       64    11.8         12.1     15.7          16.1       13.2           13.6     8.6                9.0
+
+
+
+addressing far-ﬁeld speech scenarios. The absence of an eﬀective reso-                    ation from this optimal kernel size, whether it is smaller or larger, leads
+lution for far-ﬁeld speech separation underscores a noteworthy gap in                     to a perceptible decrease in performance.
+the current state of the ﬁeld. We also ﬁnd that FaSNet-TAC did not per-
+form well on all datasets, so it is not suitable for single channel speech                5.2.2. Can EMD module be replaced by a simple convolutional network?
+separation.                                                                                   Increasing the number of model parameters has the potential to
+                                                                                          enhance its performance. To determine whether the improvement in
+5.2. Ablation study                                                                       performance achieved by the EMD module is solely due to the expan-
+                                                                                          sion of parameters, we employ one-dimensional convolutional networks
+5.2.1. The inﬂuence of small convolution kernel                                           as a substitute for the EMD module and carry out several comparative
+    Many studies [21,18] have proven that small convolutional kernels                     experiments. The outcomes of our research are summarized in Table 2.
+can improve model performance at the expense of computation. And                              Through comparative analysis, it is evident that the model preﬁxed
+there is a small window size 𝐿 = 3 in EMD module parameter, which                         with “ENC” exhibits inferior performance relative to the model preﬁxed
+means the EMD module may use a small 1-D convolution kernel to get a                      with “EMD” and even underperforms compared to the original model.
+better performance. In order to illustrate that the EMD module is not ef-                 Therefore, it can be inferred that the EMD module does not introduce
+fective simply by using a small-size convolution kernel, we set up a set of               additional model parameters or uses the smaller kernel size but captures
+comparative experiments to compare EMD-TDANet-Large and TDANet-                           more profound features.
+Large, as shown in Table 2 and Table 3. The TDANet-Large is conducted
+by a large-size version of TDANet by modifying 𝑁 from 64 to 32. Fur-                      5.2.3. EMD feature analysis
+thermore, through a comparison of the outcomes obtained from DPRNN                             To evaluate the capability of EMD in extracting envelopes and its
+utilizing a kernel size of 2 and those from EMD-DPRNN, it can be estab-                   contribution to enhancing speech separation eﬃcacy, we isolate the up-
+lished that the EMD technique does not work in the same manner as a                       per envelope feature and the lower envelope feature, denoted as 𝑓̂ and
+convolution kernel with a smaller size.                                                   𝑓̌, from the EMD module. We compared 𝑓̂ and 𝑓̌ with the original wave-
+    To ascertain that the EMD module transcends the functionality of                      forms, as shown in Fig. 3 (a). It can be found that the upper envelope
+a mere small-scale convolutional kernel, we orchestrated a series of                      and lower envelope key points of the waveform of the original signal are
+experiments employing diverse convolutional kernels, as delineated in                     strongly related to the EMD features. We marked them with red boxes
+Table 6. After conducting a thorough analysis, it becomes clearly ap-                     and purple boxes respectively, as shown in Fig. 3 (b).
+parent that the EMD module demonstrates its peak performance when                              In this particular phenomenon, although the EMD module may not
+employing a convolution kernel size of 3. It is noteworthy that any devi-                 fully achieve the envelope extraction capability that is inherent to the
+
+                                                                                     5
+X. Yang, W. Ke and J. Wei                                                                                                           Applied Acoustics 226 (2024) 110210
+
+
+                                                                                Declaration of competing interest
+
+                                                                                    The authors declare that they have no known competing ﬁnancial
+                                                                                interests or personal relationships that could have appeared to inﬂuence
+                                                                                the work reported in this paper.
+
+                                                                                Data availability
+
+                                                                                    Data will be made available on request.
+
+                                                                                References
+
+                                                                                 [1] Afouras T, Chung JS, Senior A, Vinyals O, Zisserman A. Deep audio-visual speech
+                                                                                     recognition. IEEE Trans Pattern Anal Mach Intell 2018;44:8717–27.
+                                                                                 [2] Ahissar E, Nagarajan S, Ahissar M, Protopapas A, Mahncke H, Merzenich MM. Speech
+                                                                                     comprehension is correlated with temporal response patterns recorded from auditory
+                                                                                     cortex. Proc Natl Acad Sci 2001;98:13367–72.
+                                                                                 [3] Barajas MCO, Guevara R, Gervain J. The origins and development of speech envelope
+                                                                                     tracking during the ﬁrst months of life. Dev Cogn Neurosci 2021;48:100915.
+                                                                                 [4] Bendoumia R, Kerkar M, Bouzekkar SA. Acoustic noise reduction by new
+                                                                                     sub-band forward symmetric adaptive decorrelation algorithms. Appl Acoust
+                                                                                     2019;152:118–26.
+                                                                                 [5] Boudraa AO, Cexus JC. Emd-based signal ﬁltering. IEEE Trans Instrum Meas
+                                                                                     2007;56:2196–202.
+                                                                                 [6] Chen J, Mao Q, Liu D. Dual-path transformer network: direct context-aware mod-
+                                                                                     eling for end-to-end monaural speech separation. In: Proc. interspeech 2020; 2020.
+                                                                                     p. 2642–6.
+                                                                                 [7] Chen Y, Liu B, Zhang Z, Kim HS. An end-to-end deep learning framework for mul-
+                                                                                     tiple audio source separation and localization. In: ICASSP 2022-2022 IEEE interna-
+                                                                                     tional conference on acoustics, speech and signal processing (ICASSP). IEEE; 2022.
+                                                                                     p. 736–40.
+                                                                                 [8] Cosentino J, Pariente M, Cornell S, Deleforge A, Vincent E. Librimix: an open-source
+                                                                                     dataset for generalizable speech separation. arXiv preprint. arXiv:2005.11262, 2020.
+                                                                                 [9] Guo T, Deng Z. An improved emd method based on the multi-objective optimiza-
+                                                                                     tion and its application to fault feature extraction of rolling bearing. Appl Acoust
+                                                                                     2017;127:46–62.
+                                                                                [10] Han N, Mhaskar H, Chui CK. Theory-inspired deep network for instantaneous-
+                                                                                     frequency extraction and subsignals recovery from discrete blind-source data. IEEE
+                                                                                     Trans Neural Netw Learn Syst 2021;33:3437–47.
+                                                                                [11] Huang NE, Shen Z, Long SR, Wu MC, Shih HH, Zheng Q, et al. The empirical mode
+                                                                                     decomposition and the Hilbert spectrum for nonlinear and non-stationary time series
+                   Fig. 3. Original signal and its EMD feature.                      analysis. Proc R Soc Lond, Ser A, Math Phys Eng Sci 1998;454:903–95.
+                                                                                [12] Johnson Jr CR, Sethares WA, Klein AG. Software receiver design: build your own
+                                                                                     digital communication system in ﬁve easy steps. Cambridge University Press; 2011.
+                                                                                [13] Junsheng C, Dejie Y, Yu Y. Research on the intrinsic mode function (imf) criterion
+conventional EMD algorithm, it nonetheless accomplishes the eﬀective                 in emd method. Mech Syst Signal Process 2006;20:817–24.
+transformation of the envelope’s pivotal points from the original sig-          [14] Kerkeni L, Serrestou Y, Raoof K, Mbarki M, Mahjoub MA, Cleder C. Automatic speech
+nal into embedded features. This conversion enables these features to                emotion recognition using an optimal combination of features based on emd-tkeo.
+align more accurately with the subsequent neural network representa-                 Speech Commun 2019;114:22–35.
+                                                                                [15] Kolbæk M, Yu D, Tan ZH, Jensen J. Multitalker speech separation with utterance-
+tion, thereby enhancing the overall performance and accuracy of the                  level permutation invariant training of deep recurrent neural networks. IEEE/ACM
+system.                                                                              Trans Audio Speech Lang Process 2017;25:1901–13.
+                                                                                [16] Kopsinis Y, McLaughlin S. Development of emd-based denoising methods inspired
+                                                                                     by wavelet thresholding. IEEE Trans Signal Process 2009;57:1351–62.
+6. Conclusion                                                                   [17] Kubanek J, Brunner P, Gunduz A, Poeppel D, Schalk G. The tracking of speech en-
+                                                                                     velope in the human cortex. PLoS ONE 2013;8:e53398.
+    In this work, we introduce a novel EMD module that can achieve              [18] Li K, Yang R, Hu X. An eﬃcient encoder-decoder architecture with top-down atten-
+                                                                                     tion for speech separation. In: ICLR; 2023.
+plug-and-play eﬀect in existing speech separation systems. The EMD              [19] Luo Y. A time-domain real-valued generalized Wiener ﬁlter for multi-channel neural
+neural network module originates from the empirical mode decomposi-                  separation systems. IEEE/ACM Trans Audio Speech Lang Process 2022;30:3008–19.
+tion method, and experiments have also shown that the learnable EMD             [20] Luo Y, Chen Z, Mesgarani N, Yoshioka T. End-to-end microphone permutation and
+module has the advantages to establish a cutting-edge speech separation              number invariant multi-channel speech separation. In: ICASSP 2020-2020 IEEE in-
+
+model. We also have analyzed what the feature 𝑓̂ and 𝑓̌ represents and
+                                                                                     ternational conference on acoustics, speech and signal processing (ICASSP). IEEE;
+                                                                                     2020. p. 6394–8.
+they are strongly correlated with the key envelope points of the original       [21] Luo Y, Chen Z, Yoshioka T. Dual-path rnn: eﬃcient long sequence modeling for
+signal. But we have to admit that there are many improved versions of                time-domain single-channel speech separation. In: ICASSP 2020-2020 IEEE interna-
+the EMD algorithm, which this article did not explore. Are there more                tional conference on acoustics, speech and signal processing (ICASSP). IEEE; 2020.
+                                                                                     p. 46–50.
+EMD module structures that can be expanded? All of these questions              [22] Luo Y, Mesgarani N. Tasnet: time-domain audio separation network for real-time,
+will lead our future research.                                                       single-channel speech separation. In: 2018 IEEE international conference on acous-
+                                                                                     tics, speech and signal processing (ICASSP). IEEE; 2018. p. 696–700.
+                                                                                [23] Luo Y, Mesgarani N. Conv-tasnet: surpassing ideal time–frequency magnitude
+CRediT authorship contribution statement
+                                                                                     masking for speech separation. IEEE/ACM Trans Audio Speech Lang Process
+                                                                                     2019;27:1256–66.
+    Xiaokang Yang: Writing – review & editing, Writing – original draft,        [24] McKinley S, Levine M. Cubic spline interpolation. Coll Redwoods 1998;45:1049–60.
+                                                                                [25] Meng W, Li X, Li A, Li J, Li X, Zheng C. All neural Kronecker product beamforming
+Visualization, Software, Formal analysis, Data curation, Conceptualiza-
+                                                                                     for speech extraction with large-scale microphone arrays. In: ICASSP 2024 - 2024
+tion. Wenjun Ke: Writing – review & editing, Visualization. Jianguo                  IEEE international conference on acoustics, speech and signal processing (ICASSP);
+Wei: Supervision, Resources.                                                         2024. p. 8566–70.
+
+
+                                                                            6
+X. Yang, W. Ke and J. Wei                                                                                                                          Applied Acoustics 226 (2024) 110210
+
+
+[26] Oganian Y, Chang EF. A speech envelope landmark for syllable encoding in human             [36] Wang D, Chen J. Supervised speech separation based on deep learning: an overview.
+     superior temporal gyrus. Sci Adv 2019;5:eaay6279.                                               IEEE/ACM Trans Audio Speech Lang Process 2018;26:1702–26.
+[27] Rix A, Beerends J, Hollier M, Hekstra A. Perceptual evaluation of speech qual-             [37] Wang T, Pan Z, Ge M, Yang Z, Li H. Time-domain speech separation networks with
+     ity (pesq)-a new method for speech quality assessment of telephone networks and                 graph encoding auxiliary. IEEE Signal Process Lett 2023;30:110–4.
+     codecs. In: 2001 IEEE international conference on acoustics, speech, and signal pro-       [38] Wang T, Zhang M, Yu Q, Zhang H. Comparing the applications of emd and eemd on
+     cessing. Proceedings (Cat. No. 01CH37221); 2001. p. 749–52.                                     time–frequency analysis of seismic signal. J Appl Geophys 2012;83:29–34.
+[28] Rosen S. Temporal information in speech: acoustic, auditory and linguistic aspects.        [39] Wang X, Lu X, Kawai H, Yamamoto S. F0 contour analysis based on empirical mode
+     Philos Trans R Soc Lond B, Biol Sci 1992;336:367–73.                                            decomposition for dnn acoustic modeling in mandarin speech recognition. In: IN-
+[29] Sharma R, Vignolo L, Schlotthauer G, Colominas MA, Ruﬁner HL, Prasanna S. Em-                   TERSPEECH; 2016. p. 973–7.
+     pirical mode decomposition for adaptive am-fm analysis of speech: a review. Speech         [40] Wang ZQ, Cornell S, Choi S, Lee Y, Kim BY, Watanabe S. Tf-gridnet: making time-
+     Commun 2017;88:39–64.                                                                           frequency domain models great again for monaural speaker separation. In: ICASSP
+[30] Sidi Yakoub M, Selouani Sa, Zaidi BF, Bouchair A. Improving dysarthric speech                   2023-2023 IEEE international conference on acoustics, speech and signal processing
+     recognition using empirical mode decomposition and convolutional neural network.                (ICASSP). IEEE; 2023. p. 1–5.
+     EURASIP J Audio Speech Music Process 2020;2020:1–7.                                        [41] Wichern G, Antognini J, Flynn M, Zhu LR, McQuinn E, Crow D, et al. WHAM!: ex-
+[31] Subakan C, Ravanelli M, Cornell S, Bronzi M, Zhong J. Attention is all you need in              tending speech separation to noisy environments. In: Proc. interspeech 2019; 2019.
+     speech separation. In: ICASSP 2021-2021 IEEE international conference on acoustics,             p. 1368–72.
+     speech and signal processing (ICASSP). IEEE; 2021. p. 21–5.                                [42] Yang X, Wei J. DMANet: deep learning-based diﬀerential microphone arrays for
+[32] Taal CH, Hendriks RC, Heusdens R, Jensen J. An algorithm for intelligibility pre-               multi-channel speech separation. In: ICASSP 2022-2022 IEEE international confer-
+     diction of time–frequency weighted noisy speech. IEEE Trans Audio Speech Lang                   ence on acoustics, speech and signal processing (ICASSP). IEEE; 2022. p. 4363–7.
+     Process 2011;19:2125–36.                                                                   [43] Zão L, Coelho R, Flandrin P. Speech enhancement with emd and Hurst-based mode
+[33] Tzinis E, Wang Z, Smaragdis P. Sudo rm-rf: eﬃcient networks for universal audio                 selection. IEEE/ACM Trans Audio Speech Lang Process 2014;22:899–911.
+     source separation. In: 2020 IEEE 30th international workshop on machine learning           [44] Zhao S, Ma B, Watcharasupat KN, Gan WS. Frcrn: boosting feature representation us-
+     for signal processing (MLSP). IEEE; 2020. p. 1–6.                                               ing frequency recurrence for monaural speech enhancement. In: ICASSP 2022-2022
+[34] Vaswani A, Shazeer N, Parmar N, Uszkoreit J, Jones L, Gomez AN, et al. Attention                IEEE international conference on acoustics, speech and signal processing (ICASSP).
+     is all you need. Adv Neural Inf Process Syst 2017;30.                                           IEEE; 2022. p. 9281–5.
+[35] Velasco-Forero S, Pagès R, Angulo J. Learnable empirical mode decomposition based
+     on mathematical morphology. SIAM J Imaging Sci 2022;15:23–44.
+
+
+
+
+                                                                                            7
+

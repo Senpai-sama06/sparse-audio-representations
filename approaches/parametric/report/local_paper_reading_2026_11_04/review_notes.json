@@ -1,0 +1,215 @@
+{
+  "date": "2026-11-04",
+  "scope": "Review of all 19 supplied PDFs, focused on methods, objectives, empirical evidence and relevant appendices. This is not a line-by-line verification of every appendix proof. Original PDFs remain unchanged. Proposed transfers and algebraic audits below are our analysis, not reported speech results.",
+  "papers": [
+    {
+      "id": "P01",
+      "title": "Variational generalized nonlinear mode decomposition: Algorithm and applications",
+      "venue": "Mechanical Systems and Signal Processing",
+      "year": "2024",
+      "pages": "2-8, 11, 15-16, 19",
+      "method": "Generalizes modes to time-domain chirps and frequency-domain dispersive components with explicit support intervals. Fuses time-frequency maps, clusters ridges, identifies coordinate direction, and initializes variational demodulation or dispersion compensation.",
+      "evidence": "Synthetic mixtures and noise tests; bat echolocation and railway vibration applications. The paper explicitly assumes separated time-frequency ridges and says its method fails when crossing/close ridges violate that condition.",
+      "limit": "No compact parameter transmission or speech coding experiment. Demodulated amplitude/phase trajectories remain functions, not automatically short vectors. The ridge classification and thresholds are algorithmic choices.",
+      "proposal": "Generate programs for demodulated quadrature envelopes or phase innovations; test a frequency-domain representation for transient modes. Count carrier, support boundaries, coordinate choice, and envelope coefficients. Select by achieved description/error, not ridge-type rules alone."
+    },
+    {
+      "id": "P02",
+      "title": "TFD-Net: Towards Intelligent Time-Frequency Mode Decomposition with Practical Applications",
+      "venue": "AAAI",
+      "year": "2026",
+      "pages": "2-7; Fig. 1 on 3",
+      "method": "Complex multi-resolution convolutional transforms and residual U-Net features feed a query-based segmentation model. Hungarian matching supervises individual instantaneous-frequency tracks. Extracted tracks initialize a separate iterative demodulation reconstruction procedure.",
+      "evidence": "30,000 training, 1,000 validation and 200 test synthetic modulated signals, length 256, one to six modes. BCE/Dice losses supervise maps and masks. Real examples are power-system oscillations and bat echolocation.",
+      "limit": "The existing training does not optimize the size of a transmitted expression. Its conclusion identifies unfolded reconstruction as future work; it should not be described as already a fully neural end-to-end waveform decomposition.",
+      "proposal": "Borrow permutation-invariant query slots and frequency-track proposals to initialize VMD-like optimization. Add actual program reconstruction and complexity objectives; validate on speech and variable mode counts."
+    },
+    {
+      "id": "P03",
+      "title": "FINER: Flexible spectral-bias tuning in Implicit NEural Representation by Variable-periodic Activation Functions",
+      "venue": "Local arXiv v1 manuscript; FINER conference line",
+      "year": "2023 local version",
+      "pages": "3-8",
+      "method": "Uses sin((abs(x)+1)*x) and wider bias initialization to expose different oscillation scales while retaining the base weight initialization. Studies spectral bias through geometry and empirical neural tangent kernels.",
+      "evidence": "Image fitting, signed-distance fields and radiance fields. Image comparison uses three hidden layers with 256 neurons each; varying bias initialization changes recoverable detail.",
+      "limit": "This PDF is the original FINER preprint, not FINER++. Its reported improvements do not establish few-constant IMF coding, nor a generally optimal functional family. Initialization still affects convergence.",
+      "proposal": "Use variable-periodic composition as an optional expression primitive and fit small explicit programs, with initialization as a separate factor. Compare after expanding the primitive into elementary operations so it does not receive an artificially cheap code."
+    },
+    {
+      "id": "P04",
+      "title": "Recent Advances in Symbolic Regression",
+      "venue": "ACM Computing Surveys",
+      "year": "2025",
+      "pages": "4-12, 14-18, 24-25; category survey",
+      "method": "Surveys deterministic enumeration/programming, genetic programming, semantic search, neural generators, equation learners and hybrids. Distinguishes trees, graphs, grammar and reusable subexpressions; discusses accuracy, interpretability and computation separately.",
+      "evidence": "A methodological survey, not a new speech experiment. Describes variable projection, semantic replacement, graph reuse, neural guidance and sparsity-based equation learning across the literature.",
+      "limit": "A survey description is not independent experimental validation of each cited method. General benchmark success cannot establish compact speech representations or global optimality of numerical fits.",
+      "proposal": "Replace isolated complete-tree proposals with neural-guided local edits and a reusable program graph. Benchmark generator, fitter and grammar independently, with both proposal and wall-time budgets."
+    },
+    {
+      "id": "P05",
+      "title": "Density-Based Adaptive Mode Decomposition",
+      "venue": "IEEE Transactions on Signal Processing",
+      "year": "2026",
+      "pages": "2-8, 10-12; Theorem II.2 on 4",
+      "method": "Uses weighted spectral meanshift with bandwidth selection to determine frequency partitions and mode counts. Direct extraction uses disjoint masks; optional hybrid refinement initializes VMD from clustering results.",
+      "evidence": "Synthetic signals and real examples including TIMIT speech. Reported timing: direct extraction 2.4 s, hybrid refinement 20.7 s, VMD 14.0 s for the stated comparison. Discussion calls the method a frequency-domain partitioning framework rather than a generative intrinsic time-domain mode model.",
+      "limit": "Perfect reconstruction of uncompressed transform partitions is not parameter compression. The unrestricted VMD/clustering equivalence is not established by constructing hard partitions; see our algebraic counterexample below. Number of clusters remains sensitive to representation and bandwidth.",
+      "proposal": "Use density clustering as an initializer and candidate split/merge proposal, then accept mode counts based on actual compact-program reconstruction. Keep hard masks and soft VMD updates as distinct ablation arms."
+    },
+    {
+      "id": "P06",
+      "title": "FINER++: Building a Family of Variable-periodic Functions for Activating Implicit Neural Representation",
+      "venue": "IEEE TPAMI, accepted author version",
+      "year": "2026",
+      "pages": "5-9, 13-14",
+      "method": "Extends variable-periodic construction to sine, Gaussian and complex wavelet activations. Bias range controls the used portion of the activation; discusses overlap/degeneration and progressive streamable representations.",
+      "evidence": "Visual signal fitting and rendering, including a progressively widened network with earlier parameters frozen. A representative network has three layers and 256 neurons per layer. The author-version header says final edited content may change.",
+      "limit": "The local PDF is FINER++, separate from P03. Extra initialization and scale parameters remain. Visual accuracy and a streamable neural network do not establish a compact symbolic IMF representation.",
+      "proposal": "Learn or search compact compositions with chirped/localized primitives, and progressively refine only unresolved structure. Preserve a fully explicit evaluable program; charge every per-IMF weight if an INR is used directly."
+    },
+    {
+      "id": "P07",
+      "title": "KAN: Kolmogorov-Arnold Networks",
+      "venue": "ICLR",
+      "year": "2025",
+      "pages": "3-6, 32, 46-47",
+      "method": "Learns spline functions on graph edges with summation nodes; supports grid refinement, sparsification, pruning and subsequent symbolic substitution.",
+      "evidence": "Mathematical/physical regression and PDE examples. The approximation theorem assumes sufficiently smooth compositional edge functions. Appendix M fits affine transforms around user-specified symbolic functions via grid search and regression.",
+      "limit": "KAN does not automatically output an arbitrary shortest symbolic function. Its symbolification uses a user-defined candidate library. Splines, grids and weights have storage cost; for one input variable, the multivariate representation theorem is not the core advantage.",
+      "proposal": "Use a small adaptive spline/compositional network as a teacher to expose useful structure, then distill into explicit programs and re-evaluate. Also keep sparse splines as a direct, fully costed representation."
+    },
+    {
+      "id": "P08",
+      "title": "RAG-SR: Retrieval-Augmented Generation for Neural Symbolic Regression",
+      "venue": "ICLR",
+      "year": "2025",
+      "pages": "4-9, 11, 17-18",
+      "method": "Semantic descent removes a feature's contribution and generates/retrieves a replacement from the residual. A dynamic library stores evaluated subtrees and their outputs; a neural generator conditions on residual and a retrieved expression.",
+      "evidence": "Synthetic tree generation and 120 black-box regression datasets; separate Feynman/Strogatz results in appendix. Default evolutionary model has ten trees, population 200 and 100 generations. Retrieval restricts replacement size; full RAG-SR is slower than TPSR in their implementation.",
+      "limit": "The model is multi-feature symbolic regression, not short speech IMF coding. Edit distance to a generating tree is not our primary objective. Residual addition without replacement can bloat descriptions.",
+      "proposal": "Condition expression edits on the current curve and its residual, not only raw IMF samples. Reuse good subexpressions, replace rather than blindly append, and retrain on actual successful speech-derived fits. Keep test speakers out of the training library."
+    },
+    {
+      "id": "P09",
+      "title": "Symbolic Regression via MDLformer-Guided Search: From Minimizing Prediction Error to Minimizing Description Length",
+      "venue": "ICLR",
+      "year": "2025",
+      "pages": "3-7, 10, 15-16",
+      "method": "Learns a predictor of simplified formula token length from numeric observations, with numeric/symbolic alignment pretraining, then uses it to guide search for useful subformulas.",
+      "evidence": "133 known-formula and 122 black-box problems. Appendix: about 131 million generated data/formula pairs, 31.9M numeric-model parameters, 41 hours on eight A100 GPUs.",
+      "limit": "Its MDL target is simplified symbolic length, not a measured audio payload including numerical precision. SymPy-based simplification is not proof of the globally shortest representation. Estimated complexity may fail out of distribution; it is a guide, not an optimality certificate.",
+      "proposal": "Train a smaller speech-specific predictor of remaining error-versus-description cost from actual search archives. Periodically verify rankings using the real fitter, retain uncertainty/exploration, and never accept a claimed compression result solely from the surrogate."
+    },
+    {
+      "id": "P10",
+      "title": "MAPSS: Manifold-based Assessment of Perceptual Source Separation",
+      "venue": "ICLR",
+      "year": "2026",
+      "pages": "2-6, 8-10, 17-19, 43",
+      "method": "Embeds references, distorted references and separated outputs with pretrained audio representations and diffusion maps. Defines distinct perceptual match and separation scores with uncertainty/truncation analyses.",
+      "evidence": "SEBASS: over 900 separated signals, about 11,000 ratings, 10-second outputs judged by 15 raters. No new listening study; fine-frame outputs are aggregated to compare with utterance-level human scores.",
+      "limit": "Not validated as an isolated-IMF or isolated-40-ms speech-codec quality oracle. Separation score needs competing sources; ordinary IMF components are not independently meaningful speech sources. The paper states no frame-level human labels and significant computational cost.",
+      "proposal": "Retain exact per-IMF fitting error and summed-block reconstruction metrics now. Later validate perceptual measures on reconstructed speech in its original utterance context, using the same unchanged context for each method."
+    },
+    {
+      "id": "P11",
+      "title": "Coupled Splines for Sparse Curve Fitting",
+      "venue": "IEEE Transactions on Image Processing",
+      "year": "2022",
+      "pages": "2-5, 7-8; Theorems 2-3 and Fig. 3",
+      "method": "Fits two coordinate functions with rotation-invariant total-variation/group regularization of derivatives. Shared sparse knots and hybrid spline orders permit smooth regions and corners. Proves spline representer results for its stated periodic curve-fitting objective.",
+      "evidence": "2D contour experiments; equal-knot comparison in Fig. 3 reports QFE 12.09 versus 153.47. Hybrid linear/cubic fits reduce knot counts in demonstrated contours.",
+      "limit": "Theorems concern the declared 2D periodic convex objective, not arbitrary AM-FM factorization or shortest speech programs. Nonperiodic speech boundaries and sparse knot payloads need separate treatment.",
+      "proposal": "Fit the real and imaginary parts of a demodulated analytic IMF as coupled envelopes with shared adaptive knots. Phase rotation rotates these coordinates, suggesting a natural use of rotation-invariant coupling. Count knot locations, both coefficient sets and carrier parameters."
+    },
+    {
+      "id": "P12",
+      "title": "Learnable Empirical Mode Decomposition Based on Mathematical Morphology",
+      "venue": "SIAM Journal on Imaging Sciences; local author manuscript",
+      "year": "2022",
+      "pages": "6-14, 16, 18-20",
+      "method": "Replaces interpolation envelopes with dilation/erosion, opening/closing or Lasry-Lions constructions; learns structuring functions and convex envelope weights. Derives gradients through extrema and discusses additive-shift invariance of sifting.",
+      "evidence": "Toy 1D classification and hyperspectral classification (Indian Pines/Pavia), spatially disjoint train/test regions, ten repetitions. In the reported task the classifier uses residuals of a single decomposition step.",
+      "limit": "This demonstrates trainable morphological preprocessing, not compact speech reconstruction. Nonsmooth extrema have sparse gradients, and the representation need not satisfy classical IMF criteria merely because the module is called EMD.",
+      "proposal": "Use constrained learnable envelopes as an alternative decomposition arm. Validate sum/remainder, oscillatory properties and actual formula cost, and impose no uncharged raw-signal feature bypass."
+    },
+    {
+      "id": "P13",
+      "title": "Neural Networks Fail to Learn Periodic Functions and How to Fix It",
+      "venue": "NeurIPS",
+      "year": "2020",
+      "pages": "2-6, 8-9",
+      "method": "Introduces Snake_a(x)=x+sin(a*x)^2/a, studies periodic extrapolation, monotonicity and initialization, and discusses learnable frequency.",
+      "evidence": "Synthetic periodic regression and other forecasting/classification examples. The extrapolation theorem is an existence result with sufficient width, not a finite-width optimization guarantee.",
+      "limit": "This is the original Snake paper, not a SnakeBeta paper. Extrapolation beyond a fitting interval differs from our exact sampled reconstruction task. A favorable neural activation does not establish the smallest standalone IMF formula.",
+      "proposal": "Allow Snake-like residual-periodic compositions as language elements, compare against their expanded elementary formulas, and separately test trainability versus final achievable error at matched parameter counts."
+    },
+    {
+      "id": "P14",
+      "title": "Plug-and-play learnable EMD module for time-domain speech separation",
+      "venue": "Applied Acoustics",
+      "year": "2024",
+      "pages": "2-6",
+      "method": "Uses max pooling on positive/negative signals and transposed convolutions for EMD-inspired features, which supplement an existing time-domain speech-separation encoder.",
+      "evidence": "Four two-speaker separation datasets and SI-SNR-based training; small extra model/compute cost. Feature analysis acknowledges learned outputs are not a complete implementation of original EMD envelopes.",
+      "limit": "Reported separation improvements do not establish a source-free compact decomposition. Equations label an envelope average as an IMF; distinguish the paper's feature construction from classical sifting. Existing raw-signal encoding remains part of the system.",
+      "proposal": "Borrow differentiable envelope estimation as an implementation option, but validate our output modes independently and ensure reconstruction uses only the explicitly stored mathematical representation."
+    },
+    {
+      "id": "P15",
+      "title": "(Exhaustive) symbolic regression and model selection by minimum description length",
+      "venue": "Philosophical Transactions of the Royal Society A",
+      "year": "2026",
+      "pages": "3-7, 12-13",
+      "method": "Enumerates expressions within a declared operator set and maximum tree size, removes equivalences, fits constants, and ranks descriptions using structural, parameter-precision and residual terms.",
+      "evidence": "Benchmark and astrophysical applications. Describes a typical complexity-10 run of roughly 200 CPU hours. Shows different syntactic/parametric expressions can represent the same function; numerical tolerance still affects fitting.",
+      "limit": "Enumeration coverage is bounded by grammar and maximum complexity; local constant fitting does not become globally solved through enumeration. MDL depends on coding/model assumptions and operator vocabulary. Its statistical precision formula should not be transplanted blindly to noiseless speech coding.",
+      "proposal": "Add safe canonical simplification, remove redundant scale/constant parameters, and enumerate very small programs as a coverage reference. Keep parameter-count frontiers now and report actual representation cost separately; precision-aware coding can follow later without RVQ."
+    },
+    {
+      "id": "P16",
+      "title": "WIRE: Wavelet Implicit Neural Representations",
+      "venue": "CVPR",
+      "year": "2023",
+      "pages": "3-7",
+      "method": "Uses complex Gabor activations combining an oscillatory carrier and Gaussian localization. Discusses empirical NTK bias, real variants, scale/frequency choices and inverse problems.",
+      "evidence": "Images, 3D volumes, visual inverse problems and radiance fields. Counts real/imaginary weights in architecture comparisons by reducing complex network width.",
+      "limit": "Evidence is visual rather than few-parameter speech coding. Denoising biases can suppress noise-like speech detail. Network weights, complex components and localization parameters all count if used per IMF.",
+      "proposal": "Expose localized oscillatory atoms or compositions to symbolic discovery for transient modes. Compare full-frame oscillators with localized ones, including center, width, phase, frequency and envelope costs."
+    },
+    {
+      "id": "P17",
+      "title": "Short-time variational mode decomposition",
+      "venue": "Signal Processing",
+      "year": "2026",
+      "pages": "4-12",
+      "method": "Applies a short-time transform to VMD/MVMD. Non-dynamic version shares centers across windows; dynamic version lets them change with window while sharing within multichannel observations. Gives normalized window reconstruction and online handling.",
+      "evidence": "Synthetic stationary/nonstationary signals and SSVEP EEG; examples show a temporal/frequency-resolution tradeoff and increased computation. Authors discuss window/mode selection and noise sensitivity as limitations.",
+      "limit": "Not just independently running ordinary VMD on disjoint chunks. Short-time analysis still has endpoint extensions and window-resolution effects. No compact description optimization or speech coding result.",
+      "proposal": "Use it as a decomposition reference when returning to longer audio, with explicit mode tracking and normalized synthesis. Keep 40-ms isolated controls to separate fitting failure from stitching, while still measuring boundary-specific fitting error."
+    },
+    {
+      "id": "P18",
+      "title": "Sinusoidal Frequency Estimation by Gradient Descent",
+      "venue": "ICASSP",
+      "year": "2023",
+      "pages": "1-4; Fig. 1 and Eq. 2 on 2",
+      "method": "Optimizes real parts of complex powers, Re(z^n), allowing radial damping while the frequency angle moves; uses amplitude correction/refitting to recover a real sinusoid.",
+      "evidence": "N=4096, zero initial target phase, 50k steps for single tones and 300k for mixtures in the reported settings. Improves over direct real sinusoidal optimization; authors observe component collisions and missing quieter tones.",
+      "limit": "No formal general convergence result; not yet a general speech/chirped-AM-FM solution. Final error must be measured on the intended real expression, not the damped surrogate.",
+      "proposal": "Use damping as a temporary optimization aid, then restore/refit the transmitted real expression. Test random phases, chirps, weak components and 640-sample signals at practical budgets before adopting it."
+    },
+    {
+      "id": "P19",
+      "title": "Differentiable Time-Varying Linear Prediction in the Context of End-to-End Analysis-by-Synthesis",
+      "venue": "Interspeech",
+      "year": "2024",
+      "pages": "1-4",
+      "method": "Derives efficient sample-wise time-varying LP backpropagation and integrates it with a source-filter synthesizer. Studies source/noise-filter coupling and reflection coefficient parameterization.",
+      "evidence": "24-kHz VCTK, 2-second training segments, one million optimization steps. Subjective comparison uses two selected speakers, with 17 retained listeners; phase and pitch estimation affect results.",
+      "limit": "This is not free-form per-IMF function discovery. It demonstrates that frame-wise training and sample-wise evaluation can disagree; spectral error and subjective rankings need not agree.",
+      "proposal": "Use exactly the same formula evaluator in fitting and final reconstruction. Later test shared harmonic phase/source structure between modes as an explicit graph, storing all shared parameters, pointers and residual innovations."
+    }
+  ]
+}

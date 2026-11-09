@@ -1,0 +1,52 @@
+{
+  "selected_utterances": 64,
+  "selected_cases": 128,
+  "completed_cases": 128,
+  "failed_cases": 0,
+  "excluded_selected_cases": 0,
+  "case_tables": 128,
+  "audio_clips": 256,
+  "spectrograms": 256,
+  "other_figures": 1,
+  "source_and_output_samples_verified": true,
+  "all_embedded_audio_decoded": true,
+  "all_embedded_images_decoded": true,
+  "metrics_recomputed_from_embedded_samples": true,
+  "maximum_score_difference_from_saved_metrics": 0.0,
+  "all_raw_rates_checked": true,
+  "external_asset_dependencies": [],
+  "style_elements": 0,
+  "html_bytes": 126251495,
+  "html_sha256": "c56e5e003b4d5ec8ffee1f4dfa32f30439cc41c6a5f62664e91a7414b80d95e3",
+  "browser_visual_check": {
+    "status": "passed",
+    "browser": "Microsoft Edge headless",
+    "scope": [
+      "full report opened from local file",
+      "report summary and training figure inspected",
+      "case 1 table, audio controls, and source/output spectrograms inspected",
+      "run documentation inspected"
+    ],
+    "background_networking": "disabled for full report preview",
+    "external_assets_required": false
+  },
+  "native_audio_controls_present": true,
+  "audible_playback_check": "Not performed; audio bytes decoded, but no listening assessment was made",
+  "build_seconds": 34.25,
+  "browser_media_check": {
+    "scope": "two audio elements from case 1",
+    "metadata_loaded": true,
+    "durations_seconds": [
+      1,
+      1
+    ],
+    "media_errors": [
+      null,
+      null
+    ],
+    "playback_progress_confirmed": false,
+    "note": "Headless probe loaded metadata but did not advance playback before the virtual-time deadline. No listening assessment was made."
+  },
+  "documentation_links_checked": true,
+  "builder_source_sha256": "25252a8db39a6af1f299953c7398f371a5e09e5ce555ae25f63897a41f874443"
+}

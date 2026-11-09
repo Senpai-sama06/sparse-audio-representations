@@ -1,0 +1,7 @@
+# Standalone sparse-ae folder: Python 3.11+, compatible CUDA-enabled PyTorch.
+torch>=2.8,<2.9
+numpy>=2,<3
+soundfile>=0.13,<0.14
+kagglehub>=1.0.3,<2
+pesq>=0.0.4
+pystoi>=0.4,<0.5

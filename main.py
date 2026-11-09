@@ -29,6 +29,14 @@ class ExperimentCase:
 # current command-line workflows remain the default until cases are listed.
 EXPERIMENTS: list[ExperimentCase] = []
 
+# Explicit function discovery for each fixed-VMD IMF (not a latent decoder):
+# from approaches.parametric.symbolic.experiment import run as discover_imf_functions
+# EXPERIMENTS = [ExperimentCase("symbolic_imf", lambda: discover_imf_functions(
+#     source="runs/parametric_learned_representation_pilot",
+#     output="runs/parametric_symbolic_imf_pilot", pretrain_steps=1500,
+#     adapt_steps=80, blocks=(16,4,8), candidates=48,
+# ))]
+
 # Shared learned-function pilot for experiment 1 (fixed VMD; no RVQ):
 # from approaches.parametric.learned import run as train_shared_functions
 # EXPERIMENTS = [ExperimentCase("learned_mode_functions", lambda: train_shared_functions(

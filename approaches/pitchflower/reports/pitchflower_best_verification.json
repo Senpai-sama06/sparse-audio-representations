@@ -1,0 +1,99 @@
+{
+  "cases": 40,
+  "audio_clips": 120,
+  "spectrograms": 120,
+  "tables": 41,
+  "external_dependencies": [],
+  "style_or_script_elements": 0,
+  "html_bytes": 21926277,
+  "means": {
+    "stoi": 0.90491319896757,
+    "pesq_wb": 2.1628671258687975,
+    "vocoder_stoi": 0.9715575450955697,
+    "vocoder_pesq_wb": 3.4408994913101196
+  },
+  "bitrate_example": {
+    "latent_frames": 71,
+    "pitch_frames": 142,
+    "content_kbps": 3.3989361702127656,
+    "pitch_kbps": 3.021276595744681
+  },
+  "bitrate": {
+    "status": "estimated fixed-width payload; no serialized codec bitstream",
+    "aggregation": "total payload bits / total source duration",
+    "pcm_kbps": 384.0,
+    "content_kbps": 3.3989361702127674,
+    "pitch_kbps": 3.0212765957446823,
+    "combined_kbps": 6.42021276595745,
+    "raw_mel_kbps": 302.1276595744683,
+    "pcm_to_combined_ratio": 59.81110190555093,
+    "reduction_vs_pcm_percent": 98.32806959219859,
+    "raw_mel_to_combined_ratio": 47.058823529411775,
+    "reduction_vs_raw_mel_percent": 97.875,
+    "pitch_share_percent": 47.05882352941177,
+    "assumptions": {
+      "sample_rate": 24000,
+      "pcm_bits_per_sample": 16,
+      "rvq_codebooks": 8,
+      "entries_per_codebook": 512,
+      "bits_per_index": 9,
+      "bits_per_pitch_value": 32,
+      "mel_bands": 100,
+      "mel_hop_samples": 256,
+      "bits_per_raw_mel_value": 32,
+      "raw_mel_baseline": "hypothetical uncompressed float32 source mel; not a tested mel codec",
+      "excluded": [
+        "headers and packetization",
+        "byte padding",
+        "gain and other metadata",
+        "shared model weights and codebooks"
+      ]
+    }
+  },
+  "embedded_assets_preserved": true,
+  "refresh_checks": {
+    "original_case_metrics_preserved": true,
+    "embedded_assets_preserved": true,
+    "wav_headers_and_sample_counts_validated": 120,
+    "png_chunk_checksums_validated": 120,
+    "case_quality_and_rate_rows_match_records": 40,
+    "refresh_is_idempotent": true,
+    "mismatched_case_records_rejected": true,
+    "direct_after_vs_vocoder_rate_rows_validated": 40,
+    "output_wav_sizes_measured": 120
+  },
+  "playback": {
+    "before": {
+      "total_wav_bytes": 2889440,
+      "duration_seconds": 60.15999999999997,
+      "pcm_kbps": 384.00000000000017,
+      "wav_file_kbps": 384.2340425531917
+    },
+    "after": {
+      "total_wav_bytes": 2889440,
+      "duration_seconds": 60.15999999999997,
+      "pcm_kbps": 384.00000000000017,
+      "wav_file_kbps": 384.2340425531917
+    },
+    "control": {
+      "total_wav_bytes": 2889440,
+      "duration_seconds": 60.15999999999997,
+      "pcm_kbps": 384.00000000000017,
+      "wav_file_kbps": 384.2340425531917
+    }
+  },
+  "standalone_checks": {
+    "single_file_relocation_checked": true,
+    "required_files": [
+      "pitchflower_best_testcases.html"
+    ],
+    "cases": 40,
+    "embedded_wav_files_validated": 120,
+    "embedded_png_files_validated": 120,
+    "external_dependencies": [],
+    "script_elements": 0,
+    "html_bytes": 21926277,
+    "html_sha256": "31e02b2ba73a7eee02faf23a1e8582cf781b3ab1dfac955634379dffb7d6c3f5",
+    "validation_method": "HTML dependency audit, embedded WAV parsing, PNG checksums and pixel-stream decompression, isolated single-file copy"
+  }
+}
