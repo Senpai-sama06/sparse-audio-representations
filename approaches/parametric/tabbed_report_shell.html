@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Parametric experiments — complete tabbed report</title>
+<style>
+body{margin:0;font:16px/1.5 system-ui,sans-serif;color:#172c3b;background:#fff}header{padding:14px 24px;border-bottom:1px solid #ccd5dc}h1{font-size:1.5rem;margin:0 0 6px}header p{margin:0;font-size:.9rem}nav{display:flex;flex-wrap:wrap;gap:6px;padding:12px 24px;background:#eef3f6;position:sticky;top:0;z-index:2}nav a{color:#174b70;text-decoration:none;padding:9px 12px;border:1px solid #bccbd5;border-radius:4px;background:white}nav a[aria-selected=true]{background:#174b70;color:white}nav a:focus-visible,summary:focus-visible{outline:3px solid #db8d00;outline-offset:2px}main{padding:12px 24px}#status{min-height:1.5em}#context{max-width:1400px;margin:auto}#context img{display:block;max-width:100%;height:auto}article{border-top:1px solid #ccd5dc;margin-top:16px}audio{max-width:100%;width:270px}select{font:inherit;padding:7px;max-width:100%}details{margin:12px 0}summary{cursor:pointer;font-weight:600}code{overflow-wrap:anywhere}iframe{display:block;width:100%;height:75vh;min-height:540px;border:1px solid #bccbd5}#report-label{font-size:1.1rem}button{font:inherit;padding:6px 12px}.note{background:#fff5dc;padding:10px} [hidden]{display:none!important}@media(max-width:650px){main,header{padding:12px}nav{padding:8px;gap:4px}nav a{font-size:.85rem;padding:7px}iframe{min-height:450px}}
+</style></head><body>
+<header><h1>Parametric experiments: recordings, decompositions, and results</h1><p>One offline file. Select an experiment to load its report. Original experiment results are preserved.</p></header>
+<nav role="tablist" aria-label="Experiment reports"><!-- MENU --></nav>
+<main id="viewer-panel" role="tabpanel" tabindex="0"><p id="status" role="status" aria-live="polite"></p>
+<div id="context"></div><h2 id="report-label">Experiment report</h2><p><button id="download" hidden>Save this experiment's standalone report</button></p>
+<iframe id="report" title="Selected experiment report" src="about:blank"></iframe>
+<noscript>This report uses JavaScript to unpack the embedded experiment pages and navigate its tabs. Open it in a current Chrome or Edge browser with JavaScript enabled.</noscript></main>
+<script>
+const reports=/* METADATA */;
+let serial=0,currentUrl=null,currentKey=null;
+function selectCase(select){const parent=select.parentElement.parentElement;parent.querySelectorAll(':scope > .signal-case').forEach((p,i)=>{p.hidden=i!==Number(select.value);if(p.hidden)p.querySelectorAll('audio').forEach(a=>a.pause())})}
+async function showReport(key){
+ const item=reports.find(r=>r.id===key)||reports[0];const token=++serial;currentKey=item.id;
+ const frame=document.getElementById('report'),status=document.getElementById('status'),context=document.getElementById('context'),button=document.getElementById('download');
+ frame.src='about:blank';if(currentUrl){URL.revokeObjectURL(currentUrl);currentUrl=null}button.hidden=true;
+ document.querySelectorAll('[role=tab]').forEach(a=>{a.setAttribute('aria-selected',String(a.hash==='#'+item.id));a.tabIndex=a.hash==='#'+item.id?0:-1});
+ document.getElementById('viewer-panel').setAttribute('aria-labelledby','tab-'+item.id);
+ document.getElementById('report-label').textContent=item.title+' — complete saved report';
+ context.querySelectorAll('audio').forEach(a=>a.pause());context.replaceChildren();const template=document.getElementById('context-'+item.id);if(template)context.append(template.content.cloneNode(true));
+ if(item.id!=='overview'&&item.id!=='audit'){const note=document.createElement('p');note.className='note';note.textContent='These new context plots show the saved source and decomposition. The complete historical report follows below. Waveforms use native amplitude. Short-block STFT uses a 128-sample (8 ms) Hann window, 16-sample (1 ms) hop, 128-point FFT; full-recording views use 512/128 samples. All spectrograms use -100 to 0 dB re amplitude 1. Short windows trade frequency resolution for time resolution. Quiet modes are not individually normalized.';context.prepend(note)}
+ status.textContent='Loading '+item.title+' ('+(item.bytes/1e6).toFixed(1)+' MB unpacked)…';
+ await new Promise(requestAnimationFrame);
+ try{
+  if(typeof DecompressionStream==='undefined')throw Error('This browser lacks gzip decompression. Use a current Chrome or Edge browser.');
+  const chunks=document.querySelectorAll('script[data-report="'+item.id+'"]');const parts=[];
+  for(let i=0;i<chunks.length;i++){const raw=atob(chunks[i].textContent.trim());const bytes=new Uint8Array(raw.length);for(let j=0;j<raw.length;j++)bytes[j]=raw.charCodeAt(j);parts.push(bytes);if(i%32===0){status.textContent='Unpacking '+item.title+': '+Math.round(100*i/chunks.length)+'%';await new Promise(requestAnimationFrame);if(token!==serial)return}}
+  const data=await new Response(new Blob(parts).stream().pipeThrough(new DecompressionStream('gzip'))).blob();
+  if(token!==serial)return;
+  currentUrl=URL.createObjectURL(new Blob([data],{type:'text/html;charset=utf-8'}));
+  frame.onload=()=>{if(token===serial&&frame.src!=='about:blank')status.textContent='Loaded '+item.title+'. One experiment is displayed; other reports stay packed until selected.'};
+  frame.src=currentUrl;button.hidden=false;button.onclick=()=>{const a=document.createElement('a');a.href=currentUrl;a.download=item.id+'_report.html';a.click()};
+ }catch(error){if(token===serial)status.textContent='Could not load this experiment: '+error.message}
+}
+function initReport(){document.querySelector('nav').addEventListener('keydown',e=>{const links=[...document.querySelectorAll('[role=tab]')];let i=links.indexOf(document.activeElement);if(i<0)return;if(e.key==='ArrowRight')i=(i+1)%links.length;else if(e.key==='ArrowLeft')i=(i+links.length-1)%links.length;else if(e.key==='Home')i=0;else if(e.key==='End')i=links.length-1;else return;e.preventDefault();links[i].focus();location.hash=links[i].hash});window.addEventListener('hashchange',()=>showReport(location.hash.slice(1)));showReport(location.hash.slice(1)||'overview')}
+</script>

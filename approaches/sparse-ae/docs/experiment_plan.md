@@ -1,8 +1,12 @@
 # Proposed sparse autoencoder rate-distortion benchmark
 
-Status: proposed benchmark protocol. Native-objective training scripts and pipeline
-checks are implemented; see training.md. No corpus training has been started.
-Quantization-aware training and operational bitstream evaluation remain planned.
+Status: the full rate-distortion protocol remains proposed. Native-objective
+training and evaluation scripts are implemented, and the first seven-model,
+10-hour LibriSpeech campaign has completed. Its 40-crop diagnostic comparison is
+in [the standalone report](../reports/sparse_ae_pitchflower_best_testcases.html).
+Those crops overlap the campaign's validation/calibration selections, and this
+unquantized pilot does not measure bitrate. Quantization-aware training and
+operational bitstream evaluation remain planned.
 
 ## Purpose
 

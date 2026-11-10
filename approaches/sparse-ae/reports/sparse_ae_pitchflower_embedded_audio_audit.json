@@ -1,0 +1,34 @@
+{
+  "case_sections": 40,
+  "formats": [
+    "(16000, 'PCM_16', 1)",
+    "(24000, 'PCM_16', 1)"
+  ],
+  "sample_rates_and_lengths": [
+    [
+      16000,
+      24064
+    ],
+    [
+      24000,
+      36096
+    ]
+  ],
+  "audio_count": 360,
+  "clip_samples_above_full_scale": 0,
+  "max_audio_abs": 1.0,
+  "max_score_delta_embedded_vs_csv": {
+    "pitchflower": 0.0,
+    "l1": 1.0658141036401503e-14,
+    "kl": 1.0658141036401503e-14,
+    "topk": 8.881784197001252e-15,
+    "jumprelu": 8.881784197001252e-15,
+    "gated": 1.0658141036401503e-14,
+    "batchtopk": 7.105427357601002e-15,
+    "dense": 1.0658141036401503e-14
+  },
+  "errors": [],
+  "error_count": 0,
+  "all_audio_bytes_match_evaluated_files": true,
+  "all_embedded_scores_recomputed_from_decoded_audio": true
+}

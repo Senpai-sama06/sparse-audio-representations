@@ -1,0 +1,2858 @@
+{
+  "file": "parametric_experiments_testcases.html",
+  "bytes": 29723528,
+  "sha256": "76931d7db6140c8b6956a964224dc085d2ce01f94a288bf617de4abf7cda41f5",
+  "style": "PitchFlower-style case tables with experiment tabs",
+  "case_tables": 73,
+  "cases": [
+    {
+      "case": "Recording 1272-128104-0000: 40 ms analysis windows",
+      "metadata": "dev-clean; speaker 1272; complete 5.855 s / 93,680 samples. Source recording SHA-256: 4e25e22555cd16e90edb0a3b49fdcf1fe652b2a1250ab643634db33895c75b41",
+      "samples": 93680,
+      "duration_seconds": 5.855,
+      "outputs": [
+        {
+          "label": "After: VMD sampled modes",
+          "pesq_wb": "4.3397393226623535",
+          "stoi": "0.9850153152583279",
+          "saved_nmse": "0.0075156240171409955",
+          "embedded_pcm_nmse": 0.007515624017140993
+        },
+        {
+          "label": "Control: EMD sampled modes",
+          "pesq_wb": "4.609211444854736",
+          "stoi": "0.9999995936546007",
+          "saved_nmse": "0.0056888446699819364",
+          "embedded_pcm_nmse": 0.005688844669981937
+        }
+      ]
+    },
+    {
+      "case": "First completed VMD representation example",
+      "metadata": "Full dev-clean recording; 40 ms windows; polynomial; budget 500 values/s; 32-bit coefficients.",
+      "samples": 93680,
+      "duration_seconds": 5.855,
+      "outputs": [
+        {
+          "label": "After: first saved VMD fit",
+          "values": 2927,
+          "encoded_kbps": 88.79111870196412,
+          "rate_basis": "Measured .par bytes / full recording duration; includes metadata",
+          "saved_nmse": "1.000970450033496",
+          "pesq_wb": "1.0572503805160522",
+          "stoi": "0.37791675293053645",
+          "embedded_pcm_nmse": 1.000970450033496
+        }
+      ]
+    },
+    {
+      "case": "Case 1: independent 40 ms speech block",
+      "metadata": "Utterance 1272-128104-0000; speaker 1272; dev-clean; samples [15360,16000), 0.96\u20131.00 s. Exactly 640 samples.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: VMD fit / sinusoid",
+          "values": 108,
+          "encoded_kbps": 543.4,
+          "rate_basis": "Measured float64 JSON model file / 0.04 s; storage rate only",
+          "saved_nmse": "0.03245671685381574",
+          "embedded_pcm_nmse": 0.03245671685381574
+        },
+        {
+          "label": "Control: DIRECT / dct",
+          "values": 128,
+          "encoded_kbps": 559.8,
+          "rate_basis": "Measured float64 JSON model file / 0.04 s; storage rate only",
+          "saved_nmse": "0.0025187456983703977",
+          "embedded_pcm_nmse": 0.0025187456983703977
+        },
+        {
+          "label": "Control: SVMD / sinusoid",
+          "values": 108,
+          "encoded_kbps": 536.8,
+          "rate_basis": "Measured float64 JSON model file / 0.04 s; storage rate only",
+          "saved_nmse": "0.024995213737163572",
+          "embedded_pcm_nmse": 0.024995213737163572
+        }
+      ]
+    },
+    {
+      "case": "Case 2: independent 40 ms speech block",
+      "metadata": "Utterance 1272-128104-0000; speaker 1272; dev-clean; samples [31360,32000), 1.96\u20132.00 s. Exactly 640 samples.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: VMD fit / sinusoid",
+          "values": 108,
+          "encoded_kbps": 549.2,
+          "rate_basis": "Measured float64 JSON model file / 0.04 s; storage rate only",
+          "saved_nmse": "0.22304035614159157",
+          "embedded_pcm_nmse": 0.22304035614159157
+        },
+        {
+          "label": "Control: DIRECT / dct",
+          "values": 128,
+          "encoded_kbps": 569.8,
+          "rate_basis": "Measured float64 JSON model file / 0.04 s; storage rate only",
+          "saved_nmse": "0.004591992472136408",
+          "embedded_pcm_nmse": 0.004591992472136409
+        },
+        {
+          "label": "Control: SVMD / sinusoid",
+          "values": 120,
+          "encoded_kbps": 603.8,
+          "rate_basis": "Measured float64 JSON model file / 0.04 s; storage rate only",
+          "saved_nmse": "0.0826403689369681",
+          "embedded_pcm_nmse": 0.08264036893696812
+        }
+      ]
+    },
+    {
+      "case": "Case 3: independent 40 ms speech block",
+      "metadata": "Utterance 1272-128104-0000; speaker 1272; dev-clean; samples [47360,48000), 2.96\u20133.00 s. Exactly 640 samples.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: VMD fit / amfm",
+          "values": 90,
+          "encoded_kbps": 521.6,
+          "rate_basis": "Measured float64 JSON model file / 0.04 s; storage rate only",
+          "saved_nmse": "0.34745906604669424",
+          "embedded_pcm_nmse": 0.34745906604669424
+        },
+        {
+          "label": "Control: DIRECT / sinusoid",
+          "values": 48,
+          "encoded_kbps": 212.6,
+          "rate_basis": "Measured float64 JSON model file / 0.04 s; storage rate only",
+          "saved_nmse": "0.30752028169524154",
+          "embedded_pcm_nmse": 0.30752028169524154
+        },
+        {
+          "label": "Control: SVMD / sinusoid",
+          "values": 84,
+          "encoded_kbps": 426.2,
+          "rate_basis": "Measured float64 JSON model file / 0.04 s; storage rate only",
+          "saved_nmse": "0.2654155718323973",
+          "embedded_pcm_nmse": 0.2654155718323973
+        }
+      ]
+    },
+    {
+      "case": "DIRECT domain: saved test example 1, code size 64/component",
+      "metadata": "7127-75946-0006; speaker 7127; test-clean; samples [0,640); 0.000\u20130.040 s.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: sine",
+          "values": 66,
+          "encoded_kbps": 294.4,
+          "rate_basis": "Measured code JSON storage only; shared decoder weights excluded",
+          "embedded_pcm_nmse": 0.01433079507904644
+        },
+        {
+          "label": "After: snakebeta",
+          "values": 66,
+          "encoded_kbps": 293.2,
+          "rate_basis": "Measured code JSON storage only; shared decoder weights excluded",
+          "embedded_pcm_nmse": 0.013082244217739602
+        },
+        {
+          "label": "Control: PCA",
+          "values": 66,
+          "encoded_kbps": 289.2,
+          "rate_basis": "Measured code JSON storage only; shared decoder weights excluded",
+          "embedded_pcm_nmse": 0.00941123173525273
+        }
+      ]
+    },
+    {
+      "case": "DIRECT domain: saved test example 2, code size 64/component",
+      "metadata": "7127-75946-0006; speaker 7127; test-clean; samples [17920,18560); 1.120\u20131.160 s.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: sine",
+          "values": 66,
+          "encoded_kbps": 290.4,
+          "rate_basis": "Measured code JSON storage only; shared decoder weights excluded",
+          "embedded_pcm_nmse": 0.306151079129184
+        },
+        {
+          "label": "After: snakebeta",
+          "values": 66,
+          "encoded_kbps": 291.6,
+          "rate_basis": "Measured code JSON storage only; shared decoder weights excluded",
+          "embedded_pcm_nmse": 0.23872631925977023
+        },
+        {
+          "label": "Control: PCA",
+          "values": 66,
+          "encoded_kbps": 291.0,
+          "rate_basis": "Measured code JSON storage only; shared decoder weights excluded",
+          "embedded_pcm_nmse": 0.01073501546320378
+        }
+      ]
+    },
+    {
+      "case": "VMD domain: saved test example 1, code size 64/component",
+      "metadata": "7127-75946-0006; speaker 7127; test-clean; samples [0,640); 0.000\u20130.040 s.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: sine",
+          "values": 594,
+          "encoded_kbps": 2435.0,
+          "rate_basis": "Measured code JSON storage only; shared decoder weights excluded",
+          "embedded_pcm_nmse": 0.015278571947553355
+        },
+        {
+          "label": "After: snakebeta",
+          "values": 594,
+          "encoded_kbps": 2419.4,
+          "rate_basis": "Measured code JSON storage only; shared decoder weights excluded",
+          "embedded_pcm_nmse": 0.014722974625522826
+        },
+        {
+          "label": "Control: PCA",
+          "values": 594,
+          "encoded_kbps": 2463.4,
+          "rate_basis": "Measured code JSON storage only; shared decoder weights excluded",
+          "embedded_pcm_nmse": 0.008974358705022145
+        }
+      ]
+    },
+    {
+      "case": "VMD domain: saved test example 2, code size 64/component",
+      "metadata": "7127-75946-0006; speaker 7127; test-clean; samples [17920,18560); 1.120\u20131.160 s.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: sine",
+          "values": 594,
+          "encoded_kbps": 2433.6,
+          "rate_basis": "Measured code JSON storage only; shared decoder weights excluded",
+          "embedded_pcm_nmse": 0.43004643093413203
+        },
+        {
+          "label": "After: snakebeta",
+          "values": 594,
+          "encoded_kbps": 2402.6,
+          "rate_basis": "Measured code JSON storage only; shared decoder weights excluded",
+          "embedded_pcm_nmse": 0.3958742679561797
+        },
+        {
+          "label": "Control: PCA",
+          "values": 594,
+          "encoded_kbps": 2431.8,
+          "rate_basis": "Measured code JSON storage only; shared decoder weights excluded",
+          "embedded_pcm_nmse": 0.010020118934482826
+        }
+      ]
+    },
+    {
+      "case": "IMF case 1/64: 908-31957-0002, block 99, mode 1/8",
+      "metadata": "test-clean; speaker 908; parent crop [32000,32640) at 2.000 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 2,
+          "saved_nmse": 0.533928264505828,
+          "rate_basis": "Reference description: 180 bits / IMF; not a serialized codec",
+          "formula": "-0.00622972617 * sin((t * ((t * cos(t)) - (19.6410199))))",
+          "description_bits": 180,
+          "embedded_pcm_nmse": 0.5339282637415718
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 6,
+          "saved_nmse": 0.5235243977148736,
+          "rate_basis": "Reference description: 460 bits / IMF; not a serialized codec",
+          "formula": "0.06636242 * ((sin((sin(((((16.224241) * (1.02168985)) + (3.6825115)) * t)) * (-0.164982629))) + (-0.00146589836)) * t)",
+          "description_bits": 460,
+          "embedded_pcm_nmse": 0.5235243982964576
+        },
+        {
+          "label": "Control: random",
+          "values": 9,
+          "saved_nmse": 0.8058354928978714,
+          "rate_basis": "Reference description: 716 bits / IMF; not a serialized codec",
+          "formula": "-0.00305725796 * (t + (sin((((sin((23.6469965)) - ((1.5541435) * sin(((3.06733334) * sin(t))))) + (-2.40712625)) * sin(cos((t * (sin((tanh((t - (34.6522108))) * (44.7452443))) * (32.4552042))))))) - (0.069744917)))",
+          "description_bits": 716,
+          "embedded_pcm_nmse": 0.8058354935804558
+        }
+      ]
+    },
+    {
+      "case": "IMF case 2/64: 908-31957-0002, block 99, mode 2/8",
+      "metadata": "test-clean; speaker 908; parent crop [32000,32640) at 2.000 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 3,
+          "saved_nmse": 0.5241992218909883,
+          "rate_basis": "Reference description: 232 bits / IMF; not a serialized codec",
+          "formula": "0.00153561176 * sin(((31.6565869) + (t * (38.8845407))))",
+          "description_bits": 232,
+          "embedded_pcm_nmse": 0.5241992228880021
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 3,
+          "saved_nmse": 0.5469458506175193,
+          "rate_basis": "Reference description: 236 bits / IMF; not a serialized codec",
+          "formula": "-0.00170271077 * sin(sin((((1.09585789) - (39.832243)) * t)))",
+          "description_bits": 236,
+          "embedded_pcm_nmse": 0.5469458496868456
+        },
+        {
+          "label": "Control: random",
+          "values": 6,
+          "saved_nmse": 0.8765524793800823,
+          "rate_basis": "Reference description: 524 bits / IMF; not a serialized codec",
+          "formula": "-0.00267855374 * (sin((40.2916637)) * (((sin(sin((-0.784465439))) - sin(sin(t))) + (t * t)) + ((-0.159075514) + sin((cos((sin((sin(sin(t)) * (t * (46.134383)))) + (-0.839555779))) + t)))))",
+          "description_bits": 524,
+          "embedded_pcm_nmse": 0.8765524799421545
+        }
+      ]
+    },
+    {
+      "case": "IMF case 3/64: 908-31957-0002, block 99, mode 3/8",
+      "metadata": "test-clean; speaker 908; parent crop [32000,32640) at 2.000 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 3,
+          "saved_nmse": 0.49733496570474944,
+          "rate_basis": "Reference description: 236 bits / IMF; not a serialized codec",
+          "formula": "-0.00161037637 * sin(sin((((59.1605647) + t) * (56.9027529))))",
+          "description_bits": 236,
+          "embedded_pcm_nmse": 0.49733496369793273
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 2,
+          "saved_nmse": 0.8492320619751265,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "-0.000781386616 * cos((t * (61.5615403)))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.8492320619553958
+        },
+        {
+          "label": "Control: random",
+          "values": 2,
+          "saved_nmse": 0.8757283325457348,
+          "rate_basis": "Reference description: 196 bits / IMF; not a serialized codec",
+          "formula": "-0.000728293235 * sin((((58.349831) * tanh((t * t))) + sin((t + sin(t)))))",
+          "description_bits": 196,
+          "embedded_pcm_nmse": 0.8757283325416036
+        }
+      ]
+    },
+    {
+      "case": "IMF case 4/64: 908-31957-0002, block 99, mode 4/8",
+      "metadata": "test-clean; speaker 908; parent crop [32000,32640) at 2.000 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 2,
+          "saved_nmse": 0.8725172420642677,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "0.000174555286 * cos(((76.1770831) * t))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.8725172417404901
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 2,
+          "saved_nmse": 0.7792330980024775,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "-0.000230493442 * cos(((87.7917934) * t))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.7792330984084548
+        },
+        {
+          "label": "Control: random",
+          "values": 4,
+          "saved_nmse": 0.9010096239765897,
+          "rate_basis": "Reference description: 344 bits / IMF; not a serialized codec",
+          "formula": "-6.33626529e-05 * (((cos(t) * t) + (t - ((-17.5977575) * sin(((108.529819) * cos(t)))))) * ((-0.239448135) * t))",
+          "description_bits": 344,
+          "embedded_pcm_nmse": 0.9010096238765307
+        }
+      ]
+    },
+    {
+      "case": "IMF case 5/64: 908-31957-0002, block 99, mode 5/8",
+      "metadata": "test-clean; speaker 908; parent crop [32000,32640) at 2.000 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 3,
+          "saved_nmse": 0.8577308746494026,
+          "rate_basis": "Reference description: 232 bits / IMF; not a serialized codec",
+          "formula": "-2.78484377e-05 * sin((((377.360436) * t) + (421.935293)))",
+          "description_bits": 232,
+          "embedded_pcm_nmse": 0.8577308750321346
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 3,
+          "saved_nmse": 0.8577308746720256,
+          "rate_basis": "Reference description: 240 bits / IMF; not a serialized codec",
+          "formula": "2.78484362e-05 * sin((((393.66097) - t) + ((378.360252) * t)))",
+          "description_bits": 240,
+          "embedded_pcm_nmse": 0.8577308736954592
+        },
+        {
+          "label": "Control: random",
+          "values": 4,
+          "saved_nmse": 0.9525239699311445,
+          "rate_basis": "Reference description: 368 bits / IMF; not a serialized codec",
+          "formula": "-1.08339462e-05 * ((cos((sin(t) * (378.539985))) + ((t)^2 * sin(((sin(sin(tanh(t))) + ((t + t) * (403.901788))) * t)))) * (1.34865512))",
+          "description_bits": 368,
+          "embedded_pcm_nmse": 0.9525239701190339
+        }
+      ]
+    },
+    {
+      "case": "IMF case 6/64: 908-31957-0002, block 99, mode 6/8",
+      "metadata": "test-clean; speaker 908; parent crop [32000,32640) at 2.000 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 2,
+          "saved_nmse": 0.905810187436004,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "2.38795543e-05 * cos((t * (467.480744)))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.9058101877876569
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 3,
+          "saved_nmse": 0.7521729755009781,
+          "rate_basis": "Reference description: 236 bits / IMF; not a serialized codec",
+          "formula": "3.87127493e-05 * cos(((t * (496.256334)) + sin((-0.0984895166))))",
+          "description_bits": 236,
+          "embedded_pcm_nmse": 0.7521729749380472
+        },
+        {
+          "label": "Control: random",
+          "values": 3,
+          "saved_nmse": 0.7521729755009832,
+          "rate_basis": "Reference description: 232 bits / IMF; not a serialized codec",
+          "formula": "3.87127493e-05 * sin((((496.256334) * t) - (507.465544)))",
+          "description_bits": 232,
+          "embedded_pcm_nmse": 0.7521729743456371
+        }
+      ]
+    },
+    {
+      "case": "IMF case 7/64: 908-31957-0002, block 99, mode 7/8",
+      "metadata": "test-clean; speaker 908; parent crop [32000,32640) at 2.000 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 2,
+          "saved_nmse": 0.8339312255811251,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "2.42665165e-05 * sin(((783.162182) * t))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.8339312257555339
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 3,
+          "saved_nmse": 0.7037806439869663,
+          "rate_basis": "Reference description: 248 bits / IMF; not a serialized codec",
+          "formula": "0.000181838337 * (sin(((781.412785) * t)) * (cos(t) - sin((779.931907))))",
+          "description_bits": 248,
+          "embedded_pcm_nmse": 0.7037806449372223
+        },
+        {
+          "label": "Control: random",
+          "values": 2,
+          "saved_nmse": 0.9032853520868409,
+          "rate_basis": "Reference description: 164 bits / IMF; not a serialized codec",
+          "formula": "-2.10469224e-05 * sin(cos(((793.527229) * t)))",
+          "description_bits": 164,
+          "embedded_pcm_nmse": 0.9032853519102888
+        }
+      ]
+    },
+    {
+      "case": "IMF case 8/64: 908-31957-0002, block 99, mode 8/8",
+      "metadata": "test-clean; speaker 908; parent crop [32000,32640) at 2.000 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 2,
+          "saved_nmse": 0.8286826227868227,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "2.67003974e-05 * sin(((910.266946) * t))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.8286826229241839
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 2,
+          "saved_nmse": 0.8286826227868227,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "2.67003974e-05 * sin(((910.266946) * t))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.8286826229241839
+        },
+        {
+          "label": "Control: random",
+          "values": 4,
+          "saved_nmse": 0.9827122488392875,
+          "rate_basis": "Reference description: 312 bits / IMF; not a serialized codec",
+          "formula": "-8.2995701e-06 * sin(((tanh(t) * ((909.63667) + cos((906.501188)))) * (1.89683624)))",
+          "description_bits": 312,
+          "embedded_pcm_nmse": 0.9827122489062355
+        }
+      ]
+    },
+    {
+      "case": "IMF case 9/64: 2961-960-0003, block 203, mode 1/8",
+      "metadata": "test-clean; speaker 2961; parent crop [117760,118400) at 7.360 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 3,
+          "saved_nmse": 0.47817052610473293,
+          "rate_basis": "Reference description: 236 bits / IMF; not a serialized codec",
+          "formula": "-0.0361586766 * sin(((31.2737575) * ((35.1957624) - sin(t))))",
+          "description_bits": 236,
+          "embedded_pcm_nmse": 0.4781705276271237
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 3,
+          "saved_nmse": 0.13259871076100022,
+          "rate_basis": "Reference description: 240 bits / IMF; not a serialized codec",
+          "formula": "0.00732500269 * (cos(((28.3168351) * t)) * ((-6.36684732) + t))",
+          "description_bits": 240,
+          "embedded_pcm_nmse": 0.1325987107327952
+        },
+        {
+          "label": "Control: random",
+          "values": 6,
+          "saved_nmse": 0.9624540926454973,
+          "rate_basis": "Reference description: 460 bits / IMF; not a serialized codec",
+          "formula": "-0.00936442958 * cos(((-2.13623608) * ((((((59.8891825) * (t)^2) * t) + (26.0882477)) * (0.57207213)) + (32.3582166))))",
+          "description_bits": 460,
+          "embedded_pcm_nmse": 0.9624540921096156
+        }
+      ]
+    },
+    {
+      "case": "IMF case 10/64: 2961-960-0003, block 203, mode 2/8",
+      "metadata": "test-clean; speaker 2961; parent crop [117760,118400) at 7.360 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 9,
+          "saved_nmse": 0.653238869211353,
+          "rate_basis": "Reference description: 716 bits / IMF; not a serialized codec",
+          "formula": "-0.0391649758 * tanh((((cos(cos((-1.03599639))) * (cos(((52.752101) * t)) + t)) * (-0.835433612)) * sin(((cos(t) * (((-5.07185484) * t) - t)) - (((1.00641277) * (0.881900532)) * ((59.6061673) + (53.332938)))))))",
+          "description_bits": 716,
+          "embedded_pcm_nmse": 0.6532388693046911
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 3,
+          "saved_nmse": 0.2819727729449587,
+          "rate_basis": "Reference description: 236 bits / IMF; not a serialized codec",
+          "formula": "-0.0249600549 * sin((cos((0.257946705)) * ((59.4396778) * t)))",
+          "description_bits": 236,
+          "embedded_pcm_nmse": 0.281972773154269
+        },
+        {
+          "label": "Control: random",
+          "values": 9,
+          "saved_nmse": 0.9619083116940225,
+          "rate_basis": "Reference description: 716 bits / IMF; not a serialized codec",
+          "formula": "-0.00573698102 * cos(((((sin((55.0634241)) + t) + t) * (60.5115881)) - ((((84.6854367) * cos((((tanh(((((t - (0.500197787)) * (-0.0232413803)) + t) * (1.66689369))) - t))^2 + (87.8229987)))) * (0.688933016)))^2))",
+          "description_bits": 716,
+          "embedded_pcm_nmse": 0.9619083118278087
+        }
+      ]
+    },
+    {
+      "case": "IMF case 11/64: 2961-960-0003, block 203, mode 3/8",
+      "metadata": "test-clean; speaker 2961; parent crop [117760,118400) at 7.360 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 2,
+          "saved_nmse": 0.5294961049212841,
+          "rate_basis": "Reference description: 168 bits / IMF; not a serialized codec",
+          "formula": "-0.00964579312 * cos(((t * (315.009018)) + t))",
+          "description_bits": 168,
+          "embedded_pcm_nmse": 0.5294961058481839
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 2,
+          "saved_nmse": 0.7473966014780065,
+          "rate_basis": "Reference description: 172 bits / IMF; not a serialized codec",
+          "formula": "-0.00706416919 * cos((cos(t) + ((316.061137) * t)))",
+          "description_bits": 172,
+          "embedded_pcm_nmse": 0.7473966012366365
+        },
+        {
+          "label": "Control: random",
+          "values": 10,
+          "saved_nmse": 0.6771761079440031,
+          "rate_basis": "Reference description: 780 bits / IMF; not a serialized codec",
+          "formula": "-0.00319687761 * ((((-12.4950426) + cos(((((316.041844) * sin(t)) + (2.29704754)) * t))) * (sin(((cos(t) + cos((((323.078897) * (313.668881)) - (((0.554540389) * (285.437953)) * t)))))^2) * (-0.330370521))) - (1.22468216))",
+          "description_bits": 780,
+          "embedded_pcm_nmse": 0.6771761063824357
+        }
+      ]
+    },
+    {
+      "case": "IMF case 12/64: 2961-960-0003, block 203, mode 4/8",
+      "metadata": "test-clean; speaker 2961; parent crop [117760,118400) at 7.360 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 2,
+          "saved_nmse": 0.5690332681479905,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "-0.0127504955 * sin(((375.852869) * t))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.5690332681495659
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 3,
+          "saved_nmse": 0.9062428817107977,
+          "rate_basis": "Reference description: 236 bits / IMF; not a serialized codec",
+          "formula": "0.00675575469 * sin(sin((((398.336692) + t) * (401.514215))))",
+          "description_bits": 236,
+          "embedded_pcm_nmse": 0.9062428822860137
+        },
+        {
+          "label": "Control: random",
+          "values": 5,
+          "saved_nmse": 0.32448747981094184,
+          "rate_basis": "Reference description: 396 bits / IMF; not a serialized codec",
+          "formula": "0.0171533118 * (sin((0.00102945292)) + ((sin((344.758818)) + t) * cos(((t + tanh((-0.413135803))) * (374.804071)))))",
+          "description_bits": 396,
+          "embedded_pcm_nmse": 0.3244874769268371
+        }
+      ]
+    },
+    {
+      "case": "IMF case 13/64: 2961-960-0003, block 203, mode 5/8",
+      "metadata": "test-clean; speaker 2961; parent crop [117760,118400) at 7.360 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 4,
+          "saved_nmse": 0.45300819476628035,
+          "rate_basis": "Reference description: 332 bits / IMF; not a serialized codec",
+          "formula": "-0.00513546699 * sin(((((t - ((-1.49839804) * (-1.0892985))) * tanh((t + t))) + (514.607737)) * t))",
+          "description_bits": 332,
+          "embedded_pcm_nmse": 0.45300819344684795
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 3,
+          "saved_nmse": 0.6201914979205555,
+          "rate_basis": "Reference description: 236 bits / IMF; not a serialized codec",
+          "formula": "-0.457988347 * sin((sin((t * (514.490734))) * (0.00934998402)))",
+          "description_bits": 236,
+          "embedded_pcm_nmse": 0.6201914977718804
+        },
+        {
+          "label": "Control: random",
+          "values": 3,
+          "saved_nmse": 0.99183710885954,
+          "rate_basis": "Reference description: 268 bits / IMF; not a serialized codec",
+          "formula": "0.00103246154 * (cos(((516.496856) * tanh((((t + cos(tanh((457.955852)))) * (t)^2))^2))) * t)",
+          "description_bits": 268,
+          "embedded_pcm_nmse": 0.9918371085390569
+        }
+      ]
+    },
+    {
+      "case": "IMF case 14/64: 2961-960-0003, block 203, mode 6/8",
+      "metadata": "test-clean; speaker 2961; parent crop [117760,118400) at 7.360 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 2,
+          "saved_nmse": 0.4140697343420392,
+          "rate_basis": "Reference description: 176 bits / IMF; not a serialized codec",
+          "formula": "0.00335894498 * sin(sin((t * ((543.101601) + cos(t)))))",
+          "description_bits": 176,
+          "embedded_pcm_nmse": 0.41406973535012226
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 5,
+          "saved_nmse": 0.5151312546803568,
+          "rate_basis": "Reference description: 392 bits / IMF; not a serialized codec",
+          "formula": "-0.00501787217 * sin(((518.36282) + (t * sin((tanh((0.673795645)) + ((t - (0.357832864)) * (541.598247)))))))",
+          "description_bits": 392,
+          "embedded_pcm_nmse": 0.5151312535251547
+        },
+        {
+          "label": "Control: random",
+          "values": 4,
+          "saved_nmse": 0.9862131979860715,
+          "rate_basis": "Reference description: 328 bits / IMF; not a serialized codec",
+          "formula": "0.000420662414 * (t + tanh(sin(sin(sin(((cos((514.416581)) + ((0.376712625) + t)) * (547.888885)))))))",
+          "description_bits": 328,
+          "embedded_pcm_nmse": 0.9862131976692863
+        }
+      ]
+    },
+    {
+      "case": "IMF case 15/64: 2961-960-0003, block 203, mode 7/8",
+      "metadata": "test-clean; speaker 2961; parent crop [117760,118400) at 7.360 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 2,
+          "saved_nmse": 0.6996383243541886,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "0.000622640253 * cos(((801.776039) * t))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.6996383239152355
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 3,
+          "saved_nmse": 0.8940436640066487,
+          "rate_basis": "Reference description: 236 bits / IMF; not a serialized codec",
+          "formula": "-0.000369173087 * sin((((773.404698) - cos((775.655031))) * t))",
+          "description_bits": 236,
+          "embedded_pcm_nmse": 0.8940436649084942
+        },
+        {
+          "label": "Control: random",
+          "values": 3,
+          "saved_nmse": 0.7422813913898763,
+          "rate_basis": "Reference description: 232 bits / IMF; not a serialized codec",
+          "formula": "-0.000379338554 * (sin((t * (802.365201))) * (-1.51719327))",
+          "description_bits": 232,
+          "embedded_pcm_nmse": 0.742281390867698
+        }
+      ]
+    },
+    {
+      "case": "IMF case 16/64: 2961-960-0003, block 203, mode 8/8",
+      "metadata": "test-clean; speaker 2961; parent crop [117760,118400) at 7.360 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 5,
+          "saved_nmse": 0.8994490195073848,
+          "rate_basis": "Reference description: 420 bits / IMF; not a serialized codec",
+          "formula": "-0.000526124961 * sin((t * (((t)^2 + (-1.50241466)) - (sin(((cos(sin((-0.292275494))) + t) + sin((-0.941676472)))) - ((826.979289) + t)))))",
+          "description_bits": 420,
+          "embedded_pcm_nmse": 0.8994490193635127
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 2,
+          "saved_nmse": 0.890439712218215,
+          "rate_basis": "Reference description: 172 bits / IMF; not a serialized codec",
+          "formula": "-0.00102595859 * sin((sin((t * (832.438604))) * t))",
+          "description_bits": 172,
+          "embedded_pcm_nmse": 0.8904397126323683
+        },
+        {
+          "label": "Control: random",
+          "values": 2,
+          "saved_nmse": 0.9974367429773157,
+          "rate_basis": "Reference description: 172 bits / IMF; not a serialized codec",
+          "formula": "-8.31313381e-05 * sin((sin(t) * (t * (827.788902))))",
+          "description_bits": 172,
+          "embedded_pcm_nmse": 0.9974367429507
+        }
+      ]
+    },
+    {
+      "case": "IMF case 17/64: 5105-28241-0013, block 188, mode 1/8",
+      "metadata": "test-clean; speaker 5105; parent crop [43520,44160) at 2.720 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 4,
+          "saved_nmse": 0.0553375545065269,
+          "rate_basis": "Reference description: 368 bits / IMF; not a serialized codec",
+          "formula": "-0.0033008343 * (cos(t) + ((((-0.615946383) - (t)^2) + tanh(cos(t))) * tanh(cos(((15.9980454) * (sin(((0.605404682))^2) * (t * sin(t))))))))",
+          "description_bits": 368,
+          "embedded_pcm_nmse": 0.05533755434662051
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 7,
+          "saved_nmse": 0.04813488196222435,
+          "rate_basis": "Reference description: 588 bits / IMF; not a serialized codec",
+          "formula": "0.00512569577 * (cos((2.24742252)) + ((((tanh((-0.776813394)) + tanh(cos(t))) * tanh(cos(((6.33894231) * (sin(((21.9633229))^2) * (t * sin(t))))))) * (t * ((-6.49988693) * cos((12.5449363))))) * t))",
+          "description_bits": 588,
+          "embedded_pcm_nmse": 0.048134882072656746
+        },
+        {
+          "label": "Control: random",
+          "values": 9,
+          "saved_nmse": 0.0484994991405427,
+          "rate_basis": "Reference description: 716 bits / IMF; not a serialized codec",
+          "formula": "-6.05431227e-05 * ((t + ((-7.28384276) * (-7.54774501))) + (((((sin((t * (((8.96330716) * (cos((67.7561959)) + sin(t))) + (21.9231435)))) * (20.5997231)) - (tanh((0.63447869)) + t)) - t) + (-1.02399116)) * t))",
+          "description_bits": 716,
+          "embedded_pcm_nmse": 0.04849949981377186
+        }
+      ]
+    },
+    {
+      "case": "IMF case 18/64: 5105-28241-0013, block 188, mode 2/8",
+      "metadata": "test-clean; speaker 5105; parent crop [43520,44160) at 2.720 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 8,
+          "saved_nmse": 0.8280746922094735,
+          "rate_basis": "Reference description: 632 bits / IMF; not a serialized codec",
+          "formula": "-0.00139972819 * ((cos((((178.794059))^2 - sin((t * (((205.194044) + t) + (((-2.02078215) - sin(sin((t * (236.214527))))) * t)))))) + (-0.0243110681)) * ((-1.07645752) + (1.82318786)))",
+          "description_bits": 632,
+          "embedded_pcm_nmse": 0.8280746925177249
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 6,
+          "saved_nmse": 0.9455960755898364,
+          "rate_basis": "Reference description: 456 bits / IMF; not a serialized codec",
+          "formula": "-0.000517258509 * sin((t * ((cos(((0.522913826) * ((188.201035) * (178.790983)))))^2 * ((185.064351) + (203.884455)))))",
+          "description_bits": 456,
+          "embedded_pcm_nmse": 0.9455960763285669
+        },
+        {
+          "label": "Control: random",
+          "values": 12,
+          "saved_nmse": 0.9892729462300969,
+          "rate_basis": "Reference description: 908 bits / IMF; not a serialized codec",
+          "formula": "0.000115739035 * ((1.45243528) * (cos((((179.479088) + (0.998168952)) * tanh(t))) + sin(((0.44099358) * ((sin(((((0.574149561) - (232.114545)) + (2.34026814)) * ((((1.70295126) * sin((175.654352))) + (0.259786819)))^2)) * t) * (232.114661))))))",
+          "description_bits": 908,
+          "embedded_pcm_nmse": 0.9892729464045474
+        }
+      ]
+    },
+    {
+      "case": "IMF case 19/64: 5105-28241-0013, block 188, mode 3/8",
+      "metadata": "test-clean; speaker 5105; parent crop [43520,44160) at 2.720 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 3,
+          "saved_nmse": 0.8041432468559788,
+          "rate_basis": "Reference description: 236 bits / IMF; not a serialized codec",
+          "formula": "-0.00172021157 * cos((t * (cos((454.310763)) + (454.990653))))",
+          "description_bits": 236,
+          "embedded_pcm_nmse": 0.8041432469894793
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 2,
+          "saved_nmse": 0.9327530405522463,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "-0.00100810811 * cos((t * (445.144944)))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.9327530406566454
+        },
+        {
+          "label": "Control: random",
+          "values": 5,
+          "saved_nmse": 0.9999749553524151,
+          "rate_basis": "Reference description: 396 bits / IMF; not a serialized codec",
+          "formula": "-1.36798234e-05 * tanh(((sin((((499.749529) + t) + (499.749529))) * (t * (t * (-94.4382672)))) * (-94.6961775)))",
+          "description_bits": 396,
+          "embedded_pcm_nmse": 0.9999749553528832
+        }
+      ]
+    },
+    {
+      "case": "IMF case 20/64: 5105-28241-0013, block 188, mode 4/8",
+      "metadata": "test-clean; speaker 5105; parent crop [43520,44160) at 2.720 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 2,
+          "saved_nmse": 0.7627221584566816,
+          "rate_basis": "Reference description: 168 bits / IMF; not a serialized codec",
+          "formula": "0.00444799853 * sin(sin(cos((t * (542.128006)))))",
+          "description_bits": 168,
+          "embedded_pcm_nmse": 0.7627221581320892
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 2,
+          "saved_nmse": 0.7614706980542973,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "0.0035800119 * cos(((542.127593) * t))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.761470697278639
+        },
+        {
+          "label": "Control: random",
+          "values": 2,
+          "saved_nmse": 0.7614706980542973,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "0.0035800119 * cos(((542.127593) * t))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.761470697278639
+        }
+      ]
+    },
+    {
+      "case": "IMF case 21/64: 5105-28241-0013, block 188, mode 5/8",
+      "metadata": "test-clean; speaker 5105; parent crop [43520,44160) at 2.720 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 2,
+          "saved_nmse": 0.6713258793169653,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "-0.00581386828 * sin(((583.228104) * t))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.6713258792199306
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 2,
+          "saved_nmse": 0.8654427898499051,
+          "rate_basis": "Reference description: 168 bits / IMF; not a serialized codec",
+          "formula": "0.00372144558 * sin((((588.27403) + t) * t))",
+          "description_bits": 168,
+          "embedded_pcm_nmse": 0.8654427900217907
+        },
+        {
+          "label": "Control: random",
+          "values": 7,
+          "saved_nmse": 0.9795278612626603,
+          "rate_basis": "Reference description: 588 bits / IMF; not a serialized codec",
+          "formula": "4.37001316e-05 * (((sin(sin(((sin(cos((sin((824.733182)) + sin(((sin(tanh(t)) + t) + (208.858326)))))) * (327.411725)) * (327.896963)))) * t) * (sin((1143.08332)) * cos((t * t)))) * (180.061581))",
+          "description_bits": 588,
+          "embedded_pcm_nmse": 0.9795278612235915
+        }
+      ]
+    },
+    {
+      "case": "IMF case 22/64: 5105-28241-0013, block 188, mode 6/8",
+      "metadata": "test-clean; speaker 5105; parent crop [43520,44160) at 2.720 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 2,
+          "saved_nmse": 0.7945154187379899,
+          "rate_basis": "Reference description: 164 bits / IMF; not a serialized codec",
+          "formula": "-0.00510345754 * sin(sin((t * (678.366036))))",
+          "description_bits": 164,
+          "embedded_pcm_nmse": 0.7945154185017259
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 2,
+          "saved_nmse": 0.7940569299998168,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "-0.00450142193 * sin((t * (678.365234)))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.794056929717115
+        },
+        {
+          "label": "Control: random",
+          "values": 2,
+          "saved_nmse": 0.9932502087728281,
+          "rate_basis": "Reference description: 164 bits / IMF; not a serialized codec",
+          "formula": "0.000813795592 * sin(((662.3721) * sin(t)))",
+          "description_bits": 164,
+          "embedded_pcm_nmse": 0.9932502089821775
+        }
+      ]
+    },
+    {
+      "case": "IMF case 23/64: 5105-28241-0013, block 188, mode 7/8",
+      "metadata": "test-clean; speaker 5105; parent crop [43520,44160) at 2.720 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 3,
+          "saved_nmse": 0.6222007097178383,
+          "rate_basis": "Reference description: 240 bits / IMF; not a serialized codec",
+          "formula": "0.00915431311 * cos((((707.007746) - t) - (t * (711.746966))))",
+          "description_bits": 240,
+          "embedded_pcm_nmse": 0.622200711276395
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 3,
+          "saved_nmse": 0.6222007097209115,
+          "rate_basis": "Reference description: 236 bits / IMF; not a serialized codec",
+          "formula": "0.00915431311 * sin(((cos((2.3822379)) + t) * (712.746965)))",
+          "description_bits": 236,
+          "embedded_pcm_nmse": 0.6222007093464696
+        },
+        {
+          "label": "Control: random",
+          "values": 4,
+          "saved_nmse": 0.8563549795517351,
+          "rate_basis": "Reference description: 308 bits / IMF; not a serialized codec",
+          "formula": "-0.00565327639 * ((sin((t * (715.475855))) + sin((2.67302281))) + (-0.451611114))",
+          "description_bits": 308,
+          "embedded_pcm_nmse": 0.8563549795145208
+        }
+      ]
+    },
+    {
+      "case": "IMF case 24/64: 5105-28241-0013, block 188, mode 8/8",
+      "metadata": "test-clean; speaker 5105; parent crop [43520,44160) at 2.720 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 3,
+          "saved_nmse": 0.8062276788058599,
+          "rate_basis": "Reference description: 232 bits / IMF; not a serialized codec",
+          "formula": "0.0032946922 * cos(((872.318185) * ((0.0106411938) + t)))",
+          "description_bits": 232,
+          "embedded_pcm_nmse": 0.8062276776812153
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 3,
+          "saved_nmse": 0.8539254164199876,
+          "rate_basis": "Reference description: 236 bits / IMF; not a serialized codec",
+          "formula": "0.00286390869 * sin(((cos((831.037532)) + (851.684868)) * t))",
+          "description_bits": 236,
+          "embedded_pcm_nmse": 0.8539254164956671
+        },
+        {
+          "label": "Control: random",
+          "values": 8,
+          "saved_nmse": 0.9668539219303645,
+          "rate_basis": "Reference description: 652 bits / IMF; not a serialized codec",
+          "formula": "7.53459913e-05 * (((((13.5576099) + sin(cos((t + (852.827657))))) - t) * cos(t)) * (((t + cos(((((-0.833357751) + sin(((t * (832.732759)) + (851.654175)))) + (850.357864)) * t))) + (0.132220931)))^2)",
+          "description_bits": 652,
+          "embedded_pcm_nmse": 0.9668539222213896
+        }
+      ]
+    },
+    {
+      "case": "IMF case 25/64: 2961-960-0003, block 200, mode 1/8",
+      "metadata": "test-clean; speaker 2961; parent crop [0,640) at 0.000 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 3,
+          "saved_nmse": 0.7044253701118623,
+          "rate_basis": "Reference description: 232 bits / IMF; not a serialized codec",
+          "formula": "-0.000804290889 * cos(((t * (10.5429009)) + (-1.11788611)))",
+          "description_bits": 232,
+          "embedded_pcm_nmse": 0.7044253712001073
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 4,
+          "saved_nmse": 0.6758897417029897,
+          "rate_basis": "Reference description: 332 bits / IMF; not a serialized codec",
+          "formula": "-0.000834775621 * sin((((sin((tanh((tanh(t) + t)) + (12.1815752))) + (-0.641403156)) + (11.4696342)) * t))",
+          "description_bits": 332,
+          "embedded_pcm_nmse": 0.6758897430898353
+        },
+        {
+          "label": "Control: random",
+          "values": 8,
+          "saved_nmse": 0.7126887053408797,
+          "rate_basis": "Reference description: 652 bits / IMF; not a serialized codec",
+          "formula": "0.00205159309 * ((((tanh(((6.89298257) + (((cos((-2.4817602)) + t) - (14.6743989)) * sin(((0.62151645) * cos((sin(((5.03288945) * ((3.03902511) * t))) * t))))))) * cos((0.0978738579))) * t) * t) * t)",
+          "description_bits": 652,
+          "embedded_pcm_nmse": 0.7126887042073252
+        }
+      ]
+    },
+    {
+      "case": "IMF case 26/64: 2961-960-0003, block 200, mode 2/8",
+      "metadata": "test-clean; speaker 2961; parent crop [0,640) at 0.000 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 2,
+          "saved_nmse": 0.4769042978235295,
+          "rate_basis": "Reference description: 168 bits / IMF; not a serialized codec",
+          "formula": "-0.00256997729 * cos((t * (t + (75.039221))))",
+          "description_bits": 168,
+          "embedded_pcm_nmse": 0.47690429886187724
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 3,
+          "saved_nmse": 0.24083725664068076,
+          "rate_basis": "Reference description: 232 bits / IMF; not a serialized codec",
+          "formula": "-0.00309566828 * sin(((74.7510613) * (t - (91.4184753))))",
+          "description_bits": 232,
+          "embedded_pcm_nmse": 0.24083725473817608
+        },
+        {
+          "label": "Control: random",
+          "values": 3,
+          "saved_nmse": 0.2408372566389357,
+          "rate_basis": "Reference description: 236 bits / IMF; not a serialized codec",
+          "formula": "0.00309566835 * cos(((sin((84.7088018)) - t) * (74.7510669)))",
+          "description_bits": 236,
+          "embedded_pcm_nmse": 0.2408372562051371
+        }
+      ]
+    },
+    {
+      "case": "IMF case 27/64: 2961-960-0003, block 200, mode 3/8",
+      "metadata": "test-clean; speaker 2961; parent crop [0,640) at 0.000 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 2,
+          "saved_nmse": 0.8184056374374229,
+          "rate_basis": "Reference description: 168 bits / IMF; not a serialized codec",
+          "formula": "0.00028299498 * sin(((t + (189.630076)) * t))",
+          "description_bits": 168,
+          "embedded_pcm_nmse": 0.8184056369946591
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 3,
+          "saved_nmse": 0.7503229337693325,
+          "rate_basis": "Reference description: 236 bits / IMF; not a serialized codec",
+          "formula": "0.000376692604 * sin(sin(((t + (-1.38610812)) * (189.67083))))",
+          "description_bits": 236,
+          "embedded_pcm_nmse": 0.7503229335628019
+        },
+        {
+          "label": "Control: random",
+          "values": 13,
+          "saved_nmse": 0.8977084342190773,
+          "rate_basis": "Reference description: 972 bits / IMF; not a serialized codec",
+          "formula": "-4.06698721e-06 * (((1637.40095) - (((((-4.03081758) + cos((t * (((0.912623952) + ((((9.17718711) * sin((((166.750064) + t) - (-1.09802459)))) + (205.882001)) - (-2.30315428))) + (2.97412123))))) - ((-5.56873248))^2) - (5.42130739)))^2) * (-0.645749458))",
+          "description_bits": 972,
+          "embedded_pcm_nmse": 0.8977084337239749
+        }
+      ]
+    },
+    {
+      "case": "IMF case 28/64: 2961-960-0003, block 200, mode 4/8",
+      "metadata": "test-clean; speaker 2961; parent crop [0,640) at 0.000 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 5,
+          "saved_nmse": 0.739236194441487,
+          "rate_basis": "Reference description: 396 bits / IMF; not a serialized codec",
+          "formula": "0.0702101155 * sin(sin((t * (((-0.070437302))^2 * sin(((t + (270.088322)) * ((1.10304303) + (272.719767))))))))",
+          "description_bits": 396,
+          "embedded_pcm_nmse": 0.7392361947007061
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 3,
+          "saved_nmse": 0.7941123850162379,
+          "rate_basis": "Reference description: 232 bits / IMF; not a serialized codec",
+          "formula": "-0.000178590798 * sin(((271.914887) * (t - (0.0881294893))))",
+          "description_bits": 232,
+          "embedded_pcm_nmse": 0.7941123857414206
+        },
+        {
+          "label": "Control: random",
+          "values": 7,
+          "saved_nmse": 0.9910711085667117,
+          "rate_basis": "Reference description: 552 bits / IMF; not a serialized codec",
+          "formula": "-4.3920965e-05 * cos(((t - (260.172119)) * (((((((t * (0.600053873)))^2)^2 * (-2.25334441)) + tanh(sin(((272.895219))^2))))^2 - ((1.05725533) * (0.256543639)))))",
+          "description_bits": 552,
+          "embedded_pcm_nmse": 0.9910711090194882
+        }
+      ]
+    },
+    {
+      "case": "IMF case 29/64: 2961-960-0003, block 200, mode 5/8",
+      "metadata": "test-clean; speaker 2961; parent crop [0,640) at 0.000 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 5,
+          "saved_nmse": 0.8662404665700183,
+          "rate_basis": "Reference description: 408 bits / IMF; not a serialized codec",
+          "formula": "-7.72028377e-05 * sin((t * ((0.179325281) - ((447.177268) - cos((sin(cos((t * (t * cos((-0.000162753619)))))) * (-2.81400485)))))))",
+          "description_bits": 408,
+          "embedded_pcm_nmse": 0.8662404664101786
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 5,
+          "saved_nmse": 0.8486550460365393,
+          "rate_basis": "Reference description: 400 bits / IMF; not a serialized codec",
+          "formula": "0.00260269009 * (cos(((456.138214) * t)) * ((sin(((-0.176021683))^2) * (1.19445167)) * cos((t * sin((1.57077886))))))",
+          "description_bits": 400,
+          "embedded_pcm_nmse": 0.8486550456764369
+        },
+        {
+          "label": "Control: random",
+          "values": 5,
+          "saved_nmse": 0.9100140557602486,
+          "rate_basis": "Reference description: 376 bits / IMF; not a serialized codec",
+          "formula": "-6.99913889e-05 * ((((0.00019917559) + cos((t * (446.926728)))) * (-1.78488172)) * (-0.506749387))",
+          "description_bits": 376,
+          "embedded_pcm_nmse": 0.9100140560062453
+        }
+      ]
+    },
+    {
+      "case": "IMF case 30/64: 2961-960-0003, block 200, mode 6/8",
+      "metadata": "test-clean; speaker 2961; parent crop [0,640) at 0.000 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 2,
+          "saved_nmse": 0.9393446060329828,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "-3.21873609e-05 * cos(((545.927284) * t))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.9393446068088082
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 3,
+          "saved_nmse": 0.9393446060314901,
+          "rate_basis": "Reference description: 236 bits / IMF; not a serialized codec",
+          "formula": "-3.49183742e-05 * (cos(((545.927275) * t)) * cos((546.238994)))",
+          "description_bits": 236,
+          "embedded_pcm_nmse": 0.9393446055277267
+        },
+        {
+          "label": "Control: random",
+          "values": 7,
+          "saved_nmse": 0.957991996737708,
+          "rate_basis": "Reference description: 588 bits / IMF; not a serialized codec",
+          "formula": "2.5740397e-05 * sin(((0.865519481) * (cos(((t + (t * ((546.653711) - (sin((0.855649097)) * t)))) + t)) * (((((sin(cos(cos(t))) * (-1.23325097)) + (2.11735965)) * (1.90613868)) + sin(t)))^2)))",
+          "description_bits": 588,
+          "embedded_pcm_nmse": 0.95799199665495
+        }
+      ]
+    },
+    {
+      "case": "IMF case 31/64: 2961-960-0003, block 200, mode 7/8",
+      "metadata": "test-clean; speaker 2961; parent crop [0,640) at 0.000 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 8,
+          "saved_nmse": 0.8050278009283869,
+          "rate_basis": "Reference description: 652 bits / IMF; not a serialized codec",
+          "formula": "-6.23657593e-05 * sin(sin(((t * (-0.11448025)) + ((sin(((cos((686.438052)) * t))^2) + (((698.573027) + (t * ((sin((t - (t * (697.654006)))) * t) * (699.411724)))) * (0.00614463893))) + (1.97626627)))))",
+          "description_bits": 652,
+          "embedded_pcm_nmse": 0.8050277996220557
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 4,
+          "saved_nmse": 0.7925132553322711,
+          "rate_basis": "Reference description: 324 bits / IMF; not a serialized codec",
+          "formula": "4.51575196e-05 * sin(((696.049024) * (t + sin(sin(sin(sin((sin((683.798106)) + (677.524739)))))))))",
+          "description_bits": 324,
+          "embedded_pcm_nmse": 0.7925132560924991
+        },
+        {
+          "label": "Control: random",
+          "values": 3,
+          "saved_nmse": 0.9475164858288097,
+          "rate_basis": "Reference description: 268 bits / IMF; not a serialized codec",
+          "formula": "1.75912019e-05 * ((sin(((t + (sin((t - sin(t))))^2) * (696.539858))) + t) - (0.00355226091))",
+          "description_bits": 268,
+          "embedded_pcm_nmse": 0.9475164863092401
+        }
+      ]
+    },
+    {
+      "case": "IMF case 32/64: 2961-960-0003, block 200, mode 8/8",
+      "metadata": "test-clean; speaker 2961; parent crop [0,640) at 0.000 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 2,
+          "saved_nmse": 0.8274470810734851,
+          "rate_basis": "Reference description: 172 bits / IMF; not a serialized codec",
+          "formula": "3.11127829e-05 * sin(((t * (814.074629)) + cos(t)))",
+          "description_bits": 172,
+          "embedded_pcm_nmse": 0.8274470817724814
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 3,
+          "saved_nmse": 0.8294658830968711,
+          "rate_basis": "Reference description: 232 bits / IMF; not a serialized codec",
+          "formula": "3.09415353e-05 * cos((((791.711443) + t) * (814.222245)))",
+          "description_bits": 232,
+          "embedded_pcm_nmse": 0.8294658832688159
+        },
+        {
+          "label": "Control: random",
+          "values": 6,
+          "saved_nmse": 0.9808308577167224,
+          "rate_basis": "Reference description: 524 bits / IMF; not a serialized codec",
+          "formula": "2.30336758e-07 * ((((((((-46.9749493) * (t * (cos(sin(((800.047318) * t))) - (0.799910953)))) - (tanh(t) + tanh(t))) - (0.194163254)) - sin(((-0.664229906))^2)) + (cos(t) + t)) - t))^2",
+          "description_bits": 524,
+          "embedded_pcm_nmse": 0.9808308575920893
+        }
+      ]
+    },
+    {
+      "case": "IMF case 33/64: 6930-81414-0003, block 254, mode 1/8",
+      "metadata": "test-clean; speaker 6930; parent crop [44160,44800) at 2.760 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 12,
+          "saved_nmse": 0.42148235465095574,
+          "rate_basis": "Reference description: 908 bits / IMF; not a serialized codec",
+          "formula": "0.0107593121 * tanh((((((((-1.47640383) * cos((((sin(((sin((((-0.281134861) * (28.2377439)) + (43.9057321))) + cos(t)) - (15.6902186))))^2 * (29.1118321)) * (73.0070381)))) * (-0.124569089)) + (0.138501309)) - t) * (2.34671495)) - (-0.125145723)))",
+          "description_bits": 908,
+          "embedded_pcm_nmse": 0.421482352276473
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 6,
+          "saved_nmse": 0.4036429502560274,
+          "rate_basis": "Reference description: 460 bits / IMF; not a serialized codec",
+          "formula": "0.132292135 * ((0.105809859) - (((((sin(((15.1548728) + t)) * (-0.87138387)) - (-0.460552147)) - (0.282624158)) - t))^2)",
+          "description_bits": 460,
+          "embedded_pcm_nmse": 0.4036429503989679
+        },
+        {
+          "label": "Control: random",
+          "values": 3,
+          "saved_nmse": 0.43594978492605696,
+          "rate_basis": "Reference description: 276 bits / IMF; not a serialized codec",
+          "formula": "-1.67476081 * tanh(((0.0143473777) * tanh(tanh(((sin((sin(t) + (t - t))) + (-0.19491862)) * cos(t))))))",
+          "description_bits": 276,
+          "embedded_pcm_nmse": 0.4359497838878007
+        }
+      ]
+    },
+    {
+      "case": "IMF case 34/64: 6930-81414-0003, block 254, mode 2/8",
+      "metadata": "test-clean; speaker 6930; parent crop [44160,44800) at 2.760 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 3,
+          "saved_nmse": 0.6764128884417571,
+          "rate_basis": "Reference description: 232 bits / IMF; not a serialized codec",
+          "formula": "0.0116239518 * sin(((217.17855) * (t + (1.42276797))))",
+          "description_bits": 232,
+          "embedded_pcm_nmse": 0.6764128867514929
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 3,
+          "saved_nmse": 0.6952607798859567,
+          "rate_basis": "Reference description: 236 bits / IMF; not a serialized codec",
+          "formula": "-0.0112995357 * sin(((t + tanh((210.157822))) * (218.437497)))",
+          "description_bits": 236,
+          "embedded_pcm_nmse": 0.6952607788542088
+        },
+        {
+          "label": "Control: random",
+          "values": 5,
+          "saved_nmse": 0.7630609732199245,
+          "rate_basis": "Reference description: 396 bits / IMF; not a serialized codec",
+          "formula": "-0.00493824272 * (((((((-0.182116257) * t) * (1.69012238)) + cos(((217.817652) * t))) + t) + (-0.511575292)))^2",
+          "description_bits": 396,
+          "embedded_pcm_nmse": 0.7630609726380334
+        }
+      ]
+    },
+    {
+      "case": "IMF case 35/64: 6930-81414-0003, block 254, mode 3/8",
+      "metadata": "test-clean; speaker 6930; parent crop [44160,44800) at 2.760 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 2,
+          "saved_nmse": 0.4620495113419089,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "-0.0126454347 * sin((t * (243.278848)))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.46204951216615747
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 2,
+          "saved_nmse": 0.4620495113426707,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "-0.0126454347 * sin(((243.278849) * t))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.462049510962666
+        },
+        {
+          "label": "Control: random",
+          "values": 4,
+          "saved_nmse": 0.9409844497422704,
+          "rate_basis": "Reference description: 316 bits / IMF; not a serialized codec",
+          "formula": "-0.00724551302 * (cos(((257.207547) * ((cos((254.067824)) * t) + (238.387458)))) * t)",
+          "description_bits": 316,
+          "embedded_pcm_nmse": 0.9409844497506687
+        }
+      ]
+    },
+    {
+      "case": "IMF case 36/64: 6930-81414-0003, block 254, mode 4/8",
+      "metadata": "test-clean; speaker 6930; parent crop [44160,44800) at 2.760 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 2,
+          "saved_nmse": 0.6451536015140633,
+          "rate_basis": "Reference description: 172 bits / IMF; not a serialized codec",
+          "formula": "0.0179780345 * sin(sin((t * (t - (299.85961)))))",
+          "description_bits": 172,
+          "embedded_pcm_nmse": 0.6451536018411899
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 5,
+          "saved_nmse": 0.7591417171571864,
+          "rate_basis": "Reference description: 396 bits / IMF; not a serialized codec",
+          "formula": "-0.0131084398 * sin(((cos((((t * (t + (-0.715760857))) * (294.846335)) * (297.983012))) + (299.778839)) * t))",
+          "description_bits": 396,
+          "embedded_pcm_nmse": 0.7591417174456072
+        },
+        {
+          "label": "Control: random",
+          "values": 6,
+          "saved_nmse": 0.6122724924048341,
+          "rate_basis": "Reference description: 508 bits / IMF; not a serialized codec",
+          "formula": "-0.0247542271 * (sin((tanh((((1529.1717) * (t * t)) - ((cos(((301.148797) * tanh(sin((282.239356))))) + t) - t))) + ((-0.324196573) + t))) * cos((t * (296.38828))))",
+          "description_bits": 508,
+          "embedded_pcm_nmse": 0.6122724919895103
+        }
+      ]
+    },
+    {
+      "case": "IMF case 37/64: 6930-81414-0003, block 254, mode 5/8",
+      "metadata": "test-clean; speaker 6930; parent crop [44160,44800) at 2.760 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 3,
+          "saved_nmse": 0.7764040691299771,
+          "rate_basis": "Reference description: 232 bits / IMF; not a serialized codec",
+          "formula": "0.00663501494 * sin((((-2.1544926) - t) * (424.321979)))",
+          "description_bits": 232,
+          "embedded_pcm_nmse": 0.7764040712931649
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 3,
+          "saved_nmse": 0.6835980258933338,
+          "rate_basis": "Reference description: 236 bits / IMF; not a serialized codec",
+          "formula": "0.00894780226 * sin(cos(((t * (0.960131)) * (439.136535))))",
+          "description_bits": 236,
+          "embedded_pcm_nmse": 0.6835980258283211
+        },
+        {
+          "label": "Control: random",
+          "values": 7,
+          "saved_nmse": 0.9767712815462491,
+          "rate_basis": "Reference description: 588 bits / IMF; not a serialized codec",
+          "formula": "0.00210264547 * (cos((((sin((((426.58902))^2 * (t * t))) * (407.773339)) * (((cos(t) * sin(t)) * sin(cos(((cos((439.135832)) * t) * (420.31573))))) * t)) * (-0.506123801))) + (-0.185844898))",
+          "description_bits": 588,
+          "embedded_pcm_nmse": 0.9767712813272389
+        }
+      ]
+    },
+    {
+      "case": "IMF case 38/64: 6930-81414-0003, block 254, mode 6/8",
+      "metadata": "test-clean; speaker 6930; parent crop [44160,44800) at 2.760 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 2,
+          "saved_nmse": 0.6000917765818377,
+          "rate_basis": "Reference description: 168 bits / IMF; not a serialized codec",
+          "formula": "0.00328759381 * sin((t * ((534.712489) - t)))",
+          "description_bits": 168,
+          "embedded_pcm_nmse": 0.6000917753017743
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 2,
+          "saved_nmse": 0.540445381462648,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "0.00352239884 * sin(((535.225564) * t))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.5404453799723898
+        },
+        {
+          "label": "Control: random",
+          "values": 6,
+          "saved_nmse": 0.8292026440533868,
+          "rate_basis": "Reference description: 460 bits / IMF; not a serialized codec",
+          "formula": "-0.000569887194 * (((-2.03721881) * (((2.44159731) * sin((t * (539.097506)))) * (t - sin((534.581253))))) - (0.0138296869))",
+          "description_bits": 460,
+          "embedded_pcm_nmse": 0.8292026451135049
+        }
+      ]
+    },
+    {
+      "case": "IMF case 39/64: 6930-81414-0003, block 254, mode 7/8",
+      "metadata": "test-clean; speaker 6930; parent crop [44160,44800) at 2.760 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 2,
+          "saved_nmse": 0.7638015518620003,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "-0.00285652287 * sin(((552.895354) * t))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.7638015516123492
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 9,
+          "saved_nmse": 0.7425620610878334,
+          "rate_basis": "Reference description: 708 bits / IMF; not a serialized codec",
+          "formula": "0.00598337122 * (sin((t + cos((557.127589)))) * ((((0.432353229) - (0.438572007)) * ((2.97644054) + ((t * cos((558.076906))) * ((t + (2048)) * cos((t * (t + (568.085572)))))))) * (0.226672291)))",
+          "description_bits": 708,
+          "embedded_pcm_nmse": 0.7425620586336158
+        },
+        {
+          "label": "Control: random",
+          "values": 3,
+          "saved_nmse": 0.9547417074182054,
+          "rate_basis": "Reference description: 264 bits / IMF; not a serialized codec",
+          "formula": "-0.00121538766 * cos(((-9.91410402) * (t + sin(((sin(((541.334715) * t)) + t) * t)))))",
+          "description_bits": 264,
+          "embedded_pcm_nmse": 0.954741707598376
+        }
+      ]
+    },
+    {
+      "case": "IMF case 40/64: 6930-81414-0003, block 254, mode 8/8",
+      "metadata": "test-clean; speaker 6930; parent crop [44160,44800) at 2.760 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 2,
+          "saved_nmse": 0.8367867991148568,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "0.00298742058 * sin(((349.761591) * t))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.8367867981489874
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 3,
+          "saved_nmse": 0.8617441465189021,
+          "rate_basis": "Reference description: 236 bits / IMF; not a serialized codec",
+          "formula": "0.00274862775 * sin(((sin((357.583051)) - t) * (364.113297)))",
+          "description_bits": 236,
+          "embedded_pcm_nmse": 0.8617441468767003
+        },
+        {
+          "label": "Control: random",
+          "values": 3,
+          "saved_nmse": 0.9575483735198389,
+          "rate_basis": "Reference description: 268 bits / IMF; not a serialized codec",
+          "formula": "-0.00202098632 * sin(tanh(sin((((((((353.239481) + t) + t) - t))^2 * (-0.554844251)) - t))))",
+          "description_bits": 268,
+          "embedded_pcm_nmse": 0.9575483729020707
+        }
+      ]
+    },
+    {
+      "case": "IMF case 41/64: 5105-28241-0013, block 191, mode 1/8",
+      "metadata": "test-clean; speaker 5105; parent crop [76160,76800) at 4.760 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 4,
+          "saved_nmse": 0.0009921913068969117,
+          "rate_basis": "Reference description: 328 bits / IMF; not a serialized codec",
+          "formula": "-0.000366852194 * ((9.51852636) + sin((((35.6025415) + t) * cos(sin(((-0.296635996) * (t - t)))))))",
+          "description_bits": 328,
+          "embedded_pcm_nmse": 0.000992191333550143
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 9,
+          "saved_nmse": 0.000979562358425899,
+          "rate_basis": "Reference description: 716 bits / IMF; not a serialized codec",
+          "formula": "-0.00627352592 * ((0.507149558) + ((((tanh((-1.7945557)) * ((0.966315402) - t)) * (0.0946747589)) * (0.293493043)) * (((1.51817159) + ((-0.406188508) + ((sin((t * t)) * ((2.07542951) + (t + t))) * t))) * t)))",
+          "description_bits": 716,
+          "embedded_pcm_nmse": 0.0009795623809806474
+        },
+        {
+          "label": "Control: random",
+          "values": 8,
+          "saved_nmse": 0.0010046046713568797,
+          "rate_basis": "Reference description: 652 bits / IMF; not a serialized codec",
+          "formula": "-0.00378662238 * ((((((-0.4970739) + (-0.418864278)) * cos(t)))^2 - (((((((2.94009729) - t) * (1.86975285)) - ((((sin(t) + (11.3321537)) - t))^2 * (0.0664631144))) - (-4.08228186)) + t) * t)) + t)",
+          "description_bits": 652,
+          "embedded_pcm_nmse": 0.0010046047003812637
+        }
+      ]
+    },
+    {
+      "case": "IMF case 42/64: 5105-28241-0013, block 191, mode 2/8",
+      "metadata": "test-clean; speaker 5105; parent crop [76160,76800) at 4.760 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 3,
+          "saved_nmse": 0.7859489909271954,
+          "rate_basis": "Reference description: 232 bits / IMF; not a serialized codec",
+          "formula": "9.46942212e-05 * cos((((0.0466478398) + (158.401194)) * t))",
+          "description_bits": 232,
+          "embedded_pcm_nmse": 0.7859489914580446
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 3,
+          "saved_nmse": 0.7335085665728632,
+          "rate_basis": "Reference description: 236 bits / IMF; not a serialized codec",
+          "formula": "-0.000119951653 * sin(sin(((t + (155.903935)) * (170.399803))))",
+          "description_bits": 236,
+          "embedded_pcm_nmse": 0.7335085671354687
+        },
+        {
+          "label": "Control: random",
+          "values": 5,
+          "saved_nmse": 0.934674117037306,
+          "rate_basis": "Reference description: 460 bits / IMF; not a serialized codec",
+          "formula": "-5.25979152e-05 * ((cos(((167.740745) + (t * ((tanh((tanh((cos((t - (((((158.129603) + sin(t)) + (164.397739)) + t) * t))) + t)))^2) * t) + (164.165137))))) * t) - t)",
+          "description_bits": 460,
+          "embedded_pcm_nmse": 0.9346741173168811
+        }
+      ]
+    },
+    {
+      "case": "IMF case 43/64: 5105-28241-0013, block 191, mode 3/8",
+      "metadata": "test-clean; speaker 5105; parent crop [76160,76800) at 4.760 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 2,
+          "saved_nmse": 0.4508288345452442,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "0.0001069954 * cos((t * (314.441047)))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.45082883554050657
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 2,
+          "saved_nmse": 0.8070795996739101,
+          "rate_basis": "Reference description: 164 bits / IMF; not a serialized codec",
+          "formula": "7.21134834e-05 * sin(sin((t * (314.390881))))",
+          "description_bits": 164,
+          "embedded_pcm_nmse": 0.8070795990048308
+        },
+        {
+          "label": "Control: random",
+          "values": 6,
+          "saved_nmse": 0.9971826806962231,
+          "rate_basis": "Reference description: 460 bits / IMF; not a serialized codec",
+          "formula": "-8.02521144e-06 * sin((((304.254765) + (0.345949872)) * (((tanh((t * (0.167392041))) * (323.07484)) * t) * (276.024653))))",
+          "description_bits": 460,
+          "embedded_pcm_nmse": 0.9971826807474423
+        }
+      ]
+    },
+    {
+      "case": "IMF case 44/64: 5105-28241-0013, block 191, mode 4/8",
+      "metadata": "test-clean; speaker 5105; parent crop [76160,76800) at 4.760 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 2,
+          "saved_nmse": 0.8746495564981125,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "-4.42680239e-05 * sin((t * (370.231587)))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.8746495566635809
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 3,
+          "saved_nmse": 0.8541277555324663,
+          "rate_basis": "Reference description: 232 bits / IMF; not a serialized codec",
+          "formula": "4.77489505e-05 * sin(((t - (368.597808)) * (365.369052)))",
+          "description_bits": 232,
+          "embedded_pcm_nmse": 0.854127756674214
+        },
+        {
+          "label": "Control: random",
+          "values": 10,
+          "saved_nmse": 0.9905730748381087,
+          "rate_basis": "Reference description: 780 bits / IMF; not a serialized codec",
+          "formula": "-1.21070909e-05 * cos(((((t + t) + (390.410907)) + (7.85686526)) * ((348.240643) + (((t - (sin(((-0.9255445) * sin((-1.07335064)))) - cos(sin((348.167494))))) * t) * ((348.451253) + (cos((357.824005)) - (366.617521)))))))",
+          "description_bits": 780,
+          "embedded_pcm_nmse": 0.9905730750617249
+        }
+      ]
+    },
+    {
+      "case": "IMF case 45/64: 5105-28241-0013, block 191, mode 5/8",
+      "metadata": "test-clean; speaker 5105; parent crop [76160,76800) at 4.760 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 3,
+          "saved_nmse": 0.8868142685698477,
+          "rate_basis": "Reference description: 240 bits / IMF; not a serialized codec",
+          "formula": "4.90533992e-05 * sin(cos((t * ((461.125856) - ((-1.21426185))^2))))",
+          "description_bits": 240,
+          "embedded_pcm_nmse": 0.8868142666255296
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 2,
+          "saved_nmse": 0.8866371483955697,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "4.32436036e-05 * cos((t * (459.649468)))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.8866371484504019
+        },
+        {
+          "label": "Control: random",
+          "values": 2,
+          "saved_nmse": 0.907924991246929,
+          "rate_basis": "Reference description: 204 bits / IMF; not a serialized codec",
+          "formula": "-3.89703842e-05 * cos((t * ((452.390566) + ((((t)^2 * (t + t)) + t) + t))))",
+          "description_bits": 204,
+          "embedded_pcm_nmse": 0.9079249908197627
+        }
+      ]
+    },
+    {
+      "case": "IMF case 46/64: 5105-28241-0013, block 191, mode 6/8",
+      "metadata": "test-clean; speaker 5105; parent crop [76160,76800) at 4.760 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 3,
+          "saved_nmse": 0.6408260801181147,
+          "rate_basis": "Reference description: 256 bits / IMF; not a serialized codec",
+          "formula": "-2.36732945e-05 * sin(((629.151099) * (sin((cos(sin(sin(sin((-1.30985384))))))^2) + t)))",
+          "description_bits": 256,
+          "embedded_pcm_nmse": 0.6408260820072191
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 3,
+          "saved_nmse": 0.6415509715471848,
+          "rate_basis": "Reference description: 236 bits / IMF; not a serialized codec",
+          "formula": "-2.68442897e-05 * sin(sin((((0.0952292559) + t) * (629.15085))))",
+          "description_bits": 236,
+          "embedded_pcm_nmse": 0.6415509711919857
+        },
+        {
+          "label": "Control: random",
+          "values": 5,
+          "saved_nmse": 0.9953512600102987,
+          "rate_basis": "Reference description: 396 bits / IMF; not a serialized codec",
+          "formula": "-2.73362154e-06 * (sin((((((592.833157))^2 * (sin(((2.21839066))^2) * t)) * t) + (-24.075555))) - (-0.0203440585))",
+          "description_bits": 396,
+          "embedded_pcm_nmse": 0.9953512599215057
+        }
+      ]
+    },
+    {
+      "case": "IMF case 47/64: 5105-28241-0013, block 191, mode 7/8",
+      "metadata": "test-clean; speaker 5105; parent crop [76160,76800) at 4.760 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 3,
+          "saved_nmse": 0.9008627516984984,
+          "rate_basis": "Reference description: 232 bits / IMF; not a serialized codec",
+          "formula": "1.11826886e-05 * sin((((745.068874) + t) * (747.994357)))",
+          "description_bits": 232,
+          "embedded_pcm_nmse": 0.9008627511906475
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 3,
+          "saved_nmse": 0.9059306416923821,
+          "rate_basis": "Reference description: 232 bits / IMF; not a serialized codec",
+          "formula": "-8.19804346e-06 * (cos((t * (747.984449))) * (-1.32868627))",
+          "description_bits": 232,
+          "embedded_pcm_nmse": 0.9059306421312557
+        },
+        {
+          "label": "Control: random",
+          "values": 2,
+          "saved_nmse": 0.9859774468752995,
+          "rate_basis": "Reference description: 172 bits / IMF; not a serialized codec",
+          "formula": "-4.30317611e-06 * sin(((cos(t) * (762.270977)) * t))",
+          "description_bits": 172,
+          "embedded_pcm_nmse": 0.9859774467942204
+        }
+      ]
+    },
+    {
+      "case": "IMF case 48/64: 5105-28241-0013, block 191, mode 8/8",
+      "metadata": "test-clean; speaker 5105; parent crop [76160,76800) at 4.760 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 3,
+          "saved_nmse": 0.8553108157859338,
+          "rate_basis": "Reference description: 264 bits / IMF; not a serialized codec",
+          "formula": "-1.08359933e-05 * sin(((((859.395857) * t) - cos((t)^2)) + (sin(t) + sin((889.055393)))))",
+          "description_bits": 264,
+          "embedded_pcm_nmse": 0.8553108162645875
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 3,
+          "saved_nmse": 0.8573646071651915,
+          "rate_basis": "Reference description: 232 bits / IMF; not a serialized codec",
+          "formula": "1.07439911e-05 * cos(((t + (0.920583335)) * (860.624614)))",
+          "description_bits": 232,
+          "embedded_pcm_nmse": 0.8573646082090309
+        },
+        {
+          "label": "Control: random",
+          "values": 4,
+          "saved_nmse": 0.9146188729989475,
+          "rate_basis": "Reference description: 328 bits / IMF; not a serialized codec",
+          "formula": "-9.44880371e-06 * ((tanh((0.00457711949)) * sin(sin(t))) - sin(((5.53970706e-05) - sin((t * (853.520366))))))",
+          "description_bits": 328,
+          "embedded_pcm_nmse": 0.9146188725853756
+        }
+      ]
+    },
+    {
+      "case": "IMF case 49/64: 7127-75947-0035, block 28, mode 1/8",
+      "metadata": "test-clean; speaker 7127; parent crop [39680,40320) at 2.480 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 3,
+          "saved_nmse": 0.19562129599155248,
+          "rate_basis": "Reference description: 232 bits / IMF; not a serialized codec",
+          "formula": "-0.0814691811 * sin((t * ((-0.931368321) + (34.4714684))))",
+          "description_bits": 232,
+          "embedded_pcm_nmse": 0.19562129647620022
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 3,
+          "saved_nmse": 0.09051147526219941,
+          "rate_basis": "Reference description: 244 bits / IMF; not a serialized codec",
+          "formula": "-0.087504159 * sin((((sin((30.9081674)) + (34.0441284)) + t) * t))",
+          "description_bits": 244,
+          "embedded_pcm_nmse": 0.09051147584221933
+        },
+        {
+          "label": "Control: random",
+          "values": 10,
+          "saved_nmse": 0.8147307866851694,
+          "rate_basis": "Reference description: 780 bits / IMF; not a serialized codec",
+          "formula": "0.0394450692 * cos(((((3.86062886) - tanh(((((-0.390382523) + t) * (0.131288527)) * (26.3785681)))) * (-2.91377614)) * ((sin(sin(t)) - tanh(((sin(t) * ((sin((34.5218366)) * (34.4853603)))^2) * (12.5286568)))) * (2.26639282))))",
+          "description_bits": 780,
+          "embedded_pcm_nmse": 0.814730786254204
+        }
+      ]
+    },
+    {
+      "case": "IMF case 50/64: 7127-75947-0035, block 28, mode 2/8",
+      "metadata": "test-clean; speaker 7127; parent crop [39680,40320) at 2.480 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 3,
+          "saved_nmse": 0.24087928954485208,
+          "rate_basis": "Reference description: 232 bits / IMF; not a serialized codec",
+          "formula": "-0.0343743862 * sin(((66.9859973) * (t - (-2.25630941))))",
+          "description_bits": 232,
+          "embedded_pcm_nmse": 0.2408792920818462
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 4,
+          "saved_nmse": 0.32798526731746824,
+          "rate_basis": "Reference description: 316 bits / IMF; not a serialized codec",
+          "formula": "0.0649618672 * (((-0.498065262) * sin((t + ((66.0375241) * t)))) + sin((50.2634979)))",
+          "description_bits": 316,
+          "embedded_pcm_nmse": 0.32798526713217846
+        },
+        {
+          "label": "Control: random",
+          "values": 3,
+          "saved_nmse": 0.2791597366811889,
+          "rate_basis": "Reference description: 236 bits / IMF; not a serialized codec",
+          "formula": "-0.033462803 * cos((((66.9600134) * t) + sin((67.5442464))))",
+          "description_bits": 236,
+          "embedded_pcm_nmse": 0.2791597372729212
+        }
+      ]
+    },
+    {
+      "case": "IMF case 51/64: 7127-75947-0035, block 28, mode 3/8",
+      "metadata": "test-clean; speaker 7127; parent crop [39680,40320) at 2.480 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 3,
+          "saved_nmse": 0.7477437680682663,
+          "rate_basis": "Reference description: 232 bits / IMF; not a serialized codec",
+          "formula": "-0.016296977 * cos(((220.140926) + (t * (213.857929))))",
+          "description_bits": 232,
+          "embedded_pcm_nmse": 0.7477437681173525
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 3,
+          "saved_nmse": 0.7477437680699769,
+          "rate_basis": "Reference description: 232 bits / IMF; not a serialized codec",
+          "formula": "-0.0162969769 * sin((((228.437199) - t) * (213.857933)))",
+          "description_bits": 232,
+          "embedded_pcm_nmse": 0.7477437677036372
+        },
+        {
+          "label": "Control: random",
+          "values": 2,
+          "saved_nmse": 0.9024178098144073,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "-0.0101499622 * sin((t * (207.156371)))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.9024178103473182
+        }
+      ]
+    },
+    {
+      "case": "IMF case 52/64: 7127-75947-0035, block 28, mode 4/8",
+      "metadata": "test-clean; speaker 7127; parent crop [39680,40320) at 2.480 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 3,
+          "saved_nmse": 0.6548269068879072,
+          "rate_basis": "Reference description: 232 bits / IMF; not a serialized codec",
+          "formula": "-0.00990607635 * cos((((-1.0674698) - t) * (293.967194)))",
+          "description_bits": 232,
+          "embedded_pcm_nmse": 0.654826908210629
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 7,
+          "saved_nmse": 0.7702761222522385,
+          "rate_basis": "Reference description: 524 bits / IMF; not a serialized codec",
+          "formula": "-0.00807418742 * sin((((((304.259164) + ((304.259164) + t)) * (294.847747)) + ((297.985791) * sin((0.252572052)))) * (307.394475)))",
+          "description_bits": 524,
+          "embedded_pcm_nmse": 0.7702761221859518
+        },
+        {
+          "label": "Control: random",
+          "values": 3,
+          "saved_nmse": 0.9863043588687272,
+          "rate_basis": "Reference description: 232 bits / IMF; not a serialized codec",
+          "formula": "0.00175824494 * ((1.12047542) * sin(((309.526552) * t)))",
+          "description_bits": 232,
+          "embedded_pcm_nmse": 0.9863043586448954
+        }
+      ]
+    },
+    {
+      "case": "IMF case 53/64: 7127-75947-0035, block 28, mode 5/8",
+      "metadata": "test-clean; speaker 7127; parent crop [39680,40320) at 2.480 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 2,
+          "saved_nmse": 0.702734306892254,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "0.0100604916 * cos(((461.785722) * t))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.702734306388663
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 2,
+          "saved_nmse": 0.8459391017647183,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "0.0072445054 * sin((t * (459.873596)))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.8459391012075747
+        },
+        {
+          "label": "Control: random",
+          "values": 4,
+          "saved_nmse": 0.9978038690790892,
+          "rate_basis": "Reference description: 316 bits / IMF; not a serialized codec",
+          "formula": "-0.000715628103 * (sin((t * (((0.598623273) * (t)^2) * (479.91438)))) * (1.26779442))",
+          "description_bits": 316,
+          "embedded_pcm_nmse": 0.9978038690495217
+        }
+      ]
+    },
+    {
+      "case": "IMF case 54/64: 7127-75947-0035, block 28, mode 6/8",
+      "metadata": "test-clean; speaker 7127; parent crop [39680,40320) at 2.480 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 3,
+          "saved_nmse": 0.7101422744614405,
+          "rate_basis": "Reference description: 232 bits / IMF; not a serialized codec",
+          "formula": "0.00743174219 * sin(((t * (444.111297)) + (426.690904)))",
+          "description_bits": 232,
+          "embedded_pcm_nmse": 0.7101422742731941
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 10,
+          "saved_nmse": 0.512825817903414,
+          "rate_basis": "Reference description: 780 bits / IMF; not a serialized codec",
+          "formula": "-0.000522235782 * ((((-1.55430786) * (((-0.227052599) + (-0.173572567)) + (t - (0.317823872)))) * ((0.155399601) * t)) * ((t - (((((-0.00802254343) * sin(t)) + sin((t * (437.393405)))) * (271.006442)) * t)) * (0.566891049)))",
+          "description_bits": 780,
+          "embedded_pcm_nmse": 0.5128258180322853
+        },
+        {
+          "label": "Control: random",
+          "values": 6,
+          "saved_nmse": 0.7163702566028333,
+          "rate_basis": "Reference description: 524 bits / IMF; not a serialized codec",
+          "formula": "0.00735283221 * sin((((443.857117) - tanh(((6.35980332) * (t * tanh((sin(((442.275228) * tanh((sin((tanh(sin(t)) * cos((sin(((442.272432) + t)) * t)))) + t)))) + (439.135748))))))) * t))",
+          "description_bits": 524,
+          "embedded_pcm_nmse": 0.7163702566908218
+        }
+      ]
+    },
+    {
+      "case": "IMF case 55/64: 7127-75947-0035, block 28, mode 7/8",
+      "metadata": "test-clean; speaker 7127; parent crop [39680,40320) at 2.480 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 2,
+          "saved_nmse": 0.6470406956861499,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "-0.0110031841 * sin((t * (327.559473)))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.6470406967253289
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 2,
+          "saved_nmse": 0.6470406956860382,
+          "rate_basis": "Reference description: 168 bits / IMF; not a serialized codec",
+          "formula": "0.011003184 * sin((t - ((328.559478) * t)))",
+          "description_bits": 168,
+          "embedded_pcm_nmse": 0.6470406965026212
+        },
+        {
+          "label": "Control: random",
+          "values": 9,
+          "saved_nmse": 0.9850599753828966,
+          "rate_basis": "Reference description: 696 bits / IMF; not a serialized codec",
+          "formula": "0.00394207561 * ((((0.205117746) - sin((sin(((cos(t) * (329.35915)) * (1.35033256))) - (((((t * (sin((329.421517)))^2) * (1.12127461)))^2 + (326.228442)) * (316.818457))))))^2 + (-0.472739459))",
+          "description_bits": 696,
+          "embedded_pcm_nmse": 0.9850599752259708
+        }
+      ]
+    },
+    {
+      "case": "IMF case 56/64: 7127-75947-0035, block 28, mode 8/8",
+      "metadata": "test-clean; speaker 7127; parent crop [39680,40320) at 2.480 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 3,
+          "saved_nmse": 0.876000242893763,
+          "rate_basis": "Reference description: 236 bits / IMF; not a serialized codec",
+          "formula": "-0.000700216056 * cos((t * ((609.59225) * tanh((611.653363)))))",
+          "description_bits": 236,
+          "embedded_pcm_nmse": 0.8760002422430062
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 6,
+          "saved_nmse": 0.942001518461636,
+          "rate_basis": "Reference description: 464 bits / IMF; not a serialized codec",
+          "formula": "4.53647295e-05 * (((-2.4278665) + (t - ((3.34850059) * (3.13438423)))) * ((0.00537296823) + tanh(cos((sin(t) * (617.175474))))))",
+          "description_bits": 464,
+          "embedded_pcm_nmse": 0.9420015191844123
+        },
+        {
+          "label": "Control: random",
+          "values": 8,
+          "saved_nmse": 0.9877604572574505,
+          "rate_basis": "Reference description: 652 bits / IMF; not a serialized codec",
+          "formula": "0.000162698631 * ((0.00240049391) * ((((2047.93051) * (cos((cos(t) * t)) + tanh((-0.665437173)))) * tanh((((0.212056128) * tanh((-1.75346761))) + sin((t * (t * ((611.102593) + ((601.694507) + t)))))))) - t))",
+          "description_bits": 652,
+          "embedded_pcm_nmse": 0.9877604572558503
+        }
+      ]
+    },
+    {
+      "case": "IMF case 57/64: 5105-28241-0013, block 186, mode 1/8",
+      "metadata": "test-clean; speaker 5105; parent crop [21760,22400) at 1.360 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 2,
+          "saved_nmse": 0.26847333248578586,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "-0.0571123744 * sin((t * (80.2519369)))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.2684733317920238
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 3,
+          "saved_nmse": 0.693885619869526,
+          "rate_basis": "Reference description: 268 bits / IMF; not a serialized codec",
+          "formula": "-0.0892026888 * (sin(((80.1324358) * t)) * (t * sin((((t * t) + (62.0812095)) + t))))",
+          "description_bits": 268,
+          "embedded_pcm_nmse": 0.6938856205885764
+        },
+        {
+          "label": "Control: random",
+          "values": 5,
+          "saved_nmse": 0.48951644526230564,
+          "rate_basis": "Reference description: 396 bits / IMF; not a serialized codec",
+          "formula": "-0.0385697167 * ((sin(t) + (sin(((((80.4067016) + t) * t) + (-0.310765665))) - (0.133713833))) - (-0.156387847))",
+          "description_bits": 396,
+          "embedded_pcm_nmse": 0.4895164453439711
+        }
+      ]
+    },
+    {
+      "case": "IMF case 58/64: 5105-28241-0013, block 186, mode 2/8",
+      "metadata": "test-clean; speaker 5105; parent crop [21760,22400) at 1.360 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 2,
+          "saved_nmse": 0.4703008779588732,
+          "rate_basis": "Reference description: 168 bits / IMF; not a serialized codec",
+          "formula": "0.0772719926 * sin(((t + (120.599661)) * t))",
+          "description_bits": 168,
+          "embedded_pcm_nmse": 0.47030087650771313
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 2,
+          "saved_nmse": 0.47710694510574464,
+          "rate_basis": "Reference description: 164 bits / IMF; not a serialized codec",
+          "formula": "0.087281233 * sin(cos((t * (121.093076))))",
+          "description_bits": 164,
+          "embedded_pcm_nmse": 0.4771069448782681
+        },
+        {
+          "label": "Control: random",
+          "values": 3,
+          "saved_nmse": 0.6845115543767955,
+          "rate_basis": "Reference description: 236 bits / IMF; not a serialized codec",
+          "formula": "3.93525391 * (sin((t * (120.090659))) * sin((0.0151899477)))",
+          "description_bits": 236,
+          "embedded_pcm_nmse": 0.6845115545845605
+        }
+      ]
+    },
+    {
+      "case": "IMF case 59/64: 5105-28241-0013, block 186, mode 3/8",
+      "metadata": "test-clean; speaker 5105; parent crop [21760,22400) at 1.360 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 3,
+          "saved_nmse": 0.18459867117458473,
+          "rate_basis": "Reference description: 232 bits / IMF; not a serialized codec",
+          "formula": "-0.0786796418 * cos((t * ((1.70404185) - (102.328937))))",
+          "description_bits": 232,
+          "embedded_pcm_nmse": 0.18459867165682353
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 4,
+          "saved_nmse": 0.8309925203370792,
+          "rate_basis": "Reference description: 332 bits / IMF; not a serialized codec",
+          "formula": "0.034054975 * cos((cos(((t * (t - (51.354927))) + ((27.717298) + t))) * (t * (4.9348148))))",
+          "description_bits": 332,
+          "embedded_pcm_nmse": 0.8309925196067423
+        },
+        {
+          "label": "Control: random",
+          "values": 9,
+          "saved_nmse": 0.8269704895739766,
+          "rate_basis": "Reference description: 716 bits / IMF; not a serialized codec",
+          "formula": "0.0361838574 * sin((cos(t) - (((((-0.199480282) + (((tanh(t) + (sin((-0.810032978)) * t)))^2 * (sin((7.21953576)) + (46.528711)))) * (sin((111.518658)) + (cos(t) * (112.248614)))) + (113.659191)) - (89.4352572))))",
+          "description_bits": 716,
+          "embedded_pcm_nmse": 0.8269704891711348
+        }
+      ]
+    },
+    {
+      "case": "IMF case 60/64: 5105-28241-0013, block 186, mode 4/8",
+      "metadata": "test-clean; speaker 5105; parent crop [21760,22400) at 1.360 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 2,
+          "saved_nmse": 0.5233679198039954,
+          "rate_basis": "Reference description: 168 bits / IMF; not a serialized codec",
+          "formula": "0.00554951513 * sin((((321.343679) + t) * t))",
+          "description_bits": 168,
+          "embedded_pcm_nmse": 0.5233679210213261
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 3,
+          "saved_nmse": 0.5701462569262522,
+          "rate_basis": "Reference description: 236 bits / IMF; not a serialized codec",
+          "formula": "0.00527481795 * sin(((321.022989) * (t - sin((304.267284)))))",
+          "description_bits": 236,
+          "embedded_pcm_nmse": 0.5701462583025457
+        },
+        {
+          "label": "Control: random",
+          "values": 3,
+          "saved_nmse": 0.9290472434814505,
+          "rate_basis": "Reference description: 236 bits / IMF; not a serialized codec",
+          "formula": "0.00202488008 * ((1.05794378) * sin((tanh(t) * (323.40389))))",
+          "description_bits": 236,
+          "embedded_pcm_nmse": 0.9290472436406543
+        }
+      ]
+    },
+    {
+      "case": "IMF case 61/64: 5105-28241-0013, block 186, mode 5/8",
+      "metadata": "test-clean; speaker 5105; parent crop [21760,22400) at 1.360 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 2,
+          "saved_nmse": 0.7316955279399651,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "0.00592711094 * sin(((336.049513) * t))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.7316955282810726
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 3,
+          "saved_nmse": 0.6776946592435301,
+          "rate_basis": "Reference description: 236 bits / IMF; not a serialized codec",
+          "formula": "0.00535019744 * ((-1.21234865) * cos((t * ((338.771196))^2)))",
+          "description_bits": 236,
+          "embedded_pcm_nmse": 0.6776946594088635
+        },
+        {
+          "label": "Control: random",
+          "values": 5,
+          "saved_nmse": 0.9665450839310733,
+          "rate_basis": "Reference description: 404 bits / IMF; not a serialized codec",
+          "formula": "-4.75692297e-05 * (((0.652404152) - (((cos((t * (340.858218))) * (t * sin((331.428013)))) * (76.1699533)) + t)) - t)",
+          "description_bits": 404,
+          "embedded_pcm_nmse": 0.9665450836141085
+        }
+      ]
+    },
+    {
+      "case": "IMF case 62/64: 5105-28241-0013, block 186, mode 6/8",
+      "metadata": "test-clean; speaker 5105; parent crop [21760,22400) at 1.360 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 4,
+          "saved_nmse": 0.29968547416038505,
+          "rate_basis": "Reference description: 308 bits / IMF; not a serialized codec",
+          "formula": "0.0229926973 * cos(((-0.470066402) - (t * ((141.709707) - cos((162.356018))))))",
+          "description_bits": 308,
+          "embedded_pcm_nmse": 0.29968547425721587
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 4,
+          "saved_nmse": 0.30192276577797744,
+          "rate_basis": "Reference description: 308 bits / IMF; not a serialized codec",
+          "formula": "-0.0282189449 * tanh(sin(((141.174562) * (t - ((0.503731086) * (-1.66324663))))))",
+          "description_bits": 308,
+          "embedded_pcm_nmse": 0.3019227651665732
+        },
+        {
+          "label": "Control: random",
+          "values": 5,
+          "saved_nmse": 0.47040837974884314,
+          "rate_basis": "Reference description: 392 bits / IMF; not a serialized codec",
+          "formula": "-0.00703394495 * (sin((3.11965569)) + ((-2.84352109) * cos(((t * (140.387496)) + (tanh((147.425586)) + t)))))",
+          "description_bits": 392,
+          "embedded_pcm_nmse": 0.4704083793740891
+        }
+      ]
+    },
+    {
+      "case": "IMF case 63/64: 5105-28241-0013, block 186, mode 7/8",
+      "metadata": "test-clean; speaker 5105; parent crop [21760,22400) at 1.360 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 3,
+          "saved_nmse": 0.7262300056109195,
+          "rate_basis": "Reference description: 236 bits / IMF; not a serialized codec",
+          "formula": "-0.00511662527 * sin(sin((((378.442824) - t) * (380.616752))))",
+          "description_bits": 236,
+          "embedded_pcm_nmse": 0.726230005891887
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 2,
+          "saved_nmse": 0.7487653146622533,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "0.00431946346 * sin((t * (380.149076)))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.7487653148098419
+        },
+        {
+          "label": "Control: random",
+          "values": 4,
+          "saved_nmse": 0.7487653146345502,
+          "rate_basis": "Reference description: 332 bits / IMF; not a serialized codec",
+          "formula": "0.00431946344 * sin((((((t - t) * (t + sin((0.218239337)))) * (-1350.82096)) + t) * (380.149066)))",
+          "description_bits": 332,
+          "embedded_pcm_nmse": 0.7487653133990596
+        }
+      ]
+    },
+    {
+      "case": "IMF case 64/64: 5105-28241-0013, block 186, mode 8/8",
+      "metadata": "test-clean; speaker 5105; parent crop [21760,22400) at 1.360 s. The signal here is one VMD IMF, not complete speech.",
+      "samples": 640,
+      "duration_seconds": 0.04,
+      "outputs": [
+        {
+          "label": "After: adapted",
+          "values": 2,
+          "saved_nmse": 0.8781228618853121,
+          "rate_basis": "Reference description: 160 bits / IMF; not a serialized codec",
+          "formula": "0.000275196067 * cos(((692.226387) * t))",
+          "description_bits": 160,
+          "embedded_pcm_nmse": 0.8781228614612898
+        },
+        {
+          "label": "Control: pretrained",
+          "values": 3,
+          "saved_nmse": 0.800183098507563,
+          "rate_basis": "Reference description: 236 bits / IMF; not a serialized codec",
+          "formula": "-0.000616247077 * (sin(sin((t * (713.439732)))) * (0.648695974))",
+          "description_bits": 236,
+          "embedded_pcm_nmse": 0.8001830992214205
+        },
+        {
+          "label": "Control: random",
+          "values": 7,
+          "saved_nmse": 0.977848121318776,
+          "rate_basis": "Reference description: 588 bits / IMF; not a serialized codec",
+          "formula": "0.00060752973 * (sin((t + (691.137215))) - ((t * ((sin((0.448953856)) - (((-0.050363804) + t) * t)) * cos((sin(cos((((t * sin((2.05040808))) + t) * (693.207143)))) * (710.327145))))) + t))",
+          "description_bits": 588,
+          "embedded_pcm_nmse": 0.9778481216751812
+        }
+      ]
+    }
+  ],
+  "source_hashes": {
+    "runs/parametric_librispeech_1272_128104_0000/settings.json": "ce8b17660f5ab1e0fe5129aa8e9c3345c360e68a44e3fe205aafb2b4115b8b4f",
+    "runs/parametric_librispeech_1272_128104_0000/reference.wav": "8ced93d3265be7440c2e82f31fc7b1d9e34d82e2d50c96d3adbd74f276e350c6",
+    "runs/parametric_librispeech_1272_128104_0000/metrics.csv": "abc7e140ed8bb7abd27ae1f3694a91aa0ec34e2a3f7a530e3ed570dbe52a23cf",
+    "runs/parametric_librispeech_1272_128104_0000/vmd/window_640_samples/modes.wav": "c8866eed4d32576e2a660acae39896e293476a7e5777943ba8c4d0f749500bc0",
+    "runs/parametric_librispeech_1272_128104_0000/emd/window_640_samples/modes.wav": "ef307dce75aab6d2113af9b817bc58a130601ff86937aeecae7e1c33330c5174",
+    "runs/parametric_ablation_librispeech_1272_v2/metrics.csv": "ad67d6c1424c6ebd03631bff54ca7647ea9c7d4641e10e38d266117f7546c5f2",
+    "runs/parametric_ablation_librispeech_1272_v2/case0_vmd_40ms_polynomial_500_32bit.wav": "d996a24dcacf818da41fbeca1a5fdda78e5c6f2cb9c113ae028701757402d16a",
+    "runs/parametric_ablation_librispeech_1272_v2/manifest.json": "98e82ab1dac59bf3986884f62e5e128cc7c48aa454e8c729ed7f9721333750f3",
+    "runs/parametric_ablation_librispeech_1272_v2/case0_vmd_40ms_polynomial_500_32bit.par": "686b7637076ab14bcc601cf62ef3593d66747a32fe57804d180dc371c02e4210",
+    "runs/parametric_isolated_40ms_librispeech/manifest.json": "486c7b7d435ef0442d38f142a0fd72eab2e7758b460983c4dbe0198e45cba97e",
+    "runs/parametric_isolated_40ms_librispeech/metrics.csv": "6e5283c86a8c2c7f3fd761a5988ec20f4680c560721c98a65dfdb49ddc4101ad",
+    "runs/parametric_isolated_40ms_librispeech/case0_vmd_sinusoid_4.wav": "cf9fbb21275a9fcbbdbd98b2058b8f1b5cf16d1fd3c638903d3038cfb064487b",
+    "runs/parametric_isolated_40ms_librispeech/case0_direct_dct_128.wav": "d76bcb8ae5f4128b15a7dfd96c0a0a345d3eff4b5d4a56250038073bfd7c38cc",
+    "runs/parametric_isolated_40ms_librispeech/case0_svmd_sinusoid_4.wav": "260f1ccdbf7e5909ead803a04fb7b7ad40232d02e6973cbeea51f2225e9961fb",
+    "runs/parametric_isolated_40ms_librispeech/case1_vmd_sinusoid_4.wav": "80cdfba6e07d115bbda45de3872c8d2ac28b433492cae92d248b852dd731f640",
+    "runs/parametric_isolated_40ms_librispeech/case1_direct_dct_128.wav": "0e2b67b26c8ce55a791c05f5393b0b47fedeca574b0209dc8abaa6435a418518",
+    "runs/parametric_isolated_40ms_librispeech/case1_svmd_sinusoid_4.wav": "1a791e29d526e7cd03a7fbbf1d6c83dfb3678b57195221e970f7bd63b9538469",
+    "runs/parametric_isolated_40ms_librispeech/case2_vmd_amfm_4_4.wav": "1feb0d0a333be2b0e13c8a4d089d088377d5998f96b2b05a2d7e4fe0b3be0364",
+    "runs/parametric_isolated_40ms_librispeech/case2_direct_sinusoid_16.wav": "8cc28c3ed3a35e7487880cdf78f7a1b4c5db6c847aa94b00c3c9830226c5bf1e",
+    "runs/parametric_isolated_40ms_librispeech/case2_svmd_sinusoid_4.wav": "6389f8d6639d528fbec2e2dab850ec04a9e7a3a8bafc8a85ca6893e885c5d852",
+    "runs/parametric_isolated_40ms_librispeech/selections.csv": "7b4e3eadc2eafd2f1f35e050952f8ce8d66e5682841290bfd10179aad1ab19c7",
+    "runs/parametric_learned_representation_pilot/data_manifest.json": "35e503c0d578cda9351371ce1eeb7a076572fcef3e228f277df7eac9c54c7195",
+    "runs/parametric_learned_representation_pilot/metrics.csv": "5636113b9fc35d09e15857d1f4488a4eafb17c67399052e84b120be894c3ae78",
+    "runs/parametric_learned_representation_pilot/examples/direct_pca_test_0_reference.wav": "35af710f05fcf8b25501bc9b39b39578878395dc2d4f664916cdea08b8c4512c",
+    "runs/parametric_learned_representation_pilot/examples/direct_sine_test_0_z64.json": "9d1a56783687c4d346c24655a1d63cee3b5e234b2d10111fb4162118d214d271",
+    "runs/parametric_learned_representation_pilot/examples/direct_sine_test_0_z64_reconstruction.wav": "7e6c1b9d6accabdfbbb1fb9eb9d66d0b6f2a31bb5f448d122f3800b6b9bdd2c9",
+    "runs/parametric_learned_representation_pilot/examples/direct_snakebeta_test_0_z64.json": "cc6f5c9c10a547c606a3ce949d21c3298e60e3d37e1974475ec4435cd1dd7f00",
+    "runs/parametric_learned_representation_pilot/examples/direct_snakebeta_test_0_z64_reconstruction.wav": "e3337c6228a81008b3adb7fea9993eeff872b468097de2c2558b4ed19955d659",
+    "runs/parametric_learned_representation_pilot/examples/direct_pca_test_0_z64.json": "fd67b260931192b50459c79bb611ddc4561295dfef5186b52dc1fe245e6331bf",
+    "runs/parametric_learned_representation_pilot/examples/direct_pca_test_0_z64_reconstruction.wav": "6c710b71bc2ce2e3d577bea29d1d4985a6b8281206fc619e1a49cef82b66444d",
+    "runs/parametric_learned_representation_pilot/examples/direct_pca_test_1_reference.wav": "dd1e3f5c31126edd9d8b4e83b7661053b0776ba33a098f4d7e6147a7a8e9d445",
+    "runs/parametric_learned_representation_pilot/examples/direct_sine_test_1_z64.json": "86c8be39e84bce8e7c8fd9f9d456607ae60351f16c87dd997005af5981e27c8e",
+    "runs/parametric_learned_representation_pilot/examples/direct_sine_test_1_z64_reconstruction.wav": "1f0b133990f2cf3475da1dd9d0c2d6f04c1f11fb5a45ed94620e4c3837ee7931",
+    "runs/parametric_learned_representation_pilot/examples/direct_snakebeta_test_1_z64.json": "b7ec0a3904808addd257e78e5d62032d3d9ee4367c638c46254533dfb86741a5",
+    "runs/parametric_learned_representation_pilot/examples/direct_snakebeta_test_1_z64_reconstruction.wav": "28ddc56ba558279bfc6e2faa768485e325b9e5213eda316668a82bafe1e2a6a8",
+    "runs/parametric_learned_representation_pilot/examples/direct_pca_test_1_z64.json": "9ffc8a78d792c594e8da09e92cc98392b0b6c7d729540d1daed7833f74f12945",
+    "runs/parametric_learned_representation_pilot/examples/direct_pca_test_1_z64_reconstruction.wav": "ac940e6d3c41fff3b3c66fdefd94b3534b34312228625dd19a2943f4a4e0697b",
+    "runs/parametric_learned_representation_pilot/examples/vmd_pca_test_0_reference.wav": "11e943487332bd3d54be0eb31ce3eec5c3cc880477ac703de545a1085400e84e",
+    "runs/parametric_learned_representation_pilot/examples/vmd_sine_test_0_z64.json": "e8870f362fd4ae472444ebdb0b8e9f6779c5c247fe8982712709cc402ee390b7",
+    "runs/parametric_learned_representation_pilot/examples/vmd_sine_test_0_z64_reconstruction.wav": "c0ec36b0d7696e5613c38706f30ef7edbd31fec5008c1f38cfc50d30240ada52",
+    "runs/parametric_learned_representation_pilot/examples/vmd_snakebeta_test_0_z64.json": "741f44ada142242ddd8110960e38052a245d721c49ffe1807aa73d68e2951323",
+    "runs/parametric_learned_representation_pilot/examples/vmd_snakebeta_test_0_z64_reconstruction.wav": "96fbd498ed040fdc7bd9dc0413565b54eebab1629c992fd066304c59785ece0c",
+    "runs/parametric_learned_representation_pilot/examples/vmd_pca_test_0_z64.json": "814da54067f91e46371c5fa0e130d47b50f0e8987640ff03c84a29422d208e0a",
+    "runs/parametric_learned_representation_pilot/examples/vmd_pca_test_0_z64_reconstruction.wav": "f1f5d659e18ad552d3eb1171e28899cec0d15789f101d396f90ff592a6693f2d",
+    "runs/parametric_learned_representation_pilot/examples/vmd_pca_test_1_reference.wav": "89c7ad70e07c35fe443ded664dd866882603fc5872c136fcf0980010dab38f49",
+    "runs/parametric_learned_representation_pilot/examples/vmd_sine_test_1_z64.json": "b7162bd28f8ac155b9826020fd4ac836a3260381b394934a196f6fb095f8287d",
+    "runs/parametric_learned_representation_pilot/examples/vmd_sine_test_1_z64_reconstruction.wav": "6e7c209a13a04c5c8ff2a6342c06e7632ce4b2bf76f66fabfe87235844c2937d",
+    "runs/parametric_learned_representation_pilot/examples/vmd_snakebeta_test_1_z64.json": "62a059086897ff8644143e56e72054d441d6ee909566252f1535ef369c08e0a8",
+    "runs/parametric_learned_representation_pilot/examples/vmd_snakebeta_test_1_z64_reconstruction.wav": "db77d927123468eb1323c4c71f56fbcd529133c73bccf261f4cf4484b15dd30f",
+    "runs/parametric_learned_representation_pilot/examples/vmd_pca_test_1_z64.json": "12636fb481714af8da09dedecbe6fcb923d15e9e6b5f1d2b97205d3534e05c57",
+    "runs/parametric_learned_representation_pilot/examples/vmd_pca_test_1_z64_reconstruction.wav": "5a0d5579bc433b9955ba0379b8a4170077c3bb301861213d94352cde4bf26506",
+    "runs/parametric_learned_representation_pilot/manifest.json": "cc66776bdcc509079719bf8207d69e0982826a2a425cfc9a9c83fc458cf68262",
+    "runs/parametric_symbolic_imf_pilot/data_manifest.json": "e01bcce1f71682ee590e1335c96760221e10f32fb37ab5d46b79220bed2a3fee",
+    "runs/parametric_symbolic_imf_pilot/summary.json": "47f3df3e5c47a50285b870405a06fe494a95b5d019e9951fc10cd4f654a91700",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b99_m0.json": "a1f1b31769f43787bce943820ced6008cafaac6fbad5636fe8ffa1822fc28fd2",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b99_m0.json": "62506eb3b60d6b5d35559c7c8746d65d96e28bbc505641563f64d56b24ce336a",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b99_m0.json": "d3094bf064a0f98e8e268353a35aaa21a8d35d19be38976c1eec57d397c43ab8",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b99_m1.json": "11e9ffb6cce3d685c60b5fd9e19569605ced444764fe470302a3682ad01feb09",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b99_m1.json": "f898733a9a5ac3a43b817b01f525f800525ec904d1e3869f304b16cb1df80a60",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b99_m1.json": "7428accb53a60d94dfe38ebb71bb09d4a202d6297f1cbc674e2ac8cfbb99c7b3",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b99_m2.json": "d21b5c4f6fbd547d48a3d80e803e48af58567afcb02d2a31bcace9a563f4a3ce",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b99_m2.json": "00264073defe915ca6892624e3785036f8dfed2f91a43dd289624d92f7bf8b06",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b99_m2.json": "efd9ca225b26dfda0e10db258947817db5bb9cbf043f8d5947f2feaf90a50a76",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b99_m3.json": "4a59a30a5d37ee394541717123611c885718b96d7f897c02856c546ee4cb0eb1",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b99_m3.json": "f8787e6bc6f0f7f2c2276a7b78f494074629ea56040669ee90fb7ebc6660c939",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b99_m3.json": "7c0f59956fc601eaa25a77c7d8c58f173843b544dd7464ec7953391cf660f7bd",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b99_m4.json": "f71331a896cad1efec2de43317339d9be9d1ed60cb8b722e31dfa5eb8c2df5a3",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b99_m4.json": "aea35979dd52f5a84a435b0bdc12c99d2373ee98513472ccc39bc8ef3b4972e7",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b99_m4.json": "9de66aac29537f92a278fe895e8db1977890028890d83fdf15de645fdc86adc1",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b99_m5.json": "ccfcda491c89e996707881a3f0f9321e92d183e7351ed7556ec5e59b667455eb",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b99_m5.json": "6bb6f38ddc8c303695a50b23407dc39ce9ca608273afb4ce2829ab49ea937fdb",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b99_m5.json": "36ed365316b6636c7c74782a35d51a110fe49e489ca15224db3b2294e600ca75",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b99_m6.json": "9b6388ca6cdc150186332cd86f455d2bfa34b66f8740eec22d4a3466e1fc0a4d",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b99_m6.json": "4aa1f1523f095b848ad9b56e7a000dad29e8ce90f3af6003b9748ab903004624",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b99_m6.json": "5c9726fd32b1c0d3975619f36464f0d14ae0164d64eca9da605fb5e2fc74599a",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b99_m7.json": "708d8db48793677fcacc89dc0a66fc913e3bbd8f98f771dd3395165760bffc48",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b99_m7.json": "cff0a2c91f3b3b3f0b854de263e1d01456f017fabbe41a7f1299a68673d1503f",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b99_m7.json": "43e476e00cf457e3042f7794fefc0a673b1675b62186a23e30f593ac8f0ce0ce",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b203_m0.json": "bfbc8fc8fbfd2ea0381677606c3ceea8f5897a98297dd8dcae7f6001f34cd582",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b203_m0.json": "e63440276101c10e83bd570bd5c8ef5225c94a42bae7d283062b6c80f7945723",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b203_m0.json": "1e9d2d1c47deb4dbb5e1b598d5ea93d43677a7ecc3e54a1e07e13cfd6bf3e54c",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b203_m1.json": "a8bd36c6db7803bc38e934b2d6afd0730c4f31873e53786e2dc60b35b680a56b",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b203_m1.json": "5a82dc6bd1fab7e9d3a3a22e28808cb5c0eb01620474e5853c7d166e8d8e043e",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b203_m1.json": "4bf4e9fc31c5ab71960fe7cf1be60a8b9e7f8872439a259a86b636f264c6c0df",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b203_m2.json": "b8a7bd33574d53b727d19147507273ed935963298537b23330825f31cc513525",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b203_m2.json": "2aa79348055b6ab9bd1e3015e9ee9453e18bc13763ebd20e30d1342a3b933bda",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b203_m2.json": "aec96f1b8b1b70a658d66871a2e51873360d144bbc628dc4629cca9d51e6be14",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b203_m3.json": "31f88aede8ba8b569b5c62acde8e61eed53db2544a632122ada38e657715d29b",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b203_m3.json": "54fd6d21a910f4cad44500f87f3fc66ffd8eb1a15816db17ab443113dac22ebf",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b203_m3.json": "56afd0641a9566bf346319aa7bfb558f408db9ae271fb0826592ac7291b97555",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b203_m4.json": "13557a53db37e547c0bd8a2f2b7a7168503469a679f4b0c7643c66509978570c",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b203_m4.json": "6ca011cd6f8e26fa7cb45c30baebbe0409ea507c028ee7897bb84366548d8648",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b203_m4.json": "32f1b2c22c128055e2d43ddf9f7e5563f9d6cdbb2e7029becfdef96a184120aa",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b203_m5.json": "b78793a1274c38f166a80b3cd325d914031826f770131ea5c121972c05a9e7f2",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b203_m5.json": "b64bb5334b091b2cb157090af65294bd1e8c76a671230707500ec04bd9c0398a",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b203_m5.json": "0d3490864403a012550fe5841f6d605a48d664326bceed5f98787a566aa892a7",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b203_m6.json": "0b6fda1f2d04286b1699980fb3df0d81d75a4310f54f33908c8ed6c039200012",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b203_m6.json": "df9a1f4c8fb5cf8477df00150abf74d0aebc63937032ccca27bef1e23d023de8",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b203_m6.json": "b73349c9fe4dfea3fe20108d8d42314a7a2f1cc582e35a0a717b28752c562b32",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b203_m7.json": "a6153db2cd3b3a67cf8f8c1cee65d7ef38cfde85352ff14d838b5a457eb1a858",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b203_m7.json": "92b68beb5ad4159d1726f5cd3e2bcfbcd1919b178b0307e7c41758f4c1f169dc",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b203_m7.json": "378c30cd6689f76e7f3a6164c46164071dda8d65e4d2648f587cefcbd7fc7383",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b188_m0.json": "3a8b9195bfc2513d288f16c0da97b9b273798dc384ce851dccf3c9b8c0d6dcbb",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b188_m0.json": "3c2332f48d7a13763073d241d9fc1e69926454917664bd100cfe59538833669e",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b188_m0.json": "89836f36b6a90bfdf5f395cd5a577cc4480e7154151cc10cd96cc443eb2a098a",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b188_m1.json": "19b7950525ca8a1945eb3859632ad5168bfc994794e8b58df6be8591a45b3943",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b188_m1.json": "d908f0525d086758ebd6720442aeed39a842a64206b5d1e6c09f9e829754e05e",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b188_m1.json": "3020391c45a2de396a849a60a66e09efb7076926fc60be31b57780355b9807ad",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b188_m2.json": "53aa8414ead83efdaa4c21ea2aa6f66a1252d7ee8c48b413899f8f7101db1d29",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b188_m2.json": "ff1f35428661507517d3db654a218a294cbcc8f10eb810f6c3b20d50e13ac928",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b188_m2.json": "dca23f817bc6aa7fe21380cd41f9f4bfc6d4905a94f77d75c967e2a78a279357",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b188_m3.json": "fade4fd903b88a56205df338cdafbb205bc7fa06905b34d6293dd1af479139dd",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b188_m3.json": "1cad7af69681f3ffdcb8e8b6a488563bc0c8b99ee36ed1ff7c5733852f95df24",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b188_m3.json": "2895aa46da73787c705ba41c6b0cdbaa3d25dcd04fb63d5c82b67add47546fc8",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b188_m4.json": "457df9bc9a8ba0b26ca910a7e91e5521ff3492f9e2246bffceacf8487ac6d92a",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b188_m4.json": "1888b4c6c72259c045b9bdc29e255208099a3c7ab2423fc7bd70c7a331faa881",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b188_m4.json": "1b2e0881efd84f301f6cc3e4bc8d70aa1a961d97ce0704ad96addba705d2f768",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b188_m5.json": "bb10434c50a96c34a96e55a7998823076afd8375f0d3b35c719767cd176257be",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b188_m5.json": "c06823337a6d0c0384aaa8a1ab544b474da402b409f3a53d513ee5a36a36b750",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b188_m5.json": "81bf218f88997cc215128e1d98cd7942d73d0a0e4d4ac28528eae5ef034fcc6c",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b188_m6.json": "59295e1dd5d6f4d3bfc2ed536dd342b4c464447499160f8ea0c20cd254a676fc",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b188_m6.json": "a453d2cc4c7c76af1c91e67cb5b9936305b012ed2d30b3c463d00bead238fff2",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b188_m6.json": "5a22d46ebe975e081b160d711d9572ec8ddef1f4e58d302d012cb4b23015142e",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b188_m7.json": "c0f721813c2414651eac2ae9bc73ea98874f448806cd04504db6fe7319430f72",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b188_m7.json": "dc18bde2eff9155c567c57646f7bddbdaa05bb284c55bf56288ca0a8f126d5c0",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b188_m7.json": "aaf534782396611dec36268d67b6f484f40597b2ceea5d5962830487ac7fbde8",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b200_m0.json": "6f7618756c7b70ba247f56ddde4882581dca5fd4bf35254c0fe806f36326f912",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b200_m0.json": "151b34ac7c4b80dd716b7a3c02d2e61d95905cd8a3cd3a419a5f81837c1d41e4",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b200_m0.json": "6feb849e3b8e5998e4c89220e8d1d18d8e2ba2efd3624bdb8d5a3a41b9c4fef7",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b200_m1.json": "be412e4740fc410f3ebe984789b7e6a865efd8990d7e51aeafe843cf8a4b87bc",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b200_m1.json": "37cfb524ffe4312d74c170d6726154974cd660e7618a47737ea14a5a49deb1d5",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b200_m1.json": "91ed774f26187cd0d7367406059ad6a3c575c64247512fc8b6e63a6708561947",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b200_m2.json": "51f66d0e3b7954ea6677067eb290668bcdb0da3a0442cfa074240f8efbdf9c0c",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b200_m2.json": "2cf112eae3b2faecbe649bcf4a1c227e08d4bac0b1b46be45dff3be5ae6ed97c",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b200_m2.json": "1bae8b0ffc07d1cd96f8991761eb427704cbb781743fc723f8215b551b42ac41",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b200_m3.json": "4b32fe307501c80ccc67e93c4430311a8a25c0d9c55c2cc02ae23993ec5081f3",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b200_m3.json": "448c340ee8593f9347edd2a6067b666b419c15c0c7b823b12301a50a15b9241d",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b200_m3.json": "172cda345a13e56da88e18c43aa40d1cbac84074538e0d18dac2ca4d65915403",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b200_m4.json": "affa0936eedc3175d0c75e7d43e5a3b4089775b03a52f92fe6044beb5e8fd25f",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b200_m4.json": "7135ffc4385dce7047b392eee9a339b1d8cf2992dddfb2a6d71b3545ac3eda9a",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b200_m4.json": "c1403e5f30047f368dec5ec61bc10d045103524b1f7d1da946dd4c9144e5b3c0",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b200_m5.json": "2c1801e7d518f290728773b2cc735ed12f2a8565cfdc5297c71222bb8e588c9e",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b200_m5.json": "786bdfa2299c1d11116e83ab40af9d6ca914d29708e46e4843cf4b4b2cc1bf1f",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b200_m5.json": "a083865686fad7a24e5679251f374037f6300e28294292b194ef5325e611514e",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b200_m6.json": "7d4a414fb848eba402eed7fdda07231fba859b2d5bce6f9afcd0cbe22eee1ac8",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b200_m6.json": "65e221566445f027b9f68b562ea073fcd824e9902c51f9dbf830f7252a225ee8",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b200_m6.json": "dda0d46a65094d7e143cb076f44bd7ee54a5fc72341f583e877171abc342b821",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b200_m7.json": "60f1f8a91ebd034e39b8bb04ee9d1fd2322493e29fb0e4cff4bffb202e998f31",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b200_m7.json": "957a4ea1d0e47a3dd7f72fb54fb16860834ed5dbc7365d4f12387b5d7c45fd83",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b200_m7.json": "be13174a328693e258abf1de776308af912e30127bb7913a0851901f59e58f94",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b254_m0.json": "f342a12cfca5cef36613b22711853c923068f7216fa96aa95ed149a6a0aee62b",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b254_m0.json": "f094727a66bc84a528b7778bee184cb40ef2af73e890e9bf99e2b84b0e895782",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b254_m0.json": "c914fa8652fe9348fcccce7c2594a97bb7ee027d0842ff804180a6eacb18925e",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b254_m1.json": "338c49ce283007b4ef2d897584a370a6982199566691679bb678687f7da7baa0",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b254_m1.json": "14ce1cec3dbd5bef285aa012073eab3efefe5158173308cce707639e47a5c2ff",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b254_m1.json": "e76cb6b4aa22fbaf2c6270eb41306fe39bf4c2c6e653cb585c47420062cc5f72",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b254_m2.json": "5d67544f68fb0afbcdaa12a57ee2cdcc13853d58307ef618df6af7a041851b17",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b254_m2.json": "98405e284b1579a282cf2ff641fb20af009f7a533655f9009d46c85ee4a2671a",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b254_m2.json": "493774a914264d57b27f536710f54dcf7da75b61545e5662e32fba7fa0226ce8",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b254_m3.json": "b8f13c2b2cb79b260195b15998ab10bdf6b6807f535c67b4e911f2b0d176ceea",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b254_m3.json": "74bc5b726d675e56fb6072d1a81efb53dcbb27a3ea6283198f68c496b3d7bd59",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b254_m3.json": "9f24ebff7e479219e26da53a73516054e7380a5ebca78b28c61c52a6263ec80d",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b254_m4.json": "c2c43eee6bc708f2cbc4e73a869adacaf48bebcbbb97814025a28bc004be3493",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b254_m4.json": "34b7ae4089a0c6c9c7ecc25007e96ec83ae00b9ae5d652ba41d66c25dfc181a6",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b254_m4.json": "9ae76410c9006621a3b9e3fad6678d3e1b0327a36eb0bffdd1bcdc3f5f1a4658",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b254_m5.json": "ac80804e0494294d718a54d0d2a506ea18e4e32d3925a396166b27c1c7e5c429",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b254_m5.json": "f8c6d249b65e9b0ba7d50f41b10337a87cab01f02bbb5969e6a95bc82b4a8ea4",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b254_m5.json": "7dda98b900c2f169abe3f604d91ce6a3f3101df904e09eaf8e6265ebdaa7aa0b",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b254_m6.json": "7e8b8a2a7838cd3ffff00d1d602a8b08a35f33f381ee95dbb3f4d0b2bfe98c48",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b254_m6.json": "3f226da12d4780df8679e77ef7eda11372e8956bd34ed3231e7bae7fb9844417",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b254_m6.json": "63d4478491e579cfe990f0651f33795eb5b449b7cec61337bb984cdba0c80c1c",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b254_m7.json": "b95ddec305cb0f7644c010913c0bc18e77d4abfd403e77e4d4b721a081c8be49",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b254_m7.json": "0f291e52ae8e869afbd97bbbd3c4483267aa90a3bd974f697abb41deca53bb90",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b254_m7.json": "988d92a8821c1be0eee13bca19bd174f76e0e1a28b49f466b7965597c57e68d9",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b191_m0.json": "61aefcade759e2f009912838b0f5293bf6831a41edf61b4e3079daa84de90e25",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b191_m0.json": "06a9bdf117b362fd599ea209f26672f780138504941c482af9109e0307d6efad",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b191_m0.json": "d0ad838932aa722af820e3ecbfb248385937e0bbf1b65e13ecdc0cc1d5e7694f",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b191_m1.json": "fe885f0bfd87483146bb4295bdedcc741847d11f812008682003ecea083a8426",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b191_m1.json": "ad202622852613be85de66bdebefe37434f6dd9bb3f5d3c3180825ff4882cdde",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b191_m1.json": "1c9e9fdd55d277363e719bf1c30d053c3ca01c01858dcc2db99cc3d6ef212e5c",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b191_m2.json": "9aa800eb5207de11721c9479d588c510b5bafa37c51e5d1592ba702d7c2cb2d4",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b191_m2.json": "b7267276f93e4010c5240e90bd4e3687ddf2743e8d17b35729a91c9b6f3abe18",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b191_m2.json": "dde2fe390a0af1de21cb15ef4373f5967c97de173d8e6227032cb5a29910b457",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b191_m3.json": "6908b361385314c80e910feb50c852b6631e1668f7772998a47f6b8705ba3bef",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b191_m3.json": "bdcc93e3a78c0a90a89fc2011d22734c3170d2b7981fde203b8794cf2bf91e8c",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b191_m3.json": "7c3dfeca24324404ae4a3b084c219a2f84ad648cd2d7dbad11b78b98f07fe94b",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b191_m4.json": "57ad8ed133b0123411ae66ea479846f4ed6edac0d3e23b81516ec4325aef57dc",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b191_m4.json": "421a3663c82c9afa417a33499946cbad34725eb62ddf03eaf199b8ec6ffe6aea",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b191_m4.json": "a0e5c6c3697583192e752072b831cd0f4368d9f941d8865144750f522c259b27",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b191_m5.json": "a629bafbd767d0d37807eacf6f1a4ed441483cca08ab61cfc08390a5bd5e6988",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b191_m5.json": "6c2a17274da5bd6852498fab92948e840a442d8dc1c67af7bbc424b9d68560ac",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b191_m5.json": "6833f215a1ed3a3fbbb5d5ee206fdf7dfe560f8060fc3c04a5763030d5c0d8b4",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b191_m6.json": "b866c09de9e7298e4d2e3e0c74c7b3e3b2d817e6cac661a3e84204e3073b6312",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b191_m6.json": "af1e61e6837a5f12ee612142b2f4f88bf8c4d04632aeb0d646effc62bcda6ad1",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b191_m6.json": "da956be2e3d03703cd97262c19cd808be3a926790987aea3a0f94c7c39ff4fce",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b191_m7.json": "eb4fae18d074ec86a84a2ac340afa150fe4d7140e67f88d19118665a6b883451",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b191_m7.json": "144832d3506fff385d5160876ff2b1df0b201089cc90f91689c557cd55379ad8",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b191_m7.json": "a16e083a97dc01d9a4e41a5e364ab733c056ed049dfe04d0c732084e67b171f4",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b28_m0.json": "ce9b3a704e8928be7716bf334dacdf58be60d1171515c955faab07f4f7701381",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b28_m0.json": "a1c2468c2150b03695c91bb3de282a7d3f651a51ab8a56a4025e7fcb666f7874",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b28_m0.json": "41fbd304d83c6d7f53a865bd898ccf131f981492bece0b7b5530536088bb11a1",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b28_m1.json": "02e5a4f0ddf51464716b0cdbbdad1b9bb898bea188b782493578ab49685cef0f",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b28_m1.json": "5216b58b50efae374ea04a5d68b335278fd05b86f45c9fd3d263017c272341e7",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b28_m1.json": "986eb61c20f451910bee70290ab604b46223ab61fb9c978010af266b932c3f17",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b28_m2.json": "f95cbf028b2e7b0114861970faa411cd3c2600852e05ff7a5816fbd259ee8412",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b28_m2.json": "78e840b37b940c2a867504b543c77441633c93b7d9acc45540d1bd0cf87b9184",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b28_m2.json": "75886b8a0acf8c76f6594c1634cd042506b55ee4e07b5b1caeac7a4e0fde925d",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b28_m3.json": "9290c34770e3a1b07853271682a960cf96ee935ba3d996ecb37cbb519a2e3414",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b28_m3.json": "cbfc46fd737f296c6edb539b5d1ddf2a34ae5e5589a7290ed8c45ac296f5cdaa",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b28_m3.json": "d54c02b5dffeeedd26519b3b5ca66bff9c4a86916dc216781e9e880adc014676",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b28_m4.json": "aa36aa2996fcdf391e47ba5793c1d27989bfe5722ff07eb5ca46259ac8256e1b",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b28_m4.json": "e3f6b1733f07f3f4d1eab5132f5d5085d3f0d7194d571881f0850f7eff986711",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b28_m4.json": "2e4cea14e8927b383cca7263bd5dec1863a31715d9192475a8aea0b508ba3739",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b28_m5.json": "a4bcfcc96353e8cdeb23f9a91ddc94882c81f1fb0a1e8d30c7cb0bc449610df7",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b28_m5.json": "0f5f8d1c3557f4c0b18158b4184527d69ce037cab9a57abdfac9072cbdbf539a",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b28_m5.json": "353da458bda2f4b9a4b7b50f64a5347a25d22b7306837ea25850d2538884728d",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b28_m6.json": "5fcbacde3771c332527a3bdfa005ab72c2ebbaf9662841475375bab7f9d0367f",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b28_m6.json": "c88428a082743221c5fa79e353146f2ade97de6a59d6495f53eb111e7001b931",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b28_m6.json": "0be8ff5ee1fcba99def4ba2f07a1a247365f4efd54390262b8888006dba618b4",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b28_m7.json": "663d7f7587efee5dd57d2944de81a6be0926081e6212754d74b0fbd16671fa1b",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b28_m7.json": "c20ea2454a541c416944d838c716b5fe0dfddf01c430885801c2fb6d0d8b9047",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b28_m7.json": "8f9b043df7049b5c6a90b0ad6c0a1d548d9de16f4cd0709d8bb793238bbbb41f",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b186_m0.json": "7bc750000a42fb8e2e7f5ba06c12d39f20e6a1ac9e41a62ddf4fb0d383efaf0d",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b186_m0.json": "599fce206429e0d9fcc6c993aa0cb190f713d552a4c37ac739cc85fd5e37e30d",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b186_m0.json": "11a6c7105ee4d639f7dcafa026236cb9ffcf56d1604318447445632a4c8eaa9c",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b186_m1.json": "c15c9701b9717b6a3c0895703d7df48ad2798e139240b044311e2c01045f66a8",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b186_m1.json": "eedef28cfe259aefbeaa0e7fb049b07cd92e803d84d74e5e1de7e5bb6a482eb1",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b186_m1.json": "4d3ab0b8195b73a60fc08474a29b0ca85a75ae8a55b158545193bb4e57d01005",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b186_m2.json": "562db3b091d8195ce52db8e50a43da2179f12e99de4d128a40fef0510e80c7e3",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b186_m2.json": "9285d376b977f3151c0e64af1545d0dbee4f02cfc2d7cda33f7279536f444402",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b186_m2.json": "bab1d40ba4bc076c4c4def6d3b05ebb2062c3c6f95258fcc2d2003e5bb738f91",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b186_m3.json": "6af52719890eced04f7451eb70c7c69408a38be9d036e7eddc593ec22985ff75",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b186_m3.json": "80a248ce746a955e74af72e6835d3b50dce43fcb0d80116357b7c26594cdce69",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b186_m3.json": "295a4e81f92a2c6f4fb6dbd18ff213684b54ab2db1ed935dfedacdc3cffe7061",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b186_m4.json": "cc54b6fa11e2b91f0890f6313920688a39982c427368633096079e70e17bd8ca",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b186_m4.json": "8d92e5033e5641c4f6bc90b4c3a497b8b8569463ed6eb7a711f6b0a3d3a67de5",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b186_m4.json": "00f6f4e8c0ee6205a99b9f4f05b57dc692f014d98ea77ee7100ae0347b4d28f3",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b186_m5.json": "ca0bf9ce83e6f086192e61f5e360849b4e0ab4acfb0cf26a10a30f6523d358a0",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b186_m5.json": "4304ae193ad14f0a55a91c389ccebf295c79809cac68fc65f52a3c330b401da2",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b186_m5.json": "199530a62065ab700ab1e6f1648c6e34ea232cc60ded1ea93ad92d28e448e403",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b186_m6.json": "0d11e81736df4cd689f2d647dd6030639f9758d8394e18e1ce5d0eeffb606c14",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b186_m6.json": "ede205ac83c53c85a5005914969849d976c0d43075a0d4c0909a643d29d85e86",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b186_m6.json": "fdc4b292b75edf64e2886fc9d5b7bd8f3484aaa2c1025a2462d47ea88c547958",
+    "runs/parametric_symbolic_imf_pilot/jobs/adapted_test_b186_m7.json": "7ae41be0c8c8d9b778fb5d9336e68d825738c50d7165cf3cdc819afbfaee3874",
+    "runs/parametric_symbolic_imf_pilot/jobs/pretrained_test_b186_m7.json": "e5f241c8d780e9f35e83974173de57f271678615f1da6a94ecc7dd16b695b68f",
+    "runs/parametric_symbolic_imf_pilot/jobs/random_test_b186_m7.json": "a127444a375053e7af8171038118d9e339df797b2703f15d1f685714134082e8",
+    "runs/parametric_symbolic_imf_pilot/manifest.json": "5d46d27f5df4bba9dfea75520549ea87da0087d28ca1a1fc541e729af1517d0f",
+    "runs/parametric_implementation_audit/audit.json": "a78ec171c185b2e25b1d951d5f0b3df961cbbe7ad8aa5f1ce4324d798e500f23",
+    "runs/parametric_implementation_audit/quantization_check.json": "89356f452ae6480d633e6fed0f14b0bfe38dc5eb6a869d20f1e6f7294d16a796",
+    "approaches/parametric/report/experiments.json": "d197171925087260a557a840d9190eaa99b66c7ad01d58ccd1dd7060d51779c2"
+  },
+  "reports": [
+    {
+      "id": "overview",
+      "title": "Parametric experiment test reports",
+      "source": "tmp/parametric_case_report/overview.html",
+      "sha256": "96077181bfc860e89b51c410e8a233b321789001a58f624dd9be6f1dbbaa3e76",
+      "bytes": 9702
+    },
+    {
+      "id": "baseline",
+      "title": "1. Sampled EMD/VMD reconstruction",
+      "source": "tmp/parametric_case_report/baseline.html",
+      "sha256": "6c7501930dcd607513c4814b517291ba91bdd595301ea67b7d0aeba81a2ec406",
+      "bytes": 3268446
+    },
+    {
+      "id": "multi",
+      "title": "2. Multi-window parametric fitting (incomplete)",
+      "source": "tmp/parametric_case_report/multi.html",
+      "sha256": "4af53519a5268ef6587bf018edb6198075b5c13bb769e760897431dccaafff8b",
+      "bytes": 3912216
+    },
+    {
+      "id": "audit",
+      "title": "Fitting and quantization audit",
+      "source": "tmp/parametric_case_report/audit.html",
+      "sha256": "16716344fcf17ebb0ae65881fb9146859d90e4cc9086fdd6a496fd300e6fde05",
+      "bytes": 17353
+    },
+    {
+      "id": "isolated",
+      "title": "3. Isolated 40 ms curve fitting",
+      "source": "tmp/parametric_case_report/isolated.html",
+      "sha256": "5ea88585bb7d4e4888b8dd9d395134c2e607c462285e33abd49be0473285494b",
+      "bytes": 5095328
+    },
+    {
+      "id": "shared",
+      "title": "4. Learned shared representations",
+      "source": "tmp/parametric_case_report/shared.html",
+      "sha256": "e31c6ae08d242a232cb9774b6ea6870d8f9df3ca0e69068421bb454e48e19680",
+      "bytes": 4898857
+    },
+    {
+      "id": "symbolic",
+      "title": "5. Explicit IMF expression discovery",
+      "source": "tmp/parametric_case_report/symbolic.html",
+      "sha256": "3ca3c32a6017a3f8d046b04123620b6744e732f97e25bcff0b4444b6e5d97f34",
+      "bytes": 21197533
+    }
+  ],
+  "original_reports_modified": false,
+  "integrity_checks": {
+    "embedded_reports_unpacked_and_sha256_verified": 7,
+    "case_tables": 73,
+    "embedded_wav_files_validated": 460,
+    "embedded_png_files_validated": 606,
+    "external_dependencies": [],
+    "viewer_frames": 1
+  },
+  "browser_checks": {
+    "checks": [
+      {
+        "tab": "overview",
+        "case_tables": 0,
+        "loaded": true
+      },
+      {
+        "tab": "baseline",
+        "case_tables": 1,
+        "loaded": true
+      },
+      {
+        "tab": "multi",
+        "case_tables": 1,
+        "loaded": true
+      },
+      {
+        "tab": "isolated",
+        "case_tables": 3,
+        "loaded": true
+      },
+      {
+        "tab": "shared",
+        "case_tables": 4,
+        "loaded": true
+      },
+      {
+        "tab": "symbolic",
+        "case_tables": 64,
+        "loaded": true
+      },
+      {
+        "tab": "audit",
+        "case_tables": 0,
+        "loaded": true
+      }
+    ],
+    "page_errors": [],
+    "external_requests": [],
+    "native_audio_metadata_checked": true,
+    "browser": "Microsoft Edge headless; local file URL",
+    "visual_review": "Isolated-case Before/After/Control table inspected; waveform, spectrogram, audio and measurement rows are visible."
+  },
+  "listening_assessment": "No human listening assessment performed; media format, durations and controls were checked."
+}

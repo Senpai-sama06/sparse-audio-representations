@@ -2,7 +2,9 @@
 
 LibriSpeech trainers are implemented for six sparse autoencoder families and a
 matched dense control. Each entry script uses the same data and training machinery.
-No corpus training run has been started.
+The seven-model 10-hour LibriSpeech campaign has completed on the remote GPU.
+Its listening and score report is linked below. The current results are an
+unquantized reconstruction comparison; sparse-AE bitrate has not been measured.
 
 | Script | Model |
 | --- | --- |
@@ -143,6 +145,24 @@ do not establish that it is a fresh confirmatory set.
 These are the native-objective, unquantized training baselines. Their evaluation
 does not claim a bitrate. Quantization-aware training and saved-bitstream
 rate-distortion evaluation remain subsequent stages of the experiment plan.
+
+## Completed 10-hour campaign report
+
+- [Feature inspection: L1 and dense activations and ablations](reports/sparse_ae_feature_inspection.html) ([method](docs/feature_inspection.md))
+- [Independent local validation of imported server checkpoints (10 November 2026)](reports/local_validation_20261110.md)
+- [Standalone PitchFlower crop comparison](reports/sparse_ae_pitchflower_best_testcases.html)
+- [Mean and per-case metrics, checkpoint hashes, and data overlap audit](reports/sparse_ae_pitchflower_best_metrics.json)
+- [Score and report verification record](reports/sparse_ae_pitchflower_best_verification.json)
+- [Embedded audio and score consistency audit](reports/sparse_ae_pitchflower_embedded_audio_audit.json)
+- [Per-system, per-case CSV scores](reports/sparse_ae_pitchflower_best_case_scores.csv)
+
+The report scores the saved best checkpoints for all seven methods on the same
+40 1.504-second `dev-clean` crops embedded in the PitchFlower report. It is a
+historical diagnostic set: 20 exact utterances appeared in the SAE validation
+selection and 20 in the calibration selection. The crops are peak-normalized,
+while SAE training used native LibriSpeech amplitude. See the report and audit
+record before interpreting these scores. There is no bitrate comparison until
+the latents are quantized and a complete bitstream is measured.
 
 See [training details](docs/training.md) for the losses and method-specific
 adaptations, and [the experiment plan](docs/experiment_plan.md) for the complete

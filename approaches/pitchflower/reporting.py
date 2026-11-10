@@ -28,7 +28,7 @@ def wav(x):
     sf.write(stream, x, SR, format="WAV", subtype="PCM_16")
     return stream.getvalue()
 
-def spectrum(x, duration):
+def spectrum(x, duration, colorbar_label="Magnitude (dB; reference amplitude = 1)"):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -40,7 +40,7 @@ def spectrum(x, duration):
     fig,ax = plt.subplots(figsize=(5.4,2.6))
     im=ax.pcolormesh(t, f/1000, db, vmin=-90, vmax=0, shading="auto", cmap="magma")
     ax.set(xlabel="Time (s)", ylabel="Frequency (kHz)", xlim=(0,duration), ylim=(0,12))
-    fig.colorbar(im,ax=ax,label="Magnitude (dB; reference amplitude = 1)")
+    fig.colorbar(im,ax=ax,label=colorbar_label)
     fig.tight_layout()
     stream=io.BytesIO(); fig.savefig(stream,format="png",dpi=100); plt.close(fig)
     return uri(stream.getvalue(),"image/png")
@@ -214,7 +214,7 @@ def make_report(records,checkpoint_sha):
     means={k:mean(k) for k in ["stoi","pesq_wb","vocoder_stoi","vocoder_pesq_wb"]}
     parts=['<!doctype html><html lang="en"><head><meta charset="utf-8"><title>PitchFlower RVQ test report</title></head><body>',
     '<h1>PitchFlower RVQ test report</h1>',
-    '<p><strong>Standalone report:</strong> Share this HTML file itself. Save it on the receiving computer and open it in a browser. All 120 audio clips, 120 spectrograms, scores, bitrate comparisons, and calculation assumptions are contained in this file. No internet connection, repository, dataset, model checkpoint, Python installation, or companion JSON files are needed to view and discuss these precomputed results.</p>',
+    f'<p><strong>Standalone report:</strong> Share this HTML file itself. Save it on the receiving computer and open it in a browser. All {3*len(records)+sum("encoder_input_audio" in r for r in records)} audio clips, {3*len(records)+sum("encoder_input_spectrum" in r for r in records)} spectrograms, scores, bitrate comparisons, and calculation assumptions are contained in this file. No internet connection, repository, dataset, model checkpoint, Python installation, or companion JSON files are needed to view and discuss these precomputed results.</p>',
     *quality_rate_section(records, means),
     '<h2>Test limits</h2>',
     f'<p>This report contains {len(records)} test cases from dev-clean. There is one test case for each selected speaker. Each source crop is 1.504 seconds long. These files were not used for training. These utterances were not used to select the checkpoint or to calibrate the model.</p>',
@@ -222,6 +222,12 @@ def make_report(records,checkpoint_sha):
     '<p>The model uses the checkpoint at step 91,500. The flow solver uses 10 steps. The random seed is 0 plus the test case index. The input to the content encoder is the cached WORLD signal. The decoder also receives the source pitch. There is no requested pitch change.</p>',
     '<p>The output of the vocoder alone is a control. This control uses the source mel spectrogram. It does not use the RVQ encoder or the flow model.</p>',
     '<p>Both paths use the same pretrained Vocos vocoder, charactr/vocos-mel-24khz. RVQ means residual vector quantization. After uses RVQ content and source pitch to generate a mel spectrogram, then Vocos generates the waveform. Vocoder alone gives Vocos the source mel spectrogram directly.</p>',
+    '<h2>Pitch preprocessing and complete signal path</h2>',
+    '<p>WORLD first analyzes the complete source utterance at 24 kHz using Harvest and StoneMask for fundamental frequency (F0), CheapTrick for the spectral envelope, and D4C for aperiodicity. For voiced frames, the original F0 contour is replaced by its mean voiced F0, multiplied by 2 raised to (shift / 12). The shift is sampled between -5 and +5 semitones and fixed per utterance by source ID and seed. Unvoiced frames retain F0 = 0. WORLD resynthesizes the speech using this flat, shifted F0 and the extracted envelope and aperiodicity. Duration is restored to the original sample count.</p>',
+    '<p>The first aligned 1.504-second crop is then selected. Source and resynthesized crops each receive independent peak normalization. Flattening refers to the pitch contour; it does not mean flattening the waveform array. Preprocessing happens before the neural model and is cached. The reconstruct_mel function expects this already preprocessed input.</p>',
+    '<pre>Source speech -> WORLD pitch flattening and shifting -> normalized crop -> log-mel -> content encoder -> RVQ -> content decoder -> flow mel decoder -> Vocos -> After\nOriginal source F0 (log2 Hz, zero for unvoiced) ----------------------------------------------> flow mel decoder\nSource speech -> source log-mel -> Vocos -> Vocoder alone</pre>',
+    '<p>The reconstruction target is the original speech. Original source pitch is supplied separately to the flow decoder; this evaluation requests no output pitch change. The shifted encoder-input pitch and requested output pitch are different signals. This design encourages separation of content and pitch, but does not prove complete disentanglement.</p>',
+    '<p>Each encoder-input panel below shows the actual normalized float32 WORLD crop used before content encoding, with the same STFT settings and colour scale as the other plots: 1,024-sample Hann windows, 256-sample hop, no boundary extension, -90 to 0 dB relative to amplitude 1, and 0 to 12 kHz. Its listening WAV uses PCM16 for browser playback. The panel is an intermediate input, not an additional model reconstruction; no PESQ/STOI score is assigned to it.</p>',
     '<p>Before means the source waveform. After means the output of the model and the vocoder. All audio is mono at 24 kHz. The embedded WAV files use 16-bit PCM. The scores use those same audio samples after PCM conversion.</p>',
     '<p>PESQ means perceptual evaluation of speech quality. STOI means short-time objective intelligibility. Higher scores show better agreement with the source. PESQ uses wideband mode at 16 kHz. STOI uses standard mode at 16 kHz. The test resamples both signals from 24 kHz to 16 kHz. The test does not change the gain or time alignment to improve the scores. If the sample counts differ, the test uses their common length.</p>',
     '<h2>Bitrate limits</h2>',
@@ -237,6 +243,7 @@ def make_report(records,checkpoint_sha):
         '<table border="1"><tr><th>Item</th><th>Before</th><th>After</th><th>Vocoder alone</th></tr>',
         '<tr><th>Audio</th>'+''.join(f'<td><audio controls preload="none" src="{r[k+"_audio"]}"></audio></td>' for k in ["before","after","control"])+'</tr>',
         '<tr><th>Spectrogram</th>'+''.join(f'<td><img width="540" height="260" alt="{label} spectrogram for test case {i+1}" src="{r[k+"_spectrum"]}"></td>' for k,label in [("before","Source"),("after","Model output"),("control","Vocoder control")])+'</tr>',
+        *([f'<tr><th>Content encoder input: pitch-flattened and shifted speech</th><td colspan="3"><p>Cached WORLD input. Shift: {r["preprocessing"]["shift_semitones"]:+.4f} semitones. The voiced F0 was flattened over the complete utterance before this crop was selected. This panel precedes the encoder and RVQ.</p><audio controls preload="none" src="{r["encoder_input_audio"]}"></audio><br><img width="540" height="260" alt="Pitch-flattened and shifted content encoder input spectrogram for test case {i+1}" src="{r["encoder_input_spectrum"]}"></td></tr>'] if "encoder_input_spectrum" in r else ['<tr><th>Content encoder input</th><td colspan="3">Cached WORLD waveform was not embedded in this saved report.</td></tr>']),
         f'<tr><th>PESQ-WB</th><td>Reference</td><td>{num(r["pesq_wb"])}</td><td>{num(r["vocoder_pesq_wb"])}</td></tr>',
         f'<tr><th>STOI</th><td>Reference</td><td>{num(r["stoi"])}</td><td>{num(r["vocoder_stoi"])}</td></tr>',
         '<tr><th>Playback PCM rate (kbit/s)</th><td>384.000</td><td>384.000</td><td>384.000</td></tr>',
@@ -308,6 +315,7 @@ def main():
                "content_kbps":latent_frames*CODEBOOKS*INDEX_BITS/duration/1000,"pitch_kbps":len(pitch)*FLOAT_BITS/duration/1000}
             for k,z,blob in zip(["before","after","control"],decoded,audio_bytes):
                 r[k+"_audio"]=uri(blob,"audio/wav"); r[k+"_spectrum"]=spectrum(z,len(z)/SR)
+            add_encoder_input(r, Path(settings["cache_dir"]) if Path(settings["cache_dir"]).is_absolute() else ROOT/settings["cache_dir"], settings["seed"])
             records.append(r)
             print(f"Done case {i+1}: PESQ {r['pesq_wb']}; STOI {r['stoi']}",flush=True)
     report,means=make_report(records,checkpoint_sha)
@@ -346,26 +354,64 @@ class SavedReport(HTMLParser):
             self.in_heading = False
 
 
-def refresh_existing(report_path, metrics_path, verification_path=None):
+def add_encoder_input(record, cache_dir, seed=0):
+    """Embed the original cached input, after matching its source crop to the report."""
+    import numpy as np
+
+    digest = hashlib.sha256(f"{record['id']}:{seed}:pitchflower24k-v1".encode()).hexdigest()
+    path = Path(cache_dir)/(digest+".npz")
+    raw = path.read_bytes()
+    with np.load(io.BytesIO(raw), allow_pickle=False) as archive:
+        shift = float(archive["shift"])
+    expected_shift = float(np.random.default_rng(int(digest[:16], 16)).uniform(-5, 5))
+    if shift != expected_shift:
+        raise ValueError(f"Cached shift does not match the source ID and seed: {record['id']}")
+    a, b, pitch = load_crop(record, {"cache_dir":str(Path(cache_dir).resolve()), "samples":record["source_samples"], "seed":seed})
+    if uri(wav(a), "audio/wav") != record["before_audio"]:
+        raise ValueError(f"Cached source crop does not match embedded source audio: {record['id']}")
+    if len(pitch) != record["pitch_frames"] or not np.isfinite(b).all():
+        raise ValueError(f"Invalid encoder input for {record['id']}")
+    record["encoder_input_audio"] = uri(wav(b), "audio/wav")
+    record["encoder_input_spectrum"] = spectrum(b, len(b)/SR, "Magnitude (dB re 1)")
+    record["preprocessing"] = {
+        "seed":seed, "shift_semitones":shift, "cache_filename":path.name,
+        "cache_sha256":hashlib.sha256(raw).hexdigest(),
+        "source_crop_matches_embedded_pcm16":True,
+        "encoder_input_float32_sha256":hashlib.sha256(b.astype("<f4").tobytes()).hexdigest(),
+        "crop_start_samples":0, "samples":len(b),
+        "spectrum_samples":"actual normalized float32 encoder input; listening WAV is PCM16",
+    }
+
+
+def refresh_existing(report_path, metrics_path, verification_path=None, input_cache=None):
     """Refresh interpretation from saved metrics and assets; no GPU or models needed."""
     summary = json.loads(metrics_path.read_text(encoding="utf-8"))
     records = [dict(r) for r in summary["cases_data"]]
     saved = SavedReport()
     saved.feed(report_path.read_text(encoding="utf-8"))
     expected_headings = [f"Test case {i+1}: {r['id']}" for i, r in enumerate(records)]
-    expected_tags = [tag for _ in records for tag in ("audio",)*3 + ("img",)*3]
+    stride = 8 if len(saved.assets) == 8*len(records) else 6
+    expected_tags = [tag for _ in records for tag in ("audio",)*3 + ("img",)*3 + (("audio", "img") if stride == 8 else ())]
     if saved.headings != expected_headings or [tag for tag, _ in saved.assets] != expected_tags:
         raise ValueError("Report cases/assets do not match the supplied metric records")
     for i, record in enumerate(records):
         for suffix, offset in (("audio", 0), ("spectrum", 3)):
             for j, name in enumerate(("before", "after", "control")):
-                record[name + "_" + suffix] = saved.assets[6*i + offset + j][1]
+                record[name + "_" + suffix] = saved.assets[stride*i + offset + j][1]
+        if stride == 8:
+            record["encoder_input_audio"] = saved.assets[stride*i+6][1]
+            record["encoder_input_spectrum"] = saved.assets[stride*i+7][1]
+        if input_cache:
+            add_encoder_input(record, input_cache)
+            print(f"Verified and plotted encoder input {i+1}/{len(records)}: {record['id']}", flush=True)
     report, means = make_report(records, summary["checkpoint_sha256"])
     if any(not math.isclose(means[k], summary["means"][k], abs_tol=1e-12, rel_tol=0) for k in means):
         raise ValueError("Saved summary scores do not match the case records")
     refreshed = SavedReport()
     refreshed.feed(report)
-    if refreshed.assets != saved.assets or refreshed.headings != saved.headings:
+    original_assets = [asset for i, asset in enumerate(refreshed.assets) if (not input_cache and len(refreshed.assets) == len(saved.assets)) or i % 8 < 6]
+    expected_assets = [asset for i, asset in enumerate(saved.assets) if not input_cache or stride == 6 or i % 8 < 6]
+    if original_assets != expected_assets or refreshed.headings != saved.headings:
         raise ValueError("Report refresh changed case identities or embedded assets")
     summary["bitrate"] = bitrate_summary(records)
     summary["playback"] = playback_summary(records)
@@ -376,6 +422,9 @@ def refresh_existing(report_path, metrics_path, verification_path=None):
         verification = json.loads(verification_path.read_text(encoding="utf-8"))
         verification.update(html_bytes=report_path.stat().st_size, bitrate=summary["bitrate"], playback=summary["playback"])
         verification["embedded_assets_preserved"] = True
+        verification.update(audio_clips=sum(tag == "audio" for tag, _ in refreshed.assets), spectrograms=sum(tag == "img" for tag, _ in refreshed.assets))
+        verification["encoder_inputs"] = {"cases":sum("preprocessing" in r for r in records), "source_crops_verified":all(r.get("preprocessing", {}).get("source_crop_matches_embedded_pcm16", False) for r in records)}
+        verification.pop("standalone_checks", None)
         verification_path.write_text(json.dumps(verification, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(summary["bitrate"], indent=2))
 
@@ -385,12 +434,13 @@ if __name__=="__main__":
     parser.add_argument("--refresh-existing", type=Path, metavar="HTML", help="reuse saved audio, images and scores")
     parser.add_argument("--metrics", type=Path, metavar="JSON", help="metric records for the saved report")
     parser.add_argument("--verification", type=Path, metavar="JSON", help="optional saved verification record to update")
+    parser.add_argument("--input-cache", type=Path, help="original WORLD NPZ cache; add authentic encoder input panels when refreshing")
     args = parser.parse_args()
     if args.refresh_existing:
         if not args.metrics:
             parser.error("--refresh-existing requires --metrics")
-        refresh_existing(args.refresh_existing, args.metrics, args.verification)
-    elif args.metrics or args.verification:
-        parser.error("--metrics and --verification require --refresh-existing")
+        refresh_existing(args.refresh_existing, args.metrics, args.verification, args.input_cache)
+    elif args.metrics or args.verification or args.input_cache:
+        parser.error("--metrics, --verification, and --input-cache require --refresh-existing")
     else:
         main()

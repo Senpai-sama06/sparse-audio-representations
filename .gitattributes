@@ -4,3 +4,6 @@
 *.zip filter=lfs diff=lfs merge=lfs -text
 approaches/parametric/multi_window/report/preliminary_multi_window_sweep_stopped_after_audit.html filter=lfs diff=lfs merge=lfs -text
 approaches/representations/reports/adaptive_stft_dictionary/adaptive_stft_dictionary_testcases.html filter=lfs diff=lfs merge=lfs -text
+approaches/parametric/report/parametric_experiments_tabbed.html filter=lfs diff=lfs merge=lfs -text
+approaches/sparse-ae/reports/sparse_ae_feature_inspection.html filter=lfs diff=lfs merge=lfs -text
+approaches/sparse-ae/reports/sparse_ae_pitchflower_best_testcases.html filter=lfs diff=lfs merge=lfs -text

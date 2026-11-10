@@ -45,6 +45,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": -2.065531413875994,
+        "cache_filename": "12316ddd0b7ab7e3a3d44a09c0e63477ed3825b799d127485bf7ccd5a5b9d11e.npz",
+        "cache_sha256": "ff1182cb6c5d12c9080ffd5a50de0033e8db4397d37bd0054bf0af270400ee33",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "0de3f571acba193e5dbe46ade970414bcf2ba1d6616cc19fcc2581d0fd9b4b3f",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -83,6 +94,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": 4.563355122954004,
+        "cache_filename": "2bef0c4b7b56228900eb23776aec9964fa3cff456c1925661c0d5e261372b819.npz",
+        "cache_sha256": "3211281de7f9cba1eb6b8610581a05f2640309ad644442dadef9686eff6eb8c4",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "09840190eccd7ef7c368cc5203419ca80d047c9c332565c5a2997b9615be3f42",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -121,6 +143,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": -1.8734847733009028,
+        "cache_filename": "ca03569b4ca7a4bad1ad4b8cc7da071c18b98d860436dd3a1b3198e944d61af7.npz",
+        "cache_sha256": "8cb81affbccdee68359855ba38ca26745bb966e99abc7d5a6c4ac9666c9a9569",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "aceacdcf608d2125a7827fd829ce6de8b41ae7347732f597b5e1a8738d85a7f8",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -159,6 +192,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": -3.9941663627960047,
+        "cache_filename": "163a21fb8258f2392ee23a4ca182692dd9e9a5bc7b58e6eede67bcca7905f870.npz",
+        "cache_sha256": "5ceea29c983eec88cf38c7f2b17bde389265e329d0934e79d37d07c18fb1c097",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "b4dcfe22e647517606ea24fae6b1bfb2da7724533a8321e7a0fdca89dad5c62b",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -197,6 +241,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": 4.427218569988135,
+        "cache_filename": "3d447f65dfd9b9c059967659c256131e110d40b8e1014f6da8057d276ff356e4.npz",
+        "cache_sha256": "56edc6eb0c8840f89a63f829733009f3104eb54e17cffb1eb939b5397101dcfe",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "fe5e6413fc389b251c9cf36547f3e190a76806a71b245c42a082f4c8b6af57d6",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -235,6 +290,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": -1.6927081505154673,
+        "cache_filename": "09273a8e68c9019f690ba9f21c3074b35e92b50da69e4b6d1357acaddd243047.npz",
+        "cache_sha256": "11cb8233818437329b0c9d2de91a520e919b9d0d0173e0fec5900f51757d0758",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "4552549bc6040157ec8e7dcd097d15b82cfb24e12fa5f8f4e0027ec6999ae4a1",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -273,6 +339,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": 4.292995597633016,
+        "cache_filename": "abbe4ff8005c9a67636398ffdf8e3223ffb93db7a42daa68743a3d75746029bb.npz",
+        "cache_sha256": "b38970017f363db80d57d1540e6bfce964c88c26c2ad98ad1d1eae686370a6b2",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "fe9f53c2a0a6bee1cb1aba718bfca380e45b7bc6a4347b0a9de62834cfdec2ca",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -311,6 +388,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": -1.3339736273269178,
+        "cache_filename": "1107e6bdd214cb16700bf992c9b32908c7d03b5c18da0f5c6a741526408b57c1.npz",
+        "cache_sha256": "0a49361358ce0d82a705b6b9028fd0be9778ebc542562f6b8d1dc544b044f50f",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "057484ce095e21fc922411545ff82a01f5a7f0f9461b2e50cb581670cf91764f",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -349,6 +437,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": -1.5069524449440488,
+        "cache_filename": "db5f900b4ecb2969b9c7734fa23758bcbf7b57f7d52ffd7fe24d2a6e80b04ea5.npz",
+        "cache_sha256": "80b48aae05ea694cce68ff35f08e5d9e47dde5aec232f0552dd9c28e45a1db2d",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "fbdeb9810c42f724d02a0aef159a0ed63d6414ad4de6ed4573c7ec6108e66cbe",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -387,6 +486,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": 1.9176584855022298,
+        "cache_filename": "c8a56c17f91b1dd6ad01beb04dc7bfcbc95dbdded2da286e3e2454a846df6da2.npz",
+        "cache_sha256": "a80dd2e4fdcf3373cfb252d95ca66d6f59946d97b02c361f5f8ad30b929bf1af",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "7ff32c4b2847f571ef5a6bb191f20871dea0c97220b64cd6fdc1587ce06081cf",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -425,6 +535,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": 1.5468081208821314,
+        "cache_filename": "6b8bdc6bf6ac159a9411b23d0a8625b9642cc681c3ca218208be9e056b66b453.npz",
+        "cache_sha256": "0fbd3058ab7fad8896e8efa91caf91dbf3d553d26134c6e885b0f9407e244b0b",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "d8c0551b7a30b470d0e36e856eabded8efaa81597831e8ffff06474cae501d76",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -463,6 +584,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": 1.810234541874455,
+        "cache_filename": "6b238ffbe8c23b83a7df82335b6e3aeaacaead9a0ba9be66f980b9ed5d4f2d6c.npz",
+        "cache_sha256": "e1dd0bf5507f922f7a771e990d92af722ae781be7c802099dc8910c5ef525daf",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "cd6a620c52a1a78505f47cfaeb0a2364e7e3c9736f1c7aa5a897198e093b21ed",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -501,6 +633,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": 1.1327789721608283,
+        "cache_filename": "c6fb342cd3ff318a248e8b20e8650a8e9cde0a0e0f2a21b91efdca63d7a93088.npz",
+        "cache_sha256": "bc6ae77dcf2fdef4d558f7f67f3d3f3e9c7648d12503b016789e3cbec1efef11",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "d32db7a4578ff68d09af568dc0714ca2a490af8e9de1fc28cb13de2872b40bc1",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -539,6 +682,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": -3.199889007299479,
+        "cache_filename": "c81b8789e3a78b87e1a3fb82f4eb5120c3f253f83fe676c3699e4060053f4ed3.npz",
+        "cache_sha256": "4bcce1257b7dd75c6964bd86200c19a7ab5c1f5259a99f00046fbb0cb5200df9",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "d5804b54c5eb68de3b21ea62a7acd4bed6d17b26451a85e785cf3ba6da7c9884",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -577,6 +731,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": 4.800234357635379,
+        "cache_filename": "cae6e58a7cdde02bd03c94154a6fa973cfafc02f16f9216b18e4b27770ef6e05.npz",
+        "cache_sha256": "b030e77a9878a76fa0f83b1ae98c7be4fa5e60e125bbcffb8ad9d9e4c2322990",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "8d7a37244bc646aa2ca98e0673aa5cd44f94e384bea0bb4f5187da34565c729b",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -615,6 +780,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": 4.0755432029772525,
+        "cache_filename": "6373847625422c19f3d58ec0b8326ea3fb3a652213e45d619706506a68e0b4b3.npz",
+        "cache_sha256": "7abdc154e754fdc3f861688c2e2e7547cf30ab3ade6e337006bf57600ffaecab",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "78b55280436532aaa6034772e7754e54402879f2b050cb1ef57ccf7689803f40",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -653,6 +829,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": 4.474730207826777,
+        "cache_filename": "ac30d058fd16399d30e1375cf2523530959e6956822e856593fa5b3a5913401f.npz",
+        "cache_sha256": "8759616201e106e1a710affc5a48e4a378ba8ff4afb9135d44a095d09f871d6c",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "4b301fd4b4ea016811bc1da0060c151bb6c50f87f3f4bae654f0959c4096713a",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -691,6 +878,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": 3.4094396489519205,
+        "cache_filename": "83d6dea6dd77fd40bb96018b6cd39f286e0b3856eeb895851d4396ba90fafdf3.npz",
+        "cache_sha256": "b779ab875bc6eaf1ba6d87993b79189e6b5bef5d3de6bcc7071ff11ddb5e4e1a",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "22e8841705a854f0da5dbd351213ca328171d1f2ac9145d0ef14d9a35d62c58e",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -729,6 +927,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": -2.634692963086056,
+        "cache_filename": "c5e7efc8ab412e83caa5e42481b04aef976f3dd6c7a0254699bc84658c26b76d.npz",
+        "cache_sha256": "a6e4bb65f47f658599994f758aa2573dee275a128c37420b34355a03b19c9544",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "da46a78e47a3e61fc7220638546af7c904b9e4426dd3bb85e7283fa3edff0280",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -767,6 +976,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": -1.7436738231992202,
+        "cache_filename": "a15a429c0dc8287a41de322a6c5347c43102baf6807009ec324722cd27ce4b43.npz",
+        "cache_sha256": "5b9c7676e1c5d71fbe1306c2a9f7548ea4bb0ee055a69bdb9fef06f4d041d857",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "778cfb653453f6ca40e2f910fa69671e1a74dd9555c7ccf6321987151c0e9742",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -805,6 +1025,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": 0.16885777178175854,
+        "cache_filename": "8bec8efd80d838024f87bc31d85b7b358ba2a7e0c8409ef5119f0f55b166b53a.npz",
+        "cache_sha256": "2b040c52e20cf4923ed6ccb57ced3343d94e76a58d0a61c3e8afd39a0e454f29",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "b8ed72a2e796300c448724800defe99c8845754ce32f7b08bcb1205b51dd2667",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -843,6 +1074,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": 4.995123953825159,
+        "cache_filename": "34a3c3b1274d82ddf9fa3a2535c79bc95eb6d0736f514365bbfddd1587a11919.npz",
+        "cache_sha256": "b19e3c75e8bb192cad8927edc6c6c082257d67e53b4617acd963e1cb8af9bf29",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "ef619b8ce79d2bc05431320e422d1ab286ade16d08382bcad20faee3ca7b4164",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -881,6 +1123,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": -4.250653253235925,
+        "cache_filename": "befca30cb464cc00cf9df2da487f3e5854424d6f3da659553b8e543acdd63cab.npz",
+        "cache_sha256": "aaebaaf6ea79e91c9744f63f24d623826e71847cbb02c1ef151d92ac9d914f37",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "ef79d5d217e87952c48110bb0d096c75e589808bbe40a3ca0d0a3ca6b8dde4f2",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -919,6 +1172,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": -1.0894124202805666,
+        "cache_filename": "39c4867b3525908153d96fe0b50a78eadbffb01b542f40ba9204b1942eda1b29.npz",
+        "cache_sha256": "ba342f1534609a1588c12e196b28bf99a0be8d16a9bfcf56e2e8c451e437745a",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "f61c798bff488236ebbb2423143c958ff0a819917c9dab75edcdbc513a5ff56e",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -957,6 +1221,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": -3.977451407985093,
+        "cache_filename": "1e85181ed9269e2891a98bc4472cc6d7a26a902811f680b32f79ef4ce3c321fe.npz",
+        "cache_sha256": "df0e72465a3172ec0e77d599434933b8c9380f5ec2f6c2d45ddf187cfcb9b8ce",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "0031f9dc43bbf1c575b9bd34a3698edaf1fd866017fde582d0b84d0acb6ac164",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -995,6 +1270,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": 2.6724784265659114,
+        "cache_filename": "2d9f4474550c082d1e49812c7e61b54662b94b9d0996fd8fe3b2e03e17082fe6.npz",
+        "cache_sha256": "a13a04daeb351d882de56086847a56e8fe594100c9220d6771c8d4f108b6f271",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "2f4ed881527c14d15482b85a3042b6311fe36943de21711e0d62ed0c258fafa6",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -1033,6 +1319,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": -1.8133973586537522,
+        "cache_filename": "f9d9045fdf9ef00fd16ae04aa85d680012d86eecda8e21695870bde0bc2649c6.npz",
+        "cache_sha256": "8eaf4e40dc78471136f607f77222f0cbe00d27e01bcf5c68528968f362eb3438",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "1a957477b33149f54b83f64b76a22c9786ebd78e44e45db4d90fa60fcd15d434",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -1071,6 +1368,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": 0.2537400406786965,
+        "cache_filename": "3ee2cdf5606cd15019ad8c8540c8109bd64c8d124232bbb70f5b9ae10a79c3ed.npz",
+        "cache_sha256": "5aa19db610606c3a6f3cbeba9a8d1d23a93c04bc46500209e2ed9d129db77dfa",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "0b57173ecd3fa7ef5d5a8abf067109257f07f6c531650f84f91a8d197376a45a",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -1109,6 +1417,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": -3.9173323924500156,
+        "cache_filename": "714989c2e1564923ffce85f5161745cb05551f55937dab4eea69442d2b1de10e.npz",
+        "cache_sha256": "a78109282f565aca29b7a195fed179f72c9c3801ba36a9c47dd1262a164cbdae",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "9fc5a1d32ad7c277786e55387f42329e0aa973966d6b0919497edaa9b8ec286f",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -1147,6 +1466,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": 4.010919333850769,
+        "cache_filename": "f1b3d3bc2036c331dcb1f8f69f36b2382a94f26645d2cef96d12b95cac1eb1e0.npz",
+        "cache_sha256": "df1ebb02ce6b92a4142076252aada9281a037280bd83950f4ab569f4af7964f0",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "9a9f029e37da2fe69164660e43da0bafa7eaf7aa5c672d5a2775ac9818fb888f",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -1185,6 +1515,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": 1.2332405591029172,
+        "cache_filename": "912ade405314609305835b7c11fd780108153ef196ab0278ad41ab9d85668194.npz",
+        "cache_sha256": "88f4529e37cc769ddbe274ad04f286acd0f2cd05d3c8856ec67cb34915a1fe3f",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "1ba1a3234aecf8a39c1447877186a53508c0d9d5299e10475bc0cfd693d56ca7",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -1223,6 +1564,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": 2.223411483485757,
+        "cache_filename": "e5bb9c818fc5020840e17b87cd3f33c52d218f3c4f13d29d39e85fd755f1493e.npz",
+        "cache_sha256": "2cf89c4e1a6c3755eb275e3125ff02c3938d113ca094bca926bf6a3a6d22cb22",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "35995f909a24a99292cf170488e1ead33d6ed93e775347aedddb93d3fc06ea95",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -1261,6 +1613,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": 2.6711009316661496,
+        "cache_filename": "130ad7fbf8a05747b14ab1918b2c5c2e970d6eacff837d0be4198a6fe325b8da.npz",
+        "cache_sha256": "f281a5b644bbcd9387da613635e9fd2e7f0706ba8df19bba3e8ba2d8fa9e5b69",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "5c520121362a6fede83ac043079daccda6dd26b55411b93c3f1f5dca23ffe706",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -1299,6 +1662,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": -2.3691358047627444,
+        "cache_filename": "ff1ca6f07adfdabced8b1f6f0a333b547bffea4c5eca3514bf422c1c171cd049.npz",
+        "cache_sha256": "8b1399004492eb826a1a02e99c521e75344cc0ed4d31f310928d3094bdefa5ab",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "0fac9c7e01092759e503f05661896db96109dc45c9f9cc42c63239ebe755cfd0",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -1337,6 +1711,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": 4.829601666973492,
+        "cache_filename": "6eb24d116fba72da2a8280d6bfb6bdbb74cd3b9b5545a755e41cb63e52d14942.npz",
+        "cache_sha256": "dee912220339f17dd931834fc0da2d8a1a9a8be31b350bde9d9fcf5c48ccd5e8",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "13575e7fc6afa9fc0a62fb2dd3a8cd0d1cb9bfd0586bbd7144ff402a8ffc2adb",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -1375,6 +1760,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": 3.4402017204041773,
+        "cache_filename": "a3872d210dd7776c7727cafbb95737def16253956895586ddff8fd3f3e44824a.npz",
+        "cache_sha256": "5db7282087afc86aa4fe0ea18b29bfecff413cc592c45de31f9d72905baf24b7",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "4da1f058f07b1b3061a524e1d1513c7f43b317b18ad7c432343bce1015089964",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -1413,6 +1809,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": -3.762909462806191,
+        "cache_filename": "a46c41f9d604393aeaee3db0bea41b0c9e14f012d690f203eeea18a5e1e8964a.npz",
+        "cache_sha256": "963495ec0c286eaa716a5f7715e18ffaa8b370f530e51682c5ce7d64ba1feaa7",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "0f64a55a7bc680e170da1b9a59d5555f7b5d75feaa555326f034ab1b41b44a8e",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -1451,6 +1858,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": 0.1460458213757745,
+        "cache_filename": "f61ed50471498aeb00387273dfb8c9a3e9cb1334cae47f12869e555bb9ee40ca.npz",
+        "cache_sha256": "cd49023cdfc4aa04920550efa0fe1b29c3853d3067bd0bbc3c69960ad4692f36",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "3432bdaef0afab1138de4cfb230faf5f46f5feeb47086842cf05770e716e9f8f",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -1489,6 +1907,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": -1.608490236468274,
+        "cache_filename": "ec94cb5bc0a50d41faf3f9ada8d62c1fc75bea05b9c93097a00f45834e019c54.npz",
+        "cache_sha256": "a1e16069950e2c0da3eecef7ca2e4d75803f636b1357b6a15ed3a1a8e78edd45",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "93012f98bcd645daf711d7259902398c9d762cd2f6156a4d982cc888eac8660c",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     },
     {
@@ -1527,6 +1956,17 @@
           "pcm_kbps": 384.0,
           "wav_file_kbps": 384.2340425531915
         }
+      },
+      "preprocessing": {
+        "seed": 0,
+        "shift_semitones": 2.3275398048308187,
+        "cache_filename": "c237b4ead68e76b8faa6b4350629b95981618398940673caa019a0f65a39c8fe.npz",
+        "cache_sha256": "57e0127dab10d82846aa2e967df9a86f45c687588fa7e7090a897ca1928ebecb",
+        "source_crop_matches_embedded_pcm16": true,
+        "encoder_input_float32_sha256": "606266c60ebd73a96092a0e9ac1fe2962af66400600c7420496e3ab61243d801",
+        "crop_start_samples": 0,
+        "samples": 36096,
+        "spectrum_samples": "actual normalized float32 encoder input; listening WAV is PCM16"
       }
     }
   ],

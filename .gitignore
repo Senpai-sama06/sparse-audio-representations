@@ -45,6 +45,9 @@ lightning_logs/
 # and scripts versioned instead.
 /pitchflower_gs_standalone.zip
 
+# Local bundle of the approaches tree; sources and published reports are versioned.
+/approaches.zip
+
 # Credentials and machine-local editor settings
 .env
 .env.*

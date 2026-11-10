@@ -4,6 +4,7 @@ Report index: [Method documentation and reports](documentation/README.md).
 Report instructions: [Documentation and results reports](documentation/REPORTS_README.md).
 
 Parametric report index: [experiment reports and reading reviews](approaches/parametric/README.md).
+Single-file experiment viewer: [PitchFlower-style parametric case reports](approaches/parametric/report/parametric_experiments_testcases.html).
 
 ## Per-IMF mathematical expression discovery (experiment 1)
 

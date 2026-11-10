@@ -1,0 +1,403 @@
+{
+  "file": "parametric_experiments_tabbed.html",
+  "bytes": 642231954,
+  "sha256": "7b4a93cd8a3bebbf415ff8999e68e51f2025d0605403f2447e5098689faa1ac6",
+  "reports": [
+    {
+      "id": "overview",
+      "title": "Overview",
+      "source": "tmp\\parametric_tabbed_build\\overview.html",
+      "sha256": "2844d6b34ff3faa7b144ee4451313b65f9cc0bca0cd030f22c437a7cab1ab5e3",
+      "bytes": 1459,
+      "gzip_bytes": 796
+    },
+    {
+      "id": "baseline",
+      "title": "1 \u00b7 Sampled EMD/VMD",
+      "source": "tmp\\parametric_tabbed_build\\baseline.html",
+      "sha256": "a2a407bd779c3e055a7d931d3f98ca56e7d9646a76fc8bea6113edac8f67f2ca",
+      "bytes": 6131172,
+      "gzip_bytes": 4614011
+    },
+    {
+      "id": "multi",
+      "title": "2 \u00b7 Multi-window (stopped)",
+      "source": "approaches\\parametric\\multi_window\\report\\preliminary_multi_window_sweep_stopped_after_audit.html",
+      "sha256": "30d653c0bd7021026bf11c41d8634c8a298b8d5ba83d9fb351b2fe691652fe78",
+      "bytes": 590899755,
+      "gzip_bytes": 445931039
+    },
+    {
+      "id": "audit",
+      "title": "Fitting audit",
+      "source": "tmp\\parametric_tabbed_build\\audit.html",
+      "sha256": "056bfff38fbdd0bde215c910a0509ab5c013fd7c111b7dab2192fffa0f9352f1",
+      "bytes": 2596,
+      "gzip_bytes": 1236
+    },
+    {
+      "id": "isolated",
+      "title": "3 \u00b7 Isolated 40 ms",
+      "source": "approaches\\parametric\\isolated_40ms\\report\\isolated_40ms_capacity_complete.html",
+      "sha256": "629e3246c372c47014bf46f80b49035218cf2a314a6d40b1c56eeb7ad364859e",
+      "bytes": 14174635,
+      "gzip_bytes": 9939749
+    },
+    {
+      "id": "shared",
+      "title": "4 \u00b7 Shared representations",
+      "source": "approaches\\parametric\\shared_representation\\report\\shared_representation_pilot_complete.html",
+      "sha256": "f86a6fdb6c9f7341400fee04229c45f8e1bb63577afed12bd5f5c20783c9f99e",
+      "bytes": 3661928,
+      "gzip_bytes": 683154
+    },
+    {
+      "id": "symbolic",
+      "title": "5 \u00b7 IMF expressions",
+      "source": "approaches\\parametric\\symbolic\\report\\symbolic_imf_pilot_complete.html",
+      "sha256": "ac0618403fb3e2b829cf5f1bc4625e76c6d8478cdacfe749fd2bfe09ae12db05",
+      "bytes": 9270593,
+      "gzip_bytes": 4922181
+    }
+  ],
+  "signal_cases": [
+    {
+      "role": "exploratory",
+      "split": "dev-clean",
+      "speaker": "1272",
+      "utterance": "1272-128104-0000",
+      "start": 15360,
+      "samples": 640,
+      "source_sha256": "8ced93d3265be7440c2e82f31fc7b1d9e34d82e2d50c96d3adbd74f276e350c6",
+      "label": "Isolated case 0",
+      "end_sample_exclusive": 16000,
+      "seconds": 0.04,
+      "sample_rate": 16000,
+      "mode_count": 8,
+      "residual_count": 1,
+      "cached_sum_nmse": 0.0
+    },
+    {
+      "role": "exploratory",
+      "split": "dev-clean",
+      "speaker": "1272",
+      "utterance": "1272-128104-0000",
+      "start": 31360,
+      "samples": 640,
+      "source_sha256": "8ced93d3265be7440c2e82f31fc7b1d9e34d82e2d50c96d3adbd74f276e350c6",
+      "label": "Isolated case 1",
+      "end_sample_exclusive": 32000,
+      "seconds": 0.04,
+      "sample_rate": 16000,
+      "mode_count": 8,
+      "residual_count": 1,
+      "cached_sum_nmse": 4.931227955601404e-38
+    },
+    {
+      "role": "exploratory",
+      "split": "dev-clean",
+      "speaker": "1272",
+      "utterance": "1272-128104-0000",
+      "start": 47360,
+      "samples": 640,
+      "source_sha256": "8ced93d3265be7440c2e82f31fc7b1d9e34d82e2d50c96d3adbd74f276e350c6",
+      "label": "Isolated case 2",
+      "end_sample_exclusive": 48000,
+      "seconds": 0.04,
+      "sample_rate": 16000,
+      "mode_count": 8,
+      "residual_count": 1,
+      "cached_sum_nmse": 1.3104256786921139e-36
+    },
+    {
+      "role": "test",
+      "split": "test-clean",
+      "speaker": "7127",
+      "utterance": "7127-75946-0006",
+      "start": 0,
+      "samples": 640,
+      "source_sha256": "84114ed856883c0971a2e0a679a5121d82c60737f8a912b8e07392b40b73064c",
+      "label": "Shared representation: first saved test block",
+      "end_sample_exclusive": 640,
+      "seconds": 0.04,
+      "sample_rate": 16000,
+      "mode_count": 8,
+      "residual_count": 1,
+      "cached_sum_nmse": 6.886146531276154e-16
+    },
+    {
+      "role": "test",
+      "split": "test-clean",
+      "speaker": "908",
+      "utterance": "908-31957-0002",
+      "start": 32000,
+      "samples": 640,
+      "source_sha256": "77ad707e976d262395c265cdfda5b9a3da7439f329aac0f5216a404acefe3fe7",
+      "label": "Symbolic test block 99",
+      "end_sample_exclusive": 32640,
+      "seconds": 0.04,
+      "sample_rate": 16000,
+      "mode_count": 8,
+      "residual_count": 1,
+      "cached_sum_nmse": 6.44591960466435e-16
+    },
+    {
+      "role": "test",
+      "split": "test-clean",
+      "speaker": "2961",
+      "utterance": "2961-960-0003",
+      "start": 117760,
+      "samples": 640,
+      "source_sha256": "1c7709259d871c7a36fe1f994f6f1bce0a3424c6f009002eb3defcd3f1a97040",
+      "label": "Symbolic test block 203",
+      "end_sample_exclusive": 118400,
+      "seconds": 0.04,
+      "sample_rate": 16000,
+      "mode_count": 8,
+      "residual_count": 1,
+      "cached_sum_nmse": 5.199314571134363e-16
+    },
+    {
+      "role": "test",
+      "split": "test-clean",
+      "speaker": "5105",
+      "utterance": "5105-28241-0013",
+      "start": 43520,
+      "samples": 640,
+      "source_sha256": "6f22b810e2af34f8c741fc282697468e1a436f96eb0841862a7bbbffc84ec1e1",
+      "label": "Symbolic test block 188",
+      "end_sample_exclusive": 44160,
+      "seconds": 0.04,
+      "sample_rate": 16000,
+      "mode_count": 8,
+      "residual_count": 1,
+      "cached_sum_nmse": 4.035096392226636e-16
+    },
+    {
+      "role": "test",
+      "split": "test-clean",
+      "speaker": "2961",
+      "utterance": "2961-960-0003",
+      "start": 0,
+      "samples": 640,
+      "source_sha256": "1c7709259d871c7a36fe1f994f6f1bce0a3424c6f009002eb3defcd3f1a97040",
+      "label": "Symbolic test block 200",
+      "end_sample_exclusive": 640,
+      "seconds": 0.04,
+      "sample_rate": 16000,
+      "mode_count": 8,
+      "residual_count": 1,
+      "cached_sum_nmse": 5.9307764423769205e-16
+    },
+    {
+      "role": "test",
+      "split": "test-clean",
+      "speaker": "6930",
+      "utterance": "6930-81414-0003",
+      "start": 44160,
+      "samples": 640,
+      "source_sha256": "79c9e335928c75acfcae9f98973358bda9dbd108f7518bb62c20d1ca1c2166d8",
+      "label": "Symbolic test block 254",
+      "end_sample_exclusive": 44800,
+      "seconds": 0.04,
+      "sample_rate": 16000,
+      "mode_count": 8,
+      "residual_count": 1,
+      "cached_sum_nmse": 4.856204344844722e-16
+    },
+    {
+      "role": "test",
+      "split": "test-clean",
+      "speaker": "5105",
+      "utterance": "5105-28241-0013",
+      "start": 76160,
+      "samples": 640,
+      "source_sha256": "6f22b810e2af34f8c741fc282697468e1a436f96eb0841862a7bbbffc84ec1e1",
+      "label": "Symbolic test block 191",
+      "end_sample_exclusive": 76800,
+      "seconds": 0.04,
+      "sample_rate": 16000,
+      "mode_count": 8,
+      "residual_count": 1,
+      "cached_sum_nmse": 4.385702851718109e-16
+    },
+    {
+      "role": "test",
+      "split": "test-clean",
+      "speaker": "7127",
+      "utterance": "7127-75947-0035",
+      "start": 39680,
+      "samples": 640,
+      "source_sha256": "5cc175bf35b5c772ec80bae12e0981637fad765865ff5b1012e0ce18a91a63e0",
+      "label": "Symbolic test block 28",
+      "end_sample_exclusive": 40320,
+      "seconds": 0.04,
+      "sample_rate": 16000,
+      "mode_count": 8,
+      "residual_count": 1,
+      "cached_sum_nmse": 5.062168066033868e-16
+    },
+    {
+      "role": "test",
+      "split": "test-clean",
+      "speaker": "5105",
+      "utterance": "5105-28241-0013",
+      "start": 21760,
+      "samples": 640,
+      "source_sha256": "6f22b810e2af34f8c741fc282697468e1a436f96eb0841862a7bbbffc84ec1e1",
+      "label": "Symbolic test block 186",
+      "end_sample_exclusive": 22400,
+      "seconds": 0.04,
+      "sample_rate": 16000,
+      "mode_count": 8,
+      "residual_count": 1,
+      "cached_sum_nmse": 6.087223371353984e-16
+    },
+    {
+      "role": "exploratory",
+      "split": "dev-clean",
+      "speaker": "1272",
+      "utterance": "1272-128104-0000",
+      "start": 0,
+      "samples": 640,
+      "source_sha256": "4e25e22555cd16e90edb0a3b49fdcf1fe652b2a1250ab643634db33895c75b41",
+      "label": "Sampled baseline: 40 ms window example",
+      "end_sample_exclusive": 640,
+      "seconds": 0.04,
+      "sample_rate": 16000,
+      "mode_count": 8,
+      "residual_count": 1,
+      "cached_sum_nmse": 2.793779198882072e-36
+    },
+    {
+      "role": "exploratory",
+      "split": "dev-clean",
+      "speaker": "1272",
+      "utterance": "1272-128104-0000",
+      "start": 0,
+      "samples": 640,
+      "source_sha256": "4e25e22555cd16e90edb0a3b49fdcf1fe652b2a1250ab643634db33895c75b41",
+      "label": "Stopped multi-window sweep: cached example",
+      "end_sample_exclusive": 640,
+      "seconds": 0.04,
+      "sample_rate": 16000,
+      "mode_count": 8,
+      "residual_count": 1,
+      "cached_sum_nmse": 2.793779198882072e-36
+    }
+  ],
+  "cache_sources": [
+    {
+      "file": "runs/parametric_learned_representation_pilot/cache/vmd_test.npz",
+      "sha256": "ac023b70c2e7d619b00506ed810d987ffecb9efc055b81e57d13ba6719b0fb22"
+    },
+    {
+      "file": "runs/parametric_isolated_40ms_librispeech/cache/case0_vmd.npz",
+      "sha256": "fb2dd9b6c809628defc61ee3e86bc5b8eff255c33c598fb6a66cf140efd3b8d2"
+    },
+    {
+      "file": "runs/parametric_isolated_40ms_librispeech/cache/case1_vmd.npz",
+      "sha256": "369401b75e4293f3ef17d8eb45b13141aad34422e75a4f3da997fad480d5baf1"
+    },
+    {
+      "file": "runs/parametric_isolated_40ms_librispeech/cache/case2_vmd.npz",
+      "sha256": "fb528460f2e836e03555ffffe8c0ae59f0f94919914cbd5a3d9c1b3dbc33d5b2"
+    },
+    {
+      "file": "runs/parametric_librispeech_1272_128104_0000/vmd/window_640_samples/modes/frame_000001.npz",
+      "sha256": "f67761f99a58e08f669f44fbec0eee65ba15b5617d1f4733e2ff18b3e9d83da9"
+    },
+    {
+      "file": "runs/parametric_ablation_librispeech_1272_v2/cache/case0_vmd_40ms.npz",
+      "sha256": "f16aa7de5c42b2e0bbfc34b41364a702d30189be059ab5ffedfb4ab592c13938"
+    }
+  ],
+  "source_manifest_records": 4608,
+  "plots": "Source and cached decomposition; no new fitting or decomposition",
+  "standalone": true,
+  "integrity_checks": {
+    "embedded_reports_unpacked_and_sha256_verified": 7,
+    "signal_panels": 14,
+    "context_wav_files_validated": 171,
+    "context_png_files_validated": 28,
+    "external_dependencies": [],
+    "viewer_frames": 1
+  },
+  "browser_checks": {
+    "tabs": [
+      {
+        "tab": "baseline",
+        "active": [
+          "tab-baseline"
+        ],
+        "frames": 1,
+        "status": "Loaded 1 \u00b7 Sampled EMD/VMD. One experiment is displayed; other reports stay packed until selected.",
+        "cases": 1,
+        "visibleCases": 1,
+        "frameHeading": "EMD/VMD window reconstruction"
+      },
+      {
+        "tab": "isolated",
+        "active": [
+          "tab-isolated"
+        ],
+        "frames": 1,
+        "status": "Loaded 3 \u00b7 Isolated 40 ms. One experiment is displayed; other reports stay packed until selected.",
+        "cases": 3,
+        "visibleCases": 1,
+        "frameHeading": "Completed isolated 40 ms representation capacity study"
+      },
+      {
+        "tab": "shared",
+        "active": [
+          "tab-shared"
+        ],
+        "frames": 1,
+        "status": "Loaded 4 \u00b7 Shared representations. One experiment is displayed; other reports stay packed until selected.",
+        "cases": 1,
+        "visibleCases": 1,
+        "frameHeading": "Learned mode representation pilot \u2014 experiment 1"
+      },
+      {
+        "tab": "symbolic",
+        "active": [
+          "tab-symbolic"
+        ],
+        "frames": 1,
+        "status": "Loaded 5 \u00b7 IMF expressions. One experiment is displayed; other reports stay packed until selected.",
+        "cases": 8,
+        "visibleCases": 1,
+        "frameHeading": "40 ms VMD IMF expression discovery"
+      },
+      {
+        "tab": "audit",
+        "active": [
+          "tab-audit"
+        ],
+        "frames": 1,
+        "status": "Loaded Fitting audit. One experiment is displayed; other reports stay packed until selected.",
+        "cases": 0,
+        "visibleCases": 0,
+        "frameHeading": "2. Stopped multi-window sweep and implementation audit"
+      },
+      {
+        "tab": "multi",
+        "active": [
+          "tab-multi"
+        ],
+        "frames": 1,
+        "status": "Loaded 2 \u00b7 Multi-window (stopped). One experiment is displayed; other reports stay packed until selected.",
+        "cases": 1,
+        "visibleCases": 1,
+        "frameHeading": "Preliminary multi-window sweep - stopped after implementation audit"
+      }
+    ],
+    "page_errors": [],
+    "external_requests": [],
+    "isolated_selector": true,
+    "symbolic_selector": true,
+    "browser": "Microsoft Edge, headless, local file URL",
+    "visual_review": "Overview and isolated case 2 screenshots inspected; waveform and spectrogram axes and menu visible.",
+    "audible_listening_assessment": "Not performed; context WAV formats validated and tab navigation tested."
+  }
+}

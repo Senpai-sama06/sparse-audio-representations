@@ -38,6 +38,8 @@ def write_index(records):
                 '<table border="1"><tr><th>Experiment</th><th>Status</th><th>Jobs</th><th>Active time</th><th>Report</th></tr>',
                 *rows, '</table>']
     for relative, label in (
+        ('parametric_experiments_testcases.html', 'Parametric test cases: PitchFlower-style comparison tables'),
+        ('parametric_experiments_tabbed.html', 'All experiments: single tabbed report with source signals and VMD context'),
         ('experiment_results_2026_11_04/experiment_results_shareable.html', 'Combined results: standalone overview'),
         ('experiment_results_2026_11_04/reading_guide.html', 'Focused reading guide'),
         ('literature_review_2026_11_04/index.html', 'Annotated literature review'),

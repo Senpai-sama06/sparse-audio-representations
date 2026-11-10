@@ -1,11 +1,11 @@
 {
   "cases": 40,
-  "audio_clips": 120,
-  "spectrograms": 120,
+  "audio_clips": 160,
+  "spectrograms": 160,
   "tables": 41,
   "external_dependencies": [],
   "style_or_script_elements": 0,
-  "html_bytes": 21926277,
+  "html_bytes": 28921826,
   "means": {
     "stoi": 0.90491319896757,
     "pesq_wb": 2.1628671258687975,
@@ -54,13 +54,16 @@
   "refresh_checks": {
     "original_case_metrics_preserved": true,
     "embedded_assets_preserved": true,
-    "wav_headers_and_sample_counts_validated": 120,
-    "png_chunk_checksums_validated": 120,
+    "wav_headers_and_sample_counts_validated": 160,
+    "png_chunk_checksums_validated": 160,
     "case_quality_and_rate_rows_match_records": 40,
     "refresh_is_idempotent": true,
     "mismatched_case_records_rejected": true,
     "direct_after_vs_vocoder_rate_rows_validated": 40,
-    "output_wav_sizes_measured": 120
+    "output_wav_sizes_measured": 120,
+    "encoder_input_panels_validated": 40,
+    "encoder_shift_seed_checks": 40,
+    "original_240_assets_preserved": true
   },
   "playback": {
     "before": {
@@ -82,18 +85,22 @@
       "wav_file_kbps": 384.2340425531917
     }
   },
+  "encoder_inputs": {
+    "cases": 40,
+    "source_crops_verified": true
+  },
   "standalone_checks": {
     "single_file_relocation_checked": true,
     "required_files": [
       "pitchflower_best_testcases.html"
     ],
     "cases": 40,
-    "embedded_wav_files_validated": 120,
-    "embedded_png_files_validated": 120,
+    "embedded_wav_files_validated": 160,
+    "embedded_png_files_validated": 160,
     "external_dependencies": [],
     "script_elements": 0,
-    "html_bytes": 21926277,
-    "html_sha256": "31e02b2ba73a7eee02faf23a1e8582cf781b3ab1dfac955634379dffb7d6c3f5",
-    "validation_method": "HTML dependency audit, embedded WAV parsing, PNG checksums and pixel-stream decompression, isolated single-file copy"
+    "html_bytes": 28921826,
+    "html_sha256": "c5db03b875ab89ac74d8c741bf1a6919c1de87fb303d7e55e313aad514e8d1b3",
+    "validation_method": "Embedded WAV parsing, PNG validation, original asset and score preservation, isolated single-file refresh"
   }
 }

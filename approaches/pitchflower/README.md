@@ -58,8 +58,8 @@ computed against the source using the embedded PCM samples resampled to 16 kHz.
 
 ## Sharing and verification
 
-Share only `reports/pitchflower_best_testcases.html` (about 21.9 MB).
-It includes all 120 WAV clips, 120 spectrograms, case scores, rate comparisons,
+Share only `reports/pitchflower_best_testcases.html` (about 29.0 MB).
+It includes all 160 WAV clips, 160 spectrograms, case scores, rate comparisons,
 formulas, assumptions, test scope, and checkpoint identity. Recipients can save
 the file and open it in a browser without internet, Python, the repository,
 models, datasets, or companion JSON files.
@@ -69,6 +69,16 @@ PNG checksums and decompressed pixel streams, absence of external dependencies,
 and a copy placed alone in another folder. All original audio, images, and
 quality scores were preserved when adding the bitrate comparison.
 
+Each case also includes the actual cached WORLD encoder input, with listening
+audio and a spectrogram. WORLD flattens voiced F0 to the complete utterance's
+mean, applies a deterministic shift between -5 and +5 semitones, and retains
+the envelope, aperiodicity, and unvoiced pattern for resynthesis. This happens
+before crop selection and independent peak normalization. The original source
+pitch is supplied separately to the flow decoder. The HTML explains the complete
+signal path and gives each case's shift. Encoder-input plots use the actual
+normalized float32 inputs; their browser audio uses PCM16. Existing source,
+output, control audio, and scores are unchanged.
+
 ## Refreshing the saved report
 
 This uses saved scores and embedded assets, with Python's standard library.
@@ -77,6 +87,12 @@ It does not run inference or require model dependencies:
 ```powershell
 python -m approaches.pitchflower.reporting --refresh-existing approaches/pitchflower/reports/pitchflower_best_testcases.html --metrics approaches/pitchflower/reports/pitchflower_best_metrics.json --verification approaches/pitchflower/reports/pitchflower_best_verification.json
 ```
+
+Existing encoder-input panels are preserved by that command. To populate them
+from the original WORLD cache, append `--input-cache PATH_TO_ORIGINAL_NPZ_CACHE`.
+This needs NumPy, SciPy, Matplotlib, and SoundFile, but no checkpoint or GPU.
+The tool refuses a cache whose normalized source crop differs from the embedded
+source PCM, and records cache and float32-input hashes in the metric records.
 
 The refresh verifies case identities, embedded asset preservation, and agreement
 between case scores and summary scores. The old command
